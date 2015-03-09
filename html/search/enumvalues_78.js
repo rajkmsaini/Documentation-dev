@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['x',['X',['../a00389.html#af5fb44f4f50c97b5f3c1af44781d0090a58833a3110c570fb05130d40c365d1e4',1,'Foam::coordSet::X()'],['../a02715.html#a34a2c423b3ea385bdb64e0dbba3f901ba58833a3110c570fb05130d40c365d1e4',1,'Foam::Vector::X()'],['../a02716.html#a34a2c423b3ea385bdb64e0dbba3f901ba58833a3110c570fb05130d40c365d1e4',1,'Foam::Vector2D::X()']]],
+  ['xx',['XX',['../a00496.html#a34a2c423b3ea385bdb64e0dbba3f901ba872a756ecc227f3c58ba33fb2693c93c',1,'Foam::DiagTensor::XX()'],['../a02468.html#a34a2c423b3ea385bdb64e0dbba3f901ba872a756ecc227f3c58ba33fb2693c93c',1,'Foam::SymmTensor::XX()'],['../a02469.html#a34a2c423b3ea385bdb64e0dbba3f901ba872a756ecc227f3c58ba33fb2693c93c',1,'Foam::SymmTensor2D::XX()'],['../a02492.html#a34a2c423b3ea385bdb64e0dbba3f901ba872a756ecc227f3c58ba33fb2693c93c',1,'Foam::Tensor::XX()'],['../a02493.html#a34a2c423b3ea385bdb64e0dbba3f901ba872a756ecc227f3c58ba33fb2693c93c',1,'Foam::Tensor2D::XX()']]],
+  ['xy',['XY',['../a02468.html#a34a2c423b3ea385bdb64e0dbba3f901ba0e35228e79b7d412f3c0ba4d49646ef5',1,'Foam::SymmTensor::XY()'],['../a02469.html#a34a2c423b3ea385bdb64e0dbba3f901ba0e35228e79b7d412f3c0ba4d49646ef5',1,'Foam::SymmTensor2D::XY()'],['../a02492.html#a34a2c423b3ea385bdb64e0dbba3f901ba0e35228e79b7d412f3c0ba4d49646ef5',1,'Foam::Tensor::XY()'],['../a02493.html#a34a2c423b3ea385bdb64e0dbba3f901ba0e35228e79b7d412f3c0ba4d49646ef5',1,'Foam::Tensor2D::XY()']]],
+  ['xyz',['XYZ',['../a00389.html#af5fb44f4f50c97b5f3c1af44781d0090ac3906aa83f2e1601606b5297cd4508a2',1,'Foam::coordSet']]],
+  ['xz',['XZ',['../a02468.html#a34a2c423b3ea385bdb64e0dbba3f901ba17598f0f134bb1b6c20e07f7ad30bc99',1,'Foam::SymmTensor::XZ()'],['../a02492.html#a34a2c423b3ea385bdb64e0dbba3f901ba17598f0f134bb1b6c20e07f7ad30bc99',1,'Foam::Tensor::XZ()']]]
+];
