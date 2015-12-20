@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_3b094e1ce2b3f641da0071aec2c4e694.html">limitedSchemes</a></li><li class="navelem"><a class="el" href="dir_0b07bc20f8b30bdca085af541cf06612.html">Limited</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_8b2058fecce8beb3c5dcc5bc9fca7b03.html">wallDist</a></li><li class="navelem"><a class="el" href="dir_795f957d099804d972726f980360ae24.html">wallPointYPlus</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Limited.H</div>  </div>
+<div class="title">wallPointYPlus.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05948.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,140 +119,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::LimitedLimiter</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Foam::LimitedLimiter</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05949.html">wallPointYPlus.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;Foam::scalar <a class="code" href="a02846.html#a548cd43bfae21d905fe02cafbe74ed43">Foam::wallPointYPlus::yPlusCutOff</a> = 200;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef Limited_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define Limited_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08993.html">vector.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">                       Class LimitedLimiter Declaration</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01310.html">   46</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> LimitedScheme&gt;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">class </span><a class="code" href="a01310.html">LimitedLimiter</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01312.html">LimitedScheme</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">//- Lower and upper bound of the variable</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    scalar lowerBound_, upperBound_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> checkParameters(<a class="code" href="a01191.html">Istream</a>&amp; is)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">if</span> (lowerBound_ &gt; upperBound_)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a>(<span class="stringliteral">&quot;checkParameters()&quot;</span>, is)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Invalid bounds.  Lower = &quot;</span> &lt;&lt; lowerBound_</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;  Upper = &quot;</span> &lt;&lt; upperBound_</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;.  Lower bound is higher than the upper bound.&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a01310.html#aa02bdb1d5b1c9f9738202ebe7f72fcf8">   69</a></span>&#160;    <a class="code" href="a01310.html#aa02bdb1d5b1c9f9738202ebe7f72fcf8">LimitedLimiter</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> scalar lowerBound,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">const</span> scalar upperBound,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a01191.html">Istream</a>&amp; is</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    )</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    :</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a01312.html">LimitedScheme</a>(is),</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        lowerBound_(lowerBound),</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        upperBound_(upperBound)</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        checkParameters(is);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="a01310.html#adf14c19c58eae36be71b0ac4a13e8dde">   82</a></span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a01310.html#aa02bdb1d5b1c9f9738202ebe7f72fcf8">LimitedLimiter</a>(<a class="code" href="a01191.html">Istream</a>&amp; is)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    :</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a01312.html">LimitedScheme</a>(is),</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        lowerBound_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(is)),</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        upperBound_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(is))</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        checkParameters(is);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="a01310.html#af35ae7554b25b941a59f5b2f588cdc4a">   93</a></span>&#160;    scalar <a class="code" href="a01310.html#af35ae7554b25b941a59f5b2f588cdc4a">limiter</a></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    (</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">const</span> scalar cdWeight,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">const</span> scalar faceFlux,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">const</span> scalar phiP,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">const</span> scalar phiN,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; gradcP,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; gradcN,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; d</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    )<span class="keyword"> const</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="comment">// If not between the lower and upper bounds use upwind</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">if</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        (</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            (faceFlux &gt; 0 &amp;&amp; (phiP &lt; lowerBound_ || phiN &gt; upperBound_))</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;         || (faceFlux &lt; 0 &amp;&amp; (phiN &lt; lowerBound_ || phiP &gt; upperBound_))</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;         <span class="comment">/*</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">            phiP &lt; lowerBound_</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">         || phiP &gt; upperBound_</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">         || phiN &lt; lowerBound_</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">         || phiN &gt; upperBound_</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">         */</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        )</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        {</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a01312.html#aad9e018b93b59932a398c0826c5cef86">LimitedScheme::limiter</a></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            (</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                cdWeight,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                faceFlux,</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                phiP,</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                phiN,</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                gradcP,</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                gradcN,</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                d</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            );</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;};</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a828d57f6d9b9806c086a3f840a147115"><div class="ttname"><a href="a10675.html#a828d57f6d9b9806c086a3f840a147115">Foam::readScalar</a></div><div class="ttdeci">bool readScalar(const char *buf, doubleScalar &amp;s)</div><div class="ttdoc">Read whole of buf as a scalar. Return true if succesful. </div><div class="ttdef"><b>Definition:</b> <a href="a08880_source.html#l00063">doubleScalar.H:63</a></div></div>
-<div class="ttc" id="a10675_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
-<div class="ttc" id="a01310_html"><div class="ttname"><a href="a01310.html">Foam::LimitedLimiter</a></div><div class="ttdoc">Foam::LimitedLimiter. </div><div class="ttdef"><b>Definition:</b> <a href="a05948_source.html#l00046">Limited.H:46</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a01310_html_aa02bdb1d5b1c9f9738202ebe7f72fcf8"><div class="ttname"><a href="a01310.html#aa02bdb1d5b1c9f9738202ebe7f72fcf8">Foam::LimitedLimiter::LimitedLimiter</a></div><div class="ttdeci">LimitedLimiter(const scalar lowerBound, const scalar upperBound, Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a05948_source.html#l00069">Limited.H:69</a></div></div>
-<div class="ttc" id="a07673_html_af60657ab907624ce6ce9a2bb0f29c1ec"><div class="ttname"><a href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div><div class="ttdeci">#define FatalIOErrorIn(functionName, ios)                                                                        </div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00325">error.H:325</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01310_html_af35ae7554b25b941a59f5b2f588cdc4a"><div class="ttname"><a href="a01310.html#af35ae7554b25b941a59f5b2f588cdc4a">Foam::LimitedLimiter::limiter</a></div><div class="ttdeci">scalar limiter(const scalar cdWeight, const scalar faceFlux, const scalar phiP, const scalar phiN, const vector &amp;gradcP, const vector &amp;gradcN, const vector &amp;d) const </div><div class="ttdef"><b>Definition:</b> <a href="a05948_source.html#l00093">Limited.H:93</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a01312_html"><div class="ttname"><a href="a01312.html">Foam::LimitedScheme</a></div><div class="ttdoc">Class to create NVD/TVD limited weighting-factors. </div><div class="ttdef"><b>Definition:</b> <a href="a05956_source.html#l00063">LimitedScheme.H:63</a></div></div>
-<div class="ttc" id="a01312_html_aad9e018b93b59932a398c0826c5cef86"><div class="ttname"><a href="a01312.html#aad9e018b93b59932a398c0826c5cef86">Foam::LimitedScheme::limiter</a></div><div class="ttdeci">virtual tmp&lt; surfaceScalarField &gt; limiter(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;) const </div><div class="ttdoc">Return the interpolation weighting factors. </div><div class="ttdef"><b>Definition:</b> <a href="a05955_source.html#l00139">LimitedScheme.C:139</a></div></div>
-<div class="ttc" id="a08993_html"><div class="ttname"><a href="a08993.html">vector.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05949_html"><div class="ttname"><a href="a05949.html">wallPointYPlus.H</a></div></div>
+<div class="ttc" id="a02846_html_a548cd43bfae21d905fe02cafbe74ed43"><div class="ttname"><a href="a02846.html#a548cd43bfae21d905fe02cafbe74ed43">Foam::wallPointYPlus::yPlusCutOff</a></div><div class="ttdeci">static scalar yPlusCutOff</div><div class="ttdoc">cut-off value for y+ </div><div class="ttdef"><b>Definition:</b> <a href="a05949_source.html#l00082">wallPointYPlus.H:82</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

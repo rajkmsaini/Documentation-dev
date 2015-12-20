@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_a38e3b643eae30d7add43af99171ff5d.html">fvMotionSolvers</a></li><li class="navelem"><a class="el" href="dir_7b20f18e0d7766bc859203c857d7b1a8.html">fvMotionSolverCore</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_4222bf86fc7d2e32bb18656d8b03e2ae.html">quadraticFit</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvMotionSolverCore.H</div>  </div>
+<div class="title">quadraticFitPolynomial.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06125.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,101 +120,97 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::fvMotionSolverCore</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::quadraticFitPolynomial</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Base class for fvMesh based motionSolvers.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Quadratic polynomial for centred interpolation fitting.</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    fvMotionSolverCore.C</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    Can be used with the CentredFit scheme to create a quadratic surface</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    interpolation scheme</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef fvMotionSolverCore_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define fvMotionSolverCore_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef quadraticFitPolynomial_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define quadraticFitPolynomial_H</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09045.html">vector.H</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">                Class velocityMotionSolver Declaration</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">                 Class quadraticFitPolynomial Declaration</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00875.html">   48</a></span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span><a class="code" href="a00875.html">fvMotionSolverCore</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a02047.html">   48</a></span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span><a class="code" href="a02047.html">quadraticFitPolynomial</a></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Protected data</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a00875.html#a1fc50149eff5c4755527aa31bbf37dbe">   56</a></span>&#160;        <span class="comment">//- The fvMesh to be moved</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a00875.html#a1fc50149eff5c4755527aa31bbf37dbe">fvMesh_</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Protected Member Functions</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Create the corresponding patch types for cellMotion from those</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//  of the given pointMotion</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a01355.html">wordList</a> <a class="code" href="a00875.html#a186f296126b4dbbe0ed6493277b95063">cellMotionBoundaryTypes</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Member functions</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a02047.html#add43db75eb7f3015d19091b4033bf185">   54</a></span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">static</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02047.html#add43db75eb7f3015d19091b4033bf185">nTerms</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> dim)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            (</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                dim == 1 ? 3 :</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                dim == 2 ? 6 :</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                dim == 3 ? 9 : 0</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            );</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a02047.html#a42ccda6d304817a2e6b423f797eee8b0">   65</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a02047.html#a42ccda6d304817a2e6b423f797eee8b0">addCoeffs</a></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        (</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="a00913.html">GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a>::</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            GeometricBoundaryField&amp; pmUbf</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a00875.html#a7188c24990fd960a93d388b233f86127">ClassName</a>(<span class="stringliteral">&quot;displacementMotionSolver&quot;</span>);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//- Construct from polyMesh</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a00875.html#a340bcd8f368950ff2a760d4665e0d18b">fvMotionSolverCore</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp;);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a00875.html#a9687e6999ad5ae21072ec74623f049ff">   84</a></span>&#160;        <span class="comment">//- Return reference to the fvMesh to be moved</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a00875.html#a9687e6999ad5ae21072ec74623f049ff">mesh</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00875.html#a1fc50149eff5c4755527aa31bbf37dbe">fvMesh_</a>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            scalar* coeffs,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; d,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">const</span> scalar weight,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> dim</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        )</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> curIdx = 0;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            coeffs[curIdx++] = weight;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            coeffs[curIdx++] = weight*d.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            coeffs[curIdx++] = weight*<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(d.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>());</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">if</span> (dim &gt;= 2)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02787.html#a77c00b469d89c23bd35d2eb236140f70">y</a>();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>()*d.<a class="code" href="a02787.html#a77c00b469d89c23bd35d2eb236140f70">y</a>();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                coeffs[curIdx++] = weight*<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(d.<a class="code" href="a02787.html#a77c00b469d89c23bd35d2eb236140f70">y</a>());</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keywordflow">if</span> (dim == 3)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02787.html#ac72a74f7dde9500927f63515c3f0a2f3">z</a>();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>()*d.<a class="code" href="a02787.html#ac72a74f7dde9500927f63515c3f0a2f3">z</a>();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                coeffs[curIdx++] = weight*<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(d.<a class="code" href="a02787.html#ac72a74f7dde9500927f63515c3f0a2f3">z</a>());</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a06126.html">fvMotionSolverCoreTemplates.C</a>&quot;</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00875_html_a9687e6999ad5ae21072ec74623f049ff"><div class="ttname"><a href="a00875.html#a9687e6999ad5ae21072ec74623f049ff">Foam::fvMotionSolverCore::mesh</a></div><div class="ttdeci">const fvMesh &amp; mesh() const </div><div class="ttdoc">Return reference to the fvMesh to be moved. </div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00084">fvMotionSolverCore.H:84</a></div></div>
-<div class="ttc" id="a06126_html"><div class="ttname"><a href="a06126.html">fvMotionSolverCoreTemplates.C</a></div></div>
-<div class="ttc" id="a00875_html_a340bcd8f368950ff2a760d4665e0d18b"><div class="ttname"><a href="a00875.html#a340bcd8f368950ff2a760d4665e0d18b">Foam::fvMotionSolverCore::fvMotionSolverCore</a></div><div class="ttdeci">fvMotionSolverCore(const polyMesh &amp;)</div><div class="ttdoc">Construct from polyMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a06124_source.html#l00038">fvMotionSolverCore.C:38</a></div></div>
-<div class="ttc" id="a00875_html"><div class="ttname"><a href="a00875.html">Foam::fvMotionSolverCore</a></div><div class="ttdoc">Base class for fvMesh based motionSolvers. </div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00048">fvMotionSolverCore.H:48</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; word &gt;</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a00875_html_a186f296126b4dbbe0ed6493277b95063"><div class="ttname"><a href="a00875.html#a186f296126b4dbbe0ed6493277b95063">Foam::fvMotionSolverCore::cellMotionBoundaryTypes</a></div><div class="ttdeci">wordList cellMotionBoundaryTypes(const typename GeometricField&lt; Type, pointPatchField, pointMesh &gt;::GeometricBoundaryField &amp;pmUbf) const </div><div class="ttdoc">Create the corresponding patch types for cellMotion from those. </div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a00875_html_a1fc50149eff5c4755527aa31bbf37dbe"><div class="ttname"><a href="a00875.html#a1fc50149eff5c4755527aa31bbf37dbe">Foam::fvMotionSolverCore::fvMesh_</a></div><div class="ttdeci">const fvMesh &amp; fvMesh_</div><div class="ttdoc">The fvMesh to be moved. </div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00056">fvMotionSolverCore.H:56</a></div></div>
-<div class="ttc" id="a00875_html_a7188c24990fd960a93d388b233f86127"><div class="ttname"><a href="a00875.html#a7188c24990fd960a93d388b233f86127">Foam::fvMotionSolverCore::ClassName</a></div><div class="ttdeci">ClassName(&quot;displacementMotionSolver&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10725.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08824_source.html#l00043">direction.H:43</a></div></div>
+<div class="ttc" id="a02787_html_ac72a74f7dde9500927f63515c3f0a2f3"><div class="ttname"><a href="a02787.html#ac72a74f7dde9500927f63515c3f0a2f3">Foam::Vector::z</a></div><div class="ttdeci">const Cmpt &amp; z() const </div><div class="ttdef"><b>Definition:</b> <a href="a09046_source.html#l00077">VectorI.H:77</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02047_html_add43db75eb7f3015d19091b4033bf185"><div class="ttname"><a href="a02047.html#add43db75eb7f3015d19091b4033bf185">Foam::quadraticFitPolynomial::nTerms</a></div><div class="ttdeci">static label nTerms(const direction dim)</div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00054">quadraticFitPolynomial.H:54</a></div></div>
+<div class="ttc" id="a02047_html"><div class="ttname"><a href="a02047.html">Foam::quadraticFitPolynomial</a></div><div class="ttdoc">Quadratic polynomial for centred interpolation fitting. </div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00048">quadraticFitPolynomial.H:48</a></div></div>
+<div class="ttc" id="a02047_html_a42ccda6d304817a2e6b423f797eee8b0"><div class="ttname"><a href="a02047.html#a42ccda6d304817a2e6b423f797eee8b0">Foam::quadraticFitPolynomial::addCoeffs</a></div><div class="ttdeci">static void addCoeffs(scalar *coeffs, const vector &amp;d, const scalar weight, const direction dim)</div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00065">quadraticFitPolynomial.H:65</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a09045_html"><div class="ttname"><a href="a09045.html">vector.H</a></div></div>
+<div class="ttc" id="a02787_html_aeb7dc4a97968c543f58f9c7082e55757"><div class="ttname"><a href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">Foam::Vector::x</a></div><div class="ttdeci">const Cmpt &amp; x() const </div><div class="ttdef"><b>Definition:</b> <a href="a09046_source.html#l00065">VectorI.H:65</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
+<div class="ttc" id="a02787_html_a77c00b469d89c23bd35d2eb236140f70"><div class="ttname"><a href="a02787.html#a77c00b469d89c23bd35d2eb236140f70">Foam::Vector::y</a></div><div class="ttdeci">const Cmpt &amp; y() const </div><div class="ttdef"><b>Definition:</b> <a href="a09046_source.html#l00071">VectorI.H:71</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

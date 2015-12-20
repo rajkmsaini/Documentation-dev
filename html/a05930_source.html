@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_2ca874bc62d911776e3ddacf8682d732.html">mapping</a></li><li class="navelem"><a class="el" href="dir_cbc228e1f525a3b65e338d20f50eb120.html">fvFieldMappers</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_3ea1cee8f78db0948979819c6635ea76.html">singleCellFvMesh</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">MapFvSurfaceField.H</div>  </div>
+<div class="title">singleCellFvMeshInterpolate.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05930.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,98 +119,168 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Map Surface internal field on topology change.  This is a partial</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">    template specialisation, see MapGeometricFields.</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef MapFvSurfaceField_H</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define MapFvSurfaceField_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05929.html">singleCellFvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05160.html">calculatedFvPatchFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05512.html">directFvPatchFieldMapper.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07855.html">Time.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07891.html">Field.H</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06101.html">surfaceMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> MeshMapper&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a01398.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="a01396.html">MapInternalField</a>&lt;Type, MeshMapper, <a class="code" href="a02474.html">surfaceMesh</a>&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt; <a class="code" href="a02315.html#a7f0d8ba2b6a4c4c47fd025904753a3fc">singleCellFvMesh::interpolate</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a02315.html#a7f0d8ba2b6a4c4c47fd025904753a3fc">   40</a></span>&#160;(</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;) <span class="keyword">const</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01398.html#a4b5ef2a779d4e616135f3299e05a2e36">   46</a></span>&#160;    <a class="code" href="a01398.html#a4b5ef2a779d4e616135f3299e05a2e36">MapInternalField</a>()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> operator()</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="a00749.html">Field&lt;Type&gt;</a>&amp; field,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> MeshMapper&amp; mapper</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> MeshMapper&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> MapInternalField&lt;Type, MeshMapper, surfaceMesh&gt;::operator()</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a01398.html#a878e38f2cb52984f6f176ba0a5f21bf2">   59</a></span>&#160;(</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a00749.html">Field&lt;Type&gt;</a>&amp; field,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> MeshMapper&amp; mapper</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span> (field.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() != mapper.surfaceMap().sizeBeforeMapping())</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="stringliteral">&quot;void MapInternalField&lt;Type, MeshMapper, surfaceMesh&gt;::operator()\n&quot;</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="stringliteral">&quot;(\n&quot;</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="stringliteral">&quot;    Field&lt;Type&gt;&amp; field,\n&quot;</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="stringliteral">&quot;    const MeshMapper&amp; mapper\n&quot;</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="stringliteral">&quot;) const&quot;</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        )  &lt;&lt; <span class="stringliteral">&quot;Incompatible size before mapping.  Field size: &quot;</span> &lt;&lt; field.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;           &lt;&lt; <span class="stringliteral">&quot; map size: &quot;</span> &lt;&lt; mapper.surfaceMap().sizeBeforeMapping()</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;           &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    field.<a class="code" href="a00749.html#ad0217d852e72a5f1434582bed9e52a43">autoMap</a>(mapper.surfaceMap());</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Flip the flux</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a> flipFaces = mapper.surfaceMap().flipFaceFlux().toc();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// 1. Create the complete field with dummy patch fields</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;fvPatchField&lt;Type&gt;</a> &gt; patchFields(vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>().size());</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchFields, patchI)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        patchFields.set</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            patchI,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <a class="code" href="a00886.html">fvPatchField&lt;Type&gt;::New</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            (</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                <a class="code" href="a00197.html">calculatedFvPatchField&lt;Type&gt;::typeName</a>,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                <a class="code" href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a>()[patchI],</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                <a class="code" href="a00533.html">DimensionedField&lt;Type, volMesh&gt;::null</a>()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            )</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        );</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Create the complete field from the pieces</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a02618.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt; tresF</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    (</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <a class="code" href="a01179.html">IOobject</a></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            (</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                vf.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>(),</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                time().timeName(),</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                *<span class="keyword">this</span>,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <a class="code" href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <a class="code" href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            ),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            *<span class="keyword">this</span>,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            vf.<a class="code" href="a00533.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>(),</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <a class="code" href="a00755.html">Field&lt;Type&gt;</a>(1, <a class="code" href="a10725.html#ab45e56189711a2e5cdd381a0e2b6cc5c">gAverage</a>(vf)),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            patchFields</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        )</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    );</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; resF = tresF();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(flipFaces, i)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (flipFaces[i] &lt; field.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            field[flipFaces[i]] *= -1.0;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06101_html"><div class="ttname"><a href="a06101.html">surfaceMesh.H</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List&lt; Type &gt;::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div></div>
-<div class="ttc" id="a01396_html"><div class="ttname"><a href="a01396.html">Foam::MapInternalField</a></div><div class="ttdoc">Generic internal field mapper. For "real" mapping, add template specialisations for mapping of intern...</div><div class="ttdef"><b>Definition:</b> <a href="a07977_source.html#l00044">MapGeometricFields.H:44</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a00749_html_ad0217d852e72a5f1434582bed9e52a43"><div class="ttname"><a href="a00749.html#ad0217d852e72a5f1434582bed9e52a43">Foam::Field::autoMap</a></div><div class="ttdeci">void autoMap(const FieldMapper &amp;map)</div><div class="ttdoc">Map from self. </div><div class="ttdef"><b>Definition:</b> <a href="a07890_source.html#l00479">Field.C:479</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00057">Field.H:57</a></div></div>
-<div class="ttc" id="a01398_html_a4b5ef2a779d4e616135f3299e05a2e36"><div class="ttname"><a href="a01398.html#a4b5ef2a779d4e616135f3299e05a2e36">Foam::MapInternalField&lt; Type, MeshMapper, surfaceMesh &gt;::MapInternalField</a></div><div class="ttdeci">MapInternalField()</div><div class="ttdef"><b>Definition:</b> <a href="a05930_source.html#l00046">MapFvSurfaceField.H:46</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a07891_html"><div class="ttname"><a href="a07891.html">Field.H</a></div></div>
-<div class="ttc" id="a02474_html"><div class="ttname"><a href="a02474.html">Foam::surfaceMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a06101_source.html#l00047">surfaceMesh.H:47</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// 2. Change the fvPatchFields to the correct type using a mapper</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">//  constructor (with reference to the now correct internal field)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">typename</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>::</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        GeometricBoundaryField&amp; bf = resF.boundaryField();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (agglomerate())</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>(), patchI)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; agglom = patchFaceAgglomeration_[patchI];</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nAgglom = <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(agglom)+1;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="comment">// Use inverse of agglomeration. This is from agglomeration to</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="comment">// original (fine) mesh patch face.</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <a class="code" href="a01364.html">labelListList</a> coarseToFine(<a class="code" href="a10725.html#a5da5e7d950073675f3b3d26323a640db">invertOneToMany</a>(nAgglom, agglom));</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <a class="code" href="a10725.html#afacafc96b1d456a8ba5cfb6c77ff9eb7">inplaceReorder</a>(patchFaceMap_[patchI], coarseToFine);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a01364.html">scalarListList</a> coarseWeights(nAgglom);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(coarseToFine, coarseI)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; fineFaces = coarseToFine[coarseI];</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                coarseWeights[coarseI] = <a class="code" href="a10725.html#a62dd76284f68dfe04da50b9f2a51662d">scalarList</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                (</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    fineFaces.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(),</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    1.0/fineFaces.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                );</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            bf.<a class="code" href="a02031.html#affa9210cfaa91a145f3a9618d4ef3baf">set</a></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            (</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                patchI,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                <a class="code" href="a00886.html">fvPatchField&lt;Type&gt;::New</a></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                (</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI],</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                    <a class="code" href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a>()[patchI],</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                    resF.dimensionedInternalField(),</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                    <a class="code" href="a00034.html">agglomPatchFieldMapper</a>(coarseToFine, coarseWeights)</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                )</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            );</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>(), patchI)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <a class="code" href="a01364.html">labelList</a> map(<a class="code" href="a10725.html#a36af96cb841435845fffb4fe69208490">identity</a>(vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI].size()));</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            bf.<a class="code" href="a02031.html#affa9210cfaa91a145f3a9618d4ef3baf">set</a></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            (</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                patchI,</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                <a class="code" href="a00886.html">fvPatchField&lt;Type&gt;::New</a></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                (</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                    vf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI],</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                    <a class="code" href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a>()[patchI],</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                    resF.dimensionedInternalField(),</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                    <a class="code" href="a00540.html">directFvPatchFieldMapper</a>(map)</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                )</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            );</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    }</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordflow">return</span> tresF;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02315_html_a7f0d8ba2b6a4c4c47fd025904753a3fc"><div class="ttname"><a href="a02315.html#a7f0d8ba2b6a4c4c47fd025904753a3fc">Foam::singleCellFvMesh::interpolate</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; interpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;) const </div><div class="ttdoc">Map volField. Internal field set to average, patch fields straight. </div><div class="ttdef"><b>Definition:</b> <a href="a05930_source.html#l00040">singleCellFvMeshInterpolate.C:40</a></div></div>
+<div class="ttc" id="a07855_html"><div class="ttname"><a href="a07855.html">Time.H</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a00533_html_a6098093e7de06370342a85cfae8b31f5"><div class="ttname"><a href="a00533.html#a6098093e7de06370342a85cfae8b31f5">Foam::DimensionedField::dimensions</a></div><div class="ttdeci">const dimensionSet &amp; dimensions() const </div><div class="ttdoc">Return dimensions. </div><div class="ttdef"><b>Definition:</b> <a href="a07892_source.html#l00046">DimensionedFieldI.H:46</a></div></div>
+<div class="ttc" id="a10725_html_a36af96cb841435845fffb4fe69208490"><div class="ttname"><a href="a10725.html#a36af96cb841435845fffb4fe69208490">Foam::identity</a></div><div class="ttdeci">labelList identity(const label len)</div><div class="ttdoc">Create identity map (map[i] == i) of given length. </div><div class="ttdef"><b>Definition:</b> <a href="a07644_source.html#l00104">ListOps.C:104</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a05512_html"><div class="ttname"><a href="a05512.html">directFvPatchFieldMapper.H</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a05929_html"><div class="ttname"><a href="a05929.html">singleCellFvMesh.H</a></div></div>
+<div class="ttc" id="a10725_html_a62dd76284f68dfe04da50b9f2a51662d"><div class="ttname"><a href="a10725.html#a62dd76284f68dfe04da50b9f2a51662d">Foam::scalarList</a></div><div class="ttdeci">List&lt; scalar &gt; scalarList</div><div class="ttdoc">A List of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a08938_source.html#l00050">scalarList.H:50</a></div></div>
+<div class="ttc" id="a01179_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00118">IOobject.H:118</a></div></div>
+<div class="ttc" id="a03922_html_a658027ecaee450b6533bd8d019d2c1f5"><div class="ttname"><a href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a></div><div class="ttdeci">faceListList boundary(nPatches)</div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a02031_html_affa9210cfaa91a145f3a9618d4ef3baf"><div class="ttname"><a href="a02031.html#affa9210cfaa91a145f3a9618d4ef3baf">Foam::PtrList::set</a></div><div class="ttdeci">bool set(const label) const </div><div class="ttdoc">Is element set. </div><div class="ttdef"><b>Definition:</b> <a href="a07656_source.html#l00107">PtrListI.H:107</a></div></div>
+<div class="ttc" id="a10725_html_ab45e56189711a2e5cdd381a0e2b6cc5c"><div class="ttname"><a href="a10725.html#ab45e56189711a2e5cdd381a0e2b6cc5c">Foam::gAverage</a></div><div class="ttdeci">Type gAverage(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00571">FieldFieldFunctions.C:571</a></div></div>
+<div class="ttc" id="a00034_html"><div class="ttname"><a href="a00034.html">Foam::singleCellFvMesh::agglomPatchFieldMapper</a></div><div class="ttdoc">Patch field mapper class for agglomerated meshes. </div><div class="ttdef"><b>Definition:</b> <a href="a05929_source.html#l00090">singleCellFvMesh.H:90</a></div></div>
+<div class="ttc" id="a05160_html"><div class="ttname"><a href="a05160.html">calculatedFvPatchFields.H</a></div></div>
+<div class="ttc" id="a01179_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05"><div class="ttname"><a href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">Foam::IOobject::NO_READ</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00111">IOobject.H:111</a></div></div>
+<div class="ttc" id="a00921_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00686">GeometricField.C:686</a></div></div>
+<div class="ttc" id="a00540_html"><div class="ttname"><a href="a00540.html">Foam::directFvPatchFieldMapper</a></div><div class="ttdoc">direct fvPatchFieldMapper </div><div class="ttdef"><b>Definition:</b> <a href="a05512_source.html#l00045">directFvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a5da5e7d950073675f3b3d26323a640db"><div class="ttname"><a href="a10725.html#a5da5e7d950073675f3b3d26323a640db">Foam::invertOneToMany</a></div><div class="ttdeci">labelListList invertOneToMany(const label len, const labelUList &amp;)</div><div class="ttdoc">Invert one-to-many map. Unmapped elements will be size 0. </div><div class="ttdef"><b>Definition:</b> <a href="a07644_source.html#l00067">ListOps.C:67</a></div></div>
+<div class="ttc" id="a00197_html"><div class="ttname"><a href="a00197.html">Foam::calculatedFvPatchField</a></div><div class="ttdoc">This boundary condition is not designed to be evaluated; it is assmued that the value is assigned via...</div><div class="ttdef"><b>Definition:</b> <a href="a05158_source.html#l00065">calculatedFvPatchField.H:65</a></div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
+<div class="ttc" id="a10725_html_afacafc96b1d456a8ba5cfb6c77ff9eb7"><div class="ttname"><a href="a10725.html#afacafc96b1d456a8ba5cfb6c77ff9eb7">Foam::inplaceReorder</a></div><div class="ttdeci">void inplaceReorder(const labelUList &amp;oldToNew, ListType &amp;)</div><div class="ttdoc">Inplace reorder the elements of a list. </div><div class="ttdef"><b>Definition:</b> <a href="a07646_source.html#l00102">ListOpsTemplates.C:102</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_372f5e43f50c30dcf3bbe70654c3d27a.html">radiation</a></li><li class="navelem"><a class="el" href="dir_e8719ccd60760366888bb431a21ef811.html">submodels</a></li><li class="navelem"><a class="el" href="dir_89d39245f62a7d3767728b25260224c2.html">sootModel</a></li><li class="navelem"><a class="el" href="dir_b415c0e663bba70eeadcac3677299a6b.html">mixtureFractionSoot</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_372f5e43f50c30dcf3bbe70654c3d27a.html">radiation</a></li><li class="navelem"><a class="el" href="dir_530cedc3d4dca2a21c1df83b126c2fbd.html">derivedFvPatchFields</a></li><li class="navelem"><a class="el" href="dir_798de791da584d01cb890e88357400cf.html">MarshakRadiation</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">mixtureFractionSoot.C</div>  </div>
+<div class="title">MarshakRadiationFvPatchScalarField.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10103.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,181 +119,217 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10104.html">mixtureFractionSoot.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10145.html">singleStepReactingMixture.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ThermoType&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">const</span> <a class="code" href="a02311.html">Foam::singleStepReactingMixture&lt;ThermoType&gt;</a>&amp;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a01508.html">Foam::radiation::mixtureFractionSoot&lt;ThermoType&gt;::checkThermo</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;(</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> fluidThermo&amp; thermo</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10675.html#a7f38c7df863d37f5357047d27dab7711">isA</a>&lt;singleStepReactingMixture&lt;ThermoType&gt; &gt;(thermo))</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">dynamic_cast&lt;</span><span class="keyword">const </span>singleStepReactingMixture&lt;ThermoType&gt;&amp; <span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        );</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="stringliteral">&quot;template&lt;class ThermoType&gt; &quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="stringliteral">&quot;Foam::radiation::mixtureFractionSoot &quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="stringliteral">&quot;(&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                <span class="stringliteral">&quot;const dictionary&amp;, &quot;</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                <span class="stringliteral">&quot;const fvMesh&amp;&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="stringliteral">&quot;)&quot;</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        )</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Inconsistent thermo package for &quot;</span> &lt;&lt; thermo.type()</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Please select a thermo package based on &quot;</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;singleStepReactingMixture&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">dynamic_cast&lt;</span><span class="keyword">const </span>singleStepReactingMixture&lt;ThermoType&gt;&amp; <span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        (</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        );</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::MarshakRadiationFvPatchScalarField</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Group</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    grpThermoBoundaryConditions</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    A &#39;mixed&#39; boundary condition that implements a Marshak condition for the</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    incident radiation field (usually written as G)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    The radiation temperature is retrieved from the mesh database, using a</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    user specified temperature field name.</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    \heading Patch usage</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    \table</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">        Property     | Description             | Required    | Default value</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">        T            | temperature field name  | no          | T</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">    \endtable</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">    Example of the boundary condition specification:</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">    \verbatim</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">    myPatch</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">    {</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">        type            MarshakRadiation;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">        T               T;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">        value           uniform 0;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">    }</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">    \endverbatim</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">SeeAlso</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">    Foam::radiationCoupledBase</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">    Foam::mixedFvPatchField</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">    MarshakRadiationFvPatchScalarField.C</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifndef MarshakRadiationMixedFvPatchField_H</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define MarshakRadiationMixedFvPatchField_H</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05185.html">mixedFvPatchFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10107.html">radiationCoupledBase.H</a>&quot;</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ThermoType&gt;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<a class="code" href="a01508.html#a8b602a1a5e61ff243518f0dfd87c05dc">Foam::radiation::mixtureFractionSoot&lt;ThermoType&gt;::mixtureFractionSoot</a></div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a01508.html#a8b602a1a5e61ff243518f0dfd87c05dc">   74</a></span>&#160;(</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; modelType</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">             Class MarshakRadiationFvPatchScalarField Declaration</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">class </span>MarshakRadiationFvPatchScalarField</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a02369.html">sootModel</a>(dict, mesh, modelType),</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    soot_</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    (</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        (</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="stringliteral">&quot;soot&quot;</span>,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            mesh_.time().timeName(),</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            mesh_,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            IOobject::MUST_READ,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            IOobject::AUTO_WRITE</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        ),</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        mesh_</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    ),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    coeffsDict_(dict.<a class="code" href="a00518.html#a9162446f5a508ee28a210d2bc19d2d1a">subOrEmptyDict</a>(modelType + <span class="stringliteral">&quot;Coeffs&quot;</span>)),</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    nuSoot_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(coeffsDict_.lookup(<span class="stringliteral">&quot;nuSoot&quot;</span>))),</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    Wsoot_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(coeffsDict_.lookup(<span class="stringliteral">&quot;Wsoot&quot;</span>))),</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    sootMax_(-1),</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    mappingFieldName_</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    (</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        coeffsDict_.lookupOrDefault&lt;<a class="code" href="a02856.html">word</a>&gt;(<span class="stringliteral">&quot;mappingFieldName&quot;</span>, <span class="stringliteral">&quot;none&quot;</span>)</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    ),</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    mapFieldMax_(1),</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    thermo_(mesh.<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a00837.html">fluidThermo</a>&gt;(<a class="code" href="a04384.html#a2ce6e6886eaffc8e3b0677e78ed12560">basicThermo::dictName</a>)),</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    mixture_(checkThermo(thermo_))</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02083.html">Reaction&lt;ThermoType&gt;</a>&amp; <a class="code" href="a04399.html#a31e20dded3aa39de922899a34687efcc">reaction</a> = mixture_.operator[](0);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">scalarList</a>&amp; specieStoichCoeffs(mixture_.specieStoichCoeffs());</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    scalar totalMol = 0.0;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>(), i)</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> speciei = reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>()[i].index;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        totalMol += <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(specieStoichCoeffs[speciei]);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    totalMol += nuSoot_;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="a01355.html">scalarList</a> Xi(reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>().size());</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    scalar Wm = 0.0;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>(), i)</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> speciei = reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>()[i].index;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        Xi[i] = <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(specieStoichCoeffs[speciei])/totalMol;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        Wm += Xi[i]*mixture_.speciesData()[speciei].W();</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">const</span> scalar XSoot = nuSoot_/totalMol;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    Wm += XSoot*Wsoot_;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    sootMax_ = XSoot*Wsoot_/Wm;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a> &lt;&lt; <span class="stringliteral">&quot;Maximum soot mass concentrations: &quot;</span> &lt;&lt; sootMax_ &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">if</span> (mappingFieldName_ == <span class="stringliteral">&quot;none&quot;</span>)</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> index = reaction.<a class="code" href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">rhs</a>()[0].index;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        mappingFieldName_ = mixture_.Y(index).name();</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> mapFieldIndex = mixture_.species()[mappingFieldName_];</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    mapFieldMax_ = mixture_.Yprod0()[mapFieldIndex];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">public</span> mixedFvPatchScalarField,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">public</span> radiationCoupledBase</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//- Name of temperature field</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a01434.html">   87</a></span>&#160;        <a class="code" href="a02869.html">word</a> TName_;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="a01434.html#a96cb5a1eacffac2d059547b9752b7dfd">TypeName</a>(<span class="stringliteral">&quot;MarshakRadiation&quot;</span>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- Construct from patch and internal field</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        (</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        );</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Construct from patch, internal field and dictionary</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        (</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;,</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        );</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="comment">//- Construct by mapping given MarshakRadiationFvPatchField onto a new</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//  patch</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        (</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01434.html">MarshakRadiationFvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;,</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        );</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">//- Construct as copy</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        (</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01434.html">MarshakRadiationFvPatchScalarField</a>&amp;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        );</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a> <a class="code" href="a01434.html#afdeceecb1c75e9ccc98c2f489fe8fa00">clone</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            (</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keyword">new</span> <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            );</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="comment">//- Construct as copy setting internal field reference</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="a01434.html#afdeceecb1c75e9ccc98c2f489fe8fa00">  139</a></span>&#160;        <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        (</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01434.html">MarshakRadiationFvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        );</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ThermoType&gt;</div>
-<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="a01508.html#a8dc6aa4707045796fe4e825feb9b47cf">  151</a></span>&#160;<a class="code" href="a01508.html#a8dc6aa4707045796fe4e825feb9b47cf">Foam::radiation::mixtureFractionSoot&lt;ThermoType&gt;::~mixtureFractionSoot</a>()</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;{}</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ThermoType&gt;</div>
-<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="a01508.html#a3ae44b28050c3aa494c1d8e18cf618c1">  158</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01508.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::radiation::mixtureFractionSoot&lt;ThermoType&gt;::correct</a>()</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;{</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; mapField =</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        mesh_.lookupObject&lt;<a class="code" href="a00913.html">volScalarField</a>&gt;(mappingFieldName_);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    soot_ = sootMax_*(mapField/mapFieldMax_);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01508_html_a8b602a1a5e61ff243518f0dfd87c05dc"><div class="ttname"><a href="a01508.html#a8b602a1a5e61ff243518f0dfd87c05dc">Foam::radiation::mixtureFractionSoot::mixtureFractionSoot</a></div><div class="ttdeci">mixtureFractionSoot(const dictionary &amp;dict, const fvMesh &amp;mesh, const word &amp;modelType)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00074">mixtureFractionSoot.C:74</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a10145_html"><div class="ttname"><a href="a10145.html">singleStepReactingMixture.H</a></div></div>
-<div class="ttc" id="a02083_html_aa63a0b959ae5fa84f216315302b5c4ee"><div class="ttname"><a href="a02083.html#aa63a0b959ae5fa84f216315302b5c4ee">Foam::Reaction::rhs</a></div><div class="ttdeci">const List&lt; specieCoeffs &gt; &amp; rhs() const </div><div class="ttdef"><b>Definition:</b> <a href="a10272_source.html#l00059">ReactionI.H:59</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01508_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a01508.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::radiation::mixtureFractionSoot::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Main update/correction routine. </div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00158">mixtureFractionSoot.C:158</a></div></div>
-<div class="ttc" id="a04384_html_a2ce6e6886eaffc8e3b0677e78ed12560"><div class="ttname"><a href="a04384.html#a2ce6e6886eaffc8e3b0677e78ed12560">dictName</a></div><div class="ttdeci">const word dictName(&quot;particleTrackDict&quot;)</div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10104_html"><div class="ttname"><a href="a10104.html">mixtureFractionSoot.H</a></div></div>
-<div class="ttc" id="a01678_html_affcae20935bdf1726ec1f822228a2330"><div class="ttname"><a href="a01678.html#affcae20935bdf1726ec1f822228a2330">Foam::objectRegistry::lookupObject</a></div><div class="ttdeci">const Type &amp; lookupObject(const word &amp;name) const </div><div class="ttdoc">Lookup and return the object of the given Type. </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00165">objectRegistryTemplates.C:165</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a04399_html_a31e20dded3aa39de922899a34687efcc"><div class="ttname"><a href="a04399.html#a31e20dded3aa39de922899a34687efcc">reaction</a></div><div class="ttdeci">Info&lt;&lt; &quot;Creating reaction model\n&quot;&lt;&lt; endl;autoPtr&lt; combustionModels::psiCombustionModel &gt; reaction(combustionModels::psiCombustionModel::New(mesh))</div></div>
-<div class="ttc" id="a10675_html_a7f38c7df863d37f5357047d27dab7711"><div class="ttname"><a href="a10675.html#a7f38c7df863d37f5357047d27dab7711">Foam::isA</a></div><div class="ttdeci">bool isA(const Type &amp;t)</div><div class="ttdoc">Check if a dynamic_cast to typeid is possible. </div><div class="ttdef"><b>Definition:</b> <a href="a07813_source.html#l00134">typeInfo.H:134</a></div></div>
-<div class="ttc" id="a00837_html"><div class="ttname"><a href="a00837.html">Foam::fluidThermo</a></div><div class="ttdoc">Fundamental fluid thermodynamic properties. </div><div class="ttdef"><b>Definition:</b> <a href="a09885_source.html#l00049">fluidThermo.H:49</a></div></div>
-<div class="ttc" id="a02083_html"><div class="ttname"><a href="a02083.html">Foam::Reaction</a></div><div class="ttdoc">Simple extension of ReactionThermo to handle reaction kinetics in addition to the equilibrium thermod...</div><div class="ttdef"><b>Definition:</b> <a href="a10271_source.html#l00053">Reaction.H:53</a></div></div>
-<div class="ttc" id="a04395_html_a980bff86900317ef8c7c787f7ad804f3"><div class="ttname"><a href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a></div><div class="ttdeci">psiReactionThermo &amp; thermo</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00032">createFields.H:32</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a08879_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08879_source.html#l00038">doubleScalar.C:38</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a01508_html_a8dc6aa4707045796fe4e825feb9b47cf"><div class="ttname"><a href="a01508.html#a8dc6aa4707045796fe4e825feb9b47cf">Foam::radiation::mixtureFractionSoot::~mixtureFractionSoot</a></div><div class="ttdeci">virtual ~mixtureFractionSoot()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00151">mixtureFractionSoot.C:151</a></div></div>
-<div class="ttc" id="a02311_html"><div class="ttname"><a href="a02311.html">Foam::singleStepReactingMixture</a></div><div class="ttdoc">Single step reacting mixture. </div><div class="ttdef"><b>Definition:</b> <a href="a10145_source.html#l00050">singleStepReactingMixture.H:50</a></div></div>
-<div class="ttc" id="a02369_html"><div class="ttname"><a href="a02369.html">Foam::radiation::sootModel</a></div><div class="ttdoc">Base class for soor models. </div><div class="ttdef"><b>Definition:</b> <a href="a10110_source.html#l00053">sootModel.H:53</a></div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a01508_html"><div class="ttname"><a href="a01508.html">Foam::radiation::mixtureFractionSoot</a></div><div class="ttdoc">This soot model is purely an state model. The ammount of soot produced is determined by a single step...</div><div class="ttdef"><b>Definition:</b> <a href="a10104_source.html#l00079">mixtureFractionSoot.H:79</a></div></div>
-<div class="ttc" id="a00518_html_a9162446f5a508ee28a210d2bc19d2d1a"><div class="ttname"><a href="a00518.html#a9162446f5a508ee28a210d2bc19d2d1a">Foam::dictionary::subOrEmptyDict</a></div><div class="ttdeci">dictionary subOrEmptyDict(const word &amp;, const bool mustRead=false) const </div><div class="ttdoc">Find and return a sub-dictionary as a copy, or. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00675">dictionary.C:675</a></div></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">//- Construct and return a clone setting internal field reference</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a> <a class="code" href="a01434.html#afdeceecb1c75e9ccc98c2f489fe8fa00">clone</a></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        (</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            (</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                <span class="keyword">new</span> <a class="code" href="a01434.html#a89f6c1b172804866c878af6fc6f50920">MarshakRadiationFvPatchScalarField</a>(*<span class="keyword">this</span>, iF)</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            );</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        }</div>
+<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="a01434.html#a8a53cadd8227f307947ec9c8750e5f11">  156</a></span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="comment">// Member functions</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">// Access</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            <span class="comment">//- Return the temperature field name</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a01434.html#ac619fb4bf9a1c7ad3b1850a280ddfc4d">TName</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keyword">            </span>{</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                <span class="keywordflow">return</span> TName_;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            <span class="comment">//- Return reference to the temperature field name to allow</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <span class="comment">//  adjustment</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a01434.html#ac619fb4bf9a1c7ad3b1850a280ddfc4d">TName</a>()</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            {</div>
+<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="a01434.html#ac619fb4bf9a1c7ad3b1850a280ddfc4d">  172</a></span>&#160;                <span class="keywordflow">return</span> TName_;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="comment">// Mapping functions</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="comment">//- Map (and resize as needed) from self given a mapping object</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="a01434.html#a08d80268074d15cddec7001fc0a33b1b">  179</a></span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01434.html#a0ab0c43ce90d756c88dd81e3d0a9eef5">autoMap</a></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            (</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            );</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            <span class="comment">//- Reverse map the given fvPatchField onto this fvPatchField</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01434.html#a713277715ccc0a5ef466b0516d44731f">rmap</a></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            (</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00886.html">fvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;            );</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="comment">// Evaluation functions</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            <span class="comment">//- Update the coefficients associated with the patch field</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01434.html#a7e24eafac629d3733181cd942d4c902f">updateCoeffs</a>();</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="comment">// I-O</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="comment">//- Write</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01434.html#a0941061ad5a26be83b4107d05750ace6">write</a>(<a class="code" href="a01736.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;};</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01434_html_a96cb5a1eacffac2d059547b9752b7dfd"><div class="ttname"><a href="a01434.html#a96cb5a1eacffac2d059547b9752b7dfd">Foam::MarshakRadiationFvPatchScalarField::TypeName</a></div><div class="ttdeci">TypeName(&quot;MarshakRadiation&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a01434_html_a0ab0c43ce90d756c88dd81e3d0a9eef5"><div class="ttname"><a href="a01434.html#a0ab0c43ce90d756c88dd81e3d0a9eef5">Foam::MarshakRadiationFvPatchScalarField::autoMap</a></div><div class="ttdeci">virtual void autoMap(const fvPatchFieldMapper &amp;)</div><div class="ttdoc">Map (and resize as needed) from self given a mapping object. </div><div class="ttdef"><b>Definition:</b> <a href="a10102_source.html#l00136">MarshakRadiationFvPatchScalarField.C:136</a></div></div>
+<div class="ttc" id="a01434_html_a89f6c1b172804866c878af6fc6f50920"><div class="ttname"><a href="a01434.html#a89f6c1b172804866c878af6fc6f50920">Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField</a></div><div class="ttdeci">MarshakRadiationFvPatchScalarField(const fvPatch &amp;, const DimensionedField&lt; scalar, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a10102_source.html#l00036">MarshakRadiationFvPatchScalarField.C:36</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a01434_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a01434.html#a7e24eafac629d3733181cd942d4c902f">Foam::MarshakRadiationFvPatchScalarField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients associated with the patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a10102_source.html#l00156">MarshakRadiationFvPatchScalarField.C:156</a></div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a01434_html_ac619fb4bf9a1c7ad3b1850a280ddfc4d"><div class="ttname"><a href="a01434.html#ac619fb4bf9a1c7ad3b1850a280ddfc4d">Foam::MarshakRadiationFvPatchScalarField::TName</a></div><div class="ttdeci">const word &amp; TName() const </div><div class="ttdoc">Return the temperature field name. </div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00172">MarshakRadiationFvPatchScalarField.H:172</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a10107_html"><div class="ttname"><a href="a10107.html">radiationCoupledBase.H</a></div></div>
+<div class="ttc" id="a01434_html_a713277715ccc0a5ef466b0516d44731f"><div class="ttname"><a href="a01434.html#a713277715ccc0a5ef466b0516d44731f">Foam::MarshakRadiationFvPatchScalarField::rmap</a></div><div class="ttdeci">virtual void rmap(const fvPatchScalarField &amp;, const labelList &amp;)</div><div class="ttdoc">Reverse map the given fvPatchField onto this fvPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a10102_source.html#l00146">MarshakRadiationFvPatchScalarField.C:146</a></div></div>
+<div class="ttc" id="a01434_html"><div class="ttname"><a href="a01434.html">Foam::MarshakRadiationFvPatchScalarField</a></div><div class="ttdoc">A &#39;mixed&#39; boundary condition that implements a Marshak condition for the incident radiation field (us...</div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00087">MarshakRadiationFvPatchScalarField.H:87</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a05185_html"><div class="ttname"><a href="a05185.html">mixedFvPatchFields.H</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a01434_html_afdeceecb1c75e9ccc98c2f489fe8fa00"><div class="ttname"><a href="a01434.html#afdeceecb1c75e9ccc98c2f489fe8fa00">Foam::MarshakRadiationFvPatchScalarField::clone</a></div><div class="ttdeci">virtual tmp&lt; fvPatchScalarField &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a10103_source.html#l00139">MarshakRadiationFvPatchScalarField.H:139</a></div></div>
+<div class="ttc" id="a01434_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a01434.html#a0941061ad5a26be83b4107d05750ace6">Foam::MarshakRadiationFvPatchScalarField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a10102_source.html#l00193">MarshakRadiationFvPatchScalarField.C:193</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

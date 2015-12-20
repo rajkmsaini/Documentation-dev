@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_efb3ad8e9cbb3414a44ef268cb98c0b2.html">field</a></li><li class="navelem"><a class="el" href="dir_3cf7ed893feab86642c4cf2ee92ffde8.html">fieldCoordinateSystemTransform</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_72b2b5518d1565784443265ec6729f79.html">parallel</a></li><li class="navelem"><a class="el" href="dir_521ea32879fff4cdc7c502a515533bf9.html">reconstruct</a></li><li class="navelem"><a class="el" href="dir_8ecde0336c8113967f1acbb6f1b64eef.html">reconstruct</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fieldCoordinateSystemTransformTemplates.C</div>  </div>
+<div class="title">processorMeshes.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09127.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,149 +119,144 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09124.html">fieldCoordinateSystemTransform.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07998.html">transformGeometricField.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00753.html#a705d7df13808264fa2c3eb588f7a4ad8">Foam::fieldCoordinateSystemTransform::transformField</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00753.html#a705d7df13808264fa2c3eb588f7a4ad8">   36</a></span>&#160;(</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> Type&amp; field</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName = field.name() + <span class="stringliteral">&quot;:Transformed&quot;</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span> (!obr_.foundObject&lt;Type&gt;(fieldName))</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        obr_.store</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        (</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="keyword">new</span> Type</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            (</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                    fieldName,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                    obr_.time().timeName(),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                    obr_,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                    IOobject::READ_IF_PRESENT,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                    IOobject::NO_WRITE</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                ),</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                field</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            )</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        );</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    Type&amp; transField =</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">const_cast&lt;</span>Type&amp;<span class="keyword">&gt;</span>(obr_.lookupObject&lt;Type&gt;(fieldName));</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    transField == field;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a00526.html">dimensionedTensor</a> <a class="code" href="a08817.html#a45e6077c6122a27618617931f817bc2c">R</a>(<span class="stringliteral">&quot;R&quot;</span>, field.dimensions(), coordSys_.R().R());</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::processorMeshes</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Container for processor mesh addressing.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    processorMeshes.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef processorMeshes_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define processorMeshes_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07655.html">PtrList.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07751.html">IOobjectList.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08886.html">labelIOList.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">                     Class processorMeshes Declaration</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a01991.html">   52</a></span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span><a class="code" href="a01991.html">processorMeshes</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02869.html">word</a> meshName_;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Processor databases</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;Time&gt;</a>&amp; databases_;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- List of processor meshes</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;fvMesh&gt;</a> meshes_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//- List of processor point addressing lists</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a> pointProcAddressing_;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="a10675.html#a919915170941701c1223291531ad010c">Foam::transform</a>(transField, <a class="code" href="a08817.html#a45e6077c6122a27618617931f817bc2c">R</a>, transField);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    writing field &quot;</span> &lt;&lt; transField.name() &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    transField.<a class="code" href="a01725.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a>();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00753.html#aa4d9665590bd54ba500567b9d4780bb4">Foam::fieldCoordinateSystemTransform::transform</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="a00753.html#aa4d9665590bd54ba500567b9d4780bb4">   78</a></span>&#160;(</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> vfType;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> sfType;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span> (obr_.foundObject&lt;vfType&gt;(fieldName))</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() &lt;&lt; <span class="stringliteral">&quot;: Field &quot;</span> &lt;&lt; fieldName &lt;&lt; <span class="stringliteral">&quot; already in database&quot;</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        transformField&lt;vfType&gt;(obr_.lookupObject&lt;vfType&gt;(fieldName));</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (obr_.foundObject&lt;sfType&gt;(fieldName))</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() &lt;&lt; <span class="stringliteral">&quot;: Field &quot;</span> &lt;&lt; fieldName &lt;&lt; <span class="stringliteral">&quot; already in database&quot;</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//- List of processor face addressing lists</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a> faceProcAddressing_;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- List of processor cell addressing lists</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a> cellProcAddressing_;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//- List of processor boundary addressing lists</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a> boundaryProcAddressing_;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="comment">//- Read all meshes</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordtype">void</span> read();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a01991.html">processorMeshes</a>(<span class="keyword">const</span> <a class="code" href="a01991.html">processorMeshes</a>&amp;);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a01991.html">processorMeshes</a>&amp;);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a01991.html">processorMeshes</a>(<a class="code" href="a02031.html">PtrList&lt;Time&gt;</a>&amp; databases, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a04319.html#a512540e874d513c0f7b5d869c11e75af">meshName</a>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">//- Update the meshes based on the mesh files saved in time directories</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a01916.html#a5067e839ea499ba999eae055839be5dd">fvMesh::readUpdateState</a> <a class="code" href="a01991.html#a925fa3a488984b0be0ea1429c5aba4cb">readUpdate</a>();</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        transformField&lt;sfType&gt;(obr_.lookupObject&lt;sfType&gt;(fieldName));</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <a class="code" href="a01170.html">IOobject</a> fieldHeader</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        (</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            fieldName,</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            obr_.time().timeName(),</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            obr_,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            IOobject::MUST_READ,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            IOobject::NO_WRITE</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        );</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">if</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        (</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            fieldHeader.headerOk()</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;         &amp;&amp; fieldHeader.headerClassName() == vfType::typeName</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        )</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() &lt;&lt; <span class="stringliteral">&quot;: Field &quot;</span> &lt;&lt; fieldName &lt;&lt; <span class="stringliteral">&quot; read from file&quot;</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            transformField&lt;vfType&gt;(obr_.lookupObject&lt;vfType&gt;(fieldName));</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">//- Reconstruct point position after motion in parallel</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a01991.html#a3c986dd25c16cb5d2a3c3ecf708fbe10">reconstructPoints</a>(<a class="code" href="a00876.html">fvMesh</a>&amp;);</div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="a01991.html#a6ebc65c25713d7926e644c3bf8053d6e">  105</a></span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;fvMesh&gt;</a>&amp; <a class="code" href="a01991.html#a6ebc65c25713d7926e644c3bf8053d6e">meshes</a>()</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordflow">return</span> meshes_;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        }</div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="a01991.html#af6b25671cf6c3fccbf53c66540827474">  110</a></span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; <a class="code" href="a01991.html#af6b25671cf6c3fccbf53c66540827474">pointProcAddressing</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keywordflow">return</span> pointProcAddressing_;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a01991.html#a8568efcc5d03390aad5b472c14febe96">  115</a></span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; <a class="code" href="a01991.html#a8568efcc5d03390aad5b472c14febe96">faceProcAddressing</a>()</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="keywordflow">return</span> faceProcAddressing_;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        }</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="a01991.html#ac2aab8150305c790d572e9952b5ff280">  120</a></span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; <a class="code" href="a01991.html#ac2aab8150305c790d572e9952b5ff280">cellProcAddressing</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keywordflow">return</span> cellProcAddressing_;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        }</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="a01991.html#a995281b8d8f673e95fa6dbcb669fc14e">  125</a></span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; <a class="code" href="a01991.html#a995281b8d8f673e95fa6dbcb669fc14e">boundaryProcAddressing</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <span class="keywordflow">return</span> boundaryProcAddressing_;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        (</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            fieldHeader.headerOk()</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;         &amp;&amp; fieldHeader.headerClassName() == sfType::typeName</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        )</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            {</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() &lt;&lt; <span class="stringliteral">&quot;: Field &quot;</span> &lt;&lt; fieldName &lt;&lt; <span class="stringliteral">&quot; read from file&quot;</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            transformField&lt;sfType&gt;(obr_.lookupObject&lt;sfType&gt;(fieldName));</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        }</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    }</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00753_html_aa4d9665590bd54ba500567b9d4780bb4"><div class="ttname"><a href="a00753.html#aa4d9665590bd54ba500567b9d4780bb4">Foam::fieldCoordinateSystemTransform::transform</a></div><div class="ttdeci">void transform(const word &amp;fieldName) const </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00078">fieldCoordinateSystemTransformTemplates.C:78</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned</a></div><div class="ttdoc">Generic dimensioned Type class. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a07998_html"><div class="ttname"><a href="a07998.html">transformGeometricField.H</a></div><div class="ttdoc">Spatial transformation functions for FieldFields. </div></div>
-<div class="ttc" id="a01725_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01725.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a00753_html_a705d7df13808264fa2c3eb588f7a4ad8"><div class="ttname"><a href="a00753.html#a705d7df13808264fa2c3eb588f7a4ad8">Foam::fieldCoordinateSystemTransform::transformField</a></div><div class="ttdeci">void transformField(const Type &amp;field) const </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00036">fieldCoordinateSystemTransformTemplates.C:36</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a10675_html_a919915170941701c1223291531ad010c"><div class="ttname"><a href="a10675.html#a919915170941701c1223291531ad010c">Foam::transform</a></div><div class="ttdeci">dimensionSet transform(const dimensionSet &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a07827_source.html#l00465">dimensionSet.C:465</a></div></div>
-<div class="ttc" id="a09124_html"><div class="ttname"><a href="a09124.html">fieldCoordinateSystemTransform.H</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a08817_html_a45e6077c6122a27618617931f817bc2c"><div class="ttname"><a href="a08817.html#a45e6077c6122a27618617931f817bc2c">R</a></div><div class="ttdeci">#define R(A, B, C, D, E, F, K, M)                                                                                            </div></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;};</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a07655_html"><div class="ttname"><a href="a07655.html">PtrList.H</a></div></div>
+<div class="ttc" id="a01991_html_a8568efcc5d03390aad5b472c14febe96"><div class="ttname"><a href="a01991.html#a8568efcc5d03390aad5b472c14febe96">Foam::processorMeshes::faceProcAddressing</a></div><div class="ttdeci">PtrList&lt; labelIOList &gt; &amp; faceProcAddressing()</div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00115">processorMeshes.H:115</a></div></div>
+<div class="ttc" id="a01991_html_af6b25671cf6c3fccbf53c66540827474"><div class="ttname"><a href="a01991.html#af6b25671cf6c3fccbf53c66540827474">Foam::processorMeshes::pointProcAddressing</a></div><div class="ttdeci">const PtrList&lt; labelIOList &gt; &amp; pointProcAddressing() const </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00110">processorMeshes.H:110</a></div></div>
+<div class="ttc" id="a01991_html_a3c986dd25c16cb5d2a3c3ecf708fbe10"><div class="ttname"><a href="a01991.html#a3c986dd25c16cb5d2a3c3ecf708fbe10">Foam::processorMeshes::reconstructPoints</a></div><div class="ttdeci">void reconstructPoints(fvMesh &amp;)</div><div class="ttdoc">Reconstruct point position after motion in parallel. </div><div class="ttdef"><b>Definition:</b> <a href="a09126_source.html#l00205">processorMeshes.C:205</a></div></div>
+<div class="ttc" id="a01991_html_a925fa3a488984b0be0ea1429c5aba4cb"><div class="ttname"><a href="a01991.html#a925fa3a488984b0be0ea1429c5aba4cb">Foam::processorMeshes::readUpdate</a></div><div class="ttdeci">fvMesh::readUpdateState readUpdate()</div><div class="ttdoc">Update the meshes based on the mesh files saved in time directories. </div><div class="ttdef"><b>Definition:</b> <a href="a09126_source.html#l00154">processorMeshes.C:154</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a01991_html"><div class="ttname"><a href="a01991.html">Foam::processorMeshes</a></div><div class="ttdoc">Container for processor mesh addressing. </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00052">processorMeshes.H:52</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01991_html_a6ebc65c25713d7926e644c3bf8053d6e"><div class="ttname"><a href="a01991.html#a6ebc65c25713d7926e644c3bf8053d6e">Foam::processorMeshes::meshes</a></div><div class="ttdeci">PtrList&lt; fvMesh &gt; &amp; meshes()</div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00105">processorMeshes.H:105</a></div></div>
+<div class="ttc" id="a01991_html_a995281b8d8f673e95fa6dbcb669fc14e"><div class="ttname"><a href="a01991.html#a995281b8d8f673e95fa6dbcb669fc14e">Foam::processorMeshes::boundaryProcAddressing</a></div><div class="ttdeci">const PtrList&lt; labelIOList &gt; &amp; boundaryProcAddressing() const </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00125">processorMeshes.H:125</a></div></div>
+<div class="ttc" id="a01991_html_ac2aab8150305c790d572e9952b5ff280"><div class="ttname"><a href="a01991.html#ac2aab8150305c790d572e9952b5ff280">Foam::processorMeshes::cellProcAddressing</a></div><div class="ttdeci">const PtrList&lt; labelIOList &gt; &amp; cellProcAddressing() const </div><div class="ttdef"><b>Definition:</b> <a href="a09127_source.html#l00120">processorMeshes.H:120</a></div></div>
+<div class="ttc" id="a08886_html"><div class="ttname"><a href="a08886.html">labelIOList.H</a></div></div>
+<div class="ttc" id="a01916_html_a5067e839ea499ba999eae055839be5dd"><div class="ttname"><a href="a01916.html#a5067e839ea499ba999eae055839be5dd">Foam::polyMesh::readUpdateState</a></div><div class="ttdeci">readUpdateState</div><div class="ttdoc">Enumeration defining the state of the mesh after a read update. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00088">polyMesh.H:88</a></div></div>
+<div class="ttc" id="a07751_html"><div class="ttname"><a href="a07751.html">IOobjectList.H</a></div></div>
+<div class="ttc" id="a04319_html_a512540e874d513c0f7b5d869c11e75af"><div class="ttname"><a href="a04319.html#a512540e874d513c0f7b5d869c11e75af">meshName</a></div><div class="ttdeci">static char meshName[]</div><div class="ttdef"><b>Definition:</b> <a href="a04319_source.html#l00007">globalFoam.H:7</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_d25ce32b8f85f1a08cd016b541e3d76e.html">derived</a></li><li class="navelem"><a class="el" href="dir_8385f506955519e7fb605d498ea369ab.html">basicKinematicCollidingParcel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_0edaa91cbfb55b9d84a014d50382efcb.html">DSMC</a></li><li class="navelem"><a class="el" href="dir_aa5533d18bfe518db8350fc74caf402d.html">submodels</a></li><li class="navelem"><a class="el" href="dir_d519d228e0cafd55f925ef35f21d9443.html">WallInteractionModel</a></li><li class="navelem"><a class="el" href="dir_d89b01a852ad50fb51f68233874601d5.html">WallInteractionModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">makeBasicKinematicCollidingParcelSubmodels.C</div>  </div>
+<div class="title">WallInteractionModel.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06438.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,52 +121,87 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06399.html">basicKinematicCollidingCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06439.html">WallInteractionModel.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06463.html">makeParcelCloudFunctionObjects.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Kinematic</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06466.html">makeParcelForces.H</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06465.html">makeParcelDispersionModels.H</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06468.html">makeParcelInjectionModels.H</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06464.html">makeParcelCollisionModels.H</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06469.html">makeParcelPatchInteractionModels.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06470.html">makeParcelStochasticCollisionModels.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06471.html">makeParcelSurfaceFilmModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a02836.html#aa9adc0334215c583a886a0f4e8bb0d9a">   31</a></span>&#160;<a class="code" href="a02836.html#aa9adc0334215c583a886a0f4e8bb0d9a">Foam::WallInteractionModel&lt;CloudType&gt;::WallInteractionModel</a>(<a class="code" href="a00583.html">CloudType</a>&amp; owner)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    dict_(<a class="code" href="a00524.html">dictionary</a>::null),</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    owner_(owner),</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    coeffDict_(<a class="code" href="a00524.html">dictionary</a>::null)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{}</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a06438.html#a070beefe1286c4f8fb526ddea1f9292b">makeParcelCloudFunctionObjects</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// Kinematic sub-models</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="a06438.html#a9ad290af6eb7e2f403476dbe86566f86">makeParcelForces</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a06438.html#a9fc637e8e2b1c7d917c74eb0019dbf8d">makeParcelDispersionModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="a06438.html#a0e4bc4ad7eb201155bc2437c6267a13d">makeParcelInjectionModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a06438.html#a195a81a3627f2a0fc044454cb3369af1">makeParcelCollisionModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="a06438.html#a4f3d2e57996dfc11db5c23156640246c">makeParcelPatchInteractionModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a06438.html#a54bf4d7da3d43c6696ac62137d873eeb">makeParcelStochasticCollisionModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="a06438.html#aa5246d91505170eecd519a1f27685121">makeParcelSurfaceFilmModels</a>(<a class="code" href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a02836.html#aa9adc0334215c583a886a0f4e8bb0d9a">Foam::WallInteractionModel&lt;CloudType&gt;::WallInteractionModel</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a02836.html#adf73ad9e20f1e97af3c0c7b8f1a40096">   41</a></span>&#160;(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a00583.html">CloudType</a>&amp; owner,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; type</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    dict_(dict),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    owner_(owner),</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    coeffDict_(dict.<a class="code" href="a00524.html#a42a549aa3e2c88399585b6462f6dbeb3">subDict</a>(type + <span class="stringliteral">&quot;Coeffs&quot;</span>))</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{}</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06438_html_a54bf4d7da3d43c6696ac62137d873eeb"><div class="ttname"><a href="a06438.html#a54bf4d7da3d43c6696ac62137d873eeb">makeParcelStochasticCollisionModels</a></div><div class="ttdeci">makeParcelStochasticCollisionModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06464_html"><div class="ttname"><a href="a06464.html">makeParcelCollisionModels.H</a></div></div>
-<div class="ttc" id="a06438_html_a9ad290af6eb7e2f403476dbe86566f86"><div class="ttname"><a href="a06438.html#a9ad290af6eb7e2f403476dbe86566f86">makeParcelForces</a></div><div class="ttdeci">makeParcelForces(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06438_html_a0e4bc4ad7eb201155bc2437c6267a13d"><div class="ttname"><a href="a06438.html#a0e4bc4ad7eb201155bc2437c6267a13d">makeParcelInjectionModels</a></div><div class="ttdeci">makeParcelInjectionModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06470_html"><div class="ttname"><a href="a06470.html">makeParcelStochasticCollisionModels.H</a></div></div>
-<div class="ttc" id="a06399_html"><div class="ttname"><a href="a06399.html">basicKinematicCollidingCloud.H</a></div></div>
-<div class="ttc" id="a06438_html_aa5246d91505170eecd519a1f27685121"><div class="ttname"><a href="a06438.html#aa5246d91505170eecd519a1f27685121">makeParcelSurfaceFilmModels</a></div><div class="ttdeci">makeParcelSurfaceFilmModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06463_html"><div class="ttname"><a href="a06463.html">makeParcelCloudFunctionObjects.H</a></div></div>
-<div class="ttc" id="a06438_html_a195a81a3627f2a0fc044454cb3369af1"><div class="ttname"><a href="a06438.html#a195a81a3627f2a0fc044454cb3369af1">makeParcelCollisionModels</a></div><div class="ttdeci">makeParcelCollisionModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06438_html_a9fc637e8e2b1c7d917c74eb0019dbf8d"><div class="ttname"><a href="a06438.html#a9fc637e8e2b1c7d917c74eb0019dbf8d">makeParcelDispersionModels</a></div><div class="ttdeci">makeParcelDispersionModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06466_html"><div class="ttname"><a href="a06466.html">makeParcelForces.H</a></div></div>
-<div class="ttc" id="a06438_html_a070beefe1286c4f8fb526ddea1f9292b"><div class="ttname"><a href="a06438.html#a070beefe1286c4f8fb526ddea1f9292b">makeParcelCloudFunctionObjects</a></div><div class="ttdeci">makeParcelCloudFunctionObjects(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06469_html"><div class="ttname"><a href="a06469.html">makeParcelPatchInteractionModels.H</a></div></div>
-<div class="ttc" id="a06465_html"><div class="ttname"><a href="a06465.html">makeParcelDispersionModels.H</a></div></div>
-<div class="ttc" id="a06438_html_a4f3d2e57996dfc11db5c23156640246c"><div class="ttname"><a href="a06438.html#a4f3d2e57996dfc11db5c23156640246c">makeParcelPatchInteractionModels</a></div><div class="ttdeci">makeParcelPatchInteractionModels(basicKinematicCollidingCloud)</div></div>
-<div class="ttc" id="a06471_html"><div class="ttname"><a href="a06471.html">makeParcelSurfaceFilmModels.H</a></div></div>
-<div class="ttc" id="a06468_html"><div class="ttname"><a href="a06468.html">makeParcelInjectionModels.H</a></div></div>
-<div class="ttc" id="a10675_html_a85d3b45f507e659f8d633c4614e7f799"><div class="ttname"><a href="a10675.html#a85d3b45f507e659f8d633c4614e7f799">Foam::basicKinematicCollidingCloud</a></div><div class="ttdeci">CollidingCloud&lt; KinematicCloud&lt; Cloud&lt; basicKinematicCollidingParcel &gt; &gt; &gt; basicKinematicCollidingCloud</div><div class="ttdef"><b>Definition:</b> <a href="a06399_source.html#l00052">basicKinematicCollidingCloud.H:52</a></div></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a02836.html#a8d4129d3b6382f451c1765eeb741bf03">   56</a></span>&#160;<a class="code" href="a02836.html#a8d4129d3b6382f451c1765eeb741bf03">Foam::WallInteractionModel&lt;CloudType&gt;::~WallInteractionModel</a>()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02836.html#a6335ee485deb9e618ac66a9dc32a7a76">   63</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a00583.html">CloudType</a>&amp; <a class="code" href="a02836.html#a6335ee485deb9e618ac66a9dc32a7a76">Foam::WallInteractionModel&lt;CloudType&gt;::owner</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> owner_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a02836.html#a412ab3d77673221a188e6a3bc6049538">   70</a></span>&#160;<a class="code" href="a00583.html">CloudType</a>&amp; <a class="code" href="a02836.html#a6335ee485deb9e618ac66a9dc32a7a76">Foam::WallInteractionModel&lt;CloudType&gt;::owner</a>()</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> owner_;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a02836.html#a193891e89d96c3d3699885e60fe0a609">   77</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a00524.html">Foam::dictionary</a>&amp; <a class="code" href="a02836.html#a193891e89d96c3d3699885e60fe0a609">Foam::WallInteractionModel&lt;CloudType&gt;::dict</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> dict_;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">const</span> <a class="code" href="a00524.html">Foam::dictionary</a>&amp;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="a02836.html#a953bf7e165328f1175692ac59d7cd4fc">   85</a></span>&#160;<a class="code" href="a02836.html#a953bf7e165328f1175692ac59d7cd4fc">Foam::WallInteractionModel&lt;CloudType&gt;::coeffDict</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> coeffDict_;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06440.html">WallInteractionModelNew.C</a>&quot;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02836_html_a8d4129d3b6382f451c1765eeb741bf03"><div class="ttname"><a href="a02836.html#a8d4129d3b6382f451c1765eeb741bf03">Foam::WallInteractionModel::~WallInteractionModel</a></div><div class="ttdeci">virtual ~WallInteractionModel()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06438_source.html#l00056">WallInteractionModel.C:56</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02836_html_a193891e89d96c3d3699885e60fe0a609"><div class="ttname"><a href="a02836.html#a193891e89d96c3d3699885e60fe0a609">Foam::WallInteractionModel::dict</a></div><div class="ttdeci">const dictionary &amp; dict() const </div><div class="ttdoc">Return the dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06438_source.html#l00077">WallInteractionModel.C:77</a></div></div>
+<div class="ttc" id="a02836_html_a953bf7e165328f1175692ac59d7cd4fc"><div class="ttname"><a href="a02836.html#a953bf7e165328f1175692ac59d7cd4fc">Foam::WallInteractionModel::coeffDict</a></div><div class="ttdeci">const dictionary &amp; coeffDict() const </div><div class="ttdoc">Return the coefficients dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06438_source.html#l00085">WallInteractionModel.C:85</a></div></div>
+<div class="ttc" id="a00583_html"><div class="ttname"><a href="a00583.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06404_source.html#l00068">DSMCCloud.H:68</a></div></div>
+<div class="ttc" id="a06440_html"><div class="ttname"><a href="a06440.html">WallInteractionModelNew.C</a></div></div>
+<div class="ttc" id="a02836_html_a6335ee485deb9e618ac66a9dc32a7a76"><div class="ttname"><a href="a02836.html#a6335ee485deb9e618ac66a9dc32a7a76">Foam::WallInteractionModel::owner</a></div><div class="ttdeci">const CloudType &amp; owner() const </div><div class="ttdoc">Return the owner cloud object. </div><div class="ttdef"><b>Definition:</b> <a href="a06438_source.html#l00063">WallInteractionModel.C:63</a></div></div>
+<div class="ttc" id="a02836_html_aa9adc0334215c583a886a0f4e8bb0d9a"><div class="ttname"><a href="a02836.html#aa9adc0334215c583a886a0f4e8bb0d9a">Foam::WallInteractionModel::WallInteractionModel</a></div><div class="ttdeci">WallInteractionModel(CloudType &amp;owner)</div><div class="ttdoc">Construct null from owner. </div><div class="ttdef"><b>Definition:</b> <a href="a06438_source.html#l00031">WallInteractionModel.C:31</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00524_html_a42a549aa3e2c88399585b6462f6dbeb3"><div class="ttname"><a href="a00524.html#a42a549aa3e2c88399585b6462f6dbeb3">Foam::dictionary::subDict</a></div><div class="ttdeci">const dictionary &amp; subDict(const word &amp;) const </div><div class="ttdoc">Find and return a sub-dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00633">dictionary.C:633</a></div></div>
+<div class="ttc" id="a06439_html"><div class="ttname"><a href="a06439.html">WallInteractionModel.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

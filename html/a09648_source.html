@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_24a3817a3c61c11f04a0a72057522f4f.html">sampling</a></li><li class="navelem"><a class="el" href="dir_daf57321dd7c30092fd489dbb1aa8219.html">sampledSurface</a></li><li class="navelem"><a class="el" href="dir_59f45fac588f399f19b1cde67df5fec5.html">sampledCuttingPlane</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_24a3817a3c61c11f04a0a72057522f4f.html">sampling</a></li><li class="navelem"><a class="el" href="dir_cbe5babacf778e7f66e66e5bcfb862b0.html">probes</a></li><li class="navelem"><a class="el" href="dir_f2e24231ade46650448fc1917c440f69.html">probesFunctionObject</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">sampledCuttingPlaneTemplates.C</div>  </div>
+<div class="title">probesFunctionObject.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09648.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,90 +121,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09647.html">sampledCuttingPlane.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05555.html">volFieldsFwd.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07993.html">pointFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06100.html">volPointInterpolation.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;Foam::sampledCuttingPlane::sampleField</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a02211.html#a56ff648945e06b99d5e93879f06900f0">   36</a></span>&#160;(</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vField</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02608.html">tmp&lt;Field&lt;Type&gt;</a> &gt;(<span class="keyword">new</span> <a class="code" href="a00749.html">Field&lt;Type&gt;</a>(vField, surface().meshCells()));</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;Foam::sampledCuttingPlane::interpolateField</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a02211.html#aefd86b240db58e582111d07b68287113">   47</a></span>&#160;(</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01142.html">interpolation&lt;Type&gt;</a>&amp; interpolator</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// Get fields to sample. Assume volPointInterpolation!</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; volFld =</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        interpolator.<a class="code" href="a01142.html#a57bd59e9c54833774641fd197eb3964a">psi</a>();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (subMeshPtr_.valid())</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt; tvolSubFld =</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            subMeshPtr_().interpolate(volFld);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; volSubFld =</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            tvolSubFld();</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a> &gt; tpointSubFld =</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            volPointInterpolation::New(volSubFld.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>()).<a class="code" href="a10733.html#a4d62f21551985d814104861e7c1d9b4f">interpolate</a>(volSubFld);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">// Sample.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> surface().interpolate</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            (</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                average_</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;              ? pointAverage(tpointSubFld())()</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;              : volSubFld</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            ),</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            tpointSubFld()</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        );</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a> &gt; tpointFld</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        (</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            volPointInterpolation::New(volFld.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>()).<a class="code" href="a10733.html#a4d62f21551985d814104861e7c1d9b4f">interpolate</a>(volFld)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        );</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">// Sample.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">return</span> surface().interpolate</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        (</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            (</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                average_</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;              ? pointAverage(tpointFld())()</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;              : volFld</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            ),</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            tpointFld()</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        );</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a09647_html"><div class="ttname"><a href="a09647.html">sampledCuttingPlane.H</a></div></div>
-<div class="ttc" id="a05555_html"><div class="ttname"><a href="a05555.html">volFieldsFwd.H</a></div></div>
-<div class="ttc" id="a01142_html"><div class="ttname"><a href="a01142.html">Foam::interpolation</a></div><div class="ttdoc">Abstract base class for interpolation. </div><div class="ttdef"><b>Definition:</b> <a href="a05311_source.html#l00057">mappedPatchFieldBase.H:57</a></div></div>
-<div class="ttc" id="a00527_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
-<div class="ttc" id="a06100_html"><div class="ttname"><a href="a06100.html">volPointInterpolation.H</a></div></div>
-<div class="ttc" id="a01142_html_a57bd59e9c54833774641fd197eb3964a"><div class="ttname"><a href="a01142.html#a57bd59e9c54833774641fd197eb3964a">Foam::interpolation::psi</a></div><div class="ttdeci">const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp; psi() const </div><div class="ttdoc">Return the field to be interpolated. </div><div class="ttdef"><b>Definition:</b> <a href="a05896_source.html#l00124">interpolation.H:124</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00057">Field.H:57</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10733_html_a4d62f21551985d814104861e7c1d9b4f"><div class="ttname"><a href="a10733.html#a4d62f21551985d814104861e7c1d9b4f">Foam::MULES::interpolate</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; interpolate(const RhoType &amp;rho)</div><div class="ttdef"><b>Definition:</b> <a href="a05743_source.html#l00040">IMULESTemplates.C:40</a></div></div>
-<div class="ttc" id="a07993_html"><div class="ttname"><a href="a07993.html">pointFields.H</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09649.html">probesFunctionObject.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a10725.html#a672998ba6b08c82be13419b392bf59e4">defineNamedTemplateTypeNameAndDebug</a>(<a class="code" href="a10725.html#ad5068c98c445a5698f4e0911a3b9fed0">probesFunctionObject</a>, 0);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a672998ba6b08c82be13419b392bf59e4">defineNamedTemplateTypeNameAndDebug</a>(<a class="code" href="a10725.html#ab698d6d2f1f39b43a634bac1759d91a8">patchProbesFunctionObject</a>, 0);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    (</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        functionObject,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a10725.html#ad5068c98c445a5698f4e0911a3b9fed0">probesFunctionObject</a>,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        dictionary</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    );</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        functionObject,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="a10725.html#ab698d6d2f1f39b43a634bac1759d91a8">patchProbesFunctionObject</a>,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        dictionary</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    );</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_ad5068c98c445a5698f4e0911a3b9fed0"><div class="ttname"><a href="a10725.html#ad5068c98c445a5698f4e0911a3b9fed0">Foam::probesFunctionObject</a></div><div class="ttdeci">OutputFilterFunctionObject&lt; probes &gt; probesFunctionObject</div><div class="ttdoc">FunctionObject wrapper around probes to allow them to be created via the functions entry within contr...</div><div class="ttdef"><b>Definition:</b> <a href="a09649_source.html#l00047">probesFunctionObject.H:47</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10725_html_ab698d6d2f1f39b43a634bac1759d91a8"><div class="ttname"><a href="a10725.html#ab698d6d2f1f39b43a634bac1759d91a8">Foam::patchProbesFunctionObject</a></div><div class="ttdeci">OutputFilterFunctionObject&lt; patchProbes &gt; patchProbesFunctionObject</div><div class="ttdef"><b>Definition:</b> <a href="a09649_source.html#l00048">probesFunctionObject.H:48</a></div></div>
+<div class="ttc" id="a09649_html"><div class="ttname"><a href="a09649.html">probesFunctionObject.H</a></div></div>
+<div class="ttc" id="a10725_html_a672998ba6b08c82be13419b392bf59e4"><div class="ttname"><a href="a10725.html#a672998ba6b08c82be13419b392bf59e4">Foam::defineNamedTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineNamedTemplateTypeNameAndDebug(writer&lt; scalar &gt;, 0)</div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

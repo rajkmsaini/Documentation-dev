@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_6622b42c5fca67ec351904da985070b7.html">solidChemistryModel</a></li><li class="navelem"><a class="el" href="dir_9589dc58a49d80df6201d35af4698b25.html">basicSolidChemistryModel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_87c7a4a86ffb283740ec390ea55551cb.html">reactionThermo</a></li><li class="navelem"><a class="el" href="dir_d6ca8f970bca45fc70c046b4a0fab377.html">chemistryReaders</a></li><li class="navelem"><a class="el" href="dir_138e52da766a648956709a4f09492c68.html">chemistryReader</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">basicSolidChemistryModel.C</div>  </div>
+<div class="title">chemistryReader.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10164.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,97 +121,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10165.html">basicSolidChemistryModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10165.html">chemistryReader.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(basicSolidChemistryModel, 0);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(basicSolidChemistryModel, fvMesh);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;Foam::basicSolidChemistryModel::basicSolidChemistryModel</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a00114.html#ab21b86d0d6833cec694a71ba3958d732">   41</a></span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; phaseName</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a00100.html">basicChemistryModel</a>(mesh, phaseName),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    solidThermo_(solidReactionThermo::New(mesh, phaseName))</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ThermoType&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::chemistryReader&lt;ThermoType&gt;</a> &gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a00270.html#ae29d19c002ac47fd35e724d1eff0e0b4">Foam::chemistryReader&lt;ThermoType&gt;::New</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00270.html#ae29d19c002ac47fd35e724d1eff0e0b4">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; thermoDict,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a00980.html">speciesTable</a>&amp; species</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Let the chemistry reader type default to CHEMKIN</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// for backward compatibility</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a02869.html">word</a> chemistryReaderTypeName(<span class="stringliteral">&quot;chemkinReader&quot;</span>);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// otherwise use the specified reader</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    thermoDict.<a class="code" href="a00524.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;chemistryReader&quot;</span>, chemistryReaderTypeName);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Selecting chemistryReader &quot;</span> &lt;&lt; chemistryReaderTypeName &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">typename</span> dictionaryConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(chemistryReaderTypeName);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a00114.html#ab26b79c351cf457d6efa4e5dd940606b">   53</a></span>&#160;<a class="code" href="a00114.html#ab26b79c351cf457d6efa4e5dd940606b">Foam::basicSolidChemistryModel::~basicSolidChemistryModel</a>()</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">const</span> <a class="code" href="a00527.html">Foam::DimensionedField&lt;Foam::scalar, Foam::volMesh&gt;</a>&amp;</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a00114.html#a3d9d915d9838a1c6b84e910765198616">   58</a></span>&#160;<a class="code" href="a00114.html#a3d9d915d9838a1c6b84e910765198616">Foam::basicSolidChemistryModel::RR</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a07673.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> (<a class="code" href="a00527.html">DimensionedField&lt;scalar, volMesh&gt;::null</a>());</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<a class="code" href="a00527.html">Foam::DimensionedField&lt;Foam::scalar, Foam::volMesh&gt;</a>&amp;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a00114.html#a8fda9202a129a0f3e39a2d2b92446afa">   66</a></span>&#160;<a class="code" href="a00114.html#a3d9d915d9838a1c6b84e910765198616">Foam::basicSolidChemistryModel::RR</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="a07673.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">dynamic_cast&lt;</span><a class="code" href="a00527.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;<span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    (</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a00527.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; <span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        (</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <a class="code" href="a00527.html#a52b4d630a72421e0ca175e772fe1ef5a">DimensionedField&lt;scalar, volMesh&gt;::null</a>()</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        )</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    );</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::DimensionedField&lt;Foam::scalar, Foam::volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="a00114.html#abe9583fd6095fa9f93083df9255f979d">Foam::basicSolidChemistryModel::calculateRR</a></div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="a00114.html#abe9583fd6095fa9f93083df9255f979d">   82</a></span>&#160;(</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> reactionI,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> speciei</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a07673.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">dynamic_cast&lt;</span><a class="code" href="a02608.html">tmp&lt;DimensionedField&lt;scalar, volMesh&gt;</a> <span class="keyword">&gt;</span>&amp;&gt;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    (</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a00527.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; <span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        (</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <a class="code" href="a00527.html#a52b4d630a72421e0ca175e772fe1ef5a">DimensionedField&lt;scalar, volMesh&gt;::null</a>()</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        )</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    );</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00527_html"><div class="ttname"><a href="a00527.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07836_source.html#l00051">DimensionedField.H:51</a></div></div>
-<div class="ttc" id="a07673_html_acaf1b27a1415aa0e62902c9ebb723b8f"><div class="ttname"><a href="a07673.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a></div><div class="ttdeci">#define NotImplemented</div><div class="ttdoc">Issue a FatalErrorIn for a function not currently implemented. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00366">error.H:366</a></div></div>
-<div class="ttc" id="a00114_html_a3d9d915d9838a1c6b84e910765198616"><div class="ttname"><a href="a00114.html#a3d9d915d9838a1c6b84e910765198616">Foam::basicSolidChemistryModel::RR</a></div><div class="ttdeci">virtual const DimensionedField&lt; scalar, volMesh &gt; &amp; RR(const label i) const </div><div class="ttdoc">Return const access to the total source terms. </div><div class="ttdef"><b>Definition:</b> <a href="a10164_source.html#l00058">basicSolidChemistryModel.C:58</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a10165_html"><div class="ttname"><a href="a10165.html">basicSolidChemistryModel.H</a></div></div>
-<div class="ttc" id="a00100_html"><div class="ttname"><a href="a00100.html">Foam::basicChemistryModel</a></div><div class="ttdoc">Base class for chemistry models. </div><div class="ttdef"><b>Definition:</b> <a href="a09903_source.html#l00057">basicChemistryModel.H:57</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a00114_html_ab26b79c351cf457d6efa4e5dd940606b"><div class="ttname"><a href="a00114.html#ab26b79c351cf457d6efa4e5dd940606b">Foam::basicSolidChemistryModel::~basicSolidChemistryModel</a></div><div class="ttdeci">virtual ~basicSolidChemistryModel()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a10164_source.html#l00053">basicSolidChemistryModel.C:53</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a00114_html_abe9583fd6095fa9f93083df9255f979d"><div class="ttname"><a href="a00114.html#abe9583fd6095fa9f93083df9255f979d">Foam::basicSolidChemistryModel::calculateRR</a></div><div class="ttdeci">virtual tmp&lt; DimensionedField&lt; scalar, volMesh &gt; &gt; calculateRR(const label reactionI, const label speciei) const </div><div class="ttdoc">Returns the reaction rate of the speciei in reactionI. </div><div class="ttdef"><b>Definition:</b> <a href="a10164_source.html#l00082">basicSolidChemistryModel.C:82</a></div></div>
-<div class="ttc" id="a10675_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10675.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00527_html_a52b4d630a72421e0ca175e772fe1ef5a"><div class="ttname"><a href="a00527.html#a52b4d630a72421e0ca175e772fe1ef5a">Foam::DimensionedField::null</a></div><div class="ttdeci">static const DimensionedField&lt; Type, GeoMesh &gt; &amp; null()</div><div class="ttdoc">Return a null DimensionedField. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00030">DimensionedFieldI.H:30</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown chemistryReader type &quot;</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            &lt;&lt; chemistryReaderTypeName &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid chemistryReader types are:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;sortedToc()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;chemistryReader&lt;ThermoType&gt;</a> &gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    (</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        cstrIter()(thermoDict, species)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    );</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a10165_html"><div class="ttname"><a href="a10165.html">chemistryReader.H</a></div></div>
+<div class="ttc" id="a00270_html_ae29d19c002ac47fd35e724d1eff0e0b4"><div class="ttname"><a href="a00270.html#ae29d19c002ac47fd35e724d1eff0e0b4">Foam::chemistryReader::New</a></div><div class="ttdeci">static autoPtr&lt; chemistryReader &gt; New(const dictionary &amp;thermoDict, speciesTable &amp;species)</div><div class="ttdoc">Select constructed from dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a10164_source.html#l00033">chemistryReader.C:33</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a00524_html_ac3502a72e9d1a84f63c4919b78595cd4"><div class="ttname"><a href="a00524.html#ac3502a72e9d1a84f63c4919b78595cd4">Foam::dictionary::readIfPresent</a></div><div class="ttdeci">bool readIfPresent(const word &amp;, T &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find an entry if present, and assign to T. </div><div class="ttdef"><b>Definition:</b> <a href="a07689_source.html#l00094">dictionaryTemplates.C:94</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00980_html"><div class="ttname"><a href="a00980.html">Foam::hashedWordList</a></div><div class="ttdoc">A wordList with hashed indices for faster lookup by name. </div><div class="ttdef"><b>Definition:</b> <a href="a08967_source.html#l00057">hashedWordList.H:57</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

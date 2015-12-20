@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_ab5426228c8fb14cfc52c0ebfb464378.html">sources</a></li><li class="navelem"><a class="el" href="dir_04ada5f3e1c5f73b4b84eeccdf3d9cec.html">derived</a></li><li class="navelem"><a class="el" href="dir_fe2b05beb20f76306ac0a2453b245a50.html">tabulatedAccelerationSource</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_e004c8aef6ad3730b0be09e2a7704e0f.html">interRegionOption</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">tabulatedAccelerationSourceTemplates.C</div>  </div>
+<div class="title">interRegionOptionIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06251.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,107 +121,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06250.html">tabulatedAccelerationSource.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05729.html">fvMatrices.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08095.html">uniformDimensionedFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> RhoFieldType&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> Foam::fv::tabulatedAccelerationSource::addSup</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;(</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> RhoFieldType&amp; rho,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    fvMatrix&lt;vector&gt;&amp; eqn,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> fieldi</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    Vector&lt;vector&gt; acceleration(<a class="code" href="a02542.html#a7cb92c04778cc1ab56030d8895d5410a">motion_</a>.<a class="code" href="a02540.html#a95f26e7763a392375d96477b9ef0dedf">acceleration</a>());</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06249.html">interRegionOption.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a01164.html#a6ce0c64db98eb6144d363dbfc86104eb">   30</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01164.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::interRegionOption::read</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01714.html#a6ce0c64db98eb6144d363dbfc86104eb">option::read</a>(dict))</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// If gravitational force is present combine with the linear acceleration</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">foundObject</a>&lt;<a class="code" href="a10675.html#a8e7195c1a6185aa18d75e0aa36cc58c9">uniformDimensionedVectorField</a>&gt;(<span class="stringliteral">&quot;g&quot;</span>))</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="a10675.html#a8e7195c1a6185aa18d75e0aa36cc58c9">uniformDimensionedVectorField</a>&amp; g =</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keyword">const_cast&lt;</span><a class="code" href="a10675.html#a8e7195c1a6185aa18d75e0aa36cc58c9">uniformDimensionedVectorField</a>&amp;<span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            (</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a8e7195c1a6185aa18d75e0aa36cc58c9">uniformDimensionedVectorField</a>&gt;(<span class="stringliteral">&quot;g&quot;</span>)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            );</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10675.html#a3f66821e2a14cc6118f2026ff182d659">uniformDimensionedScalarField</a>&amp; hRef =</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a3f66821e2a14cc6118f2026ff182d659">uniformDimensionedScalarField</a>&gt;(<span class="stringliteral">&quot;hRef&quot;</span>);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        g = <a class="code" href="a02542.html#a565d2d50f78b2025f20ec1f4dec1d93b">g0_</a> - <a class="code" href="a10675.html#aa56bd15e91196da521549e50b73ca3f5">dimensionedVector</a>(<span class="stringliteral">&quot;a&quot;</span>, <a class="code" href="a10675.html#ab95cf09ac3d427ccd48fb34c815aabed">dimAcceleration</a>, acceleration.x());</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a> ghRef</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        (</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(g.value()) &gt; SMALL</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;          ? g &amp; (<a class="code" href="a10675.html#acf2383c8a0a1d5fef3eb5255b950229d">cmptMag</a>(g.value())/<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(g.value()))*hRef</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;          : <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;ghRef&quot;</span>, g.dimensions()*<a class="code" href="a10675.html#a2c2f48175b211109246a24c633d02441">dimLength</a>, 0)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        );</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp;<span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&gt;(<span class="stringliteral">&quot;gh&quot;</span>)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        ) = (g &amp; <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">C</a>()) - ghRef;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp;<span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&gt;(<span class="stringliteral">&quot;ghf&quot;</span>)</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        ) = (g &amp; <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a00868.html#a9b2a54af40110cb50711a0ad3b0e2ecb">Cf</a>()) - ghRef;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// ... otherwise include explicitly in the momentum equation</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        eqn -= rho*<a class="code" href="a10675.html#aa56bd15e91196da521549e50b73ca3f5">dimensionedVector</a>(<span class="stringliteral">&quot;a&quot;</span>, <a class="code" href="a10675.html#ab95cf09ac3d427ccd48fb34c815aabed">dimAcceleration</a>, acceleration.x());</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a10675.html#aa56bd15e91196da521549e50b73ca3f5">dimensionedVector</a> Omega</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    (</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="stringliteral">&quot;Omega&quot;</span>,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        dimensionSet(0, 0, -1, 0, 0),</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        acceleration.y()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    );</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a10675.html#aa56bd15e91196da521549e50b73ca3f5">dimensionedVector</a> dOmegaDT</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    (</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="stringliteral">&quot;dOmegaDT&quot;</span>,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        dimensionSet(0, 0, -2, 0, 0),</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        acceleration.z()</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    );</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    eqn -=</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    (</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        rho*(2*Omega ^ eqn.psi())         <span class="comment">// Coriolis force</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      + rho*(Omega ^ (Omega ^ <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">C</a>())) <span class="comment">// Centrifugal force</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      + rho*(dOmegaDT ^ <a class="code" href="a01704.html#a23edeeeecebcef11921a33dd5d990570">mesh_</a>.<a class="code" href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">C</a>())        <span class="comment">// Angular tabulatedAcceleration force</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    );</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2c2f48175b211109246a24c633d02441"><div class="ttname"><a href="a10675.html#a2c2f48175b211109246a24c633d02441">Foam::dimLength</a></div><div class="ttdeci">const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00050">dimensionSets.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a10675_html_aa56bd15e91196da521549e50b73ca3f5"><div class="ttname"><a href="a10675.html#aa56bd15e91196da521549e50b73ca3f5">Foam::dimensionedVector</a></div><div class="ttdeci">dimensioned&lt; vector &gt; dimensionedVector</div><div class="ttdoc">Dimensioned vector obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00048">dimensionedVector.H:48</a></div></div>
-<div class="ttc" id="a10675_html_acf2383c8a0a1d5fef3eb5255b950229d"><div class="ttname"><a href="a10675.html#acf2383c8a0a1d5fef3eb5255b950229d">Foam::cmptMag</a></div><div class="ttdeci">void cmptMag(FieldField&lt; Field, Type &gt; &amp;cf, const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00359">FieldFieldFunctions.C:359</a></div></div>
-<div class="ttc" id="a06250_html"><div class="ttname"><a href="a06250.html">tabulatedAccelerationSource.H</a></div></div>
-<div class="ttc" id="a10675_html_a8e7195c1a6185aa18d75e0aa36cc58c9"><div class="ttname"><a href="a10675.html#a8e7195c1a6185aa18d75e0aa36cc58c9">Foam::uniformDimensionedVectorField</a></div><div class="ttdeci">UniformDimensionedField&lt; vector &gt; uniformDimensionedVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a08095_source.html#l00048">uniformDimensionedFields.H:48</a></div></div>
-<div class="ttc" id="a01678_html_af3bf58996b7f5a073485a5590fbebd84"><div class="ttname"><a href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">Foam::objectRegistry::foundObject</a></div><div class="ttdeci">bool foundObject(const word &amp;name) const </div><div class="ttdoc">Is the named Type found? </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00142">objectRegistryTemplates.C:142</a></div></div>
-<div class="ttc" id="a10675_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a08095_html"><div class="ttname"><a href="a08095.html">uniformDimensionedFields.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00868_html_a9b2a54af40110cb50711a0ad3b0e2ecb"><div class="ttname"><a href="a00868.html#a9b2a54af40110cb50711a0ad3b0e2ecb">Foam::fvMesh::Cf</a></div><div class="ttdeci">const surfaceVectorField &amp; Cf() const </div><div class="ttdoc">Return face centres as surfaceVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00380">fvMeshGeometry.C:380</a></div></div>
-<div class="ttc" id="a02542_html_a565d2d50f78b2025f20ec1f4dec1d93b"><div class="ttname"><a href="a02542.html#a565d2d50f78b2025f20ec1f4dec1d93b">Foam::fv::tabulatedAccelerationSource::g0_</a></div><div class="ttdeci">dimensionedVector g0_</div><div class="ttdef"><b>Definition:</b> <a href="a06250_source.html#l00084">tabulatedAccelerationSource.H:84</a></div></div>
-<div class="ttc" id="a05729_html"><div class="ttname"><a href="a05729.html">fvMatrices.H</a></div><div class="ttdoc">A special matrix type and solver, designed for finite volume solutions of scalar equations. </div></div>
-<div class="ttc" id="a10675_html_ab95cf09ac3d427ccd48fb34c815aabed"><div class="ttname"><a href="a10675.html#ab95cf09ac3d427ccd48fb34c815aabed">Foam::dimAcceleration</a></div><div class="ttdeci">const dimensionSet dimAcceleration</div></div>
-<div class="ttc" id="a01704_html_a23edeeeecebcef11921a33dd5d990570"><div class="ttname"><a href="a01704.html#a23edeeeecebcef11921a33dd5d990570">Foam::fv::option::mesh_</a></div><div class="ttdeci">const fvMesh &amp; mesh_</div><div class="ttdoc">Reference to the mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a06195_source.html#l00078">fvOption.H:78</a></div></div>
-<div class="ttc" id="a00868_html_add65fc7bb62260f0f5144592e78ccdba"><div class="ttname"><a href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">Foam::fvMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C() const </div><div class="ttdoc">Return cell centres as volVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00369">fvMeshGeometry.C:369</a></div></div>
-<div class="ttc" id="a02542_html_a7cb92c04778cc1ab56030d8895d5410a"><div class="ttname"><a href="a02542.html#a7cb92c04778cc1ab56030d8895d5410a">Foam::fv::tabulatedAccelerationSource::motion_</a></div><div class="ttdeci">tabulated6DoFAcceleration motion_</div><div class="ttdoc">Run-time selectable acceleration model. </div><div class="ttdef"><b>Definition:</b> <a href="a06250_source.html#l00079">tabulatedAccelerationSource.H:79</a></div></div>
-<div class="ttc" id="a01678_html_affcae20935bdf1726ec1f822228a2330"><div class="ttname"><a href="a01678.html#affcae20935bdf1726ec1f822228a2330">Foam::objectRegistry::lookupObject</a></div><div class="ttdeci">const Type &amp; lookupObject(const word &amp;name) const </div><div class="ttdoc">Lookup and return the object of the given Type. </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00165">objectRegistryTemplates.C:165</a></div></div>
-<div class="ttc" id="a02540_html_a95f26e7763a392375d96477b9ef0dedf"><div class="ttname"><a href="a02540.html#a95f26e7763a392375d96477b9ef0dedf">Foam::tabulated6DoFAcceleration::acceleration</a></div><div class="ttdeci">virtual Vector&lt; vector &gt; acceleration() const </div><div class="ttdoc">Return the solid-body accelerations. </div><div class="ttdef"><b>Definition:</b> <a href="a06247_source.html#l00063">tabulated6DoFAcceleration.C:63</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a10675_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00052">volFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_a3f66821e2a14cc6118f2026ff182d659"><div class="ttname"><a href="a10675.html#a3f66821e2a14cc6118f2026ff182d659">Foam::uniformDimensionedScalarField</a></div><div class="ttdeci">UniformDimensionedField&lt; scalar &gt; uniformDimensionedScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a08095_source.html#l00047">uniformDimensionedFields.H:47</a></div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a06249_html"><div class="ttname"><a href="a06249.html">interRegionOption.H</a></div></div>
+<div class="ttc" id="a01714_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a01714.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::option::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read source dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a05056_source.html#l00053">fvOptionIO.C:53</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a01164_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a01164.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::interRegionOption::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06251_source.html#l00030">interRegionOptionIO.C:30</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

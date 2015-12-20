@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ae30ad0bef50cf391b24c614251bb9fd.html">meshTools</a></li><li class="navelem"><a class="el" href="dir_488f81ac1e9f391f7800e42bf7f5bacd.html">algorithms</a></li><li class="navelem"><a class="el" href="dir_5afe7fcd71e6cb5e238b247899547dea.html">PatchEdgeFaceWave</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7be0d8c199b9408ae01f5d77515b8def.html">mesh</a></li><li class="navelem"><a class="el" href="dir_ade3ea1948a418ffb78a293f495540d7.html">blockMesh</a></li><li class="navelem"><a class="el" href="dir_8447882a29dd15b2ac259f90a5263f87.html">curvedEdges</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">patchEdgeFaceInfo.C</div>  </div>
+<div class="title">BSpline.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07088.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,35 +121,138 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07089.html">patchEdgeFaceInfo.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; Foam::operator&lt;&lt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;(</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a01725.html">Foam::Ostream</a>&amp; os,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01779.html">Foam::patchEdgeFaceInfo</a>&amp; wDist</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> os &lt;&lt; wDist.origin() &lt;&lt; wDist.distSqr();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07724.html">error.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07089.html">BSpline.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;Foam::BSpline::BSpline</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00164.html#a215eb1f784d7b73ed21a9fd9d8815174">   32</a></span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; knots,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> closed</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a01913.html">polyLine</a>(knots, closed)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a01191.html">Foam::Istream</a>&amp; Foam::operator&gt;&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a01191.html">Foam::Istream</a>&amp; is,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a01779.html">Foam::patchEdgeFaceInfo</a>&amp; wDist</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> is &gt;&gt; wDist.origin_ &gt;&gt; wDist.distSqr_;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a01779_html"><div class="ttname"><a href="a01779.html">Foam::patchEdgeFaceInfo</a></div><div class="ttdef"><b>Definition:</b> <a href="a07089_source.html#l00057">patchEdgeFaceInfo.H:57</a></div></div>
-<div class="ttc" id="a07089_html"><div class="ttname"><a href="a07089.html">patchEdgeFaceInfo.H</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00164.html#a34fba20c066401ebf043c0461554ad7b">   43</a></span>&#160;<a class="code" href="a02787.html">Foam::point</a> <a class="code" href="a00164.html#a34fba20c066401ebf043c0461554ad7b">Foam::BSpline::position</a>(<span class="keyword">const</span> scalar mu)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// endpoints</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span> (mu &lt; SMALL)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a01913.html#a084ae534298576408f063a6b3b820959">points</a>().<a class="code" href="a02731.html#a1c9828bc3de9502754d944c95a2ce0d9">first</a>();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mu &gt; 1 - SMALL)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a01913.html#a084ae534298576408f063a6b3b820959">points</a>().<a class="code" href="a02731.html#aef07c02ea1c27bdb5906043b399e0ff0">last</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    scalar <a class="code" href="a04459.html#ac90f959a4cd5bd0bc0d60e8c9fe14021">lambda</a> = <a class="code" href="a10738.html#a8d2432cc748eee3d28d002a6fbefcd1d">mu</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> segment = <a class="code" href="a01913.html#a54e1401547aa693d035f9c6625bdfda1">localParameter</a>(lambda);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00164.html#a34fba20c066401ebf043c0461554ad7b">position</a>(segment, lambda);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="a02787.html">Foam::point</a> <a class="code" href="a00164.html#a34fba20c066401ebf043c0461554ad7b">Foam::BSpline::position</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a00164.html#af3b8d345558677e421f22a0a4350077e">   62</a></span>&#160;(</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> segment,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> scalar mu</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// out-of-bounds</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (segment &lt; 0)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>().<a class="code" href="a02731.html#a1c9828bc3de9502754d944c95a2ce0d9">first</a>();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (segment &gt; nSegments())</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>().<a class="code" href="a02731.html#aef07c02ea1c27bdb5906043b399e0ff0">last</a>();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">point</a>&amp; p0 = <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>()[<a class="code" href="a10725.html#af3175b0283ad4d834db944e662b89986">segment</a>];</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">point</a>&amp; p1 = <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>()[segment+1];</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// special cases - no calculation needed</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (mu &lt;= 0.0)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">return</span> p0;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mu &gt;= 1.0)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">return</span> p1;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// determine the end points</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a02787.html">point</a> e0;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="a02787.html">point</a> e1;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (segment == 0)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">// end: simple reflection</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        e0 = 2*p0 - p1;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        e0 = <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>()[segment-1];</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">if</span> (segment+1 == nSegments())</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">// end: simple reflection</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        e1 = 2*p1 - p0;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        e1 = <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>()[segment+2];</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span> 1.0/6.0 *</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    (</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        ( e0 + 4*p0 + p1 )</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      + mu *</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        (</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            ( -3*e0 + 3*p1 )</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;          + mu *</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            (</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                ( 3*e0 - 6*p0 + 3*p1 )</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;              + mu *</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                ( -e0 + 3*p0 - 3*p1 + e1 )</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            )</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        )</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    );</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="a00164.html#a8b35735b5afe7675bdb73473a5a23d90">  133</a></span>&#160;Foam::scalar <a class="code" href="a00164.html#a8b35735b5afe7675bdb73473a5a23d90">Foam::BSpline::length</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="a07724.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a>;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">return</span> 1.0;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04459_html_ac90f959a4cd5bd0bc0d60e8c9fe14021"><div class="ttname"><a href="a04459.html#ac90f959a4cd5bd0bc0d60e8c9fe14021">lambda</a></div><div class="ttdeci">dimensionedScalar lambda(laminarTransport.lookup(&quot;lambda&quot;))</div></div>
+<div class="ttc" id="a02731_html_a1c9828bc3de9502754d944c95a2ce0d9"><div class="ttname"><a href="a02731.html#a1c9828bc3de9502754d944c95a2ce0d9">Foam::UList::first</a></div><div class="ttdeci">T &amp; first()</div><div class="ttdoc">Return the first element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00117">UListI.H:117</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a10738_html_a8d2432cc748eee3d28d002a6fbefcd1d"><div class="ttname"><a href="a10738.html#a8d2432cc748eee3d28d002a6fbefcd1d">Foam::constant::physicoChemical::mu</a></div><div class="ttdeci">const dimensionedScalar mu</div><div class="ttdoc">Atomic mass unit. </div><div class="ttdef"><b>Definition:</b> <a href="a04442_source.html#l00013">createFields.H:13</a></div></div>
+<div class="ttc" id="a01913_html_a084ae534298576408f063a6b3b820959"><div class="ttname"><a href="a01913.html#a084ae534298576408f063a6b3b820959">Foam::polyLine::points</a></div><div class="ttdeci">const pointField &amp; points() const </div><div class="ttdoc">Return const-access to the control-points. </div><div class="ttdef"><b>Definition:</b> <a href="a07102_source.html#l00073">polyLine.C:73</a></div></div>
+<div class="ttc" id="a00164_html_a8b35735b5afe7675bdb73473a5a23d90"><div class="ttname"><a href="a00164.html#a8b35735b5afe7675bdb73473a5a23d90">Foam::BSpline::length</a></div><div class="ttdeci">scalar length() const </div><div class="ttdoc">Return the length of the curve. </div><div class="ttdef"><b>Definition:</b> <a href="a07088_source.html#l00133">BSpline.C:133</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a07089_html"><div class="ttname"><a href="a07089.html">BSpline.H</a></div></div>
+<div class="ttc" id="a07724_html_acaf1b27a1415aa0e62902c9ebb723b8f"><div class="ttname"><a href="a07724.html#acaf1b27a1415aa0e62902c9ebb723b8f">NotImplemented</a></div><div class="ttdeci">#define NotImplemented</div><div class="ttdoc">Issue a FatalErrorIn for a function not currently implemented. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00366">error.H:366</a></div></div>
+<div class="ttc" id="a02731_html_aef07c02ea1c27bdb5906043b399e0ff0"><div class="ttname"><a href="a02731.html#aef07c02ea1c27bdb5906043b399e0ff0">Foam::UList::last</a></div><div class="ttdeci">T &amp; last()</div><div class="ttdoc">Return the last element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00131">UListI.H:131</a></div></div>
+<div class="ttc" id="a01913_html_a54e1401547aa693d035f9c6625bdfda1"><div class="ttname"><a href="a01913.html#a54e1401547aa693d035f9c6625bdfda1">Foam::polyLine::localParameter</a></div><div class="ttdeci">label localParameter(scalar &amp;lambda) const </div><div class="ttdoc">Return the line segment and the local parameter [0..1]. </div><div class="ttdef"><b>Definition:</b> <a href="a07102_source.html#l00085">polyLine.C:85</a></div></div>
+<div class="ttc" id="a07724_html"><div class="ttname"><a href="a07724.html">error.H</a></div></div>
+<div class="ttc" id="a00164_html_a34fba20c066401ebf043c0461554ad7b"><div class="ttname"><a href="a00164.html#a34fba20c066401ebf043c0461554ad7b">Foam::BSpline::position</a></div><div class="ttdeci">point position(const scalar lambda) const </div><div class="ttdoc">Return the point position corresponding to the curve parameter. </div><div class="ttdef"><b>Definition:</b> <a href="a07088_source.html#l00043">BSpline.C:43</a></div></div>
+<div class="ttc" id="a01913_html"><div class="ttname"><a href="a01913.html">Foam::polyLine</a></div><div class="ttdoc">A series of straight line segments, which can also be interpreted as a series of control points for s...</div><div class="ttdef"><b>Definition:</b> <a href="a07103_source.html#l00053">polyLine.H:53</a></div></div>
+<div class="ttc" id="a10725_html_af3175b0283ad4d834db944e662b89986"><div class="ttname"><a href="a10725.html#af3175b0283ad4d834db944e662b89986">Foam::segment</a></div><div class="ttdeci">Pair&lt; point &gt; segment</div><div class="ttdef"><b>Definition:</b> <a href="a09118_source.html#l00061">distributedTriSurfaceMesh.H:61</a></div></div>
+<div class="ttc" id="a04274_html_a1adbc4c519b2cee284a47d6682036276"><div class="ttname"><a href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a></div><div class="ttdeci">const pointField &amp; points</div><div class="ttdef"><b>Definition:</b> <a href="a04274_source.html#l00001">gmvOutputHeader.H:1</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

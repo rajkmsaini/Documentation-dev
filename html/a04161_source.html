@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_3210494cbdf79b7f44b411965daadab0.html">miscellaneous</a></li><li class="navelem"><a class="el" href="dir_2020bc9d02c2226b7cafa9649829dc89.html">foamFormatConvert</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_d0d736d3dc14112e53d1ae4faa8f931f.html">mesh</a></li><li class="navelem"><a class="el" href="dir_15449a1ef4a09517cc5e2efa6b11565e.html">manipulation</a></li><li class="navelem"><a class="el" href="dir_2b6dd3b3e05cd11523b7c76e421a7a3c.html">mergeOrSplitBaffles</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">foamFormatConvert.C</div>  </div>
+<div class="title">mergeOrSplitBaffles.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04161.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,315 +120,454 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Application</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    foamFormatConvert</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    mergeOrSplitBaffles</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Converts all IOobjects associated with a case into the format specified</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    in the controlDict.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Detects faces that share points (baffles). Either merge them or</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    duplicate the points.</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Mainly used to convert binary mesh/field files to ASCII.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    Problem: any zero-size List written binary gets written as &#39;0&#39;. When</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    reading the file as a dictionary this is interpreted as a label. This</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    is (usually) not a problem when doing patch fields since these get the</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    &#39;uniform&#39;, &#39;nonuniform&#39; prefix. However zone contents are labelLists</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    not labelFields and these go wrong. For now hacked a solution where</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    we detect the keywords in zones and redo the dictionary entries</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    to be labelLists.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Notes:</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    - can only handle pairwise boundary faces. So three faces using</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">      the same points is not handled (is illegal mesh anyway)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    - there is no option to only split/merge some baffles.</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    - surfaces consisting of duplicate faces can be topologically split</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    if the points on the interior of the surface cannot walk to all the</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    cells that use them in one go.</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08097.html">argList.H</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07809.html">timeSelector.H</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07993.html">pointFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08432.html">cellIOList.H</a>&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07700.html">IOobjectList.H</a>&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07716.html">IOPtrList.H</a>&quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04162.html">writeMeshObject.H</a>&quot;</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07325.html">fieldDictionary.H</a>&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10675.html">Foam</a>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a10675.html#adda8d2f21637cf437577b8bfeda5a259">defineTemplateTypeNameAndDebug</a>(<a class="code" href="a01176.html">IOPtrList&lt;entry&gt;</a>, 0);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">    - Parallel operation (where duplicate face is perpendicular to a coupled</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">    boundary) is supported but not really tested.</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">    (Note that coupled faces themselves are not seen as duplicate faces)</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08148.html">argList.H</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07855.html">Time.H</a>&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08677.html">syncTools.H</a>&quot;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07456.html">faceSet.H</a>&quot;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07460.html">pointSet.H</a>&quot;</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07303.html">meshTools.H</a>&quot;</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04885.html">polyTopoChange.H</a>&quot;</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04902.html">polyRemoveFace.H</a>&quot;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04879.html">polyModifyFace.H</a>&quot;</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08737.html">indirectPrimitivePatch.H</a>&quot;</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08660.html">processorPolyPatch.H</a>&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07335.html">localPointRegion.H</a>&quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04871.html">duplicatePoints.H</a>&quot;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08142.html">ReadFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05609.html">volFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10725.html">Foam</a>;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// Hack to do zones which have Lists in them. See above.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">bool</span> writeZones(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; name, <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; meshDir, <a class="code" href="a02596.html">Time</a>&amp; runTime)</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a01170.html">IOobject</a> io</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        name,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        runTime.<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        meshDir,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        runTime,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891">IOobject::MUST_READ</a>,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a>,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        false</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    );</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">bool</span> writeOk = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span> (io.headerOk())</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        Reading &quot;</span> &lt;&lt; io.headerClassName()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; name &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> insertDuplicateMerge</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;(</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; duplicates,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a01937.html">polyTopoChange</a>&amp; meshMod</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">faceList</a>&amp; faces = mesh.<a class="code" href="a01916.html#a4434536d50d4c14116249da802a1e2b2">faces</a>();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; faceOwner = mesh.<a class="code" href="a01916.html#a6d4def83436c9aa4dc68e8e42c5cf268">faceOwner</a>();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02896.html">faceZoneMesh</a>&amp; faceZones = mesh.<a class="code" href="a01916.html#aa3b2dc268f43cd7ca2d043febae4f0e6">faceZones</a>();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(duplicates, bFaceI)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> otherFaceI = duplicates[bFaceI];</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">if</span> (otherFaceI != -1 &amp;&amp; otherFaceI &gt; bFaceI)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="comment">// Two duplicate faces. Merge.</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">// Switch off type checking (for reading e.g. faceZones as</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">// generic list of dictionaries).</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02856.html">word</a> oldTypeName = <a class="code" href="a01176.html">IOPtrList&lt;entry&gt;::typeName</a>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a02856.html">word</a>&amp;<span class="keyword">&gt;</span>(<a class="code" href="a01176.html">IOPtrList&lt;entry&gt;::typeName</a>) = <a class="code" href="a02856.html#a5e70847c3fec3d9d4c7265dfacdf7fd3">word::null</a>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a01176.html">IOPtrList&lt;entry&gt;</a> <a class="code" href="a01458.html">meshObject</a>(io);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(<a class="code" href="a01458.html">meshObject</a>, i)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="a01458.html">meshObject</a>[i].isDict())</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <a class="code" href="a00518.html">dictionary</a>&amp; d = <a class="code" href="a01458.html">meshObject</a>[i].dict();</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                <span class="keywordflow">if</span> (d.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;faceLabels&quot;</span>))</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    d.<a class="code" href="a00518.html#a8396ca7a6d20d7aeebc8b1ac9e18460b">set</a>(<span class="stringliteral">&quot;faceLabels&quot;</span>, <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(d.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;faceLabels&quot;</span>)));</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> face0 = mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>() + bFaceI;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> face1 = mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>() + otherFaceI;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> own0 = faceOwner[face0];</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> own1 = faceOwner[face1];</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keywordflow">if</span> (own0 &lt; own1)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                <span class="comment">// Use face0 as the new internal face.</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> zoneID = faceZones.<a class="code" href="a02896.html#a6ffe5ffe3013200c7748e4c8fe8a883b">whichZone</a>(face0);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                <span class="keywordtype">bool</span> zoneFlip = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                <span class="keywordflow">if</span> (zoneID &gt;= 0)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                    <span class="keyword">const</span> <a class="code" href="a00741.html">faceZone</a>&amp; fZone = faceZones[zoneID];</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    zoneFlip = fZone.<a class="code" href="a00741.html#ae010e9aa1fb7b930973122f73b998498">flipMap</a>()[fZone.<a class="code" href="a00741.html#a44dd2110316f20b114950fef748cb7c2">whichFace</a>(face0)];</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                }</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                <span class="keywordflow">if</span> (d.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;flipMap&quot;</span>))</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    d.<a class="code" href="a00518.html#a8396ca7a6d20d7aeebc8b1ac9e18460b">set</a>(<span class="stringliteral">&quot;flipMap&quot;</span>, <a class="code" href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">boolList</a>(d.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;flipMap&quot;</span>)));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                <span class="keywordflow">if</span> (d.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;cellLabels&quot;</span>))</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    d.<a class="code" href="a00518.html#a8396ca7a6d20d7aeebc8b1ac9e18460b">set</a>(<span class="stringliteral">&quot;cellLabels&quot;</span>, <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(d.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;cellLabels&quot;</span>)));</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                <span class="keywordflow">if</span> (d.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;pointLabels&quot;</span>))</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                {</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                    d.<a class="code" href="a00518.html#a8396ca7a6d20d7aeebc8b1ac9e18460b">set</a>(<span class="stringliteral">&quot;pointLabels&quot;</span>, <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(d.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;pointLabels&quot;</span>)));</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a02856.html">word</a>&amp;<span class="keyword">&gt;</span>(<a class="code" href="a01176.html">IOPtrList&lt;entry&gt;::typeName</a>) = oldTypeName;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">// Fake type back to what was in field</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a02856.html">word</a>&amp;<span class="keyword">&gt;</span>(<a class="code" href="a01458.html">meshObject</a>.type()) = io.headerClassName();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        Writing &quot;</span> &lt;&lt; name &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                meshMod.<a class="code" href="a01937.html#a40a23962b792d24f4cb999f5b55aece2">setAction</a>(<a class="code" href="a01935.html">polyRemoveFace</a>(face1));</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                meshMod.<a class="code" href="a01937.html#a40a23962b792d24f4cb999f5b55aece2">setAction</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                (</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    <a class="code" href="a01925.html">polyModifyFace</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                    (</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                        faces[face0],           <span class="comment">// modified face</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                        face0,                  <span class="comment">// label of face being modified</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                        own0,                   <span class="comment">// owner</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                        own1,                   <span class="comment">// neighbour</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                        <span class="keyword">false</span>,                  <span class="comment">// face flip</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                        -1,                     <span class="comment">// patch for face</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                        <span class="keyword">false</span>,                  <span class="comment">// remove from zone</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                        zoneID,                 <span class="comment">// zone for face</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                        zoneFlip                <span class="comment">// face flip in zone</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                    )</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                );</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="comment">// Use face1 as the new internal face.</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> zoneID = faceZones.<a class="code" href="a02896.html#a6ffe5ffe3013200c7748e4c8fe8a883b">whichZone</a>(face1);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                <span class="keywordtype">bool</span> zoneFlip = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="comment">// Force writing as ascii</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        writeOk = <a class="code" href="a01458.html">meshObject</a>.regIOobject::writeObject</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        (</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d">IOstream::ASCII</a>,</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">IOstream::currentVersion</a>,</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            runTime.writeCompression()</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        );</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> writeOk;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;{</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <a class="code" href="a02602.html#a31c1a8888cbb272c4a519af132eab27d">timeSelector::addOptions</a>();</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <a class="code" href="a00065.html#a4713251600d03471873e0d9bd8379c5c">argList::addBoolOption</a></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    (</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="stringliteral">&quot;noConstant&quot;</span>,</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="stringliteral">&quot;exclude the &#39;constant/&#39; dir in the times list&quot;</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    );</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08147.html">addRegionOption.H</a>&quot;</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08162.html">setRootCase.H</a>&quot;</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                <span class="keywordflow">if</span> (zoneID &gt;= 0)</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                    <span class="keyword">const</span> <a class="code" href="a00741.html">faceZone</a>&amp; fZone = faceZones[zoneID];</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                    zoneFlip = fZone.<a class="code" href="a00741.html#ae010e9aa1fb7b930973122f73b998498">flipMap</a>()[fZone.<a class="code" href="a00741.html#a44dd2110316f20b114950fef748cb7c2">whichFace</a>(face1)];</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                meshMod.<a class="code" href="a01937.html#a40a23962b792d24f4cb999f5b55aece2">setAction</a>(<a class="code" href="a01935.html">polyRemoveFace</a>(face0));</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                meshMod.<a class="code" href="a01937.html#a40a23962b792d24f4cb999f5b55aece2">setAction</a></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                (</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                    <a class="code" href="a01925.html">polyModifyFace</a></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                    (</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                        faces[face1],           <span class="comment">// modified face</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;                        face1,                  <span class="comment">// label of face being modified</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                        own1,                   <span class="comment">// owner</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                        own0,                   <span class="comment">// neighbour</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                        <span class="keyword">false</span>,                  <span class="comment">// face flip</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                        -1,                     <span class="comment">// patch for face</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                        <span class="keyword">false</span>,                  <span class="comment">// remove from zone</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                        zoneID,                 <span class="comment">// zone for face</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                        zoneFlip                <span class="comment">// face flip in zone</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                    )</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                );</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        }</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="comment">// enable noConstant by switching</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00065.html#a1448e8925bc2243c51fa37aa47b66453">optionFound</a>(<span class="stringliteral">&quot;noConstant&quot;</span>))</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    {</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00065.html#a2b08057eb49b010e684062bc205c8f5e">setOption</a>(<span class="stringliteral">&quot;constant&quot;</span>, <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    {</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00065.html#abb0043a59507ba67bd011a6e69495081">unsetOption</a>(<span class="stringliteral">&quot;constant&quot;</span>);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Excluding the constant directory.&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<a class="code" href="a01364.html">labelList</a> findBaffles(<span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh, <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; boundaryFaces)</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;{</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="comment">// Get all duplicate face labels (in boundaryFaces indices!).</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <a class="code" href="a01364.html">labelList</a> duplicates = <a class="code" href="a01378.html#a6a37b082fe46b394cc065a8dfa76f62c">localPointRegion::findDuplicateFaces</a></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    (</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        mesh,</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        boundaryFaces</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    );</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08158.html">createTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">// Check that none are on processor patches</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01910.html">polyBoundaryMesh</a>&amp; patches = mesh.<a class="code" href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// Make sure we do not use the master-only reading since we read</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">// fields (different per processor) as dictionaries.</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="a02134.html#a5e6b440e162a87e2356e8650e1392c37">regIOobject::fileModificationChecking</a> = <a class="code" href="a02134.html#add6a30c9f9d2e0ea7a3b63d1cc7fab13a71662b623320c075c17352f381a78d56">regIOobject::timeStamp</a>;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <a class="code" href="a00774.html">fileName</a> meshDir = <a class="code" href="a01905.html#a2a92f855fa59e8fd35d1dcbfcc031394">polyMesh::meshSubDir</a>;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <a class="code" href="a00774.html">fileName</a> regionPrefix = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <a class="code" href="a02856.html">word</a> regionName = <a class="code" href="a01905.html#a5f1dd9c6b3190ebd0d3b9b4a9970cf97">polyMesh::defaultRegion</a>;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00065.html#ae541edb552fed41fb73c1defe98dbaf8">optionReadIfPresent</a>(<span class="stringliteral">&quot;region&quot;</span>, regionName))</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Using region &quot;</span> &lt;&lt; regionName &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        regionPrefix = <a class="code" href="a04687.html#abca3f18cb2dfcb39980b66c3e69cfbaa">regionName</a>;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        meshDir = regionName/<a class="code" href="a01905.html#a2a92f855fa59e8fd35d1dcbfcc031394">polyMesh::meshSubDir</a>;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    }</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="a01355.html">Foam::instantList</a> timeDirs = <a class="code" href="a02602.html#a8438f603c31fb433e6a1bc4f9137af62">Foam::timeSelector::select0</a>(runTime, <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>);</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(timeDirs, timeI)</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    {</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        runTime.setTime(timeDirs[timeI], timeI);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Time = &quot;</span> &lt;&lt; runTime.timeName() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="comment">// Convert all the standard mesh files</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        writeMeshObject&lt;cellCompactIOList&gt;(<span class="stringliteral">&quot;cells&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        writeMeshObject&lt;labelIOList&gt;(<span class="stringliteral">&quot;owner&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        writeMeshObject&lt;labelIOList&gt;(<span class="stringliteral">&quot;neighbour&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        writeMeshObject&lt;faceCompactIOList&gt;(<span class="stringliteral">&quot;faces&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        writeMeshObject&lt;pointIOField&gt;(<span class="stringliteral">&quot;points&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        writeMeshObject&lt;labelIOList&gt;(<span class="stringliteral">&quot;pointProcAddressing&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        writeMeshObject&lt;labelIOList&gt;(<span class="stringliteral">&quot;faceProcAddressing&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        writeMeshObject&lt;labelIOList&gt;(<span class="stringliteral">&quot;cellProcAddressing&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        writeMeshObject&lt;labelIOList&gt;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        (</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="stringliteral">&quot;boundaryProcAddressing&quot;</span>,</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            meshDir,</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            runTime</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        );</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        <span class="comment">// foamyHexMesh vertices</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        writeMeshObject&lt;pointIOField&gt;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        (</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            <span class="stringliteral">&quot;internalDelaunayVertices&quot;</span>,</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            regionPrefix,</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            runTime</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        );</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(duplicates, bFaceI)</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    {</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">if</span> (duplicates[bFaceI] != -1)</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>() + bFaceI;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = patches.<a class="code" href="a01910.html#a6d7e875689c6272231ad4b60139b7324">whichPatch</a>(faceI);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keywordflow">if</span> (isA&lt;processorPolyPatch&gt;(patches[patchI]))</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            {</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;Duplicate face &quot;</span> &lt;&lt; faceI</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; is on a processorPolyPatch.&quot;</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;This is not allowed.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;Face:&quot;</span> &lt;&lt; faceI</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; is on patch:&quot;</span> &lt;&lt; patches[patchI].<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>()</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;                    &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            }</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        }</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    }</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="comment">// Write to faceSet for ease of postprocessing.</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <a class="code" href="a00733.html">faceSet</a> duplicateSet</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        (</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            mesh,</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            <span class="stringliteral">&quot;duplicateFaces&quot;</span>,</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            (mesh.<a class="code" href="a01967.html#a9be088de373a98524a153de7da0e92e8">nFaces</a>() - mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>())/256</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        );</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(duplicates, bFaceI)</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        {</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> otherFaceI = duplicates[bFaceI];</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">if</span> (otherFaceI != -1 &amp;&amp; otherFaceI &gt; bFaceI)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            {</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;                duplicateSet.insert(mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>() + bFaceI);</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;                duplicateSet.insert(mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>() + otherFaceI);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            }</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Writing &quot;</span> &lt;&lt; duplicateSet.size()</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; duplicate faces to faceSet &quot;</span> &lt;&lt; duplicateSet.objectPath()</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        duplicateSet.<a class="code" href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a>();</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    }</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordflow">if</span> (runTime.writeFormat() == <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d">IOstream::ASCII</a>)</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        {</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            <span class="comment">// Only do zones when converting from binary to ascii</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            <span class="comment">// The other way gives problems since working on dictionary level.</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            writeZones(<span class="stringliteral">&quot;cellZones&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            writeZones(<span class="stringliteral">&quot;faceZones&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            writeZones(<span class="stringliteral">&quot;pointZones&quot;</span>, meshDir, runTime);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        }</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <span class="comment">// Get list of objects from the database</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <a class="code" href="a01171.html">IOobjectList</a> objects(runTime, runTime.timeName(), regionPrefix);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a01171.html">IOobjectList</a>, objects, iter)</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        {</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; headerClassName = iter()-&gt;headerClassName();</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            <span class="keywordflow">if</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            (</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">volScalarField::typeName</a></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">volVectorField::typeName</a></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">volSphericalTensorField::typeName</a></div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">volSymmTensorField::typeName</a></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">volTensorField::typeName</a></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">surfaceScalarField::typeName</a></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">surfaceVectorField::typeName</a></div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">surfaceSphericalTensorField::typeName</a></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">surfaceSymmTensorField::typeName</a></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">surfaceTensorField::typeName</a></div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">pointScalarField::typeName</a></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">pointVectorField::typeName</a></div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">pointSphericalTensorField::typeName</a></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">pointSymmTensorField::typeName</a></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;             || headerClassName == <a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">pointTensorField::typeName</a></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            )</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            {</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        Reading &quot;</span> &lt;&lt; headerClassName</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; iter()-&gt;name() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                <a class="code" href="a00755.html">fieldDictionary</a> fDict</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                (</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                    *iter(),</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                    headerClassName</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                );</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">return</span> duplicates;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;}</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;{</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <a class="code" href="a00067.html#a09bf9421c340fe4eabc3e26a15b1feba">argList::addNote</a></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    (</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="stringliteral">&quot;Detect faces that share points (baffles).\n&quot;</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <span class="stringliteral">&quot;Merge them or duplicate the points.&quot;</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    );</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08197.html">addOverwriteOption.H</a>&quot;</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08198.html">addRegionOption.H</a>&quot;</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <a class="code" href="a00067.html#a4713251600d03471873e0d9bd8379c5c">argList::addBoolOption</a></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    (</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        <span class="stringliteral">&quot;detectOnly&quot;</span>,</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        <span class="stringliteral">&quot;find baffles only, but do not merge or split them&quot;</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    );</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <a class="code" href="a00067.html#a4713251600d03471873e0d9bd8379c5c">argList::addBoolOption</a></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    (</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="stringliteral">&quot;split&quot;</span>,</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        <span class="stringliteral">&quot;topologically split duplicate surfaces&quot;</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    );</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08213.html">setRootCase.H</a>&quot;</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08209.html">createTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    runTime.functionObjects().off();</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08206.html">createNamedMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a> oldInstance = mesh.<a class="code" href="a01916.html#a53d666389621432730eebcc16566c363">pointsInstance</a>();</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> split      = <a class="code" href="a08213.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00067.html#a1448e8925bc2243c51fa37aa47b66453">optionFound</a>(<span class="stringliteral">&quot;split&quot;</span>);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> overwrite  = <a class="code" href="a08213.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00067.html#a1448e8925bc2243c51fa37aa47b66453">optionFound</a>(<span class="stringliteral">&quot;overwrite&quot;</span>);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> detectOnly = <a class="code" href="a08213.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00067.html#a1448e8925bc2243c51fa37aa47b66453">optionFound</a>(<span class="stringliteral">&quot;detectOnly&quot;</span>);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="comment">// Collect all boundary faces</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <a class="code" href="a01364.html">labelList</a> boundaryFaces(mesh.<a class="code" href="a01967.html#a9be088de373a98524a153de7da0e92e8">nFaces</a>() - mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>());</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(boundaryFaces, i)</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    {</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        boundaryFaces[i] = i+mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>();</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    }</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        Writing &quot;</span> &lt;&lt; iter()-&gt;name() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                fDict.regIOobject::write();</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            }</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordflow">if</span> (detectOnly)</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    {</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        findBaffles(mesh, boundaryFaces);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    }</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;End\n&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="comment">// Read objects in time directory</span></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <a class="code" href="a01180.html">IOobjectList</a> objects(mesh, runTime.timeName());</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="comment">// Read vol fields.</span></div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01905_html_a2a92f855fa59e8fd35d1dcbfcc031394"><div class="ttname"><a href="a01905.html#a2a92f855fa59e8fd35d1dcbfcc031394">Foam::polyMesh::meshSubDir</a></div><div class="ttdeci">static word meshSubDir</div><div class="ttdoc">Return the mesh sub-directory name (usually "polyMesh") </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00309">polyMesh.H:309</a></div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891">Foam::IOobject::MUST_READ</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00108">IOobject.H:108</a></div></div>
-<div class="ttc" id="a00518_html_ae9d6521e0e8d3956f9b49ddeb44877b8"><div class="ttname"><a href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">Foam::dictionary::found</a></div><div class="ttdeci">bool found(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Search dictionary for given keyword. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00306">dictionary.C:306</a></div></div>
-<div class="ttc" id="a08162_html"><div class="ttname"><a href="a08162.html">setRootCase.H</a></div></div>
-<div class="ttc" id="a00749_html_af642af0897d5cb478b60511ba0e60f10"><div class="ttname"><a href="a00749.html#af642af0897d5cb478b60511ba0e60f10">Foam::Field::typeName</a></div><div class="ttdeci">static const char *const typeName</div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00094">Field.H:94</a></div></div>
-<div class="ttc" id="a01171_html"><div class="ttname"><a href="a01171.html">Foam::IOobjectList</a></div><div class="ttdoc">List of IOobjects with searching and retrieving facilities. </div><div class="ttdef"><b>Definition:</b> <a href="a07700_source.html#l00050">IOobjectList.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a00065_html_ae541edb552fed41fb73c1defe98dbaf8"><div class="ttname"><a href="a00065.html#ae541edb552fed41fb73c1defe98dbaf8">Foam::argList::optionReadIfPresent</a></div><div class="ttdeci">bool optionReadIfPresent(const word &amp;opt, T &amp;) const </div><div class="ttdoc">Read a value from the named option if present. </div><div class="ttdef"><b>Definition:</b> <a href="a08098_source.html#l00198">argListI.H:198</a></div></div>
-<div class="ttc" id="a07809_html"><div class="ttname"><a href="a07809.html">timeSelector.H</a></div></div>
-<div class="ttc" id="a00065_html_a4713251600d03471873e0d9bd8379c5c"><div class="ttname"><a href="a00065.html#a4713251600d03471873e0d9bd8379c5c">Foam::argList::addBoolOption</a></div><div class="ttdeci">static void addBoolOption(const word &amp;opt, const string &amp;usage=&quot;&quot;)</div><div class="ttdoc">Add to a bool option to validOptions with usage information. </div><div class="ttdef"><b>Definition:</b> <a href="a08096_source.html#l00083">argList.C:83</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a07700_html"><div class="ttname"><a href="a07700.html">IOobjectList.H</a></div></div>
-<div class="ttc" id="a02134_html_add6a30c9f9d2e0ea7a3b63d1cc7fab13a71662b623320c075c17352f381a78d56"><div class="ttname"><a href="a02134.html#add6a30c9f9d2e0ea7a3b63d1cc7fab13a71662b623320c075c17352f381a78d56">Foam::regIOobject::timeStamp</a></div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00070">regIOobject.H:70</a></div></div>
-<div class="ttc" id="a00065_html_a1448e8925bc2243c51fa37aa47b66453"><div class="ttname"><a href="a00065.html#a1448e8925bc2243c51fa37aa47b66453">Foam::argList::optionFound</a></div><div class="ttdeci">bool optionFound(const word &amp;opt) const </div><div class="ttdoc">Return true if the named option is found. </div><div class="ttdef"><b>Definition:</b> <a href="a08098_source.html#l00108">argListI.H:108</a></div></div>
-<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::fieldDictionary</a></div><div class="ttdoc">Read field as dictionary (without mesh). </div><div class="ttdef"><b>Definition:</b> <a href="a07325_source.html#l00047">fieldDictionary.H:47</a></div></div>
-<div class="ttc" id="a01176_html"><div class="ttname"><a href="a01176.html">Foam::IOPtrList</a></div><div class="ttdoc">A PtrList of objects of type <T> with automated input and output. </div><div class="ttdef"><b>Definition:</b> <a href="a07716_source.html#l00050">IOPtrList.H:50</a></div></div>
-<div class="ttc" id="a08158_html"><div class="ttname"><a href="a08158.html">createTime.H</a></div></div>
-<div class="ttc" id="a04162_html"><div class="ttname"><a href="a04162.html">writeMeshObject.H</a></div><div class="ttdoc">Write a mesh object in the format specified in controlDict. </div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a08432_html"><div class="ttname"><a href="a08432.html">cellIOList.H</a></div></div>
-<div class="ttc" id="a07325_html"><div class="ttname"><a href="a07325.html">fieldDictionary.H</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; instant &gt;</a></div></div>
-<div class="ttc" id="a02596_html"><div class="ttname"><a href="a02596.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07804_source.html#l00068">Time.H:68</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a10675_html_a5e3d604f75e54acc2c36172444a6f612"><div class="ttname"><a href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">Foam::boolList</a></div><div class="ttdeci">List&lt; bool &gt; boolList</div><div class="ttdoc">Bool container classes. </div><div class="ttdef"><b>Definition:</b> <a href="a08753_source.html#l00050">boolList.H:50</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a01170_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00118">IOobject.H:118</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a08162_html_ab517f1c9143023797c59a4aa1b3ea71f"><div class="ttname"><a href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a></div><div class="ttdeci">Foam::argList args(argc, argv)</div></div>
-<div class="ttc" id="a01458_html"><div class="ttname"><a href="a01458.html">Foam::meshObject</a></div><div class="ttdef"><b>Definition:</b> <a href="a08427_source.html#l00160">MeshObject.H:160</a></div></div>
-<div class="ttc" id="a07716_html"><div class="ttname"><a href="a07716.html">IOPtrList.H</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a01905_html_a5f1dd9c6b3190ebd0d3b9b4a9970cf97"><div class="ttname"><a href="a01905.html#a5f1dd9c6b3190ebd0d3b9b4a9970cf97">Foam::polyMesh::defaultRegion</a></div><div class="ttdeci">static word defaultRegion</div><div class="ttdoc">Return the default region name. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00306">polyMesh.H:306</a></div></div>
-<div class="ttc" id="a00518_html_a8396ca7a6d20d7aeebc8b1ac9e18460b"><div class="ttname"><a href="a00518.html#a8396ca7a6d20d7aeebc8b1ac9e18460b">Foam::dictionary::set</a></div><div class="ttdeci">void set(entry *)</div><div class="ttdoc">Assign a new entry, overwrite any existing entry. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00866">dictionary.C:866</a></div></div>
-<div class="ttc" id="a08097_html"><div class="ttname"><a href="a08097.html">argList.H</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a00065_html_abb0043a59507ba67bd011a6e69495081"><div class="ttname"><a href="a00065.html#abb0043a59507ba67bd011a6e69495081">Foam::argList::unsetOption</a></div><div class="ttdeci">bool unsetOption(const word &amp;opt)</div><div class="ttdoc">Unset option directly (use with caution) </div><div class="ttdef"><b>Definition:</b> <a href="a08096_source.html#l00958">argList.C:958</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a02134_html_a5e6b440e162a87e2356e8650e1392c37"><div class="ttname"><a href="a02134.html#a5e6b440e162a87e2356e8650e1392c37">Foam::regIOobject::fileModificationChecking</a></div><div class="ttdeci">static fileCheckTypes fileModificationChecking</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00128">regIOobject.H:128</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a00065_html_a2b08057eb49b010e684062bc205c8f5e"><div class="ttname"><a href="a00065.html#a2b08057eb49b010e684062bc205c8f5e">Foam::argList::setOption</a></div><div class="ttdeci">bool setOption(const word &amp;opt, const string &amp;param=&quot;&quot;)</div><div class="ttdoc">Set option directly (use with caution) </div><div class="ttdef"><b>Definition:</b> <a href="a08096_source.html#l00883">argList.C:883</a></div></div>
-<div class="ttc" id="a10675_html_adda8d2f21637cf437577b8bfeda5a259"><div class="ttname"><a href="a10675.html#adda8d2f21637cf437577b8bfeda5a259">Foam::defineTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineTemplateTypeNameAndDebug(IOPtrList&lt; ensightPart &gt;, 0)</div></div>
-<div class="ttc" id="a07993_html"><div class="ttname"><a href="a07993.html">pointFields.H</a></div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d">Foam::IOstream::ASCII</a></div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00088">IOstream.H:88</a></div></div>
-<div class="ttc" id="a09365_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09365_source.html#l00054">postCalc.C:54</a></div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
-<div class="ttc" id="a01177_html_a2eebbb2b682d3d80e0de1d414d1a4fb2"><div class="ttname"><a href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">Foam::IOstream::currentVersion</a></div><div class="ttdeci">static const versionNumber currentVersion</div><div class="ttdoc">Current version number. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00206">IOstream.H:206</a></div></div>
-<div class="ttc" id="a04687_html_abca3f18cb2dfcb39980b66c3e69cfbaa"><div class="ttname"><a href="a04687.html#abca3f18cb2dfcb39980b66c3e69cfbaa">regionName</a></div><div class="ttdeci">Foam::word regionName</div><div class="ttdef"><b>Definition:</b> <a href="a04687_source.html#l00001">createNamedDynamicFvMesh.H:1</a></div></div>
-<div class="ttc" id="a02856_html_a5e70847c3fec3d9d4c7265dfacdf7fd3"><div class="ttname"><a href="a02856.html#a5e70847c3fec3d9d4c7265dfacdf7fd3">Foam::word::null</a></div><div class="ttdeci">static const word null</div><div class="ttdoc">An empty word. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00077">word.H:77</a></div></div>
-<div class="ttc" id="a02602_html_a31c1a8888cbb272c4a519af132eab27d"><div class="ttname"><a href="a02602.html#a31c1a8888cbb272c4a519af132eab27d">Foam::timeSelector::addOptions</a></div><div class="ttdeci">static void addOptions(const bool constant=true, const bool withZero=false)</div><div class="ttdoc">Add the options handled by timeSelector to argList::validOptions. </div><div class="ttdef"><b>Definition:</b> <a href="a07808_source.html#l00114">timeSelector.C:114</a></div></div>
-<div class="ttc" id="a08147_html"><div class="ttname"><a href="a08147.html">addRegionOption.H</a></div></div>
-<div class="ttc" id="a02602_html_a8438f603c31fb433e6a1bc4f9137af62"><div class="ttname"><a href="a02602.html#a8438f603c31fb433e6a1bc4f9137af62">Foam::timeSelector::select0</a></div><div class="ttdeci">static instantList select0(Time &amp;runTime, const argList &amp;args)</div><div class="ttdoc">Return the set of times selected based on the argList options. </div><div class="ttdef"><b>Definition:</b> <a href="a07808_source.html#l00253">timeSelector.C:253</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;volScalarField&gt;</a> vsFlds;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, vsFlds);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;volVectorField&gt;</a> vvFlds;</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, vvFlds);</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;volSphericalTensorField&gt;</a> vstFlds;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, vstFlds);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;volSymmTensorField&gt;</a> vsymtFlds;</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, vsymtFlds);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;volTensorField&gt;</a> vtFlds;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, vtFlds);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="comment">// Read surface fields.</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;surfaceScalarField&gt;</a> ssFlds;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, ssFlds);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;surfaceVectorField&gt;</a> svFlds;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, svFlds);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;surfaceSphericalTensorField&gt;</a> sstFlds;</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, sstFlds);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;surfaceSymmTensorField&gt;</a> ssymtFlds;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, ssymtFlds);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <a class="code" href="a02031.html">PtrList&lt;surfaceTensorField&gt;</a> stFlds;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <a class="code" href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">ReadFields</a>(mesh, objects, stFlds);</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="comment">// Mesh change engine</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <a class="code" href="a01937.html">polyTopoChange</a> meshMod(mesh);</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">if</span> (split)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Topologically splitting duplicate surfaces&quot;</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;, i.e. duplicating points internal to duplicate surfaces.&quot;</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="comment">// Analyse which points need to be duplicated</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <a class="code" href="a01378.html">localPointRegion</a> <a class="code" href="a02140.html">regionSide</a>(mesh);</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="comment">// Point duplication engine</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <a class="code" href="a00592.html">duplicatePoints</a> pointDuplicator(mesh);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="comment">// Insert topo changes</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        pointDuplicator.setRefinement(<a class="code" href="a02140.html">regionSide</a>, meshMod);</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    }</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    {</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Merging duplicate faces.&quot;</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="comment">// Get all duplicate face labels (in boundaryFaces indices!).</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <a class="code" href="a01364.html">labelList</a> duplicates(findBaffles(mesh, boundaryFaces));</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        <span class="comment">// Merge into internal faces.</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        insertDuplicateMerge(mesh, duplicates, meshMod);</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    }</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordflow">if</span> (!overwrite)</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        runTime++;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="comment">// Change the mesh. No inflation.</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <a class="code" href="a00086.html">autoPtr&lt;mapPolyMesh&gt;</a> map = meshMod.<a class="code" href="a01937.html#a1b105b13373ba9f1c7685f873b250cf2">changeMesh</a>(mesh, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="comment">// Update fields</span></div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    mesh.<a class="code" href="a01916.html#a9c8cde0b192708d622d874f8cc2df66d">updateMesh</a>(map);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="comment">// Move mesh (since morphing does not do this)</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">if</span> (map().hasMotionPoints())</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    {</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        mesh.<a class="code" href="a01916.html#a3693c648bea2e99054cbbb75d4bf4e4d">movePoints</a>(map().preMotionPoints());</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    }</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <span class="keywordflow">if</span> (overwrite)</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    {</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;        mesh.<a class="code" href="a01916.html#add9813891a074bebd77384af1717b0bf">setInstance</a>(oldInstance);</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    }</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Writing mesh to time &quot;</span> &lt;&lt; runTime.timeName() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    mesh.<a class="code" href="a02145.html#a6e5faa425b059eeb55cd904755791076">write</a>();</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="comment">// Dump duplicated points (if any)</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">if</span> (split)</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    {</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; pointMap = map().pointMap();</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <a class="code" href="a01364.html">labelList</a> nDupPerPoint(map().nOldPoints(), 0);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        <a class="code" href="a01898.html">pointSet</a> dupPoints(mesh, <span class="stringliteral">&quot;duplicatedPoints&quot;</span>, 100);</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pointMap, pointI)</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        {</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> oldPointI = pointMap[pointI];</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            nDupPerPoint[oldPointI]++;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;            <span class="keywordflow">if</span> (nDupPerPoint[oldPointI] &gt; 1)</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            {</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                dupPoints.insert(map().reversePointMap()[oldPointI]);</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                dupPoints.insert(pointI);</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;            }</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        }</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Writing &quot;</span> &lt;&lt; dupPoints.size()</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; duplicated points to pointSet &quot;</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;            &lt;&lt; dupPoints.objectPath() &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        dupPoints.<a class="code" href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a>();</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    }</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;End\n&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;}</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a16c6d7049c7bb00a3ebca6e545109f15"><div class="ttname"><a href="a10725.html#a16c6d7049c7bb00a3ebca6e545109f15">Foam::ReadFields</a></div><div class="ttdeci">wordList ReadFields(const Mesh &amp;mesh, const IOobjectList &amp;objects, PtrList&lt; GeoField &gt; &amp;fields, const bool syncPar=true)</div><div class="ttdoc">Helper routine to read fields. </div></div>
+<div class="ttc" id="a00741_html_a44dd2110316f20b114950fef748cb7c2"><div class="ttname"><a href="a00741.html#a44dd2110316f20b114950fef748cb7c2">Foam::faceZone::whichFace</a></div><div class="ttdeci">label whichFace(const label globalCellID) const </div><div class="ttdoc">Helper function to re-direct to zone::localID(...) </div><div class="ttdef"><b>Definition:</b> <a href="a08683_source.html#l00314">faceZone.C:314</a></div></div>
+<div class="ttc" id="a01916_html_aa3b2dc268f43cd7ca2d043febae4f0e6"><div class="ttname"><a href="a01916.html#aa3b2dc268f43cd7ca2d043febae4f0e6">Foam::polyMesh::faceZones</a></div><div class="ttdeci">const faceZoneMesh &amp; faceZones() const </div><div class="ttdoc">Return face zone mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00463">polyMesh.H:463</a></div></div>
+<div class="ttc" id="a01180_html"><div class="ttname"><a href="a01180.html">Foam::IOobjectList</a></div><div class="ttdoc">List of IOobjects with searching and retrieving facilities. </div><div class="ttdef"><b>Definition:</b> <a href="a07751_source.html#l00050">IOobjectList.H:50</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a04885_html"><div class="ttname"><a href="a04885.html">polyTopoChange.H</a></div></div>
+<div class="ttc" id="a04902_html"><div class="ttname"><a href="a04902.html">polyRemoveFace.H</a></div></div>
+<div class="ttc" id="a07855_html"><div class="ttname"><a href="a07855.html">Time.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a04871_html"><div class="ttname"><a href="a04871.html">duplicatePoints.H</a></div></div>
+<div class="ttc" id="a01937_html_a40a23962b792d24f4cb999f5b55aece2"><div class="ttname"><a href="a01937.html#a40a23962b792d24f4cb999f5b55aece2">Foam::polyTopoChange::setAction</a></div><div class="ttdeci">label setAction(const topoAction &amp;action)</div><div class="ttdoc">For compatibility with polyTopoChange: set topological action. </div><div class="ttdef"><b>Definition:</b> <a href="a04884_source.html#l02515">polyTopoChange.C:2515</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a08206_html"><div class="ttname"><a href="a08206.html">createNamedMesh.H</a></div></div>
+<div class="ttc" id="a00741_html_ae010e9aa1fb7b930973122f73b998498"><div class="ttname"><a href="a00741.html#ae010e9aa1fb7b930973122f73b998498">Foam::faceZone::flipMap</a></div><div class="ttdeci">const boolList &amp; flipMap() const </div><div class="ttdoc">Return face flip map. </div><div class="ttdef"><b>Definition:</b> <a href="a08684_source.html#l00249">faceZone.H:249</a></div></div>
+<div class="ttc" id="a01910_html"><div class="ttname"><a href="a01910.html">Foam::polyBoundaryMesh</a></div><div class="ttdoc">Foam::polyBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08626_source.html#l00060">polyBoundaryMesh.H:60</a></div></div>
+<div class="ttc" id="a02145_html_a6e5faa425b059eeb55cd904755791076"><div class="ttname"><a href="a02145.html#a6e5faa425b059eeb55cd904755791076">Foam::regIOobject::write</a></div><div class="ttdeci">virtual bool write() const </div><div class="ttdoc">Write using setting from DB. </div><div class="ttdef"><b>Definition:</b> <a href="a07838_source.html#l00126">regIOobjectWrite.C:126</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a08209_html"><div class="ttname"><a href="a08209.html">createTime.H</a></div></div>
+<div class="ttc" id="a05609_html"><div class="ttname"><a href="a05609.html">volFields.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01916_html_a4434536d50d4c14116249da802a1e2b2"><div class="ttname"><a href="a01916.html#a4434536d50d4c14116249da802a1e2b2">Foam::polyMesh::faces</a></div><div class="ttdeci">virtual const faceList &amp; faces() const </div><div class="ttdoc">Return raw faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01004">polyMesh.C:1004</a></div></div>
+<div class="ttc" id="a01916_html_a53d666389621432730eebcc16566c363"><div class="ttname"><a href="a01916.html#a53d666389621432730eebcc16566c363">Foam::polyMesh::pointsInstance</a></div><div class="ttdeci">const fileName &amp; pointsInstance() const </div><div class="ttdoc">Return the current instance directory for points. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00772">polyMesh.C:772</a></div></div>
+<div class="ttc" id="a02896_html_a6ffe5ffe3013200c7748e4c8fe8a883b"><div class="ttname"><a href="a02896.html#a6ffe5ffe3013200c7748e4c8fe8a883b">Foam::ZoneMesh::whichZone</a></div><div class="ttdeci">label whichZone(const label objectIndex) const </div><div class="ttdoc">Given a global object index, return the zone it is in. </div><div class="ttdef"><b>Definition:</b> <a href="a08700_source.html#l00226">ZoneMesh.C:226</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a01916_html_add9813891a074bebd77384af1717b0bf"><div class="ttname"><a href="a01916.html#add9813891a074bebd77384af1717b0bf">Foam::polyMesh::setInstance</a></div><div class="ttdeci">void setInstance(const fileName &amp;)</div><div class="ttdoc">Set the instance for mesh files. </div><div class="ttdef"><b>Definition:</b> <a href="a08638_source.html#l00032">polyMeshIO.C:32</a></div></div>
+<div class="ttc" id="a00741_html"><div class="ttname"><a href="a00741.html">Foam::faceZone</a></div><div class="ttdoc">A subset of mesh faces organised as a primitive patch. </div><div class="ttdef"><b>Definition:</b> <a href="a08684_source.html#l00064">faceZone.H:64</a></div></div>
+<div class="ttc" id="a01935_html"><div class="ttname"><a href="a01935.html">Foam::polyRemoveFace</a></div><div class="ttdoc">Class containing data for face removal. </div><div class="ttdef"><b>Definition:</b> <a href="a04902_source.html#l00046">polyRemoveFace.H:46</a></div></div>
+<div class="ttc" id="a04879_html"><div class="ttname"><a href="a04879.html">polyModifyFace.H</a></div></div>
+<div class="ttc" id="a10725_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10725.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00131">errorManip.H:131</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a02896_html"><div class="ttname"><a href="a02896.html">Foam::ZoneMesh&lt; faceZone, polyMesh &gt;</a></div></div>
+<div class="ttc" id="a08737_html"><div class="ttname"><a href="a08737.html">indirectPrimitivePatch.H</a></div></div>
+<div class="ttc" id="a01910_html_a6d7e875689c6272231ad4b60139b7324"><div class="ttname"><a href="a01910.html#a6d7e875689c6272231ad4b60139b7324">Foam::polyBoundaryMesh::whichPatch</a></div><div class="ttdeci">label whichPatch(const label faceIndex) const </div><div class="ttdoc">Return patch index for a given face label. </div><div class="ttdef"><b>Definition:</b> <a href="a08625_source.html#l00703">polyBoundaryMesh.C:703</a></div></div>
+<div class="ttc" id="a08213_html"><div class="ttname"><a href="a08213.html">setRootCase.H</a></div></div>
+<div class="ttc" id="a08198_html"><div class="ttname"><a href="a08198.html">addRegionOption.H</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a07460_html"><div class="ttname"><a href="a07460.html">pointSet.H</a></div></div>
+<div class="ttc" id="a01736_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
+<div class="ttc" id="a08660_html"><div class="ttname"><a href="a08660.html">processorPolyPatch.H</a></div></div>
+<div class="ttc" id="a01916_html_a6d4def83436c9aa4dc68e8e42c5cf268"><div class="ttname"><a href="a01916.html#a6d4def83436c9aa4dc68e8e42c5cf268">Foam::polyMesh::faceOwner</a></div><div class="ttdeci">virtual const labelList &amp; faceOwner() const </div><div class="ttdoc">Return face owner. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01017">polyMesh.C:1017</a></div></div>
+<div class="ttc" id="a08677_html"><div class="ttname"><a href="a08677.html">syncTools.H</a></div></div>
+<div class="ttc" id="a01378_html_a6a37b082fe46b394cc065a8dfa76f62c"><div class="ttname"><a href="a01378.html#a6a37b082fe46b394cc065a8dfa76f62c">Foam::localPointRegion::findDuplicateFaces</a></div><div class="ttdeci">static labelList findDuplicateFaces(const primitiveMesh &amp;, const labelList &amp;)</div><div class="ttdoc">Helper routine to find baffles (two boundary faces using the. </div><div class="ttdef"><b>Definition:</b> <a href="a07334_source.html#l00504">localPointRegion.C:504</a></div></div>
+<div class="ttc" id="a00067_html_a4713251600d03471873e0d9bd8379c5c"><div class="ttname"><a href="a00067.html#a4713251600d03471873e0d9bd8379c5c">Foam::argList::addBoolOption</a></div><div class="ttdeci">static void addBoolOption(const word &amp;opt, const string &amp;usage=&quot;&quot;)</div><div class="ttdoc">Add to a bool option to validOptions with usage information. </div><div class="ttdef"><b>Definition:</b> <a href="a08147_source.html#l00083">argList.C:83</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a08197_html"><div class="ttname"><a href="a08197.html">addOverwriteOption.H</a></div></div>
+<div class="ttc" id="a01378_html"><div class="ttname"><a href="a01378.html">Foam::localPointRegion</a></div><div class="ttdoc">Takes mesh with &#39;baffles&#39; (= boundary faces sharing points). Determines for selected points on bounda...</div><div class="ttdef"><b>Definition:</b> <a href="a07335_source.html#l00067">localPointRegion.H:67</a></div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a01937_html_a1b105b13373ba9f1c7685f873b250cf2"><div class="ttname"><a href="a01937.html#a1b105b13373ba9f1c7685f873b250cf2">Foam::polyTopoChange::changeMesh</a></div><div class="ttdeci">autoPtr&lt; mapPolyMesh &gt; changeMesh(polyMesh &amp;mesh, const bool inflate, const bool syncParallel=true, const bool orderCells=false, const bool orderPoints=false)</div><div class="ttdoc">Inplace changes mesh without change of patches. </div><div class="ttdef"><b>Definition:</b> <a href="a04884_source.html#l03024">polyTopoChange.C:3024</a></div></div>
+<div class="ttc" id="a00067_html_a1448e8925bc2243c51fa37aa47b66453"><div class="ttname"><a href="a00067.html#a1448e8925bc2243c51fa37aa47b66453">Foam::argList::optionFound</a></div><div class="ttdeci">bool optionFound(const word &amp;opt) const </div><div class="ttdoc">Return true if the named option is found. </div><div class="ttdef"><b>Definition:</b> <a href="a08149_source.html#l00108">argListI.H:108</a></div></div>
+<div class="ttc" id="a08148_html"><div class="ttname"><a href="a08148.html">argList.H</a></div></div>
+<div class="ttc" id="a00733_html"><div class="ttname"><a href="a00733.html">Foam::faceSet</a></div><div class="ttdoc">A list of face labels. </div><div class="ttdef"><b>Definition:</b> <a href="a07456_source.html#l00048">faceSet.H:48</a></div></div>
+<div class="ttc" id="a01937_html"><div class="ttname"><a href="a01937.html">Foam::polyTopoChange</a></div><div class="ttdoc">Direct mesh changes based on v1.3 polyTopoChange syntax. </div><div class="ttdef"><b>Definition:</b> <a href="a04885_source.html#l00097">polyTopoChange.H:97</a></div></div>
+<div class="ttc" id="a08213_html_ab517f1c9143023797c59a4aa1b3ea71f"><div class="ttname"><a href="a08213.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a></div><div class="ttdeci">Foam::argList args(argc, argv)</div></div>
+<div class="ttc" id="a01925_html"><div class="ttname"><a href="a01925.html">Foam::polyModifyFace</a></div><div class="ttdoc">Class describing modification of a face. </div><div class="ttdef"><b>Definition:</b> <a href="a04879_source.html#l00048">polyModifyFace.H:48</a></div></div>
+<div class="ttc" id="a00067_html_a09bf9421c340fe4eabc3e26a15b1feba"><div class="ttname"><a href="a00067.html#a09bf9421c340fe4eabc3e26a15b1feba">Foam::argList::addNote</a></div><div class="ttdeci">static void addNote(const string &amp;)</div><div class="ttdoc">Add extra notes for the usage information. </div><div class="ttdef"><b>Definition:</b> <a href="a08147_source.html#l00124">argList.C:124</a></div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a01898_html"><div class="ttname"><a href="a01898.html">Foam::pointSet</a></div><div class="ttdoc">A set of point labels. </div><div class="ttdef"><b>Definition:</b> <a href="a07460_source.html#l00048">pointSet.H:48</a></div></div>
+<div class="ttc" id="a02140_html"><div class="ttname"><a href="a02140.html">Foam::regionSide</a></div><div class="ttdoc">Determines the &#39;side&#39; for every face and connected to a singly-connected (through edges) region of fa...</div><div class="ttdef"><b>Definition:</b> <a href="a04191_source.html#l00061">regionSide.H:61</a></div></div>
+<div class="ttc" id="a07456_html"><div class="ttname"><a href="a07456.html">faceSet.H</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a01967_html_aa1eec60bd258a70018b8ffda0dced7bb"><div class="ttname"><a href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">Foam::primitiveMesh::nInternalFaces</a></div><div class="ttdeci">label nInternalFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00082">primitiveMeshI.H:82</a></div></div>
+<div class="ttc" id="a01916_html_a9c8cde0b192708d622d874f8cc2df66d"><div class="ttname"><a href="a01916.html#a9c8cde0b192708d622d874f8cc2df66d">Foam::polyMesh::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(const mapPolyMesh &amp;mpm)</div><div class="ttdoc">Update the mesh corresponding to given map. </div><div class="ttdef"><b>Definition:</b> <a href="a08644_source.html#l00039">polyMeshUpdate.C:39</a></div></div>
+<div class="ttc" id="a00592_html"><div class="ttname"><a href="a00592.html">Foam::duplicatePoints</a></div><div class="ttdoc">Duplicate points. </div><div class="ttdef"><b>Definition:</b> <a href="a04871_source.html#l00057">duplicatePoints.H:57</a></div></div>
+<div class="ttc" id="a01916_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00421">polyMesh.H:421</a></div></div>
+<div class="ttc" id="a07303_html"><div class="ttname"><a href="a07303.html">meshTools.H</a></div></div>
+<div class="ttc" id="a01967_html_a9be088de373a98524a153de7da0e92e8"><div class="ttname"><a href="a01967.html#a9be088de373a98524a153de7da0e92e8">Foam::primitiveMesh::nFaces</a></div><div class="ttdeci">label nFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00088">primitiveMeshI.H:88</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a09417_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09417_source.html#l00054">postCalc.C:54</a></div></div>
+<div class="ttc" id="a08142_html"><div class="ttname"><a href="a08142.html">ReadFields.H</a></div><div class="ttdoc">Helper routine to read fields. </div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
+<div class="ttc" id="a07335_html"><div class="ttname"><a href="a07335.html">localPointRegion.H</a></div></div>
+<div class="ttc" id="a01916_html_a3693c648bea2e99054cbbb75d4bf4e4d"><div class="ttname"><a href="a01916.html#a3693c648bea2e99054cbbb75d4bf4e4d">Foam::polyMesh::movePoints</a></div><div class="ttdeci">virtual tmp&lt; scalarField &gt; movePoints(const pointField &amp;)</div><div class="ttdoc">Move points, returns volumes swept by faces in motion. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01048">polyMesh.C:1048</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

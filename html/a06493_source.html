@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_0e9805b96b2bf461314a136059d44950.html">Templates</a></li><li class="navelem"><a class="el" href="dir_f5d1b081941abbb98c3b184000882efb.html">CollidingParcel</a></li><li class="navelem"><a class="el" href="dir_dae8fc5c31387a08d81c17f3a94706cb.html">CollisionRecordList</a></li><li class="navelem"><a class="el" href="dir_9c0f60b1627696c6fa31f6530ff8fc78.html">PairCollisionRecord</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_d25ce32b8f85f1a08cd016b541e3d76e.html">derived</a></li><li class="navelem"><a class="el" href="dir_bd7333e83632f0ae52d8ae573767a17d.html">basicKinematicMPPICParcel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">PairCollisionRecordIO.C</div>  </div>
+<div class="title">makeBasicKinematicMPPICParcelSubmodels.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06493.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,77 +121,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06491.html">PairCollisionRecord.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07724.html">IOstreams.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a01750.html#ac128b0c7366baead4a0d0460807e1f78">   32</a></span>&#160;<a class="code" href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord&lt;Type&gt;::PairCollisionRecord</a>(<a class="code" href="a01191.html">Istream</a>&amp; is)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    origProcOfOther_(<a class="code" href="a10675.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(is)),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    origIdOfOther_(<a class="code" href="a10675.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(is)),</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    data_(is)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Check state of Istream</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    is.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="stringliteral">&quot;Foam::PairCollisionRecord&lt;Type&gt;::PairCollisionRecord(Foam::Istream&amp;)&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    );</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06451.html">basicKinematicMPPICCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06514.html">makeParcelCloudFunctionObjects.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Kinematic sub-models</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06517.html">makeParcelForces.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06516.html">makeParcelDispersionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06519.html">makeParcelInjectionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06520.html">makeParcelPatchInteractionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06521.html">makeParcelStochasticCollisionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06522.html">makeParcelSurfaceFilmModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// MPPIC sub-models</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06511.html">makeMPPICParcelDampingModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06512.html">makeMPPICParcelIsotropyModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06513.html">makeMPPICParcelPackingModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a01191.html">Foam::Istream</a>&amp; <a class="code" href="a10675.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a>(<a class="code" href="a01191.html">Istream</a>&amp; is, <a class="code" href="a01750.html">PairCollisionRecord&lt;Type&gt;</a>&amp; pCR)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    is  &gt;&gt; pCR.origProcOfOther_ &gt;&gt; pCR.origIdOfOther_ &gt;&gt; pCR.data_;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Check state of Istream</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    is.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    (</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="stringliteral">&quot;Foam::Istream&amp;&quot;</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="stringliteral">&quot;Foam::operator&gt;&gt;(Foam::Istream&amp;, Foam::PairCollisionRecord&lt;Type&gt;&amp;)&quot;</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    );</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> is;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; Foam::operator&lt;&lt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;(</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    Ostream&amp; os,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> PairCollisionRecord&lt;Type&gt;&amp; pCR</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    os  &lt;&lt; pCR.origProcOfOther_</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        &lt;&lt; <a class="code" href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">token::SPACE</a> &lt;&lt; pCR.origIdOfOther_</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        &lt;&lt; <a class="code" href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">token::SPACE</a> &lt;&lt; pCR.data_;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Check state of Ostream</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    os.check</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    (</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="stringliteral">&quot;Foam::Ostream&amp; Foam::operator&lt;&lt;(Foam::Ostream&amp;, &quot;</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="stringliteral">&quot;const Foam::PairCollisionRecord&lt;Type&gt;&amp;)&quot;</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    );</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> os;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01750_html_a726312fd7b0677c368c93da7903f3c50"><div class="ttname"><a href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord::PairCollisionRecord</a></div><div class="ttdeci">PairCollisionRecord()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a06490_source.html#l00031">PairCollisionRecord.C:31</a></div></div>
-<div class="ttc" id="a10675_html_abb09fbcf651d29208982dd7a601b606f"><div class="ttname"><a href="a10675.html#abb09fbcf651d29208982dd7a601b606f">Foam::readLabel</a></div><div class="ttdeci">label readLabel(Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00064">label.H:64</a></div></div>
-<div class="ttc" id="a02609_html_a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95"><div class="ttname"><a href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">Foam::token::SPACE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07774_source.html#l00095">token.H:95</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a01750_html"><div class="ttname"><a href="a01750.html">Foam::PairCollisionRecord</a></div><div class="ttdoc">Record of a collision between the particle holding the record and the particle with the stored id...</div><div class="ttdef"><b>Definition:</b> <a href="a06491_source.html#l00056">PairCollisionRecord.H:56</a></div></div>
-<div class="ttc" id="a01177_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01177.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07728_source.html#l00092">IOstream.C:92</a></div></div>
-<div class="ttc" id="a10675_html_a44f398e0525f8d7f48cead029868d845"><div class="ttname"><a href="a10675.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a></div><div class="ttdeci">Istream &amp; operator&gt;&gt;(Istream &amp;, edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04915_source.html#l00144">edgeMeshIO.C:144</a></div></div>
-<div class="ttc" id="a07724_html"><div class="ttname"><a href="a07724.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a06491_html"><div class="ttname"><a href="a06491.html">PairCollisionRecord.H</a></div></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a06493.html#a7c758038efe2be809e0708f73d05fec0">makeParcelCloudFunctionObjects</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// Kinematic sub-models</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="a06493.html#a3a6a48b2edc7bb9bafc082741aaf2ce8">makeParcelForces</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="a06493.html#a6ca63ac9ebf9e79fc1b73157d0ff20e4">makeParcelDispersionModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="a06493.html#a236033189b0a16c8c0bdf8fab105969d">makeParcelInjectionModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="a06493.html#aaa465606ccb6c1435ae2dbd732ab940a">makeParcelPatchInteractionModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a06493.html#a30d4499b75b478d1fcfe69f27ca90741">makeParcelStochasticCollisionModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a06493.html#a1a23274616a326cd39b449819b134e19">makeParcelSurfaceFilmModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// MPPIC sub-models</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="a06493.html#a6ff9ad0d749500ccf620fc4fc445a175">makeMPPICParcelDampingModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="a06493.html#af7079bcb90f3ead4fad5ea66350c3e0c">makeMPPICParcelIsotropyModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<a class="code" href="a06493.html#ac99bacd2cb5c779fb77616292d5836e3">makeMPPICParcelPackingModels</a>(<a class="code" href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">basicKinematicMPPICCloud</a>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a06493_html_aaa465606ccb6c1435ae2dbd732ab940a"><div class="ttname"><a href="a06493.html#aaa465606ccb6c1435ae2dbd732ab940a">makeParcelPatchInteractionModels</a></div><div class="ttdeci">makeParcelPatchInteractionModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a10725_html_a20d7a7f7ef8c6457d2fa540cf450cfc5"><div class="ttname"><a href="a10725.html#a20d7a7f7ef8c6457d2fa540cf450cfc5">Foam::basicKinematicMPPICCloud</a></div><div class="ttdeci">MPPICCloud&lt; KinematicCloud&lt; Cloud&lt; basicKinematicMPPICParcel &gt; &gt; &gt; basicKinematicMPPICCloud</div><div class="ttdef"><b>Definition:</b> <a href="a06451_source.html#l00052">basicKinematicMPPICCloud.H:52</a></div></div>
+<div class="ttc" id="a06493_html_a6ca63ac9ebf9e79fc1b73157d0ff20e4"><div class="ttname"><a href="a06493.html#a6ca63ac9ebf9e79fc1b73157d0ff20e4">makeParcelDispersionModels</a></div><div class="ttdeci">makeParcelDispersionModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06493_html_a236033189b0a16c8c0bdf8fab105969d"><div class="ttname"><a href="a06493.html#a236033189b0a16c8c0bdf8fab105969d">makeParcelInjectionModels</a></div><div class="ttdeci">makeParcelInjectionModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06521_html"><div class="ttname"><a href="a06521.html">makeParcelStochasticCollisionModels.H</a></div></div>
+<div class="ttc" id="a06493_html_a30d4499b75b478d1fcfe69f27ca90741"><div class="ttname"><a href="a06493.html#a30d4499b75b478d1fcfe69f27ca90741">makeParcelStochasticCollisionModels</a></div><div class="ttdeci">makeParcelStochasticCollisionModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06514_html"><div class="ttname"><a href="a06514.html">makeParcelCloudFunctionObjects.H</a></div></div>
+<div class="ttc" id="a06512_html"><div class="ttname"><a href="a06512.html">makeMPPICParcelIsotropyModels.H</a></div></div>
+<div class="ttc" id="a06493_html_a6ff9ad0d749500ccf620fc4fc445a175"><div class="ttname"><a href="a06493.html#a6ff9ad0d749500ccf620fc4fc445a175">makeMPPICParcelDampingModels</a></div><div class="ttdeci">makeMPPICParcelDampingModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06517_html"><div class="ttname"><a href="a06517.html">makeParcelForces.H</a></div></div>
+<div class="ttc" id="a06493_html_ac99bacd2cb5c779fb77616292d5836e3"><div class="ttname"><a href="a06493.html#ac99bacd2cb5c779fb77616292d5836e3">makeMPPICParcelPackingModels</a></div><div class="ttdeci">makeMPPICParcelPackingModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06520_html"><div class="ttname"><a href="a06520.html">makeParcelPatchInteractionModels.H</a></div></div>
+<div class="ttc" id="a06513_html"><div class="ttname"><a href="a06513.html">makeMPPICParcelPackingModels.H</a></div></div>
+<div class="ttc" id="a06511_html"><div class="ttname"><a href="a06511.html">makeMPPICParcelDampingModels.H</a></div></div>
+<div class="ttc" id="a06493_html_a7c758038efe2be809e0708f73d05fec0"><div class="ttname"><a href="a06493.html#a7c758038efe2be809e0708f73d05fec0">makeParcelCloudFunctionObjects</a></div><div class="ttdeci">makeParcelCloudFunctionObjects(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06493_html_af7079bcb90f3ead4fad5ea66350c3e0c"><div class="ttname"><a href="a06493.html#af7079bcb90f3ead4fad5ea66350c3e0c">makeMPPICParcelIsotropyModels</a></div><div class="ttdeci">makeMPPICParcelIsotropyModels(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06451_html"><div class="ttname"><a href="a06451.html">basicKinematicMPPICCloud.H</a></div></div>
+<div class="ttc" id="a06493_html_a3a6a48b2edc7bb9bafc082741aaf2ce8"><div class="ttname"><a href="a06493.html#a3a6a48b2edc7bb9bafc082741aaf2ce8">makeParcelForces</a></div><div class="ttdeci">makeParcelForces(basicKinematicMPPICCloud)</div></div>
+<div class="ttc" id="a06516_html"><div class="ttname"><a href="a06516.html">makeParcelDispersionModels.H</a></div></div>
+<div class="ttc" id="a06519_html"><div class="ttname"><a href="a06519.html">makeParcelInjectionModels.H</a></div></div>
+<div class="ttc" id="a06522_html"><div class="ttname"><a href="a06522.html">makeParcelSurfaceFilmModels.H</a></div></div>
+<div class="ttc" id="a06493_html_a1a23274616a326cd39b449819b134e19"><div class="ttname"><a href="a06493.html#a1a23274616a326cd39b449819b134e19">makeParcelSurfaceFilmModels</a></div><div class="ttdeci">makeParcelSurfaceFilmModels(basicKinematicMPPICCloud)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_807b34448f78de7c3bc4530ef499b703.html">fvsPatchFields</a></li><li class="navelem"><a class="el" href="dir_d3657b0b23136d928b995b4c42c4ccd9.html">constraint</a></li><li class="navelem"><a class="el" href="dir_8f981e8f3daa2baf0a0a40f4848c667b.html">cyclicACMI</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_a5850494bc77049b2a182260f0d1f703.html">fvPatchFields</a></li><li class="navelem"><a class="el" href="dir_ece9aa6b5af9a7776a75b0c1993b0910.html">derived</a></li><li class="navelem"><a class="el" href="dir_32dcbdce771c03f3965b40cf4d54b3d1.html">uniformJumpAMI</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">cyclicACMIFvsPatchFields.C</div>  </div>
+<div class="title">uniformJumpAMIFvPatchField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05492.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,29 +121,137 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05493.html">cyclicACMIFvsPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05544.html">fvsPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05493.html">uniformJumpAMIFvPatchField.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a10675.html#aff57f76de9808b4328f83630c34b2c52">makeFvsPatchFields</a>(cyclicACMI);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::uniformJumpAMIFvPatchField</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">   32</a></span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    jumpTable_(0)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{}</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_aff57f76de9808b4328f83630c34b2c52"><div class="ttname"><a href="a10675.html#aff57f76de9808b4328f83630c34b2c52">Foam::makeFvsPatchFields</a></div><div class="ttdeci">makeFvsPatchFields(calculated)</div></div>
-<div class="ttc" id="a05493_html"><div class="ttname"><a href="a05493.html">cyclicACMIFvsPatchFields.H</a></div></div>
-<div class="ttc" id="a05544_html"><div class="ttname"><a href="a05544.html">fvsPatchFields.H</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::uniformJumpAMIFvPatchField</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a02750.html#ad5f7b3c8d4f24f63e20a55ba74985f4f">   44</a></span>&#160;(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02750.html">uniformJumpAMIFvPatchField&lt;Type&gt;</a>&amp; ptf,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp; mapper</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;</a>(ptf, <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF, mapper),</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    jumpTable_(ptf.jumpTable_, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::uniformJumpAMIFvPatchField</a></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a02750.html#a81a47a5f2e6d1ba8cb2c4e8ed275313b">   58</a></span>&#160;(</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF),</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    jumpTable_(<span class="keyword">new</span> <a class="code" href="a00503.html">DataEntry&lt;Type&gt;</a>(<span class="stringliteral">&quot;jumpTable&quot;</span>))</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span> (this-&gt;cyclicAMIPatch().owner())</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        jumpTable_ = <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">DataEntry&lt;Type&gt;::New</a>(<span class="stringliteral">&quot;jumpTable&quot;</span>, dict);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (dict.<a class="code" href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;value&quot;</span>))</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a00886.html">fvPatchField&lt;Type&gt;::operator=</a>(<a class="code" href="a00755.html">Field&lt;Type&gt;</a>(<span class="stringliteral">&quot;value&quot;</span>, dict, p.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()));</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        this-&gt;evaluate(Pstream::blocking);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<a class="code" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::uniformJumpAMIFvPatchField</a></div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="a02750.html#ac71f3c18b5c789e211e18494b6f847b9">   85</a></span>&#160;(</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02750.html">uniformJumpAMIFvPatchField&lt;Type&gt;</a>&amp; ptf</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;:</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;</a>(ptf),</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    jumpTable_(ptf.<a class="code" href="a02750.html#ad364db03dce74cace892e7203d1a85ba">jumpTable_</a>, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<a class="code" href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::uniformJumpAMIFvPatchField</a></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="a02750.html#a3c2602fdf078d0989fe28967b452a220">   96</a></span>&#160;(</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02750.html">uniformJumpAMIFvPatchField&lt;Type&gt;</a>&amp; ptf,</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;:</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;</a>(ptf, iF),</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    jumpTable_(ptf.jumpTable_, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;{}</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="a02750.html#a7e24eafac629d3733181cd942d4c902f">  109</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02750.html#a7e24eafac629d3733181cd942d4c902f">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::updateCoeffs</a>()</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;{</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (this-&gt;updated())</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (this-&gt;cyclicAMIPatch().owner())</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        this-&gt;jump_ = jumpTable_-&gt;value(this-&gt;db().time().value());</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="a00822.html">fixedJumpAMIFvPatchField&lt;Type&gt;::updateCoeffs</a>();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a02750.html#a0941061ad5a26be83b4107d05750ace6">  126</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02750.html#a0941061ad5a26be83b4107d05750ace6">Foam::uniformJumpAMIFvPatchField&lt;Type&gt;::write</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">fixedJumpAMIFvPatchField&lt;Type&gt;::write</a>(os);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">if</span> (this-&gt;cyclicAMIPatch().owner())</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        jumpTable_-&gt;writeData(os);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a00822_html"><div class="ttname"><a href="a00822.html">Foam::fixedJumpAMIFvPatchField</a></div><div class="ttdoc">This boundary condition provides a jump condition, across non-conformal cyclic path-pairs, employing an arbitraryMeshInterface (AMI). </div><div class="ttdef"><b>Definition:</b> <a href="a05317_source.html#l00097">fixedJumpAMIFvPatchField.H:97</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02750_html_a4566caf5aa141171d09f174b24bac1be"><div class="ttname"><a href="a02750.html#a4566caf5aa141171d09f174b24bac1be">Foam::uniformJumpAMIFvPatchField::uniformJumpAMIFvPatchField</a></div><div class="ttdeci">uniformJumpAMIFvPatchField(const fvPatch &amp;, const DimensionedField&lt; Type, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a05492_source.html#l00032">uniformJumpAMIFvPatchField.C:32</a></div></div>
+<div class="ttc" id="a00503_html"><div class="ttname"><a href="a00503.html">Foam::DataEntry</a></div><div class="ttdoc">Top level data entry class for use in dictionaries. Provides a mechanism to specify a variable as a c...</div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00052">DataEntry.H:52</a></div></div>
+<div class="ttc" id="a02750_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a02750.html#a0941061ad5a26be83b4107d05750ace6">Foam::uniformJumpAMIFvPatchField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a05492_source.html#l00126">uniformJumpAMIFvPatchField.C:126</a></div></div>
+<div class="ttc" id="a02917_html_a8f30b3c2179b03a7acf273e9dea43342"><div class="ttname"><a href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">write</a></div><div class="ttdeci">runTime write()</div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a00524_html_ae9d6521e0e8d3956f9b49ddeb44877b8"><div class="ttname"><a href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">Foam::dictionary::found</a></div><div class="ttdeci">bool found(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Search dictionary for given keyword. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00306">dictionary.C:306</a></div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a02750_html"><div class="ttname"><a href="a02750.html">Foam::uniformJumpAMIFvPatchField</a></div><div class="ttdoc">This boundary condition provides a jump condition, using the cyclicAMI condition as a base...</div><div class="ttdef"><b>Definition:</b> <a href="a05493_source.html#l00100">uniformJumpAMIFvPatchField.H:100</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List&lt; Type &gt;::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div></div>
+<div class="ttc" id="a04434_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04434_source.html#l00051">createFields.H:51</a></div></div>
+<div class="ttc" id="a02750_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a02750.html#a7e24eafac629d3733181cd942d4c902f">Foam::uniformJumpAMIFvPatchField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients. </div><div class="ttdef"><b>Definition:</b> <a href="a05492_source.html#l00109">uniformJumpAMIFvPatchField.C:109</a></div></div>
+<div class="ttc" id="a02750_html_ad364db03dce74cace892e7203d1a85ba"><div class="ttname"><a href="a02750.html#ad364db03dce74cace892e7203d1a85ba">Foam::uniformJumpAMIFvPatchField::jumpTable_</a></div><div class="ttdeci">autoPtr&lt; DataEntry&lt; Type &gt; &gt; jumpTable_</div><div class="ttdoc">"jump" table </div><div class="ttdef"><b>Definition:</b> <a href="a05493_source.html#l00110">uniformJumpAMIFvPatchField.H:110</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a05493_html"><div class="ttname"><a href="a05493.html">uniformJumpAMIFvPatchField.H</a></div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

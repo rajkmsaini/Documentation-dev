@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_76cda00b2119e3ca1b811eb59fd40c16.html">surfaceFilmModels</a></li><li class="navelem"><a class="el" href="dir_1a2449bf10d166cb32b637bb1f2c8120.html">submodels</a></li><li class="navelem"><a class="el" href="dir_748187a7aee928611e312f378f23d627.html">kinematic</a></li><li class="navelem"><a class="el" href="dir_052a15cd963399c64c4750aa932b2703.html">injectionModel</a></li><li class="navelem"><a class="el" href="dir_c5cd61c8cc82e31b37f0712199028a17.html">patchInjection</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_e1879fa133c4c7d7be31da46fdc26b53.html">regionModel</a></li><li class="navelem"><a class="el" href="dir_0fee55ba70ecc59ec35a5f954242444f.html">singleLayerRegion</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">patchInjection.C</div>  </div>
+<div class="title">singleLayerRegion.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09480.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,232 +121,269 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09481.html">patchInjection.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09481.html">singleLayerRegion.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07855.html">Time.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05201.html">zeroGradientFvPatchFields.H</a>&quot;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>regionModels</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>surfaceFilmModels</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>regionModels</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a10750.html#ac1ace6ec7343b253553658d2bcca8e33">defineTypeNameAndDebug</a>(patchInjection, 0);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a10750.html#a8e65981fc49a9cc390da2af27417606f">addToRunTimeSelectionTable</a>(injectionModel, patchInjection, dictionary);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10798.html#a77669b24c427431da7f05f88c451cabf">defineTypeNameAndDebug</a>(singleLayerRegion, 0);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;patchInjection::patchInjection</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01791.html#a152b740d187e325136f51f50c9b798ab">   46</a></span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a02466.html">surfaceFilmModel</a>&amp; owner,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a01091.html">injectionModel</a>(<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>(), owner, dict),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    deltaStable_(coeffDict_.lookupOrDefault&lt;scalar&gt;(<span class="stringliteral">&quot;deltaStable&quot;</span>, 0.0))</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01899.html">polyBoundaryMesh</a>&amp; pbm = owner.<a class="code" href="a02120.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>().<a class="code" href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    patchIDs_.<a class="code" href="a02020.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(pbm.<a class="code" href="a02020.html#a723361dc2020160f5492e8fe2d09fa44">size</a>());</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (coeffDict_.found(<span class="stringliteral">&quot;patches&quot;</span>))</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a01355.html">wordReList</a> <a class="code" href="a03883.html#a2b0b0d262376a4021c85e70b012ebe4e">patchNames</a>(coeffDict_.lookup(<span class="stringliteral">&quot;patches&quot;</span>));</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00974.html">labelHashSet</a> patchSet = pbm.<a class="code" href="a01899.html#aaab6315ef003537187584006f4c14d30">patchSet</a>(<a class="code" href="a03883.html#a2b0b0d262376a4021c85e70b012ebe4e">patchNames</a>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        applying to patches:&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> Foam::regionModels::singleLayerRegion::constructMeshObjects()</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// construct patch normal vectors</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a02318.html#a0bf21749e2e6743948fb97e9907ce3e2">nHatPtr_</a>.reset</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    (</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a12d29e8f107156f681575a7bbbcf30ed">volVectorField</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        (</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="a01179.html#a685873fbbf7ab615e064d2bd0928f09b">IOobject</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            (</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                <span class="stringliteral">&quot;nHat&quot;</span>,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                <a class="code" href="a02131.html#a1372c16310f0a7cbeaf8b4c0cfc9363b">time_</a>.<a class="code" href="a02606.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                <a class="code" href="a02131.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>(),</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                <a class="code" href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a93b5e7478325255e6d8414b6b2ccc6f0">IOobject::READ_IF_PRESENT</a>,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                <a class="code" href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">NO_WRITE</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            ),</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <a class="code" href="a02131.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>(),</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <a class="code" href="a10725.html#aa56bd15e91196da521549e50b73ca3f5">dimensionedVector</a>(<span class="stringliteral">&quot;zero&quot;</span>, <a class="code" href="a10725.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, <a class="code" href="a02787.html#ac3b79445511a1e3a6443b59ac93c394a">vector::zero</a>),</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            zeroGradientFvPatchField&lt;vector&gt;::typeName</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        )</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    );</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> pidi = 0;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00974.html">labelHashSet</a>, patchSet, iter)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a> = iter.key();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            patchIDs_[pidi++] = <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;            &quot;</span> &lt;&lt; pbm[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>].<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        patchIDs_.setSize(pidi);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        patchInjectedMasses_.setSize(pidi, 0);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;            applying to all patches&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            patchIDs_[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>] = <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        patchInjectedMasses_.setSize(pbm.<a class="code" href="a02020.html#a723361dc2020160f5492e8fe2d09fa44">size</a>(), 0);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (!patchIDs_.size())</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a>(<span class="stringliteral">&quot;patchInjection::patchInjection&quot;</span>)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;No patches selected&quot;</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="a01791.html#ae659a353173f1155b91f35797407248a">   97</a></span>&#160;<a class="code" href="a01791.html#ae659a353173f1155b91f35797407248a">patchInjection::~patchInjection</a>()</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01091.html#a3ae44b28050c3aa494c1d8e18cf618c1">patchInjection::correct</a></div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="a01791.html#a8c67db65404877aac3731246ffb15754">  104</a></span>&#160;(</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; availableMass,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; massToInject,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; diameterToInject</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;)</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">// Do not correct if no patches selected</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">if</span> (!patchIDs_.size()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a06934.html#a8abbca041db054292d9029013349f5ed">delta</a> = owner().<a class="code" href="a02466.html#ad7a3f68138b05c28be48dae6234587ad">delta</a>();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a> = owner().<a class="code" href="a02466.html#a588d18200c9cf5a24b176c19a861f657">rho</a>();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; magSf = owner().<a class="code" href="a02305.html#a50c2173eeb08076209dffc96c59f9372">magSf</a>();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01899.html">polyBoundaryMesh</a>&amp; pbm = owner().<a class="code" href="a02120.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>().<a class="code" href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, pidi)</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a> = patchIDs_[pidi];</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp; pp = pbm[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; faceCells = pp.<a class="code" href="a01922.html#a7cbd3f7d875089fbed897f536ef662c9">faceCells</a>();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="comment">// Accumulate the total mass removed from patch</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        scalar dMassPatch = 0;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(faceCells, fci)</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> celli = faceCells[fci];</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            scalar ddelta = <a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(0.0, delta[celli] - deltaStable_);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            scalar dMass = ddelta*rho[celli]*magSf[celli];</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            massToInject[celli] += dMass;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            availableMass[celli] -= dMass;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            dMassPatch += dMass;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        patchInjectedMasses_[pidi] += dMassPatch;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        addToInjectedMass(dMassPatch);</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    }</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="a01091.html#a3ae44b28050c3aa494c1d8e18cf618c1">injectionModel::correct</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// construct patch areas</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="a02318.html#ae663e582c759725a3d56559f4d9a9261">magSfPtr_</a>.reset</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    (</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a01179.html#a685873fbbf7ab615e064d2bd0928f09b">IOobject</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            (</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <span class="stringliteral">&quot;magSf&quot;</span>,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <a class="code" href="a02131.html#a1372c16310f0a7cbeaf8b4c0cfc9363b">time_</a>.<a class="code" href="a02606.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                <a class="code" href="a02131.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>(),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                <a class="code" href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a93b5e7478325255e6d8414b6b2ccc6f0">IOobject::READ_IF_PRESENT</a>,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                <a class="code" href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">NO_WRITE</a></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            ),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <a class="code" href="a02131.html#a0c7874a65eec16e2afa43acd6055b16a">regionMesh</a>(),</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="a10725.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;zero&quot;</span>, <a class="code" href="a10725.html#a44193c38bfc37e4c0b7045f9bf17d4d5">dimArea</a>, 0.0),</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            zeroGradientFvPatchField&lt;scalar&gt;::typeName</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        )</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    );</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> Foam::regionModels::singleLayerRegion::initialise()</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;singleLayerRegion::initialise()&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nBoundaryFaces = 0;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">const</span> polyBoundaryMesh&amp; rbm = regionMesh().boundaryMesh();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a10725.html#a12d29e8f107156f681575a7bbbcf30ed">volVectorField</a>&amp; nHat = nHatPtr_();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; magSf = magSfPtr_();</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(intCoupledPatchIDs_, i)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = intCoupledPatchIDs_[i];</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> polyPatch&amp; pp = rbm[patchI];</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; fCells = pp.faceCells();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        nBoundaryFaces += fCells.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        UIndirectList&lt;vector&gt;(nHat, fCells) = pp.faceNormals();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        UIndirectList&lt;scalar&gt;(magSf, fCells) = <a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(pp.faceAreas());</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    nHat.correctBoundaryConditions();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    magSf.correctBoundaryConditions();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">if</span> (nBoundaryFaces != regionMesh().nCells())</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Number of primary region coupled boundary faces not equal to &quot;</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;the number of cells in the local region&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Number of cells = &quot;</span> &lt;&lt; regionMesh().nCells() &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Boundary faces  = &quot;</span> &lt;&lt; nBoundaryFaces &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a> passiveMagSf(magSf.size(), 0.0);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    passivePatchIDs_.setSize(intCoupledPatchIDs_.size(), -1);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(intCoupledPatchIDs_, i)</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = intCoupledPatchIDs_[i];</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keyword">const</span> polyPatch&amp; ppIntCoupled = rbm[patchI];</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">if</span> (ppIntCoupled.size() &gt; 0)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellId = rbm[patchI].faceCells()[0];</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keyword">const</span> cell&amp; cFaces = regionMesh().cells()[<a class="code" href="a03226.html#a2b68faeb76e10db149bc842b4f5e7a42">cellId</a>];</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = ppIntCoupled.start();</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceO = cFaces.opposingFaceLabel(faceI, regionMesh().faces());</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> passivePatchI = rbm.whichPatch(faceO);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            passivePatchIDs_[i] = passivePatchI;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <span class="keyword">const</span> polyPatch&amp; ppPassive = rbm[passivePatchI];</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            UIndirectList&lt;scalar&gt;(passiveMagSf, ppPassive.faceCells()) =</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                <a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(ppPassive.faceAreas());</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        }</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <a class="code" href="a02015.html#a8c0e5044dc4a942cf62b06797c3a743f">Pstream::listCombineGather</a>(passivePatchIDs_, maxEqOp&lt;label&gt;());</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="a02015.html#adfd4915b68ab7181dccb847976286e56">Pstream::listCombineScatter</a>(passivePatchIDs_);</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">if</span> (outputTime())</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <a class="code" href="a00749.html">scalarField</a> patchInjectedMasses0</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        (</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            getModelProperty&lt;scalarField&gt;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            (</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                <span class="stringliteral">&quot;patchInjectedMasses&quot;</span>,</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                <a class="code" href="a10675.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(patchInjectedMasses_.size(), 0)</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            )</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        );</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <a class="code" href="a00749.html">scalarField</a> patchInjectedMassTotals(patchInjectedMasses_);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <a class="code" href="a02004.html#a8c0e5044dc4a942cf62b06797c3a743f">Pstream::listCombineGather</a>(patchInjectedMassTotals, <a class="code" href="a01851.html">plusEqOp&lt;scalar&gt;</a>());</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        patchInjectedMasses0 += patchInjectedMassTotals;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    magSf.field() = 0.5*(magSf + passiveMagSf);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    magSf.correctBoundaryConditions();</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno"><a class="line" href="a02318.html#af816873151ddb0126e98bb2f914d8ed5">  152</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02318.html#af816873151ddb0126e98bb2f914d8ed5">Foam::regionModels::singleLayerRegion::read</a>()</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;{</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02131.html#af816873151ddb0126e98bb2f914d8ed5">regionModel::read</a>();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;}</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        setModelProperty&lt;scalarField&gt;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        (</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            <span class="stringliteral">&quot;patchInjectedMasses&quot;</span>,</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            patchInjectedMasses0</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        );</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        patchInjectedMasses_ = 0;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;}</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="a01791.html#ab427ea6edd5841379ea91a45907e8858">  171</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01791.html#ab427ea6edd5841379ea91a45907e8858">patchInjection::patchInjectedMassTotals</a>(<a class="code" href="a00749.html">scalarField</a>&amp; patchMasses)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="comment">// Do not correct if no patches selected</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="a01791.html#afa3403a1e731400675b38b6d1fc6f661">patchIDs_</a>.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <a class="code" href="a00749.html">scalarField</a> patchInjectedMasses</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    (</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        getModelProperty&lt;scalarField&gt;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        (</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="stringliteral">&quot;patchInjectedMasses&quot;</span>,</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <a class="code" href="a10675.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<a class="code" href="a01791.html#a622c3901167b31d2eb4dc098a2270be8">patchInjectedMasses_</a>.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(), 0)</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        )</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    );</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="a00749.html">scalarField</a> <a class="code" href="a01791.html#ab427ea6edd5841379ea91a45907e8858">patchInjectedMassTotals</a>(<a class="code" href="a01791.html#a622c3901167b31d2eb4dc098a2270be8">patchInjectedMasses_</a>);</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <a class="code" href="a02004.html#a8c0e5044dc4a942cf62b06797c3a743f">Pstream::listCombineGather</a>(patchInjectedMassTotals, <a class="code" href="a01851.html">plusEqOp&lt;scalar&gt;</a>());</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(<a class="code" href="a01791.html#afa3403a1e731400675b38b6d1fc6f661">patchIDs_</a>, pidi)</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    {</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a> = <a class="code" href="a01791.html#afa3403a1e731400675b38b6d1fc6f661">patchIDs_</a>[pidi];</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        patchMasses[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>] +=</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            patchInjectedMasses[pidi] + patchInjectedMassTotals[pidi];</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    }</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;}</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;Foam::regionModels::singleLayerRegion::singleLayerRegion</div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="a02318.html#a9f62e4a395da9fe230c1c28d623e4567">  161</a></span>&#160;(</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; regionType</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;)</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;:</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <a class="code" href="a02131.html">regionModel</a>(mesh, regionType),</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    nHatPtr_(NULL),</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    magSfPtr_(NULL),</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    passivePatchIDs_()</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;{}</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;Foam::regionModels::singleLayerRegion::singleLayerRegion</div>
+<div class="line"><a name="l00174"></a><span class="lineno"><a class="line" href="a02318.html#a6ff02d615240ab1ade5910b97566461f">  174</a></span>&#160;(</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; regionType,</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; modelName,</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">bool</span> readFields</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;)</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;:</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <a class="code" href="a02131.html">regionModel</a>(mesh, regionType, modelName, <span class="keyword">false</span>),</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    nHatPtr_(NULL),</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    magSfPtr_(NULL),</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    passivePatchIDs_()</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;{</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">if</span> (active_)</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        constructMeshObjects();</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        initialise();</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordflow">if</span> (readFields)</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>();</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        }</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    }</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;} <span class="comment">// End namespace surfaceFilmModels</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;} <span class="comment">// End namespace regionModels</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04277_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04277_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
-<div class="ttc" id="a01851_html"><div class="ttname"><a href="a01851.html">Foam::plusEqOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08855_source.html#l00071">ops.H:71</a></div></div>
-<div class="ttc" id="a10750_html_ac1ace6ec7343b253553658d2bcca8e33"><div class="ttname"><a href="a10750.html#ac1ace6ec7343b253553658d2bcca8e33">Foam::regionModels::surfaceFilmModels::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(kinematicSingleLayer, 0)</div></div>
-<div class="ttc" id="a02120_html_a0c7874a65eec16e2afa43acd6055b16a"><div class="ttname"><a href="a02120.html#a0c7874a65eec16e2afa43acd6055b16a">Foam::regionModels::regionModel::regionMesh</a></div><div class="ttdeci">const fvMesh &amp; regionMesh() const </div><div class="ttdoc">Return the region mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a09415_source.html#l00061">regionModelI.H:61</a></div></div>
-<div class="ttc" id="a02466_html_a588d18200c9cf5a24b176c19a861f657"><div class="ttname"><a href="a02466.html#a588d18200c9cf5a24b176c19a861f657">Foam::regionModels::surfaceFilmModels::surfaceFilmModel::rho</a></div><div class="ttdeci">virtual const volScalarField &amp; rho() const  =0</div><div class="ttdoc">Return the film density [kg/m3]. </div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01922_html"><div class="ttname"><a href="a01922.html">Foam::polyPatch</a></div><div class="ttdoc">A patch is a list of labels that address the faces in the global face list. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00066">polyPatch.H:66</a></div></div>
-<div class="ttc" id="a01091_html"><div class="ttname"><a href="a01091.html">Foam::regionModels::surfaceFilmModels::injectionModel</a></div><div class="ttdoc">Base class for film injection models, handling mass transfer from the film. </div><div class="ttdef"><b>Definition:</b> <a href="a09476_source.html#l00056">injectionModel.H:56</a></div></div>
-<div class="ttc" id="a01791_html_ab427ea6edd5841379ea91a45907e8858"><div class="ttname"><a href="a01791.html#ab427ea6edd5841379ea91a45907e8858">Foam::regionModels::surfaceFilmModels::patchInjection::patchInjectedMassTotals</a></div><div class="ttdeci">virtual void patchInjectedMassTotals(scalarField &amp;patchMasses) const </div><div class="ttdoc">Accumulate the total mass injected for the patches into the. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00171">patchInjection.C:171</a></div></div>
-<div class="ttc" id="a02020_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02020.html#a723361dc2020160f5492e8fe2d09fa44">Foam::PtrList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the PtrList. </div><div class="ttdef"><b>Definition:</b> <a href="a07605_source.html#l00032">PtrListI.H:32</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a01791_html_afa3403a1e731400675b38b6d1fc6f661"><div class="ttname"><a href="a01791.html#afa3403a1e731400675b38b6d1fc6f661">Foam::regionModels::surfaceFilmModels::patchInjection::patchIDs_</a></div><div class="ttdeci">labelList patchIDs_</div><div class="ttdoc">List of patch IDs at which the film is removed. </div><div class="ttdef"><b>Definition:</b> <a href="a09481_source.html#l00073">patchInjection.H:73</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02305_html_a50c2173eeb08076209dffc96c59f9372"><div class="ttname"><a href="a02305.html#a50c2173eeb08076209dffc96c59f9372">Foam::regionModels::singleLayerRegion::magSf</a></div><div class="ttdeci">virtual const volScalarField &amp; magSf() const </div><div class="ttdoc">Return the face area magnitudes / [m2]. </div><div class="ttdef"><b>Definition:</b> <a href="a09428_source.html#l00220">singleLayerRegion.C:220</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a10675_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10675.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07912_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
-<div class="ttc" id="a06934_html_a8abbca041db054292d9029013349f5ed"><div class="ttname"><a href="a06934.html#a8abbca041db054292d9029013349f5ed">delta</a></div><div class="ttdeci">scalar delta</div><div class="ttdef"><b>Definition:</b> <a href="a06934_source.html#l00008">LISASMDCalcMethod2.H:8</a></div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; wordRe &gt;</a></div></div>
-<div class="ttc" id="a09481_html"><div class="ttname"><a href="a09481.html">patchInjection.H</a></div></div>
-<div class="ttc" id="a01091_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a01091.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::regionModels::surfaceFilmModels::injectionModel::correct</a></div><div class="ttdeci">void correct()</div><div class="ttdoc">Correct. </div><div class="ttdef"><b>Definition:</b> <a href="a09475_source.html#l00079">injectionModel.C:79</a></div></div>
-<div class="ttc" id="a02004_html_a8c0e5044dc4a942cf62b06797c3a743f"><div class="ttname"><a href="a02004.html#a8c0e5044dc4a942cf62b06797c3a743f">Foam::Pstream::listCombineGather</a></div><div class="ttdeci">static void listCombineGather(const List&lt; commsStruct &gt; &amp;comms, List&lt; T &gt; &amp;Value, const CombineOp &amp;cop, const int tag, const label comm)</div><div class="ttdef"><b>Definition:</b> <a href="a07734_source.html#l00282">combineGatherScatter.C:282</a></div></div>
-<div class="ttc" id="a01899_html"><div class="ttname"><a href="a01899.html">Foam::polyBoundaryMesh</a></div><div class="ttdoc">Foam::polyBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08574_source.html#l00060">polyBoundaryMesh.H:60</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a02020_html_aedb985ffeaf1bdbfeccc2a8730405703"><div class="ttname"><a href="a02020.html#aedb985ffeaf1bdbfeccc2a8730405703">Foam::PtrList::setSize</a></div><div class="ttdeci">void setSize(const label)</div><div class="ttdoc">Reset size of PtrList. If extending the PtrList, new entries are. </div><div class="ttdef"><b>Definition:</b> <a href="a07603_source.html#l00142">PtrList.C:142</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a10750_html_a8e65981fc49a9cc390da2af27417606f"><div class="ttname"><a href="a10750.html#a8e65981fc49a9cc390da2af27417606f">Foam::regionModels::surfaceFilmModels::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(surfaceFilmModel, kinematicSingleLayer, mesh)</div></div>
-<div class="ttc" id="a01905_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00421">polyMesh.H:421</a></div></div>
-<div class="ttc" id="a01899_html_aaab6315ef003537187584006f4c14d30"><div class="ttname"><a href="a01899.html#aaab6315ef003537187584006f4c14d30">Foam::polyBoundaryMesh::patchSet</a></div><div class="ttdeci">labelHashSet patchSet(const UList&lt; wordRe &gt; &amp;patchNames, const bool warnNotFound=true, const bool usePatchGroups=true) const </div><div class="ttdoc">Return the set of patch IDs corresponding to the given names. </div><div class="ttdef"><b>Definition:</b> <a href="a08573_source.html#l00767">polyBoundaryMesh.C:767</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00974_html"><div class="ttname"><a href="a00974.html">Foam::HashSet&lt; label, Hash&lt; label &gt; &gt;</a></div></div>
-<div class="ttc" id="a02466_html_ad7a3f68138b05c28be48dae6234587ad"><div class="ttname"><a href="a02466.html#ad7a3f68138b05c28be48dae6234587ad">Foam::regionModels::surfaceFilmModels::surfaceFilmModel::delta</a></div><div class="ttdeci">virtual const volScalarField &amp; delta() const  =0</div><div class="ttdoc">Return the film thickness [m]. </div></div>
-<div class="ttc" id="a02466_html"><div class="ttname"><a href="a02466.html">Foam::regionModels::surfaceFilmModels::surfaceFilmModel</a></div><div class="ttdoc">Base class for surface film models. </div><div class="ttdef"><b>Definition:</b> <a href="a09527_source.html#l00061">surfaceFilmModel.H:61</a></div></div>
-<div class="ttc" id="a01791_html_ae659a353173f1155b91f35797407248a"><div class="ttname"><a href="a01791.html#ae659a353173f1155b91f35797407248a">Foam::regionModels::surfaceFilmModels::patchInjection::~patchInjection</a></div><div class="ttdeci">virtual ~patchInjection()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00097">patchInjection.C:97</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a03883_html_a2b0b0d262376a4021c85e70b012ebe4e"><div class="ttname"><a href="a03883.html#a2b0b0d262376a4021c85e70b012ebe4e">patchNames</a></div><div class="ttdeci">wordList patchNames(nPatches)</div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a01791_html_a622c3901167b31d2eb4dc098a2270be8"><div class="ttname"><a href="a01791.html#a622c3901167b31d2eb4dc098a2270be8">Foam::regionModels::surfaceFilmModels::patchInjection::patchInjectedMasses_</a></div><div class="ttdeci">scalarField patchInjectedMasses_</div><div class="ttdoc">Injected mass for each patch at which the film is removed. </div><div class="ttdef"><b>Definition:</b> <a href="a09481_source.html#l00076">patchInjection.H:76</a></div></div>
-<div class="ttc" id="a01922_html_a7cbd3f7d875089fbed897f536ef662c9"><div class="ttname"><a href="a01922.html#a7cbd3f7d875089fbed897f536ef662c9">Foam::polyPatch::faceCells</a></div><div class="ttdeci">const labelUList &amp; faceCells() const </div><div class="ttdoc">Return face-cell addressing. </div><div class="ttdef"><b>Definition:</b> <a href="a08619_source.html#l00316">polyPatch.C:316</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno"><a class="line" href="a02318.html#a71a65f09625851374481f5dd26432a6a">  201</a></span>&#160;<a class="code" href="a02318.html#a71a65f09625851374481f5dd26432a6a">Foam::regionModels::singleLayerRegion::~singleLayerRegion</a>()</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;{}</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
+<div class="line"><a name="l00207"></a><span class="lineno"><a class="line" href="a02318.html#a0f8e04f7d40d49fd2f1a14bfd4fc3b76">  207</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a00921.html">Foam::volVectorField</a>&amp; <a class="code" href="a02318.html#a0f8e04f7d40d49fd2f1a14bfd4fc3b76">Foam::regionModels::singleLayerRegion::nHat</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordflow">if</span> (!nHatPtr_.valid())</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Region patch normal vectors not available&quot;</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    }</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">return</span> nHatPtr_();</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;}</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
+<div class="line"><a name="l00220"></a><span class="lineno"><a class="line" href="a02318.html#a50c2173eeb08076209dffc96c59f9372">  220</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a00921.html">Foam::volScalarField</a>&amp; <a class="code" href="a02318.html#a50c2173eeb08076209dffc96c59f9372">Foam::regionModels::singleLayerRegion::magSf</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordflow">if</span> (!magSfPtr_.valid())</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    {</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Region patch areas not available&quot;</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    }</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordflow">return</span> magSfPtr_();</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;}</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="keyword">const</span> <a class="code" href="a01364.html">Foam::labelList</a>&amp;</div>
+<div class="line"><a name="l00234"></a><span class="lineno"><a class="line" href="a02318.html#a125033d79edb6b5cbef47a87b28615cc">  234</a></span>&#160;<a class="code" href="a02318.html#a125033d79edb6b5cbef47a87b28615cc">Foam::regionModels::singleLayerRegion::passivePatchIDs</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordflow">return</span> passivePatchIDs_;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;}</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02015_html_adfd4915b68ab7181dccb847976286e56"><div class="ttname"><a href="a02015.html#adfd4915b68ab7181dccb847976286e56">Foam::Pstream::listCombineScatter</a></div><div class="ttdeci">static void listCombineScatter(const List&lt; commsStruct &gt; &amp;comms, List&lt; T &gt; &amp;Value, const int tag, const label comm)</div><div class="ttdoc">Scatter data. Reverse of combineGather. </div><div class="ttdef"><b>Definition:</b> <a href="a07785_source.html#l00417">combineGatherScatter.C:417</a></div></div>
+<div class="ttc" id="a02318_html_ae663e582c759725a3d56559f4d9a9261"><div class="ttname"><a href="a02318.html#ae663e582c759725a3d56559f4d9a9261">Foam::regionModels::singleLayerRegion::magSfPtr_</a></div><div class="ttdeci">autoPtr&lt; volScalarField &gt; magSfPtr_</div><div class="ttdoc">Face area magnitudes / [m2]. </div><div class="ttdef"><b>Definition:</b> <a href="a09481_source.html#l00082">singleLayerRegion.H:82</a></div></div>
+<div class="ttc" id="a02318_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a02318.html#af816873151ddb0126e98bb2f914d8ed5">Foam::regionModels::singleLayerRegion::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read control parameters from dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00152">singleLayerRegion.C:152</a></div></div>
+<div class="ttc" id="a10725_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10725.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07882_source.html#l00047">dimensionSets.H:47</a></div></div>
+<div class="ttc" id="a07855_html"><div class="ttname"><a href="a07855.html">Time.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a02318_html_a0bf21749e2e6743948fb97e9907ce3e2"><div class="ttname"><a href="a02318.html#a0bf21749e2e6743948fb97e9907ce3e2">Foam::regionModels::singleLayerRegion::nHatPtr_</a></div><div class="ttdeci">autoPtr&lt; volVectorField &gt; nHatPtr_</div><div class="ttdoc">Patch normal vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a09481_source.html#l00079">singleLayerRegion.H:79</a></div></div>
+<div class="ttc" id="a10725_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10725.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08887_source.html#l00056">labelList.H:56</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a02318_html_a125033d79edb6b5cbef47a87b28615cc"><div class="ttname"><a href="a02318.html#a125033d79edb6b5cbef47a87b28615cc">Foam::regionModels::singleLayerRegion::passivePatchIDs</a></div><div class="ttdeci">virtual const labelList &amp; passivePatchIDs() const </div><div class="ttdoc">Return the list of patch IDs opposite to internally. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00234">singleLayerRegion.C:234</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a02606_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02606.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07854_source.html#l00741">Time.C:741</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a02318_html_a71a65f09625851374481f5dd26432a6a"><div class="ttname"><a href="a02318.html#a71a65f09625851374481f5dd26432a6a">Foam::regionModels::singleLayerRegion::~singleLayerRegion</a></div><div class="ttdeci">virtual ~singleLayerRegion()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00201">singleLayerRegion.C:201</a></div></div>
+<div class="ttc" id="a03226_html_a2b68faeb76e10db149bc842b4f5e7a42"><div class="ttname"><a href="a03226.html#a2b68faeb76e10db149bc842b4f5e7a42">cellId</a></div><div class="ttdeci">label cellId</div><div class="ttdef"><b>Definition:</b> <a href="a03226_source.html#l00067">interrogateWallPatches.H:67</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02131_html_a0c7874a65eec16e2afa43acd6055b16a"><div class="ttname"><a href="a02131.html#a0c7874a65eec16e2afa43acd6055b16a">Foam::regionModels::regionModel::regionMesh</a></div><div class="ttdeci">const fvMesh &amp; regionMesh() const </div><div class="ttdoc">Return the region mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a09467_source.html#l00061">regionModelI.H:61</a></div></div>
+<div class="ttc" id="a10725_html_a44193c38bfc37e4c0b7045f9bf17d4d5"><div class="ttname"><a href="a10725.html#a44193c38bfc37e4c0b7045f9bf17d4d5">Foam::dimArea</a></div><div class="ttdeci">const dimensionSet dimArea(sqr(dimLength))</div><div class="ttdef"><b>Definition:</b> <a href="a07882_source.html#l00057">dimensionSets.H:57</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a10725_html_aa56bd15e91196da521549e50b73ca3f5"><div class="ttname"><a href="a10725.html#aa56bd15e91196da521549e50b73ca3f5">Foam::dimensionedVector</a></div><div class="ttdeci">dimensioned&lt; vector &gt; dimensionedVector</div><div class="ttdoc">Dimensioned vector obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07877_source.html#l00048">dimensionedVector.H:48</a></div></div>
+<div class="ttc" id="a01179_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00118">IOobject.H:118</a></div></div>
+<div class="ttc" id="a02318_html_a50c2173eeb08076209dffc96c59f9372"><div class="ttname"><a href="a02318.html#a50c2173eeb08076209dffc96c59f9372">Foam::regionModels::singleLayerRegion::magSf</a></div><div class="ttdeci">virtual const volScalarField &amp; magSf() const </div><div class="ttdoc">Return the face area magnitudes / [m2]. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00220">singleLayerRegion.C:220</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a01179_html_a685873fbbf7ab615e064d2bd0928f09b"><div class="ttname"><a href="a01179.html#a685873fbbf7ab615e064d2bd0928f09b">Foam::IOobject::IOobject</a></div><div class="ttdeci">IOobject(const word &amp;name, const fileName &amp;instance, const objectRegistry &amp;registry, readOption r=NO_READ, writeOption w=NO_WRITE, bool registerObject=true)</div><div class="ttdoc">Construct from name, instance, registry, io options. </div><div class="ttdef"><b>Definition:</b> <a href="a07744_source.html#l00114">IOobject.C:114</a></div></div>
+<div class="ttc" id="a02131_html_a1372c16310f0a7cbeaf8b4c0cfc9363b"><div class="ttname"><a href="a02131.html#a1372c16310f0a7cbeaf8b4c0cfc9363b">Foam::regionModels::regionModel::time_</a></div><div class="ttdeci">const Time &amp; time_</div><div class="ttdoc">Reference to the time database. </div><div class="ttdef"><b>Definition:</b> <a href="a09466_source.html#l00090">regionModel.H:90</a></div></div>
+<div class="ttc" id="a10725_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10725.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00131">errorManip.H:131</a></div></div>
+<div class="ttc" id="a09481_html"><div class="ttname"><a href="a09481.html">singleLayerRegion.H</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a10725_html_a12d29e8f107156f681575a7bbbcf30ed"><div class="ttname"><a href="a10725.html#a12d29e8f107156f681575a7bbbcf30ed">Foam::volVectorField</a></div><div class="ttdeci">GeometricField&lt; vector, fvPatchField, volMesh &gt; volVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00055">volFieldsFwd.H:55</a></div></div>
+<div class="ttc" id="a10725_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a02787_html_ac3b79445511a1e3a6443b59ac93c394a"><div class="ttname"><a href="a02787.html#ac3b79445511a1e3a6443b59ac93c394a">Foam::Vector&lt; scalar &gt;::zero</a></div><div class="ttdeci">static const Vector zero</div><div class="ttdef"><b>Definition:</b> <a href="a09042_source.html#l00080">Vector.H:80</a></div></div>
+<div class="ttc" id="a02318_html_a0f8e04f7d40d49fd2f1a14bfd4fc3b76"><div class="ttname"><a href="a02318.html#a0f8e04f7d40d49fd2f1a14bfd4fc3b76">Foam::regionModels::singleLayerRegion::nHat</a></div><div class="ttdeci">virtual const volVectorField &amp; nHat() const </div><div class="ttdoc">Return the patch normal vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a09480_source.html#l00207">singleLayerRegion.C:207</a></div></div>
+<div class="ttc" id="a10798_html_a77669b24c427431da7f05f88c451cabf"><div class="ttname"><a href="a10798.html#a77669b24c427431da7f05f88c451cabf">Foam::regionModels::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(regionModel, 0)</div></div>
+<div class="ttc" id="a01179_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a93b5e7478325255e6d8414b6b2ccc6f0"><div class="ttname"><a href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a93b5e7478325255e6d8414b6b2ccc6f0">Foam::IOobject::READ_IF_PRESENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00110">IOobject.H:110</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a02131_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a02131.html#af816873151ddb0126e98bb2f914d8ed5">Foam::regionModels::regionModel::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read control parameters from dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09465_source.html#l00171">regionModel.C:171</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10725.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07867_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a02131_html"><div class="ttname"><a href="a02131.html">Foam::regionModels::regionModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a09466_source.html#l00057">regionModel.H:57</a></div></div>
+<div class="ttc" id="a02015_html_a8c0e5044dc4a942cf62b06797c3a743f"><div class="ttname"><a href="a02015.html#a8c0e5044dc4a942cf62b06797c3a743f">Foam::Pstream::listCombineGather</a></div><div class="ttdeci">static void listCombineGather(const List&lt; commsStruct &gt; &amp;comms, List&lt; T &gt; &amp;Value, const CombineOp &amp;cop, const int tag, const label comm)</div><div class="ttdef"><b>Definition:</b> <a href="a07785_source.html#l00282">combineGatherScatter.C:282</a></div></div>
+<div class="ttc" id="a05201_html"><div class="ttname"><a href="a05201.html">zeroGradientFvPatchFields.H</a></div></div>
+<div class="ttc" id="a10725_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10725.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07963_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

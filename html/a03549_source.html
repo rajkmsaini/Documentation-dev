@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_68582b348e2d9384d1ebe839f91d5a6a.html">turbulentDispersionModels</a></li><li class="navelem"><a class="el" href="dir_ad6f252ef799a825589f7f2110d5e4a7.html">Gosman</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_3e80d02eb03cde4585a5e9230356fd14.html">swarmCorrections</a></li><li class="navelem"><a class="el" href="dir_0f7e2f4bc17eb8418a5afc662abfc1d6.html">swarmCorrection</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Gosman.C</div>  </div>
+<div class="title">newSwarmCorrection.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03549.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,94 +121,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;Gosman.H&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;swarmCorrection.H&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;phasePair.H&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03637.html">phaseCompressibleTurbulenceModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;dragModel.H&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span>turbulentDispersionModels</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(Gosman, 0);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        turbulentDispersionModel,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        Gosman,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        dictionary</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="a00929.html#aef7cab7bcc57d7203b4dfc17432a76fa">Foam::turbulentDispersionModels::Gosman::Gosman</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;(</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> phasePair&amp; pair</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    turbulentDispersionModel(dict, pair),</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    sigma_(<span class="stringliteral">&quot;sigma&quot;</span>, <a class="code" href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, dict)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{}</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<a class="code" href="a00929.html#af13143a9e4603179b282fbfc64066505">Foam::turbulentDispersionModels::Gosman::~Gosman</a>()</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<a class="code" href="a00929.html#a90286481a29619d1361cdd7a6d61cb23">Foam::turbulentDispersionModels::Gosman::D</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> fvMesh&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(pair_.phase1().mesh());</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> dragModel&amp;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a04398.html#a75ab482bd36d710ce9bafbaaddff50e4">drag</a></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        (</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>.lookupObject&lt;dragModel&gt;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            (</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                <a class="code" href="a01170.html#ad5705e6da2a025ad75b4cf5d748d7d30">IOobject::groupName</a>(dragModel::typeName, pair_.name())</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            )</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        );</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        0.75</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;       *<a class="code" href="a04398.html#a75ab482bd36d710ce9bafbaaddff50e4">drag</a>.CdRe()</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;       *pair_.dispersed()</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;       *pair_.continuous().nu()</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;       *pair_.continuous().turbulence().nut()</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;       /(</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            sigma_</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;           *<a class="code" href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(pair_.dispersed().d())</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        )</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;       *pair_.continuous().rho();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00929_html_af13143a9e4603179b282fbfc64066505"><div class="ttname"><a href="a00929.html#af13143a9e4603179b282fbfc64066505">Foam::turbulentDispersionModels::Gosman::~Gosman</a></div><div class="ttdeci">virtual ~Gosman()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a04398_html_a75ab482bd36d710ce9bafbaaddff50e4"><div class="ttname"><a href="a04398.html#a75ab482bd36d710ce9bafbaaddff50e4">drag</a></div><div class="ttdeci">Info&lt;&lt; &quot;Reading strained laminar flame speed field Su\n&quot;&lt;&lt; endl;volScalarField Su(IOobject(&quot;Su&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Reading field betav\n&quot;&lt;&lt; endl;volScalarField betav(IOobject(&quot;betav&quot;, mesh.facesInstance(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE), mesh);Info&lt;&lt; &quot;Reading field Lobs\n&quot;&lt;&lt; endl;volScalarField Lobs(IOobject(&quot;Lobs&quot;, mesh.facesInstance(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE), mesh);Info&lt;&lt; &quot;Reading field CT\n&quot;&lt;&lt; endl;volSymmTensorField CT(IOobject(&quot;CT&quot;, mesh.facesInstance(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE), mesh);Info&lt;&lt; &quot;Reading field Nv\n&quot;&lt;&lt; endl;volScalarField Nv(IOobject(&quot;Nv&quot;, mesh.facesInstance(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE), mesh);Info&lt;&lt; &quot;Reading field nsv\n&quot;&lt;&lt; endl;volSymmTensorField nsv(IOobject(&quot;nsv&quot;, mesh.facesInstance(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE), mesh);IOdictionary PDRProperties(IOobject(&quot;PDRProperties&quot;, runTime.constant(), mesh, IOobject::MUST_READ_IF_MODIFIED, IOobject::NO_WRITE));autoPtr&lt; PDRDragModel &gt; drag</div><div class="ttdef"><b>Definition:</b> <a href="a04398_source.html#l00183">createFields.H:183</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01170_html_ad5705e6da2a025ad75b4cf5d748d7d30"><div class="ttname"><a href="a01170.html#ad5705e6da2a025ad75b4cf5d748d7d30">Foam::IOobject::groupName</a></div><div class="ttdeci">static word groupName(Name name, const word &amp;group)</div></div>
-<div class="ttc" id="a00929_html_a90286481a29619d1361cdd7a6d61cb23"><div class="ttname"><a href="a00929.html#a90286481a29619d1361cdd7a6d61cb23">Foam::turbulentDispersionModels::Gosman::D</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; D() const </div><div class="ttdoc">Turbulent diffusivity. </div></div>
-<div class="ttc" id="a00929_html_aef7cab7bcc57d7203b4dfc17432a76fa"><div class="ttname"><a href="a00929.html#aef7cab7bcc57d7203b4dfc17432a76fa">Foam::turbulentDispersionModels::Gosman::Gosman</a></div><div class="ttdeci">Gosman(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from a dictionary and a phase pair. </div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a10675_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07819_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
-<div class="ttc" id="a10675_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00047">dimensionSets.H:47</a></div></div>
-<div class="ttc" id="a03637_html"><div class="ttname"><a href="a03637.html">phaseCompressibleTurbulenceModel.H</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::swarmCorrection&gt;</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02511.html#aed46a8706b7f96382c52e67d774e2d3a">Foam::swarmCorrection::New</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> dictionary&amp; dict,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> phasePair&amp; pair</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    word swarmCorrectionType(dict.lookup(<span class="stringliteral">&quot;type&quot;</span>));</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Selecting swarmCorrection for &quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        &lt;&lt; pair &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; swarmCorrectionType &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    dictionaryConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(swarmCorrectionType);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown swarmCorrectionType type &quot;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            &lt;&lt; swarmCorrectionType &lt;&lt; endl &lt;&lt; endl</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid swarmCorrection types are : &quot;</span> &lt;&lt; endl</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;sortedToc()</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> cstrIter()(<a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, pair);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a02511_html_aed46a8706b7f96382c52e67d774e2d3a"><div class="ttname"><a href="a02511.html#aed46a8706b7f96382c52e67d774e2d3a">Foam::swarmCorrection::New</a></div><div class="ttdeci">static autoPtr&lt; swarmCorrection &gt; New(const dictionary &amp;dict, const phasePair &amp;pair)</div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr&lt; Foam::swarmCorrection &gt;</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

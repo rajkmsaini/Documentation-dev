@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a88fe22feb23ce5f078a04a1df67721.html">surfMesh</a></li><li class="navelem"><a class="el" href="dir_3ad8f5f9808d8196d04eb1769c1a10a8.html">surfaceFormats</a></li><li class="navelem"><a class="el" href="dir_e4831ee9d774d24b11a0839d35061a1b.html">ftr</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a5b93d9ceb327a1197b724c6aefedcbd.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_7bf5f2e6b4a44539c2947a2841ca313c.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_72e9e3456c414eac52b3a6275bc6c58e.html">restraints</a></li><li class="navelem"><a class="el" href="dir_6e1bc2e36688850bd3aeabb66192bef0.html">sixDoFRigidBodyMotionRestraint</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">FTRsurfaceFormat.C</div>  </div>
+<div class="title">sixDoFRigidBodyMotionRestraintNew.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09775.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,103 +121,55 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09776.html">FTRsurfaceFormat.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07535.html">Keyed.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07718.html">IFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09774.html">sixDoFRigidBodyMotionRestraint.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a00857.html">Foam::fileFormats::FTRsurfaceFormat&lt;Face&gt;::FTRsurfaceFormat</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00857.html#a3e34c439958343cb033d5d9e9658a296">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; filename</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(filename);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::sixDoFRigidBodyMotionRestraint&gt;</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a02327.html#a47329b29ef3a76b394e178a9733ad91a">Foam::sixDoFRigidBodyMotionRestraint::New</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a02327.html#a47329b29ef3a76b394e178a9733ad91a">   32</a></span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; name,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; sDoFRBMRDict</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a> restraintType</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        sDoFRBMRDict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;sixDoFRigidBodyMotionRestraint&quot;</span>)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    );</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00857.html#a464ebd67acbdff0014d4dae69e3ec4be">Foam::fileFormats::FTRsurfaceFormat&lt;Face&gt;::read</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a00857.html#a464ebd67acbdff0014d4dae69e3ec4be">   46</a></span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; filename</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    this-&gt;<a class="code" href="a03129.html#a3a533f9231a5668b9d8f301a79d57b73">clear</a>();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a01023.html">IFstream</a> is(filename);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">if</span> (!is.<a class="code" href="a01177.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        (</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="stringliteral">&quot;fileFormats::FTRsurfaceFormat::read(const fileName&amp;)&quot;</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        )</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Cannot read file &quot;</span> &lt;&lt; filename</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a01355.html">List&lt;ftrPatch&gt;</a> ftrPatches(is);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// points read directly</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    is &gt;&gt; this-&gt;storedPoints();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// triFaces read with attached keys</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a01355.html">List&lt; Keyed&lt;triFace&gt;</a> &gt; facesRead(is);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a01355.html">List&lt;Face&gt;</a>  faceLst(facesRead.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a01355.html">List&lt;label&gt;</a> zoneIds(facesRead.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// disentangle faces/keys - already triangulated</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(facesRead, faceI)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">// unfortunately cannot transfer to save memory</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        faceLst[faceI] = facesRead[faceI];</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        zoneIds[faceI] = facesRead[faceI].key();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    this-&gt;storedFaces().<a class="code" href="a01355.html#a25ad1d2084d16b234b0cf91c07e832c0">transfer</a>(faceLst);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    this-&gt;storedZoneIds().transfer(zoneIds);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    facesRead.<a class="code" href="a01355.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// change ftrPatch into surfZoneIdentifier</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a01355.html">List&lt;surfZoneIdentifier&gt;</a> newZones(ftrPatches.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(newZones, zoneI)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        newZones[zoneI] = <a class="code" href="a02497.html">surfZoneIdentifier</a></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        (</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            ftrPatches[zoneI].<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>(),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            zoneI</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        );</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    this-&gt;storedZoneToc().transfer(newZones);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02497_html"><div class="ttname"><a href="a02497.html">Foam::surfZoneIdentifier</a></div><div class="ttdoc">An identifier for a surface zone on a meshed surface. </div><div class="ttdef"><b>Definition:</b> <a href="a09855_source.html#l00060">surfZoneIdentifier.H:60</a></div></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a07718_html"><div class="ttname"><a href="a07718.html">IFstream.H</a></div></div>
-<div class="ttc" id="a09776_html"><div class="ttname"><a href="a09776.html">FTRsurfaceFormat.H</a></div></div>
-<div class="ttc" id="a10675_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08826_source.html#l00087">int32IO.C:87</a></div></div>
-<div class="ttc" id="a01355_html_a25ad1d2084d16b234b0cf91c07e832c0"><div class="ttname"><a href="a01355.html#a25ad1d2084d16b234b0cf91c07e832c0">Foam::List::transfer</a></div><div class="ttdeci">void transfer(List&lt; T &gt; &amp;)</div><div class="ttdoc">Transfer the contents of the argument List into this list. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00390">List.C:390</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a01023_html"><div class="ttname"><a href="a01023.html">Foam::IFstream</a></div><div class="ttdoc">Input from file stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07718_source.html#l00081">IFstream.H:81</a></div></div>
-<div class="ttc" id="a00857_html_a464ebd67acbdff0014d4dae69e3ec4be"><div class="ttname"><a href="a00857.html#a464ebd67acbdff0014d4dae69e3ec4be">Foam::fileFormats::FTRsurfaceFormat::read</a></div><div class="ttdeci">virtual bool read(const fileName &amp;)</div><div class="ttdoc">Read from file. </div><div class="ttdef"><b>Definition:</b> <a href="a09775_source.html#l00046">FTRsurfaceFormat.C:46</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a01355_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a01355.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::List::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the list, i.e. set size to zero. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00379">List.C:379</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a01177_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a01177.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::IOstream::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdoc">Return true if next operation might succeed. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00333">IOstream.H:333</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a00857_html"><div class="ttname"><a href="a00857.html">Foam::fileFormats::FTRsurfaceFormat</a></div><div class="ttdoc">Reading of the (now deprecated and infrequently used) Foam Trisurface Format. </div><div class="ttdef"><b>Definition:</b> <a href="a09776_source.html#l00057">FTRsurfaceFormat.H:57</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a03129_html_a3a533f9231a5668b9d8f301a79d57b73"><div class="ttname"><a href="a03129.html#a3a533f9231a5668b9d8f301a79d57b73">clear</a></div><div class="ttdeci">UEqn clear()</div></div>
-<div class="ttc" id="a07535_html"><div class="ttname"><a href="a07535.html">Keyed.H</a></div></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    dictionaryConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(restraintType);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown sixDoFRigidBodyMotionRestraint type &quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; restraintType &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid sixDoFRigidBodyMotionRestraint types are : &quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;sortedToc()</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;sixDoFRigidBodyMotionRestraint&gt;</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    (</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        cstrIter()(<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>, sDoFRBMRDict)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    );</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a09774_html"><div class="ttname"><a href="a09774.html">sixDoFRigidBodyMotionRestraint.H</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a02327_html_a47329b29ef3a76b394e178a9733ad91a"><div class="ttname"><a href="a02327.html#a47329b29ef3a76b394e178a9733ad91a">Foam::sixDoFRigidBodyMotionRestraint::New</a></div><div class="ttdeci">static autoPtr&lt; sixDoFRigidBodyMotionRestraint &gt; New(const word &amp;name, const dictionary &amp;sDoFRBMRDict)</div><div class="ttdoc">Select constructed from the sDoFRBMRDict dictionary and Time. </div><div class="ttdef"><b>Definition:</b> <a href="a09775_source.html#l00032">sixDoFRigidBodyMotionRestraintNew.C:32</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

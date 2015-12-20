@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_35d1b8bea394c75820a29726f930e1b8.html">molecularDynamics</a></li><li class="navelem"><a class="el" href="dir_d688c861569b69efcb20a975bc1993fa.html">molecularMeasurements</a></li><li class="navelem"><a class="el" href="dir_842dca28d2bcc227f5882819415a5c7b.html">bufferedAccumulator</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_825de5f87f0ef3ae7d76ccd6a5458244.html">submodels</a></li><li class="navelem"><a class="el" href="dir_32fe46b8d3399a01c9ad390919e91809.html">Reacting</a></li><li class="navelem"><a class="el" href="dir_95353bd4ad7f447577e2dd3ff5a2aad7.html">PhaseChangeModel</a></li><li class="navelem"><a class="el" href="dir_a574ec62e8cd6cbf40600800e7143909.html">PhaseChangeModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">bufferedAccumulatorIO.C</div>  </div>
+<div class="title">PhaseChangeModelNew.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06818.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,36 +121,54 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06816.html">bufferedAccumulator.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07724.html">IOstreams.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;Foam::operator&lt;&lt;(Ostream&amp; os, const bufferedAccumulator&lt;Type&gt;&amp; bA)</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    os  &lt;&lt; bA.averagesTaken_</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        &lt;&lt; <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>List&lt; Field&lt;Type&gt; <span class="keyword">&gt;</span>&amp;&gt;(bA)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        &lt;&lt; bA.bufferOffsets();</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06817.html">PhaseChangeModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::PhaseChangeModel&lt;CloudType&gt;</a> &gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a01834.html#a25c7c52efd3d9653229f3aa6f4ac542c">Foam::PhaseChangeModel&lt;CloudType&gt;::New</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a01834.html#a25c7c52efd3d9653229f3aa6f4ac542c">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a00583.html">CloudType</a>&amp; owner</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a> modelType(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;phaseChangeModel&quot;</span>));</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Check state of Ostream</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    os.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="stringliteral">&quot;Foam::Ostream&amp; Foam::operator&lt;&lt;(Foam::Ostream&amp;, &quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="stringliteral">&quot;const Foam::bufferedAccumulator&amp;)&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> os;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01177_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01177.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07728_source.html#l00092">IOstream.C:92</a></div></div>
-<div class="ttc" id="a06816_html"><div class="ttname"><a href="a06816.html">bufferedAccumulator.H</a></div></div>
-<div class="ttc" id="a07724_html"><div class="ttname"><a href="a07724.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Selecting phase change model &quot;</span> &lt;&lt; modelType &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">typename</span> dictionaryConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(modelType);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown phase change model type &quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; modelType &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid phase change model types are:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;sortedToc()</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;PhaseChangeModel&lt;CloudType&gt;</a> &gt;(cstrIter()(<a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, owner));</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a06817_html"><div class="ttname"><a href="a06817.html">PhaseChangeModel.H</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01834_html_a25c7c52efd3d9653229f3aa6f4ac542c"><div class="ttname"><a href="a01834.html#a25c7c52efd3d9653229f3aa6f4ac542c">Foam::PhaseChangeModel::New</a></div><div class="ttdeci">static autoPtr&lt; PhaseChangeModel&lt; CloudType &gt; &gt; New(const dictionary &amp;dict, CloudType &amp;owner)</div><div class="ttdoc">Selector. </div><div class="ttdef"><b>Definition:</b> <a href="a06818_source.html#l00033">PhaseChangeModelNew.C:33</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a00583_html"><div class="ttname"><a href="a00583.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06404_source.html#l00068">DSMCCloud.H:68</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

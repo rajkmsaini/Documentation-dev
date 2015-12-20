@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_fd9be80e4ce10132ec26d36b30f21b7d.html">GAMG</a></li><li class="navelem"><a class="el" href="dir_a924fc5b9b02d4bfaf9b6fb6bcc671ab.html">GAMGAgglomerations</a></li><li class="navelem"><a class="el" href="dir_ce1fefca8d8766bf859c0f32ba3a3fb9.html">algebraicPairGAMGAgglomeration</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_1ce70feb2b06c30ebd4091245573b99e.html">lduMatrix</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">algebraicPairGAMGAgglomeration.C</div>  </div>
+<div class="title">lduMatrixTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08298.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,56 +119,128 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08299.html">algebraicPairGAMGAgglomeration.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08235.html">lduMatrix.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(algebraicPairGAMGAgglomeration, 0);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    lduMatrix member H operations.</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08286.html">lduMatrix.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a01282.html#a696121529e9157344b406f77234f75eb">   34</a></span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt; <a class="code" href="a01282.html#a1e81ba9c68cc53ce093a24de384b39ed">Foam::lduMatrix::H</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; <a class="code" href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a02618.html">tmp&lt;Field&lt;Type&gt;</a> &gt; tHpsi</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    (</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        GAMGAgglomeration,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        algebraicPairGAMGAgglomeration,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        lduMatrix</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    );</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>(<a class="code" href="a01282.html#a4d0ef83ad6199d0b94d565de54a9eae5">lduAddr</a>().size(), <a class="code" href="a02017.html">pTraits&lt;Type&gt;::zero</a>)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    );</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (lowerPtr_ || upperPtr_)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a00755.html">Field&lt;Type&gt;</a> &amp; Hpsi = tHpsi();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        Type* __restrict__ HpsiPtr = Hpsi.<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a00036.html#a100f93cde4cdbf0de8796d5d6c4d9677">Foam::algebraicPairGAMGAgglomeration::algebraicPairGAMGAgglomeration</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00036.html#a100f93cde4cdbf0de8796d5d6c4d9677">   48</a></span>&#160;(</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01274.html">lduMatrix</a>&amp; matrix,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; controlDict</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a01751.html">pairGAMGAgglomeration</a>(matrix.<a class="code" href="a01274.html#a4fb3cdb74541a526e6b83ac854e66cb5">mesh</a>(), <a class="code" href="a02958.html#a11d7fc5562a23e182599d89ddfcfae84">controlDict</a>)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    agglomerate(matrix.<a class="code" href="a01274.html#a4fb3cdb74541a526e6b83ac854e66cb5">mesh</a>(), <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(matrix.<a class="code" href="a01274.html#a11672a767f497e24dce3ff31da13d9d0">upper</a>()));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08235_html"><div class="ttname"><a href="a08235.html">lduMatrix.H</a></div></div>
-<div class="ttc" id="a01751_html"><div class="ttname"><a href="a01751.html">Foam::pairGAMGAgglomeration</a></div><div class="ttdoc">Agglomerate using the pair algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="a08308_source.html#l00049">pairGAMGAgglomeration.H:49</a></div></div>
-<div class="ttc" id="a01274_html_a4fb3cdb74541a526e6b83ac854e66cb5"><div class="ttname"><a href="a01274.html#a4fb3cdb74541a526e6b83ac854e66cb5">Foam::lduMatrix::mesh</a></div><div class="ttdeci">const lduMesh &amp; mesh() const </div><div class="ttdoc">Return the LDU mesh from which the addressing is obtained. </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00539">lduMatrix.H:539</a></div></div>
-<div class="ttc" id="a08299_html"><div class="ttname"><a href="a08299.html">algebraicPairGAMGAgglomeration.H</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a01274_html_a11672a767f497e24dce3ff31da13d9d0"><div class="ttname"><a href="a01274.html#a11672a767f497e24dce3ff31da13d9d0">Foam::lduMatrix::upper</a></div><div class="ttdeci">scalarField &amp; upper()</div><div class="ttdef"><b>Definition:</b> <a href="a08233_source.html#l00194">lduMatrix.C:194</a></div></div>
-<div class="ttc" id="a02958_html_a11d7fc5562a23e182599d89ddfcfae84"><div class="ttname"><a href="a02958.html#a11d7fc5562a23e182599d89ddfcfae84">controlDict</a></div><div class="ttdeci">runTime controlDict().lookup(&quot;adjustTimeStep&quot;) &gt;&gt; adjustTimeStep</div></div>
-<div class="ttc" id="a00036_html_a100f93cde4cdbf0de8796d5d6c4d9677"><div class="ttname"><a href="a00036.html#a100f93cde4cdbf0de8796d5d6c4d9677">Foam::algebraicPairGAMGAgglomeration::algebraicPairGAMGAgglomeration</a></div><div class="ttdeci">algebraicPairGAMGAgglomeration(const lduMatrix &amp;matrix, const dictionary &amp;controlDict)</div><div class="ttdoc">Construct given mesh and controls. </div><div class="ttdef"><b>Definition:</b> <a href="a08298_source.html#l00048">algebraicPairGAMGAgglomeration.C:48</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01274_html"><div class="ttname"><a href="a01274.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00077">lduMatrix.H:77</a></div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">const</span> Type* __restrict__ psiPtr = psi.<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* __restrict__ uPtr = <a class="code" href="a01282.html#a4d0ef83ad6199d0b94d565de54a9eae5">lduAddr</a>().<a class="code" href="a01277.html#ae0eccad377069f19cbad2b04b06a21b0">upperAddr</a>().<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* __restrict__ lPtr = <a class="code" href="a01282.html#a4d0ef83ad6199d0b94d565de54a9eae5">lduAddr</a>().<a class="code" href="a01277.html#af11f44951a37815ca736db386ad1c33e">lowerAddr</a>().<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> scalar* __restrict__ lowerPtr = <a class="code" href="a01282.html#a734a4ef740d3c42f77537ecea178a161">lower</a>().<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> scalar* __restrict__ upperPtr = <a class="code" href="a01282.html#a11672a767f497e24dce3ff31da13d9d0">upper</a>().<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFaces = <a class="code" href="a01282.html#a11672a767f497e24dce3ff31da13d9d0">upper</a>().<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=0; <a class="code" href="a00715.html">face</a>&lt;nFaces; <a class="code" href="a00715.html">face</a>++)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            HpsiPtr[uPtr[<a class="code" href="a00715.html">face</a>]] -= lowerPtr[<a class="code" href="a00715.html">face</a>]*psiPtr[lPtr[<a class="code" href="a00715.html">face</a>]];</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            HpsiPtr[lPtr[<a class="code" href="a00715.html">face</a>]] -= upperPtr[<a class="code" href="a00715.html">face</a>]*psiPtr[uPtr[<a class="code" href="a00715.html">face</a>]];</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> tHpsi;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a01282.html#a6a6373758a7205a55b8ef5fa26fa17cd">   69</a></span>&#160;<a class="code" href="a01282.html#a1e81ba9c68cc53ce093a24de384b39ed">Foam::lduMatrix::H</a>(<span class="keyword">const</span> <a class="code" href="a02618.html">tmp</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a> &gt;&amp; tpsi)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a02618.html">tmp&lt;Field&lt;Type&gt;</a> &gt; tHpsi(H(tpsi()));</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    tpsi.clear();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> tHpsi;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a01282.html#a39414b1d185b031f8339721603caea19">   79</a></span>&#160;<a class="code" href="a01282.html#a56783bc62b7ff7663de57902f3592d09">Foam::lduMatrix::faceH</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; <a class="code" href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (lowerPtr_ || upperPtr_)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; Lower = <span class="keyword">const_cast&lt;</span><span class="keyword">const </span><a class="code" href="a01282.html">lduMatrix</a>&amp;<span class="keyword">&gt;</span>(*this).<a class="code" href="a01282.html#a734a4ef740d3c42f77537ecea178a161">lower</a>();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; Upper = <span class="keyword">const_cast&lt;</span><span class="keyword">const </span><a class="code" href="a01282.html">lduMatrix</a>&amp;<span class="keyword">&gt;</span>(*this).<a class="code" href="a01282.html#a11672a767f497e24dce3ff31da13d9d0">upper</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; l = lduAddr().lowerAddr();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; u = lduAddr().upperAddr();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a02618.html">tmp&lt;Field&lt;Type&gt;</a> &gt; tfaceHpsi(<span class="keyword">new</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a> (Lower.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()));</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a00755.html">Field&lt;Type&gt;</a> &amp; faceHpsi = tfaceHpsi();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=0; <a class="code" href="a00715.html">face</a>&lt;l.<a class="code" href="a02731.html#a723361dc2020160f5492e8fe2d09fa44">size</a>(); <a class="code" href="a00715.html">face</a>++)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            faceHpsi[<a class="code" href="a00715.html">face</a>] =</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                Upper[<a class="code" href="a00715.html">face</a>]*psi[u[<a class="code" href="a00715.html">face</a>]]</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;              - Lower[<a class="code" href="a00715.html">face</a>]*psi[l[<a class="code" href="a00715.html">face</a>]];</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> tfaceHpsi;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Cannot calculate faceH&quot;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;               <span class="stringliteral">&quot; the matrix does not have any off-diagonal coefficients.&quot;</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;Field&lt;Type&gt;</a> &gt;(NULL);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::Field&lt;Type&gt;</a> &gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a01282.html#a709920445410c2ab2f58d34ad5529dc4">  115</a></span>&#160;<a class="code" href="a01282.html#a56783bc62b7ff7663de57902f3592d09">Foam::lduMatrix::faceH</a>(<span class="keyword">const</span> <a class="code" href="a02618.html">tmp</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a> &gt;&amp; tpsi)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="a02618.html">tmp&lt;Field&lt;Type&gt;</a> &gt; tfaceHpsi(faceH(tpsi()));</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    tpsi.clear();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> tfaceHpsi;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00715_html"><div class="ttname"><a href="a00715.html">Foam::face</a></div><div class="ttdoc">A face is a list of labels corresponding to mesh vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a08528_source.html#l00075">face.H:75</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a01282_html_a56783bc62b7ff7663de57902f3592d09"><div class="ttname"><a href="a01282.html#a56783bc62b7ff7663de57902f3592d09">Foam::lduMatrix::faceH</a></div><div class="ttdeci">tmp&lt; Field&lt; Type &gt; &gt; faceH(const Field&lt; Type &gt; &amp;) const </div></div>
+<div class="ttc" id="a01282_html_a4d0ef83ad6199d0b94d565de54a9eae5"><div class="ttname"><a href="a01282.html#a4d0ef83ad6199d0b94d565de54a9eae5">Foam::lduMatrix::lduAddr</a></div><div class="ttdeci">const lduAddressing &amp; lduAddr() const </div><div class="ttdoc">Return the LDU addressing. </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00545">lduMatrix.H:545</a></div></div>
+<div class="ttc" id="a01277_html_ae0eccad377069f19cbad2b04b06a21b0"><div class="ttname"><a href="a01277.html#ae0eccad377069f19cbad2b04b06a21b0">Foam::lduAddressing::upperAddr</a></div><div class="ttdeci">virtual const labelUList &amp; upperAddr() const  =0</div><div class="ttdoc">Return upper addressing. </div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a01282_html_a734a4ef740d3c42f77537ecea178a161"><div class="ttname"><a href="a01282.html#a734a4ef740d3c42f77537ecea178a161">Foam::lduMatrix::lower</a></div><div class="ttdeci">scalarField &amp; lower()</div><div class="ttdef"><b>Definition:</b> <a href="a08284_source.html#l00165">lduMatrix.C:165</a></div></div>
+<div class="ttc" id="a02731_html_a8a0643ef7f391465066f7f07d45ce934"><div class="ttname"><a href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">Foam::UList&lt; Type &gt;::begin</a></div><div class="ttdeci">iterator begin()</div><div class="ttdoc">Return an iterator to begin traversing the UList. </div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a01282_html"><div class="ttname"><a href="a01282.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00077">lduMatrix.H:77</a></div></div>
+<div class="ttc" id="a01282_html_a11672a767f497e24dce3ff31da13d9d0"><div class="ttname"><a href="a01282.html#a11672a767f497e24dce3ff31da13d9d0">Foam::lduMatrix::upper</a></div><div class="ttdeci">scalarField &amp; upper()</div><div class="ttdef"><b>Definition:</b> <a href="a08284_source.html#l00194">lduMatrix.C:194</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a08286_html"><div class="ttname"><a href="a08286.html">lduMatrix.H</a></div></div>
+<div class="ttc" id="a01277_html_af11f44951a37815ca736db386ad1c33e"><div class="ttname"><a href="a01277.html#af11f44951a37815ca736db386ad1c33e">Foam::lduAddressing::lowerAddr</a></div><div class="ttdeci">virtual const labelUList &amp; lowerAddr() const  =0</div><div class="ttdoc">Return lower addressing. </div></div>
+<div class="ttc" id="a02017_html"><div class="ttname"><a href="a02017.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08910_source.html#l00050">pTraits.H:50</a></div></div>
+<div class="ttc" id="a02731_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02731.html#a723361dc2020160f5492e8fe2d09fa44">Foam::UList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the UList. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00299">UListI.H:299</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a01282_html_a1e81ba9c68cc53ce093a24de384b39ed"><div class="ttname"><a href="a01282.html#a1e81ba9c68cc53ce093a24de384b39ed">Foam::lduMatrix::H</a></div><div class="ttdeci">tmp&lt; Field&lt; Type &gt; &gt; H(const Field&lt; Type &gt; &amp;) const </div></div>
+<div class="ttc" id="a02731_html"><div class="ttname"><a href="a02731.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00060">HashTable.H:60</a></div></div>
+<div class="ttc" id="a04435_html_aba679271c41582099c8ccf4827fdf217"><div class="ttname"><a href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a></div><div class="ttdeci">const volScalarField &amp; psi</div><div class="ttdef"><b>Definition:</b> <a href="a04435_source.html#l00024">createFields.H:24</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

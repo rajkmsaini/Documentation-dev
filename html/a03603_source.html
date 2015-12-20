@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_dc2172eec47757b3e024133ec45cdacf.html">wallLubricationModels</a></li><li class="navelem"><a class="el" href="dir_2ba64e1a0eca161ae501659a5986dbb4.html">TomiyamaWallLubrication</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_cee67cef8b707840d7034735f1e2f9fa.html">wallDampingModels</a></li><li class="navelem"><a class="el" href="dir_b70f90677a114947cff0cfc8975328b8.html">cosine</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">TomiyamaWallLubrication.H</div>  </div>
+<div class="title">cosineWallDamping.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03603.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,110 +119,87 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::wallLubricationModels::TomiyamaWallLubrication</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Wall lubrication model of Tomiyama.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    References:</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    \verbatim</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">        &quot;Implementation and Comparison of Correlations for interfacial Forces</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">         in a Gas-Liquid System within an Euler-Euler Framework&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">        Otromke, M.</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">        PhD Thesis, April 2013</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    \endverbatim</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    \verbatim</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">        &quot;Struggle with Computational Bubble Dynamics&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">        Tomiyama, A.,</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">        Multiphase Science and Technology</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">        Volume 10, Issue 4, 1998, pp. 369-405</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">    \endverbatim</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">    TomiyamaWallLubrication.C</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifndef TomiyamaWallLubrication_H</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define TomiyamaWallLubrication_H</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;wallLubricationModel.H&quot;</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">class </span>phasePair;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">namespace </span>wallLubricationModels</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">                            Class TomiyamaWallLubrication Declaration</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a02618.html">   68</a></span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">class </span><a class="code" href="a02618.html">TomiyamaWallLubrication</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;:</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02827.html">wallLubricationModel</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Characteristic channel dimension</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00526.html">dimensionedScalar</a> D_;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03604.html">cosineWallDamping.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;phasePair.H&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>wallDampingModels</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(cosine, 0);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        wallDampingModel,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        cosine,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        dictionary</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    );</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="a00413.html#a1a1799d0a229931987a897795cae559e">Foam::wallDampingModels::cosine::limiter</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    (</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        0.5*</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        (</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            1</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;          - <a class="code" href="a10725.html#aebb41a148f7cf44b63e12f69e487e49f">cos</a></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            (</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                <a class="code" href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">constant::mathematical::pi</a></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;               *<a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a02831.html#a7d3dada39d35eeffceccf373b54f55f9">yWall</a>()/(Cd_*<a class="code" href="a02830.html#afd0567a30e2ea4703b446fd80ca5ec0b">pair_</a>.<a class="code" href="a01841.html#a2dc74522cb85f706f8b817ecc7547e83">dispersed</a>().<a class="code" href="a01840.html#a7afa96ea7c074903d19be88a8119a8e2">d</a>()), scalar(1))</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            )</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        )</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    );</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<a class="code" href="a00413.html#a883947a3b0e074dba07fd97db34d8bb4">Foam::wallDampingModels::cosine::cosine</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;(</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> phasePair&amp; pair</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;:</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    interpolated(dict, pair),</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    Cd_(<span class="stringliteral">&quot;Cd&quot;</span>, <a class="code" href="a10725.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, dict)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{}</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="a02618.html#a9b0552dbbef6ad599c064bdab02e5c5d">TypeName</a>(<span class="stringliteral">&quot;Tomiyama&quot;</span>);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<a class="code" href="a00413.html#aa683640bc4d1d53d242dc4f36e7c6337">Foam::wallDampingModels::cosine::~cosine</a>()</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{}</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a02618.html#a4d31410b60b2379055eb33353a2301a9">TomiyamaWallLubrication</a></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        (</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01830.html">phasePair</a>&amp; pair</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        );</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02618.html#a579e0206457abf427a21a574b27336b1">~TomiyamaWallLubrication</a>();</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">//- Return phase-intensive wall lubrication force</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <a class="code" href="a02608.html">tmp&lt;volVectorField&gt;</a> <a class="code" href="a02618.html#aa5c67b5ea4e8ecba0ec47c9009f7564e">Fi</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;} <span class="comment">// End namespace wallLubricationModels</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02827_html"><div class="ttname"><a href="a02827.html">Foam::wallLubricationModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a03609_source.html#l00053">wallLubricationModel.H:53</a></div></div>
-<div class="ttc" id="a01830_html"><div class="ttname"><a href="a01830.html">Foam::phasePair</a></div><div class="ttdef"><b>Definition:</b> <a href="a03655_source.html#l00049">phasePair.H:49</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02618_html_a9b0552dbbef6ad599c064bdab02e5c5d"><div class="ttname"><a href="a02618.html#a9b0552dbbef6ad599c064bdab02e5c5d">Foam::wallLubricationModels::TomiyamaWallLubrication::TypeName</a></div><div class="ttdeci">TypeName(&quot;Tomiyama&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::wallLubricationModels::TomiyamaWallLubrication</a></div><div class="ttdoc">Wall lubrication model of Tomiyama. </div><div class="ttdef"><b>Definition:</b> <a href="a03603_source.html#l00068">TomiyamaWallLubrication.H:68</a></div></div>
-<div class="ttc" id="a02618_html_aa5c67b5ea4e8ecba0ec47c9009f7564e"><div class="ttname"><a href="a02618.html#aa5c67b5ea4e8ecba0ec47c9009f7564e">Foam::wallLubricationModels::TomiyamaWallLubrication::Fi</a></div><div class="ttdeci">tmp&lt; volVectorField &gt; Fi() const </div><div class="ttdoc">Return phase-intensive wall lubrication force. </div></div>
-<div class="ttc" id="a02618_html_a4d31410b60b2379055eb33353a2301a9"><div class="ttname"><a href="a02618.html#a4d31410b60b2379055eb33353a2301a9">Foam::wallLubricationModels::TomiyamaWallLubrication::TomiyamaWallLubrication</a></div><div class="ttdeci">TomiyamaWallLubrication(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from components. </div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a02618_html_a579e0206457abf427a21a574b27336b1"><div class="ttname"><a href="a02618.html#a579e0206457abf427a21a574b27336b1">Foam::wallLubricationModels::TomiyamaWallLubrication::~TomiyamaWallLubrication</a></div><div class="ttdeci">virtual ~TomiyamaWallLubrication()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a03604_html"><div class="ttname"><a href="a03604.html">cosineWallDamping.H</a></div></div>
+<div class="ttc" id="a01840_html_a7afa96ea7c074903d19be88a8119a8e2"><div class="ttname"><a href="a01840.html#a7afa96ea7c074903d19be88a8119a8e2">Foam::phaseModel::d</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; d() const </div></div>
+<div class="ttc" id="a10725_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10725.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07882_source.html#l00047">dimensionSets.H:47</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a01841_html_a2dc74522cb85f706f8b817ecc7547e83"><div class="ttname"><a href="a01841.html#a2dc74522cb85f706f8b817ecc7547e83">Foam::phasePair::dispersed</a></div><div class="ttdeci">virtual const phaseModel &amp; dispersed() const </div><div class="ttdoc">Dispersed phase. </div></div>
+<div class="ttc" id="a10737_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
+<div class="ttc" id="a02830_html_afd0567a30e2ea4703b446fd80ca5ec0b"><div class="ttname"><a href="a02830.html#afd0567a30e2ea4703b446fd80ca5ec0b">Foam::wallDampingModel::pair_</a></div><div class="ttdeci">const phasePair &amp; pair_</div><div class="ttdoc">Phase pair. </div><div class="ttdef"><b>Definition:</b> <a href="a03615_source.html#l00062">wallDampingModel.H:62</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00413_html_aa683640bc4d1d53d242dc4f36e7c6337"><div class="ttname"><a href="a00413.html#aa683640bc4d1d53d242dc4f36e7c6337">Foam::wallDampingModels::cosine::~cosine</a></div><div class="ttdeci">virtual ~cosine()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a02831_html_a7d3dada39d35eeffceccf373b54f55f9"><div class="ttname"><a href="a02831.html#a7d3dada39d35eeffceccf373b54f55f9">Foam::wallDependentModel::yWall</a></div><div class="ttdeci">const volScalarField &amp; yWall() const </div></div>
+<div class="ttc" id="a00413_html_a883947a3b0e074dba07fd97db34d8bb4"><div class="ttname"><a href="a00413.html#a883947a3b0e074dba07fd97db34d8bb4">Foam::wallDampingModels::cosine::cosine</a></div><div class="ttdeci">cosine(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from components. </div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a10725_html_aebb41a148f7cf44b63e12f69e487e49f"><div class="ttname"><a href="a10725.html#aebb41a148f7cf44b63e12f69e487e49f">Foam::cos</a></div><div class="ttdeci">dimensionedScalar cos(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07865_source.html#l00256">dimensionedScalar.C:256</a></div></div>
+<div class="ttc" id="a00413_html_a1a1799d0a229931987a897795cae559e"><div class="ttname"><a href="a00413.html#a1a1799d0a229931987a897795cae559e">Foam::wallDampingModels::cosine::limiter</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; limiter() const </div><div class="ttdoc">Return the force limiter field. </div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

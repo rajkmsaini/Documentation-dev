@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_a36ac568b20b0ed2190ed53a491bc296.html">primitiveShapes</a></li><li class="navelem"><a class="el" href="dir_5ea6c01523c496de67b64831bf8ebd87.html">triangle</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_d498992fb7d3f293d898bf6d3a4df869.html">primitiveMesh</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">intersection.C</div>  </div>
+<div class="title">primitiveMeshPointFaces.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08735.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,53 +121,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08736.html">intersection.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08715.html">primitiveMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07645.html">ListOps.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;Foam::scalar Foam::intersection::planarTol_ = 0.2;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a01558.html">Foam::NamedEnum</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    &lt;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="a01157.html#a99f26e6ee9fcd62f75203b5402df8098">Foam::intersection::direction</a>,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        2</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a01558.html#a7350da3a0edd92cd11e6c479c9967dc8">   39</a></span>&#160;    &gt;::names[] =</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="stringliteral">&quot;vector&quot;</span>,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="stringliteral">&quot;contactSphere&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    };</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a01558.html">Foam::NamedEnum</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    &lt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a01157.html#a8a0fd7a8363e41d8c12a90716f4f500f">Foam::intersection::algorithm</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        3</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a01558.html#a7350da3a0edd92cd11e6c479c9967dc8">   50</a></span>&#160;    &gt;::names[] =</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="stringliteral">&quot;fullRay&quot;</span>,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="stringliteral">&quot;halfRay&quot;</span>,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="stringliteral">&quot;visible&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    };</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">const</span> <a class="code" href="a01558.html">Foam::NamedEnum&lt;Foam::intersection::direction, 2&gt;</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<a class="code" href="a01157.html#ad0f19986b1f6f8609c8b9f25b47a6edb">Foam::intersection::directionNames_</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">const</span> <a class="code" href="a01558.html">Foam::NamedEnum&lt;Foam::intersection::algorithm, 3&gt;</a></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a01157.html#a1e96fcf867be72b012a4180519156db1">Foam::intersection::algorithmNames_</a>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01157_html_a8a0fd7a8363e41d8c12a90716f4f500f"><div class="ttname"><a href="a01157.html#a8a0fd7a8363e41d8c12a90716f4f500f">Foam::intersection::algorithm</a></div><div class="ttdeci">algorithm</div><div class="ttdef"><b>Definition:</b> <a href="a08736_source.html#l00069">intersection.H:69</a></div></div>
-<div class="ttc" id="a01157_html_a99f26e6ee9fcd62f75203b5402df8098"><div class="ttname"><a href="a01157.html#a99f26e6ee9fcd62f75203b5402df8098">Foam::intersection::direction</a></div><div class="ttdeci">direction</div><div class="ttdef"><b>Definition:</b> <a href="a08736_source.html#l00063">intersection.H:63</a></div></div>
-<div class="ttc" id="a01157_html_a1e96fcf867be72b012a4180519156db1"><div class="ttname"><a href="a01157.html#a1e96fcf867be72b012a4180519156db1">Foam::intersection::algorithmNames_</a></div><div class="ttdeci">static const NamedEnum&lt; algorithm, 3 &gt; algorithmNames_</div><div class="ttdoc">Projection algorithm names. </div><div class="ttdef"><b>Definition:</b> <a href="a08736_source.html#l00082">intersection.H:82</a></div></div>
-<div class="ttc" id="a01157_html_ad0f19986b1f6f8609c8b9f25b47a6edb"><div class="ttname"><a href="a01157.html#ad0f19986b1f6f8609c8b9f25b47a6edb">Foam::intersection::directionNames_</a></div><div class="ttdeci">static const NamedEnum&lt; direction, 2 &gt; directionNames_</div><div class="ttdoc">Direction names. </div><div class="ttdef"><b>Definition:</b> <a href="a08736_source.html#l00079">intersection.H:79</a></div></div>
-<div class="ttc" id="a01558_html"><div class="ttname"><a href="a01558.html">Foam::NamedEnum</a></div><div class="ttdoc">Initialise the NamedEnum HashTable from the static list of names. </div><div class="ttdef"><b>Definition:</b> <a href="a07626_source.html#l00052">NamedEnum.H:52</a></div></div>
-<div class="ttc" id="a08736_html"><div class="ttname"><a href="a08736.html">intersection.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a01967.html#a758f775d09e1be4cdd80daea4e402f55">   32</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a01364.html">Foam::labelListList</a>&amp; <a class="code" href="a01967.html#a758f775d09e1be4cdd80daea4e402f55">Foam::primitiveMesh::pointFaces</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">if</span> (!pfPtr_)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;primitiveMesh::pointFaces() : &quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;calculating pointFaces&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">// Invert faces()</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        pfPtr_ = <span class="keyword">new</span> <a class="code" href="a10725.html#a8d042301b1c77516c5bfd527662e4f54">labelListList</a>(<a class="code" href="a01967.html#a9927abeba2c8506177084d644b6e573a">nPoints</a>());</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a10725.html#af31016490620bc000b61c89e75cbfd0b">invertManyToMany</a>(<a class="code" href="a01967.html#a9927abeba2c8506177084d644b6e573a">nPoints</a>(), <a class="code" href="a01967.html#a23ca4b0f5e216674cd6bdd98aa90563e">faces</a>(), *pfPtr_);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> *pfPtr_;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a8d042301b1c77516c5bfd527662e4f54"><div class="ttname"><a href="a10725.html#a8d042301b1c77516c5bfd527662e4f54">Foam::labelListList</a></div><div class="ttdeci">List&lt; labelList &gt; labelListList</div><div class="ttdoc">A List of labelList. </div><div class="ttdef"><b>Definition:</b> <a href="a08887_source.html#l00057">labelList.H:57</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; labelList &gt;</a></div></div>
+<div class="ttc" id="a01967_html_a9927abeba2c8506177084d644b6e573a"><div class="ttname"><a href="a01967.html#a9927abeba2c8506177084d644b6e573a">Foam::primitiveMesh::nPoints</a></div><div class="ttdeci">label nPoints() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00041">primitiveMeshI.H:41</a></div></div>
+<div class="ttc" id="a10725_html_af31016490620bc000b61c89e75cbfd0b"><div class="ttname"><a href="a10725.html#af31016490620bc000b61c89e75cbfd0b">Foam::invertManyToMany</a></div><div class="ttdeci">void invertManyToMany(const label len, const UList&lt; InList &gt; &amp;, List&lt; OutList &gt; &amp;)</div><div class="ttdoc">Invert many-to-many. </div><div class="ttdef"><b>Definition:</b> <a href="a07646_source.html#l00418">ListOpsTemplates.C:418</a></div></div>
+<div class="ttc" id="a07645_html"><div class="ttname"><a href="a07645.html">ListOps.H</a></div><div class="ttdoc">Various functions to operate on Lists. </div></div>
+<div class="ttc" id="a01967_html_a23ca4b0f5e216674cd6bdd98aa90563e"><div class="ttname"><a href="a01967.html#a23ca4b0f5e216674cd6bdd98aa90563e">Foam::primitiveMesh::faces</a></div><div class="ttdeci">virtual const faceList &amp; faces() const  =0</div><div class="ttdoc">Return faces. </div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a08715_html"><div class="ttname"><a href="a08715.html">primitiveMesh.H</a></div></div>
+<div class="ttc" id="a01967_html_a758f775d09e1be4cdd80daea4e402f55"><div class="ttname"><a href="a01967.html#a758f775d09e1be4cdd80daea4e402f55">Foam::primitiveMesh::pointFaces</a></div><div class="ttdeci">const labelListList &amp; pointFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08735_source.html#l00032">primitiveMeshPointFaces.C:32</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

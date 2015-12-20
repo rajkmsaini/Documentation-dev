@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_5c4bf53b114f4c9237cd4ef0431fc9bd.html">specie</a></li><li class="navelem"><a class="el" href="dir_52d55d2fbf4a26d00084c41bddaf4722.html">thermo</a></li><li class="navelem"><a class="el" href="dir_d5c4c578f6785134f36ab2af8b27521b.html">eConst</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_5c4bf53b114f4c9237cd4ef0431fc9bd.html">specie</a></li><li class="navelem"><a class="el" href="dir_f6178c4a32c891ac3a18c9e9fb558e23.html">equationOfState</a></li><li class="navelem"><a class="el" href="dir_e208cb5f6c25d09468d77112d912a170.html">rhoConst</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">eConstThermo.H</div>  </div>
+<div class="title">rhoConst.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10284.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,244 +119,76 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::eConstThermo</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Constant properties thermodynamics package templated on an equation of</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    state</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    eConstThermoI.H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    eConstThermo.C</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef eConstThermo_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define eConstThermo_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10285.html">rhoConst.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07775.html">IOstreams.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Specie&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a02196.html#aae7628523a894ad49e17ab6191dd4479">   32</a></span>&#160;<a class="code" href="a02196.html#afb808bfcd5157a69014e2474253965de">Foam::rhoConst&lt;Specie&gt;::rhoConst</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    Specie(is),</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    rho_(<a class="code" href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is))</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    is.<a class="code" href="a01185.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;rhoConst&lt;Specie&gt;::rhoConst(Istream&amp; is)&quot;</span>);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10304.html">thermo.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// Forward declaration of friend functions and operators</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00603.html">   48</a></span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt; <span class="keyword">class </span><a class="code" href="a00603.html">eConstThermo</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Specie&gt;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a02196.html#ac142901251a06ed0af04dc3d2fbdca70">   42</a></span>&#160;<a class="code" href="a02196.html#afb808bfcd5157a69014e2474253965de">Foam::rhoConst&lt;Specie&gt;::rhoConst</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    Specie(dict),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    rho_(<a class="code" href="a10725.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.subDict(<span class="stringliteral">&quot;equationOfState&quot;</span>).<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;rho&quot;</span>)))</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">inline</span> <a class="code" href="a00603.html">eConstThermo&lt;EquationOfState&gt;</a> <span class="keyword">operator</span>+</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;(</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00603.html">eConstThermo&lt;EquationOfState&gt;</a>&amp;,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">inline</span> eConstThermo&lt;EquationOfState&gt; <span class="keyword">operator</span>-</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;(</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Specie&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a02196.html#a4bc86b48333705e13add9de0db8eebd3">   52</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02196.html#a4bc86b48333705e13add9de0db8eebd3">Foam::rhoConst&lt;Specie&gt;::write</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">Specie::write</a>(os);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a00524.html">dictionary</a> <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>(<span class="stringliteral">&quot;equationOfState&quot;</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    dict.<a class="code" href="a00524.html#ac2ddcab42322c8d8af5e5830ab4d431b">add</a>(<span class="stringliteral">&quot;rho&quot;</span>, rho_);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    os  &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; dict.<a class="code" href="a00527.html#a0c0f7c5d75947353dc8dc6cbe4df98ea">dictName</a>() &lt;&lt; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">inline</span> eConstThermo&lt;EquationOfState&gt; <span class="keyword">operator</span>*</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;(</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> scalar,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">inline</span> eConstThermo&lt;EquationOfState&gt; <span class="keyword">operator</span>==</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;(</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<a class="code" href="a01725.html">Ostream</a>&amp; <span class="keyword">operator</span>&lt;&lt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;(</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp;,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> eConstThermo&lt;EquationOfState&gt;&amp;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">                        Class eConstThermo Declaration</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> EquationOfState&gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">class </span><a class="code" href="a00603.html">eConstThermo</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;:</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">public</span> EquationOfState</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- Heat capacity at constant volume</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//  Note: input in [J/(kg K)], but internally uses [J/(kmol K)]</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        scalar Cv_;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Heat of formation</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">//  Note: input in [J/kg], but internally uses [J/kmol]</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        scalar Hf_;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a00603.html">eConstThermo</a></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        (</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keyword">const</span> EquationOfState&amp; st,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keyword">const</span> scalar cv,</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">const</span> scalar hf</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        );</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="comment">//- Construct from Istream</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <a class="code" href="a00603.html">eConstThermo</a>(<a class="code" href="a01191.html">Istream</a>&amp;);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="comment">//- Construct from dictionary</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="a00603.html">eConstThermo</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="comment">//- Construct as named copy</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a00603.html">eConstThermo</a>(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp;, <span class="keyword">const</span> <a class="code" href="a00603.html">eConstThermo</a>&amp;);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a00084.html">autoPtr&lt;eConstThermo&gt;</a> <a class="code" href="a00603.html#a5b0c2388c18723c22000f02afd2d9946">clone</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">// Selector from Istream</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">inline</span> <span class="keyword">static</span> <a class="code" href="a00084.html">autoPtr&lt;eConstThermo&gt;</a> <a class="code" href="a00603.html#ab94bbd28cde0db0c0716eb792d4bded7">New</a>(<a class="code" href="a01191.html">Istream</a>&amp; is);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="comment">// Selector from dictionary</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keyword">inline</span> <span class="keyword">static</span> <a class="code" href="a00084.html">autoPtr&lt;eConstThermo&gt;</a> <a class="code" href="a00603.html#ab94bbd28cde0db0c0716eb792d4bded7">New</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno"><a class="line" href="a00603.html#a561f535eabff4d94fd999c48df4443bd">  143</a></span>&#160;        <span class="comment">//- Return the instantiated type name</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="keyword">static</span> <a class="code" href="a02856.html">word</a> <a class="code" href="a00603.html#a561f535eabff4d94fd999c48df4443bd">typeName</a>()</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        {</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&quot;eConst&lt;&quot;</span> + EquationOfState::typeName() + <span class="charliteral">&#39;&gt;&#39;</span>;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        }</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="comment">//- Limit the temperature to be in the range Tlow_ to Thigh_</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#a36e7570f038b06ddc70de8f5c97f9be0">limit</a>(<span class="keyword">const</span> scalar <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="comment">// Fundamental properties</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            <span class="comment">//- Heat capacity at constant pressure [J/(kmol K)]</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#ad34fc523196eb59f189c7538bd76adda">cp</a>(<span class="keyword">const</span> scalar <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <span class="keyword">const</span> scalar <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            <span class="comment">//- Absolute Enthalpy [J/kmol]</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#a190aa728dba4ea87884e38be8bc27c40">ha</a>(<span class="keyword">const</span> scalar <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <span class="keyword">const</span> scalar <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            <span class="comment">//- Sensible Enthalpy [J/kmol]</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#a856fc5068853e4f8d58cb908fc57efa9">hs</a>(<span class="keyword">const</span> scalar <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <span class="keyword">const</span> scalar <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            <span class="comment">//- Chemical enthalpy [J/kmol]</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#ae030133efa83305b374f46cf58d4dc1a">hc</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            <span class="comment">//- Entropy [J/(kmol K)]</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            <span class="keyword">inline</span> scalar <a class="code" href="a00603.html#a592e05944bb9b03fab6cc8bd7f670090">s</a>(<span class="keyword">const</span> scalar <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <span class="keyword">const</span> scalar <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="comment">// I-O</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="comment">//- Write to Ostream</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="keywordtype">void</span> <a class="code" href="a00603.html#a4bc86b48333705e13add9de0db8eebd3">write</a>(Ostream&amp; os) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="comment">// Member operators</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="a00603.html#a58569d3f54c4811e10f029ac95b737bf">operator+=</a>(<span class="keyword">const</span> <a class="code" href="a00603.html">eConstThermo</a>&amp;);</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="a00603.html#a921430e4ff10ba896450f8ad3d9740af">operator-=</a>(<span class="keyword">const</span> <a class="code" href="a00603.html">eConstThermo</a>&amp;);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="comment">// Friend operators</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keyword">friend</span> <a class="code" href="a00603.html">eConstThermo</a> <span class="keyword">operator</span>+ &lt;EquationOfState&gt;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        (</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00603.html">eConstThermo</a>&amp;,</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        );</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keyword">friend</span> eConstThermo <span class="keyword">operator</span>- &lt;EquationOfState&gt;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        (</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;,</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        );</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="keyword">friend</span> eConstThermo <span class="keyword">operator</span>* &lt;EquationOfState&gt;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        (</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;            <span class="keyword">const</span> scalar,</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        );</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        <span class="keyword">friend</span> eConstThermo <span class="keyword">operator</span>== &lt;EquationOfState&gt;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        (</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;,</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        );</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="comment">// IOstream Operators</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keyword">friend</span> Ostream&amp; operator&lt;&lt; &lt;EquationOfState&gt;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        (</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            Ostream&amp;,</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            <span class="keyword">const</span> eConstThermo&amp;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        );</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;};</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10285.html">eConstThermoI.H</a>&quot;</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a10283.html">eConstThermo.C</a>&quot;</span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00603_html_ae030133efa83305b374f46cf58d4dc1a"><div class="ttname"><a href="a00603.html#ae030133efa83305b374f46cf58d4dc1a">Foam::eConstThermo::hc</a></div><div class="ttdeci">scalar hc() const </div><div class="ttdoc">Chemical enthalpy [J/kmol]. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00136">eConstThermoI.H:136</a></div></div>
-<div class="ttc" id="a10675_html_ae57fda0abb14bb0944947c463c6e09d4"><div class="ttname"><a href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">Foam::T</a></div><div class="ttdeci">void T(FieldField&lt; Field, Type &gt; &amp;f1, const FieldField&lt; Field, Type &gt; &amp;f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00055">FieldFieldFunctions.C:55</a></div></div>
-<div class="ttc" id="a10283_html"><div class="ttname"><a href="a10283.html">eConstThermo.C</a></div></div>
-<div class="ttc" id="a00603_html"><div class="ttname"><a href="a00603.html">Foam::eConstThermo</a></div><div class="ttdoc">Constant properties thermodynamics package templated on an equation of state. </div><div class="ttdef"><b>Definition:</b> <a href="a10284_source.html#l00048">eConstThermo.H:48</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00603_html_a561f535eabff4d94fd999c48df4443bd"><div class="ttname"><a href="a00603.html#a561f535eabff4d94fd999c48df4443bd">Foam::eConstThermo::typeName</a></div><div class="ttdeci">static word typeName()</div><div class="ttdoc">Return the instantiated type name. </div><div class="ttdef"><b>Definition:</b> <a href="a10284_source.html#l00143">eConstThermo.H:143</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a04395_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00051">createFields.H:51</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00603_html_a5b0c2388c18723c22000f02afd2d9946"><div class="ttname"><a href="a00603.html#a5b0c2388c18723c22000f02afd2d9946">Foam::eConstThermo::clone</a></div><div class="ttdeci">autoPtr&lt; eConstThermo &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00059">eConstThermoI.H:59</a></div></div>
-<div class="ttc" id="a00603_html_a58569d3f54c4811e10f029ac95b737bf"><div class="ttname"><a href="a00603.html#a58569d3f54c4811e10f029ac95b737bf">Foam::eConstThermo::operator+=</a></div><div class="ttdeci">void operator+=(const eConstThermo &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00157">eConstThermoI.H:157</a></div></div>
-<div class="ttc" id="a00603_html_a921430e4ff10ba896450f8ad3d9740af"><div class="ttname"><a href="a00603.html#a921430e4ff10ba896450f8ad3d9740af">Foam::eConstThermo::operator-=</a></div><div class="ttdeci">void operator-=(const eConstThermo &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00175">eConstThermoI.H:175</a></div></div>
-<div class="ttc" id="a00603_html_ad34fc523196eb59f189c7538bd76adda"><div class="ttname"><a href="a00603.html#ad34fc523196eb59f189c7538bd76adda">Foam::eConstThermo::cp</a></div><div class="ttdeci">scalar cp(const scalar p, const scalar T) const </div><div class="ttdoc">Heat capacity at constant pressure [J/(kmol K)]. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00104">eConstThermoI.H:104</a></div></div>
-<div class="ttc" id="a00603_html_ab94bbd28cde0db0c0716eb792d4bded7"><div class="ttname"><a href="a00603.html#ab94bbd28cde0db0c0716eb792d4bded7">Foam::eConstThermo::New</a></div><div class="ttdeci">static autoPtr&lt; eConstThermo &gt; New(Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00070">eConstThermoI.H:70</a></div></div>
-<div class="ttc" id="a10304_html"><div class="ttname"><a href="a10304.html">thermo.H</a></div></div>
-<div class="ttc" id="a10285_html"><div class="ttname"><a href="a10285.html">eConstThermoI.H</a></div></div>
-<div class="ttc" id="a00603_html_a36e7570f038b06ddc70de8f5c97f9be0"><div class="ttname"><a href="a00603.html#a36e7570f038b06ddc70de8f5c97f9be0">Foam::eConstThermo::limit</a></div><div class="ttdeci">scalar limit(const scalar T) const </div><div class="ttdoc">Limit the temperature to be in the range Tlow_ to Thigh_. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00094">eConstThermoI.H:94</a></div></div>
-<div class="ttc" id="a00603_html_a190aa728dba4ea87884e38be8bc27c40"><div class="ttname"><a href="a00603.html#a190aa728dba4ea87884e38be8bc27c40">Foam::eConstThermo::ha</a></div><div class="ttdeci">scalar ha(const scalar p, const scalar T) const </div><div class="ttdoc">Absolute Enthalpy [J/kmol]. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00115">eConstThermoI.H:115</a></div></div>
-<div class="ttc" id="a00603_html_a4bc86b48333705e13add9de0db8eebd3"><div class="ttname"><a href="a00603.html#a4bc86b48333705e13add9de0db8eebd3">Foam::eConstThermo::write</a></div><div class="ttdeci">void write(Ostream &amp;os) const </div><div class="ttdoc">Write to Ostream. </div><div class="ttdef"><b>Definition:</b> <a href="a10283_source.html#l00060">eConstThermo.C:60</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a00603_html_a856fc5068853e4f8d58cb908fc57efa9"><div class="ttname"><a href="a00603.html#a856fc5068853e4f8d58cb908fc57efa9">Foam::eConstThermo::hs</a></div><div class="ttdeci">scalar hs(const scalar p, const scalar T) const </div><div class="ttdoc">Sensible Enthalpy [J/kmol]. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00126">eConstThermoI.H:126</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a00603_html_a592e05944bb9b03fab6cc8bd7f670090"><div class="ttname"><a href="a00603.html#a592e05944bb9b03fab6cc8bd7f670090">Foam::eConstThermo::s</a></div><div class="ttdeci">scalar s(const scalar p, const scalar T) const </div><div class="ttdoc">Entropy [J/(kmol K)]. </div><div class="ttdef"><b>Definition:</b> <a href="a10285_source.html#l00144">eConstThermoI.H:144</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Specie&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<a class="code" href="a01736.html">Foam::Ostream</a>&amp; Foam::operator&lt;&lt;(Ostream&amp; os, const rhoConst&lt;Specie&gt;&amp; ico)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    os  &lt;&lt; static_cast&lt;const Specie&amp;&gt;(ico)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">token::SPACE</a> &lt;&lt; ico.rho_;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    os.check(<span class="stringliteral">&quot;Ostream&amp; operator&lt;&lt;(Ostream&amp; os, const rhoConst&lt;Specie&gt;&amp; ico)&quot;</span>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">Foam::token::SPACE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00095">token.H:95</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02196_html_a4bc86b48333705e13add9de0db8eebd3"><div class="ttname"><a href="a02196.html#a4bc86b48333705e13add9de0db8eebd3">Foam::rhoConst::write</a></div><div class="ttdeci">void write(Ostream &amp;os) const </div><div class="ttdoc">Write to Ostream. </div><div class="ttdef"><b>Definition:</b> <a href="a10284_source.html#l00052">rhoConst.C:52</a></div></div>
+<div class="ttc" id="a07775_html"><div class="ttname"><a href="a07775.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
+<div class="ttc" id="a02196_html_afb808bfcd5157a69014e2474253965de"><div class="ttname"><a href="a02196.html#afb808bfcd5157a69014e2474253965de">Foam::rhoConst::rhoConst</a></div><div class="ttdeci">rhoConst(const Specie &amp;sp, const scalar rho)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a10286_source.html#l00032">rhoConstI.H:32</a></div></div>
+<div class="ttc" id="a02917_html_a8f30b3c2179b03a7acf273e9dea43342"><div class="ttname"><a href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">write</a></div><div class="ttdeci">runTime write()</div></div>
+<div class="ttc" id="a10725_html_ae297c57ea5b952a8bc9e4f30f7ea8701"><div class="ttname"><a href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">Foam::indent</a></div><div class="ttdeci">Ostream &amp; indent(Ostream &amp;os)</div><div class="ttdoc">Indent stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00221">Ostream.H:221</a></div></div>
+<div class="ttc" id="a00524_html_ac2ddcab42322c8d8af5e5830ab4d431b"><div class="ttname"><a href="a00524.html#ac2ddcab42322c8d8af5e5830ab4d431b">Foam::dictionary::add</a></div><div class="ttdeci">bool add(entry *, bool mergeEntry=false)</div><div class="ttdoc">Add a new entry. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00731">dictionary.C:731</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a10725_html_a828d57f6d9b9806c086a3f840a147115"><div class="ttname"><a href="a10725.html#a828d57f6d9b9806c086a3f840a147115">Foam::readScalar</a></div><div class="ttdeci">bool readScalar(const char *buf, doubleScalar &amp;s)</div><div class="ttdoc">Read whole of buf as a scalar. Return true if succesful. </div><div class="ttdef"><b>Definition:</b> <a href="a08932_source.html#l00063">doubleScalar.H:63</a></div></div>
+<div class="ttc" id="a10285_html"><div class="ttname"><a href="a10285.html">rhoConst.H</a></div></div>
+<div class="ttc" id="a00527_html_a0c0f7c5d75947353dc8dc6cbe4df98ea"><div class="ttname"><a href="a00527.html#a0c0f7c5d75947353dc8dc6cbe4df98ea">Foam::dictionaryName::dictName</a></div><div class="ttdeci">const word dictName() const </div><div class="ttdoc">Return the local dictionary name (final part of scoped name) </div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00115">dictionary.H:115</a></div></div>
+<div class="ttc" id="a08931_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08931_source.html#l00038">doubleScalar.C:38</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a03876_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
+<div class="ttc" id="a01185_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01185.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07779_source.html#l00092">IOstream.C:92</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_0e9805b96b2bf461314a136059d44950.html">Templates</a></li><li class="navelem"><a class="el" href="dir_f5d1b081941abbb98c3b184000882efb.html">CollidingParcel</a></li><li class="navelem"><a class="el" href="dir_dae8fc5c31387a08d81c17f3a94706cb.html">CollisionRecordList</a></li><li class="navelem"><a class="el" href="dir_9c0f60b1627696c6fa31f6530ff8fc78.html">PairCollisionRecord</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_43bc749440adff70c5addf058ea4a468.html">turbulence</a></li><li class="navelem"><a class="el" href="dir_f4470e492b052055a8f68ab9bbd08f78.html">parcels</a></li><li class="navelem"><a class="el" href="dir_2cf64de3012ec3719f94a92ff2c4c98e.html">derived</a></li><li class="navelem"><a class="el" href="dir_ddee8681083a0c8fdd7c11c58dcb3d5d.html">basicKinematicCollidingParcel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">PairCollisionRecord.C</div>  </div>
+<div class="title">makeBasicKinematicCollidingParcelSubmodels.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06490.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,103 +121,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06491.html">PairCollisionRecord.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a01750.html#a726312fd7b0677c368c93da7903f3c50">   31</a></span>&#160;<a class="code" href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord&lt;Type&gt;::PairCollisionRecord</a>()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    origProcOfOther_(0),</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    origIdOfOther_(-1),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    data_(<a class="code" href="a02006.html">pTraits</a>&lt;Type&gt;::<a class="code" href="a02875.html">zero</a>)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{}</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord&lt;Type&gt;::PairCollisionRecord</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a01750.html#a8239d90014fd9d977a58aa35db3c513f">   41</a></span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">bool</span> accessed,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> origProcOfOther,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> origIdOfOther,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> Type&amp; data</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    origProcOfOther_(origProcOfOther + 1),</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    origIdOfOther_(origIdOfOther),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    data_(data)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Default assignment to origProcOfOther_ assumes accessed is true</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (!accessed)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        setUnaccessed();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord&lt;Type&gt;::PairCollisionRecord</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;(</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01750.html">PairCollisionRecord&lt;Type&gt;</a>&amp; pCR</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;:</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    origProcOfOther_(pCR.origProcOfOther_),</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    origIdOfOther_(pCR.origIdOfOther_),</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    data_(pCR.data_)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a01750.html#a5b12699d9a41b07f6bb9b440a2558d7f">   76</a></span>&#160;<a class="code" href="a01750.html#a5b12699d9a41b07f6bb9b440a2558d7f">Foam::PairCollisionRecord&lt;Type&gt;::~PairCollisionRecord</a>()</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{}</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span> Foam::PairCollisionRecord&lt;Type&gt;::operator=</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a01750.html#afe0eb440d453ae9a11060f7453dfa3a2">   84</a></span>&#160;(</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01750.html">PairCollisionRecord&lt;Type&gt;</a>&amp; rhs</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Check for assignment to self</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">this</span> == &amp;rhs)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        (</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="stringliteral">&quot;Foam::PairCollisionRecord&lt;Type&gt;::operator=&quot;</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="stringliteral">&quot;(const Foam::PairCollisionRecord&lt;Type&gt;&amp;)&quot;</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        )</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Attempted assignment to self&quot;</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    origProcOfOther_ = rhs.origProcOfOther_;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    origIdOfOther_ = rhs.origIdOfOther_;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    data_ = rhs.data_;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06493.html">PairCollisionRecordIO.C</a>&quot;</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01750_html_a726312fd7b0677c368c93da7903f3c50"><div class="ttname"><a href="a01750.html#a726312fd7b0677c368c93da7903f3c50">Foam::PairCollisionRecord::PairCollisionRecord</a></div><div class="ttdeci">PairCollisionRecord()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a06490_source.html#l00031">PairCollisionRecord.C:31</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01750_html"><div class="ttname"><a href="a01750.html">Foam::PairCollisionRecord</a></div><div class="ttdoc">Record of a collision between the particle holding the record and the particle with the stored id...</div><div class="ttdef"><b>Definition:</b> <a href="a06491_source.html#l00056">PairCollisionRecord.H:56</a></div></div>
-<div class="ttc" id="a01750_html_a5b12699d9a41b07f6bb9b440a2558d7f"><div class="ttname"><a href="a01750.html#a5b12699d9a41b07f6bb9b440a2558d7f">Foam::PairCollisionRecord::~PairCollisionRecord</a></div><div class="ttdeci">~PairCollisionRecord()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06490_source.html#l00076">PairCollisionRecord.C:76</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a02006_html"><div class="ttname"><a href="a02006.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08858_source.html#l00050">pTraits.H:50</a></div></div>
-<div class="ttc" id="a02875_html"><div class="ttname"><a href="a02875.html">Foam::zero</a></div><div class="ttdoc">A class representing the concept of 0 used to avoid unnecessary manipulations for objects that are kn...</div><div class="ttdef"><b>Definition:</b> <a href="a09004_source.html#l00047">zero.H:47</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a06493_html"><div class="ttname"><a href="a06493.html">PairCollisionRecordIO.C</a></div></div>
-<div class="ttc" id="a06491_html"><div class="ttname"><a href="a06491.html">PairCollisionRecord.H</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06450.html">basicKinematicCollidingCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07011.html">makeParcelTurbulenceDispersionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a9e26cfd4b061c751a2470ee7cf15f37c">makeParcelTurbulenceDispersionModels</a>(<a class="code" href="a10725.html#a85d3b45f507e659f8d633c4614e7f799">basicKinematicCollidingCloud</a>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a9e26cfd4b061c751a2470ee7cf15f37c"><div class="ttname"><a href="a10725.html#a9e26cfd4b061c751a2470ee7cf15f37c">Foam::makeParcelTurbulenceDispersionModels</a></div><div class="ttdeci">makeParcelTurbulenceDispersionModels(basicKinematicCollidingCloud)</div></div>
+<div class="ttc" id="a06450_html"><div class="ttname"><a href="a06450.html">basicKinematicCollidingCloud.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a07011_html"><div class="ttname"><a href="a07011.html">makeParcelTurbulenceDispersionModels.H</a></div></div>
+<div class="ttc" id="a10725_html_a85d3b45f507e659f8d633c4614e7f799"><div class="ttname"><a href="a10725.html#a85d3b45f507e659f8d633c4614e7f799">Foam::basicKinematicCollidingCloud</a></div><div class="ttdeci">CollidingCloud&lt; KinematicCloud&lt; Cloud&lt; basicKinematicCollidingParcel &gt; &gt; &gt; basicKinematicCollidingCloud</div><div class="ttdef"><b>Definition:</b> <a href="a06450_source.html#l00052">basicKinematicCollidingCloud.H:52</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

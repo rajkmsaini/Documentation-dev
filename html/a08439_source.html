@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_b8e2732bc99f8fb2a379dad81aa6030e.html">meshShapes</a></li><li class="navelem"><a class="el" href="dir_98615869478e2807f5197cae1415666c.html">cellMatcher</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_9de91893ed1140d312544af919035e0c.html">SquareMatrix</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">degenerateMatcher.C</div>  </div>
+<div class="title">SquareMatrix.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08439.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,128 +119,116 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08440.html">degenerateMatcher.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07594.html">ListOps.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a01000.html">Foam::hexMatcher</a> Foam::degenerateMatcher::hex;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02845.html">Foam::wedgeMatcher</a> Foam::degenerateMatcher::wedge;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a01962.html">Foam::prismMatcher</a> Foam::degenerateMatcher::prism;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a02562.html">Foam::tetWedgeMatcher</a> Foam::degenerateMatcher::tetWedge;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="a02029.html">Foam::pyrMatcher</a> Foam::degenerateMatcher::pyr;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a02558.html">Foam::tetMatcher</a> Foam::degenerateMatcher::tet;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a00226.html">Foam::cellShape</a> Foam::degenerateMatcher::match</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;(</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">faceList</a>&amp; faces,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; owner,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; cellFaces</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// Recognize in order of assumed occurrence.</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (hex.<a class="code" href="a01000.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> cellShape(hex.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), hex.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (tet.<a class="code" href="a02558.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> cellShape(tet.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), tet.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (prism.<a class="code" href="a01962.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> cellShape(prism.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), prism.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pyr.<a class="code" href="a02029.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">return</span> cellShape(pyr.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), pyr.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (wedge.<a class="code" href="a02845.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> cellShape(wedge.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), wedge.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (tetWedge.<a class="code" href="a02562.html#a1f0feccca7c36016d7745d9f9d196b6d">matchShape</a>(<span class="keyword">false</span>, faces, owner, cellI, cellFaces))</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> cellShape(tetWedge.<a class="code" href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">model</a>(), tetWedge.<a class="code" href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">vertLabels</a>());</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">return</span> cellShape(*(<a class="code" href="a00218.html#a30ec02a02fa2b4111091919a88f51242">cellModeller::lookup</a>(0)), <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(0));</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::SquareMatrix</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A templated 2D square matrix of objects of &lt;T&gt;, where the n x n matrix</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    dimension is known and used for subscript bounds checking, etc.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    SquareMatrixI.H</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    SquareMatrix.C</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef SquareMatrix_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define SquareMatrix_H</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08422.html">Matrix.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">                           Class Matrix Declaration</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a02410.html">   51</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span><a class="code" href="a02410.html">SquareMatrix</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01437.html">Matrix</a>&lt;SquareMatrix&lt;Type&gt;, Type&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">//- Null constructor.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a02410.html#a15b1d67010f7f4a007736502a1388326">SquareMatrix</a>();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//- Construct given number of rows/columns.</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a02410.html#a15b1d67010f7f4a007736502a1388326">SquareMatrix</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01437.html#abd0c5ee479abe99a5698e779793f412d">n</a>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Construct given number of rows and columns,</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//  It checks that m == n.</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a02410.html#a15b1d67010f7f4a007736502a1388326">SquareMatrix</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01437.html#a28db6159f26f200807be19ad57dd0340">m</a>, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> n);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- Construct with given number of rows and rows</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//  and value for all elements.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//  It checks that m == n.</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a02410.html#a15b1d67010f7f4a007736502a1388326">SquareMatrix</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> m, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> n, <span class="keyword">const</span> Type&amp;);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Construct from Istream.</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a02410.html#a15b1d67010f7f4a007736502a1388326">SquareMatrix</a>(<a class="code" href="a01199.html">Istream</a>&amp;);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a00501.html#a24df78000a5b70f0289620fb195af3ad">   80</a></span>&#160;<a class="code" href="a00226.html">Foam::cellShape</a> Foam::degenerateMatcher::match(<span class="keyword">const</span> <a class="code" href="a01355.html">faceList</a>&amp; faces)</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Do as if single cell mesh; all faces are referenced by a single cell</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//- Clone</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keyword">inline</span> <a class="code" href="a00086.html">autoPtr&lt;SquareMatrix&lt;Type&gt;</a> &gt; <a class="code" href="a02410.html#a7fe30987a9c65dbf3c30158c230e5dc3">clone</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> match</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    (</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        faces,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(faces.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(), 0),    <span class="comment">// cell 0 is owner of all faces</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        0,                             <span class="comment">// cell 0</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a10675.html#a36af96cb841435845fffb4fe69208490">identity</a>(faces.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())         <span class="comment">// cell 0 consists of all faces</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    );</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// Global functions</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">//- Return the LU decomposed SquareMatrix det</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;scalar <a class="code" href="a10725.html#ad762becea5b5499b9938c554b1336093">detDecomposed</a>(<span class="keyword">const</span> <a class="code" href="a02410.html">SquareMatrix&lt;Type&gt;</a>&amp;, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a10725.html#a221fd301d6c49c5bd4a6c0f5ccb893b2">sign</a>);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">//- Return the SquareMatrix det</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;scalar <a class="code" href="a10725.html#a0661214f1c72feedb965c88d685f8036">det</a>(<span class="keyword">const</span> <a class="code" href="a02410.html">SquareMatrix&lt;Type&gt;</a>&amp;);</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="a00501.html#a9ef91ca8ecd74bce100a69a37c0c2925">   94</a></span>&#160;<a class="code" href="a00226.html">Foam::cellShape</a> Foam::degenerateMatcher::match(<span class="keyword">const</span> <a class="code" href="a00226.html">cellShape</a>&amp; shape)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> match(shape.<a class="code" href="a00226.html#aa70d1fd2b7708df6d3077e9d4f69515f">collapsedFaces</a>());</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">//- Return the SquareMatrix det and the LU decomposition in the original matrix</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;scalar <a class="code" href="a10725.html#a0661214f1c72feedb965c88d685f8036">det</a>(<a class="code" href="a02410.html">SquareMatrix&lt;Type&gt;</a>&amp;);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<a class="code" href="a00226.html">Foam::cellShape</a> Foam::degenerateMatcher::match</div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="a00501.html#a5adc43a57aebf7c5155f18d991cdecf1">  101</a></span>&#160;(</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01956.html">primitiveMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;)</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> match</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    (</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        mesh.<a class="code" href="a01956.html#a23ca4b0f5e216674cd6bdd98aa90563e">faces</a>(),</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        mesh.<a class="code" href="a01956.html#a5fdc04c8f8b8f1535efda40674fd13fa">faceOwner</a>(),</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        cellI,</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        mesh.<a class="code" href="a01956.html#a5838384c0cea399b56339f30bc8558ab">cells</a>()[cellI]</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    );</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a08440.html">SquareMatrixI.H</a>&quot;</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a08438.html">SquareMatrix.C</a>&quot;</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01956_html_a5838384c0cea399b56339f30bc8558ab"><div class="ttname"><a href="a01956.html#a5838384c0cea399b56339f30bc8558ab">Foam::primitiveMesh::cells</a></div><div class="ttdeci">const cellList &amp; cells() const </div><div class="ttdef"><b>Definition:</b> <a href="a08669_source.html#l00136">primitiveMeshCells.C:136</a></div></div>
-<div class="ttc" id="a01000_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a01000.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::hexMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08441_source.html#l00060">hexMatcher.C:60</a></div></div>
-<div class="ttc" id="a01956_html"><div class="ttname"><a href="a01956.html">Foam::primitiveMesh</a></div><div class="ttdoc">Cell-face mesh analysis engine. </div><div class="ttdef"><b>Definition:</b> <a href="a08663_source.html#l00074">primitiveMesh.H:74</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a00215_html_a7da0edfce307965d2f2a84b1ce30e423"><div class="ttname"><a href="a00215.html#a7da0edfce307965d2f2a84b1ce30e423">Foam::cellMatcher::vertLabels</a></div><div class="ttdeci">const labelList &amp; vertLabels() const </div><div class="ttdef"><b>Definition:</b> <a href="a08438_source.html#l00074">cellMatcherI.H:74</a></div></div>
-<div class="ttc" id="a10675_html_a36af96cb841435845fffb4fe69208490"><div class="ttname"><a href="a10675.html#a36af96cb841435845fffb4fe69208490">Foam::identity</a></div><div class="ttdeci">labelList identity(const label len)</div><div class="ttdoc">Create identity map (map[i] == i) of given length. </div><div class="ttdef"><b>Definition:</b> <a href="a07593_source.html#l00104">ListOps.C:104</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01962_html"><div class="ttname"><a href="a01962.html">Foam::prismMatcher</a></div><div class="ttdoc">A cellMatcher for prism cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08444_source.html#l00051">prismMatcher.H:51</a></div></div>
-<div class="ttc" id="a00226_html_aa70d1fd2b7708df6d3077e9d4f69515f"><div class="ttname"><a href="a00226.html#aa70d1fd2b7708df6d3077e9d4f69515f">Foam::cellShape::collapsedFaces</a></div><div class="ttdeci">faceList collapsedFaces() const </div><div class="ttdoc">Collapsed faces of this cell. </div><div class="ttdef"><b>Definition:</b> <a href="a08463_source.html#l00168">cellShapeI.H:168</a></div></div>
-<div class="ttc" id="a02562_html"><div class="ttname"><a href="a02562.html">Foam::tetWedgeMatcher</a></div><div class="ttdoc">A cellMatcher for tetWedge cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08450_source.html#l00051">tetWedgeMatcher.H:51</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; face &gt;</a></div></div>
-<div class="ttc" id="a00226_html"><div class="ttname"><a href="a00226.html">Foam::cellShape</a></div><div class="ttdoc">An analytical geometric cellShape. </div><div class="ttdef"><b>Definition:</b> <a href="a08461_source.html#l00069">cellShape.H:69</a></div></div>
-<div class="ttc" id="a02558_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a02558.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::tetMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08447_source.html#l00064">tetMatcher.C:64</a></div></div>
-<div class="ttc" id="a08440_html"><div class="ttname"><a href="a08440.html">degenerateMatcher.H</a></div></div>
-<div class="ttc" id="a01956_html_a5fdc04c8f8b8f1535efda40674fd13fa"><div class="ttname"><a href="a01956.html#a5fdc04c8f8b8f1535efda40674fd13fa">Foam::primitiveMesh::faceOwner</a></div><div class="ttdeci">virtual const labelList &amp; faceOwner() const  =0</div><div class="ttdoc">Face face-owner addresing. </div></div>
-<div class="ttc" id="a00215_html_aeefe402f3085243e6db024dc8bcc1a37"><div class="ttname"><a href="a00215.html#aeefe402f3085243e6db024dc8bcc1a37">Foam::cellMatcher::model</a></div><div class="ttdeci">const cellModel &amp; model() const </div><div class="ttdef"><b>Definition:</b> <a href="a08438_source.html#l00086">cellMatcherI.H:86</a></div></div>
-<div class="ttc" id="a01000_html"><div class="ttname"><a href="a01000.html">Foam::hexMatcher</a></div><div class="ttdoc">A cellMatcher for hex cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08442_source.html#l00051">hexMatcher.H:51</a></div></div>
-<div class="ttc" id="a07594_html"><div class="ttname"><a href="a07594.html">ListOps.H</a></div><div class="ttdoc">Various functions to operate on Lists. </div></div>
-<div class="ttc" id="a02029_html"><div class="ttname"><a href="a02029.html">Foam::pyrMatcher</a></div><div class="ttdoc">A cellMatcher for pyr cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08446_source.html#l00051">pyrMatcher.H:51</a></div></div>
-<div class="ttc" id="a02558_html"><div class="ttname"><a href="a02558.html">Foam::tetMatcher</a></div><div class="ttdoc">A cellMatcher for tet cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08448_source.html#l00051">tetMatcher.H:51</a></div></div>
-<div class="ttc" id="a10675_html_adda0c8c9739c889f59a56f2998c5a9b8"><div class="ttname"><a href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">Foam::faceList</a></div><div class="ttdeci">List&lt; face &gt; faceList</div><div class="ttdef"><b>Definition:</b> <a href="a08484_source.html#l00043">faceListFwd.H:43</a></div></div>
-<div class="ttc" id="a00218_html_a30ec02a02fa2b4111091919a88f51242"><div class="ttname"><a href="a00218.html#a30ec02a02fa2b4111091919a88f51242">Foam::cellModeller::lookup</a></div><div class="ttdeci">static const cellModel * lookup(const word &amp;)</div><div class="ttdoc">Look up a model by name and return a pointer to the model or NULL. </div><div class="ttdef"><b>Definition:</b> <a href="a08457_source.html#l00091">cellModeller.C:91</a></div></div>
-<div class="ttc" id="a02562_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a02562.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::tetWedgeMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08449_source.html#l00063">tetWedgeMatcher.C:63</a></div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
-<div class="ttc" id="a01956_html_a23ca4b0f5e216674cd6bdd98aa90563e"><div class="ttname"><a href="a01956.html#a23ca4b0f5e216674cd6bdd98aa90563e">Foam::primitiveMesh::faces</a></div><div class="ttdeci">virtual const faceList &amp; faces() const  =0</div><div class="ttdoc">Return faces. </div></div>
-<div class="ttc" id="a02845_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a02845.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::wedgeMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08451_source.html#l00060">wedgeMatcher.C:60</a></div></div>
-<div class="ttc" id="a02845_html"><div class="ttname"><a href="a02845.html">Foam::wedgeMatcher</a></div><div class="ttdoc">A cellMatcher for wedge cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08452_source.html#l00051">wedgeMatcher.H:51</a></div></div>
-<div class="ttc" id="a02029_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a02029.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::pyrMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08445_source.html#l00063">pyrMatcher.C:63</a></div></div>
-<div class="ttc" id="a01962_html_a1f0feccca7c36016d7745d9f9d196b6d"><div class="ttname"><a href="a01962.html#a1f0feccca7c36016d7745d9f9d196b6d">Foam::prismMatcher::matchShape</a></div><div class="ttdeci">virtual bool matchShape(const bool checkOnly, const faceList &amp;faces, const labelList &amp;faceOwner, const label cellI, const labelList &amp;myFaces)</div><div class="ttdoc">Low level shape recognition. Return true if matches. </div><div class="ttdef"><b>Definition:</b> <a href="a08443_source.html#l00058">prismMatcher.C:58</a></div></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01437_html_a28db6159f26f200807be19ad57dd0340"><div class="ttname"><a href="a01437.html#a28db6159f26f200807be19ad57dd0340">Foam::Matrix&lt; SquareMatrix&lt; Type &gt;, Type &gt;::m</a></div><div class="ttdeci">label m() const</div><div class="ttdoc">Return the number of columns. </div></div>
+<div class="ttc" id="a02410_html"><div class="ttname"><a href="a02410.html">Foam::SquareMatrix</a></div><div class="ttdoc">A templated 2D square matrix of objects of <T>, where the n x n matrix dimension is known and used fo...</div><div class="ttdef"><b>Definition:</b> <a href="a08439_source.html#l00051">SquareMatrix.H:51</a></div></div>
+<div class="ttc" id="a08438_html"><div class="ttname"><a href="a08438.html">SquareMatrix.C</a></div></div>
+<div class="ttc" id="a10725_html_a0661214f1c72feedb965c88d685f8036"><div class="ttname"><a href="a10725.html#a0661214f1c72feedb965c88d685f8036">Foam::det</a></div><div class="ttdeci">dimensionedScalar det(const dimensionedSphericalTensor &amp;dt)</div><div class="ttdef"><b>Definition:</b> <a href="a07868_source.html#l00060">dimensionedSphericalTensor.C:60</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01437_html_abd0c5ee479abe99a5698e779793f412d"><div class="ttname"><a href="a01437.html#abd0c5ee479abe99a5698e779793f412d">Foam::Matrix&lt; SquareMatrix&lt; Type &gt;, Type &gt;::n</a></div><div class="ttdeci">label n() const</div><div class="ttdoc">Return the number of rows. </div></div>
+<div class="ttc" id="a02410_html_a15b1d67010f7f4a007736502a1388326"><div class="ttname"><a href="a02410.html#a15b1d67010f7f4a007736502a1388326">Foam::SquareMatrix::SquareMatrix</a></div><div class="ttdeci">SquareMatrix()</div><div class="ttdoc">Null constructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08440_source.html#l00029">SquareMatrixI.H:29</a></div></div>
+<div class="ttc" id="a10725_html_a221fd301d6c49c5bd4a6c0f5ccb893b2"><div class="ttname"><a href="a10725.html#a221fd301d6c49c5bd4a6c0f5ccb893b2">Foam::sign</a></div><div class="ttdeci">dimensionedScalar sign(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07865_source.html#l00179">dimensionedScalar.C:179</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a08440_html"><div class="ttname"><a href="a08440.html">SquareMatrixI.H</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a01437_html"><div class="ttname"><a href="a01437.html">Foam::Matrix</a></div><div class="ttdoc">A templated 2D matrix of objects of <T>, where the n x m matrix dimensions are known and used for sub...</div><div class="ttdef"><b>Definition:</b> <a href="a08259_source.html#l00047">DiagonalMatrix.H:47</a></div></div>
+<div class="ttc" id="a08422_html"><div class="ttname"><a href="a08422.html">Matrix.H</a></div></div>
+<div class="ttc" id="a10725_html_ad762becea5b5499b9938c554b1336093"><div class="ttname"><a href="a10725.html#ad762becea5b5499b9938c554b1336093">Foam::detDecomposed</a></div><div class="ttdeci">scalar detDecomposed(const SquareMatrix&lt; Type &gt; &amp;, const label sign)</div><div class="ttdoc">Return the LU decomposed SquareMatrix det. </div></div>
+<div class="ttc" id="a02410_html_a7fe30987a9c65dbf3c30158c230e5dc3"><div class="ttname"><a href="a02410.html#a7fe30987a9c65dbf3c30158c230e5dc3">Foam::SquareMatrix::clone</a></div><div class="ttdeci">autoPtr&lt; SquareMatrix&lt; Type &gt; &gt; clone() const </div><div class="ttdoc">Clone. </div><div class="ttdef"><b>Definition:</b> <a href="a08440_source.html#l00077">SquareMatrixI.H:77</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

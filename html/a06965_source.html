@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_43bc749440adff70c5addf058ea4a468.html">turbulence</a></li><li class="navelem"><a class="el" href="dir_8d2e9f3975cd341fe442d8051fa80149.html">submodels</a></li><li class="navelem"><a class="el" href="dir_5ba94de3dd603286eac505345baf7469.html">Kinematic</a></li><li class="navelem"><a class="el" href="dir_ec3a45eb9e031fb2cbc5f0a1a823b94d.html">DispersionModel</a></li><li class="navelem"><a class="el" href="dir_ee719341234d4426cb99ffbddc91cb03.html">GradientDispersionRAS</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_3b5845e7b77836e95b25ac2dbb8dfd76.html">spray</a></li><li class="navelem"><a class="el" href="dir_ed7d07d36d0c4a75c3b032fd5363667e.html">clouds</a></li><li class="navelem"><a class="el" href="dir_1b7f50af1f74e3e4634dcc746dde5a61.html">Templates</a></li><li class="navelem"><a class="el" href="dir_32c6db81a10c9d04b81a7c27fc9bafb7.html">SprayCloud</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">GradientDispersionRAS.H</div>  </div>
+<div class="title">SprayCloudI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06965.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,131 +119,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::GradientDispersionRAS</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    The velocity is perturbed in the direction of -grad(k), with a</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Gaussian random number distribution with variance sigma.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    where sigma is defined below</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef GradientDispersionRAS_H</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define GradientDispersionRAS_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06963.html">DispersionRASModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a02407.html">Foam::SprayCloud&lt;CloudType&gt;</a>&amp;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a02407.html#ac6f9fb362e12363cb1f031fd6f48de10">   30</a></span>&#160;<a class="code" href="a02407.html#ac6f9fb362e12363cb1f031fd6f48de10">Foam::SprayCloud&lt;CloudType&gt;::cloudCopy</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">return</span> cloudCopyPtr_();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a00080.html">Foam::AtomizationModel&lt;Foam::SprayCloud&lt;CloudType&gt;</a> &gt;&amp;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="a02407.html#a0613eadbb459faa8ffeba0cfeb4520b0">   38</a></span>&#160;<a class="code" href="a02407.html#a0613eadbb459faa8ffeba0cfeb4520b0">Foam::SprayCloud&lt;CloudType&gt;::atomization</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> atomizationModel_;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                    Class GradientDispersionRAS Declaration</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00930.html">   48</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span><a class="code" href="a00930.html">GradientDispersionRAS</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00542.html">DispersionRASModel</a>&lt;CloudType&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Protected data</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">// Locally cached turbulence fields</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">inline</span> <a class="code" href="a00080.html">Foam::AtomizationModel&lt;Foam::SprayCloud&lt;CloudType&gt;</a> &gt;&amp;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a02407.html#a2d83449d757c71674f59739310ff9d29">   46</a></span>&#160;<a class="code" href="a02407.html#a0613eadbb459faa8ffeba0cfeb4520b0">Foam::SprayCloud&lt;CloudType&gt;::atomization</a>()</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> atomizationModel_();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a00162.html">Foam::BreakupModel&lt;Foam::SprayCloud&lt;CloudType&gt;</a> &gt;&amp;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a02407.html#ae6775d14a5180633b74a5b1b66e110a7">   54</a></span>&#160;<a class="code" href="a02407.html#ae6775d14a5180633b74a5b1b66e110a7">Foam::SprayCloud&lt;CloudType&gt;::breakup</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> breakupModel_;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00930.html#a91672cd91b447770fe870683b3549b76">   59</a></span>&#160;            <span class="comment">//- Gradient of k</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>* <a class="code" href="a00930.html#a91672cd91b447770fe870683b3549b76">gradkPtr_</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a00930.html#affc959af68cf7ad84795af6492ade162">   62</a></span>&#160;            <span class="comment">//- Take ownership of the grad(k)</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keyword">mutable</span> <span class="keywordtype">bool</span> <a class="code" href="a00930.html#affc959af68cf7ad84795af6492ade162">ownGradK_</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">inline</span> <a class="code" href="a00162.html">Foam::BreakupModel&lt;Foam::SprayCloud&lt;CloudType&gt;</a> &gt;&amp;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a02407.html#aeeab4a86bde8b97b8b6f4d33a19d0f70">   62</a></span>&#160;<a class="code" href="a02407.html#ae6775d14a5180633b74a5b1b66e110a7">Foam::SprayCloud&lt;CloudType&gt;::breakup</a>()</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> breakupModel_();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a00930.html#a57bb715ee2d400a42fb59708656344db">TypeName</a>(<span class="stringliteral">&quot;gradientDispersionRAS&quot;</span>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a02407.html#a85f4c37647727461cac684d4d9744a48">   69</a></span>&#160;<span class="keyword">inline</span> Foam::scalar <a class="code" href="a02407.html#a85f4c37647727461cac684d4d9744a48">Foam::SprayCloud&lt;CloudType&gt;::averageParcelMass</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> averageParcelMass_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a00930.html#a7528649a38595c86f2f3a77602897896">GradientDispersionRAS</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a02454.html#a193891e89d96c3d3699885e60fe0a609">dict</a>, <a class="code" href="a00577.html">CloudType</a>&amp; <a class="code" href="a00286.html#a6335ee485deb9e618ac66a9dc32a7a76">owner</a>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//- Construct copy</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a00930.html#a7528649a38595c86f2f3a77602897896">GradientDispersionRAS</a>(<span class="keyword">const</span> <a class="code" href="a00930.html">GradientDispersionRAS&lt;CloudType&gt;</a>&amp; dm);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a00930.html#a1ad845ec4b69eac0709e08764ff76e03">   80</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a00084.html">autoPtr&lt;DispersionModel&lt;CloudType&gt;</a> &gt; <a class="code" href="a00930.html#a1ad845ec4b69eac0709e08764ff76e03">clone</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;DispersionModel&lt;CloudType&gt;</a> &gt;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            (</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                <span class="keyword">new</span> <a class="code" href="a00930.html">GradientDispersionRAS&lt;CloudType&gt;</a>(*this)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            );</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00930.html#a364fea2e097dd4dab3605bdc4e6446d9">~GradientDispersionRAS</a>();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//- Cache carrier fields</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00930.html#a6005414ac27ae3e0b5a783ba216c1906">cacheFields</a>(<span class="keyword">const</span> <span class="keywordtype">bool</span> store);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Update (disperse particles)</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02776.html">vector</a> <a class="code" href="a00930.html#a6b0b1e27ffb9ac1c38932a7dcd3009e0">update</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        (</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> scalar dt,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; <a class="code" href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; Uc,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a02776.html">vector</a>&amp; UTurb,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            scalar&amp; tTurb</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        );</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a06964.html">GradientDispersionRAS.C</a>&quot;</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06964_html"><div class="ttname"><a href="a06964.html">GradientDispersionRAS.C</a></div></div>
-<div class="ttc" id="a00286_html_a6335ee485deb9e618ac66a9dc32a7a76"><div class="ttname"><a href="a00286.html#a6335ee485deb9e618ac66a9dc32a7a76">Foam::CloudSubModelBase::owner</a></div><div class="ttdeci">const CloudType &amp; owner() const </div><div class="ttdoc">Return const access to the owner cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06555_source.html#l00103">CloudSubModelBase.C:103</a></div></div>
-<div class="ttc" id="a00930_html_a364fea2e097dd4dab3605bdc4e6446d9"><div class="ttname"><a href="a00930.html#a364fea2e097dd4dab3605bdc4e6446d9">Foam::GradientDispersionRAS::~GradientDispersionRAS</a></div><div class="ttdeci">virtual ~GradientDispersionRAS()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00062">GradientDispersionRAS.C:62</a></div></div>
-<div class="ttc" id="a00542_html"><div class="ttname"><a href="a00542.html">Foam::DispersionRASModel</a></div><div class="ttdoc">Base class for particle dispersion models based on RAS turbulence. </div><div class="ttdef"><b>Definition:</b> <a href="a06963_source.html#l00047">DispersionRASModel.H:47</a></div></div>
-<div class="ttc" id="a00930_html"><div class="ttname"><a href="a00930.html">Foam::GradientDispersionRAS</a></div><div class="ttdoc">The velocity is perturbed in the direction of -grad(k), with a Gaussian random number distribution wi...</div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00048">GradientDispersionRAS.H:48</a></div></div>
-<div class="ttc" id="a00930_html_a1ad845ec4b69eac0709e08764ff76e03"><div class="ttname"><a href="a00930.html#a1ad845ec4b69eac0709e08764ff76e03">Foam::GradientDispersionRAS::clone</a></div><div class="ttdeci">virtual autoPtr&lt; DispersionModel&lt; CloudType &gt; &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00080">GradientDispersionRAS.H:80</a></div></div>
-<div class="ttc" id="a06963_html"><div class="ttname"><a href="a06963.html">DispersionRASModel.H</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00930_html_a6b0b1e27ffb9ac1c38932a7dcd3009e0"><div class="ttname"><a href="a00930.html#a6b0b1e27ffb9ac1c38932a7dcd3009e0">Foam::GradientDispersionRAS::update</a></div><div class="ttdeci">virtual vector update(const scalar dt, const label cellI, const vector &amp;U, const vector &amp;Uc, vector &amp;UTurb, scalar &amp;tTurb)</div><div class="ttdoc">Update (disperse particles) </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00094">GradientDispersionRAS.C:94</a></div></div>
-<div class="ttc" id="a00930_html_a7528649a38595c86f2f3a77602897896"><div class="ttname"><a href="a00930.html#a7528649a38595c86f2f3a77602897896">Foam::GradientDispersionRAS::GradientDispersionRAS</a></div><div class="ttdeci">GradientDispersionRAS(const dictionary &amp;dict, CloudType &amp;owner)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00034">GradientDispersionRAS.C:34</a></div></div>
-<div class="ttc" id="a00930_html_affc959af68cf7ad84795af6492ade162"><div class="ttname"><a href="a00930.html#affc959af68cf7ad84795af6492ade162">Foam::GradientDispersionRAS::ownGradK_</a></div><div class="ttdeci">bool ownGradK_</div><div class="ttdoc">Take ownership of the grad(k) </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00062">GradientDispersionRAS.H:62</a></div></div>
-<div class="ttc" id="a00930_html_a91672cd91b447770fe870683b3549b76"><div class="ttname"><a href="a00930.html#a91672cd91b447770fe870683b3549b76">Foam::GradientDispersionRAS::gradkPtr_</a></div><div class="ttdeci">const volVectorField * gradkPtr_</div><div class="ttdoc">Gradient of k. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00059">GradientDispersionRAS.H:59</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a00930_html_a6005414ac27ae3e0b5a783ba216c1906"><div class="ttname"><a href="a00930.html#a6005414ac27ae3e0b5a783ba216c1906">Foam::GradientDispersionRAS::cacheFields</a></div><div class="ttdeci">virtual void cacheFields(const bool store)</div><div class="ttdoc">Cache carrier fields. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00071">GradientDispersionRAS.C:71</a></div></div>
-<div class="ttc" id="a00930_html_a57bb715ee2d400a42fb59708656344db"><div class="ttname"><a href="a00930.html#a57bb715ee2d400a42fb59708656344db">Foam::GradientDispersionRAS::TypeName</a></div><div class="ttdeci">TypeName(&quot;gradientDispersionRAS&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00577_html"><div class="ttname"><a href="a00577.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06353_source.html#l00068">DSMCCloud.H:68</a></div></div>
-<div class="ttc" id="a02906_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02906_source.html#l00082">pEqn.H:82</a></div></div>
-<div class="ttc" id="a02454_html_a193891e89d96c3d3699885e60fe0a609"><div class="ttname"><a href="a02454.html#a193891e89d96c3d3699885e60fe0a609">Foam::subModelBase::dict</a></div><div class="ttdeci">const dictionary &amp; dict() const </div><div class="ttdoc">Return const access to the cloud dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a08941_source.html#l00110">subModelBase.C:110</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02407_html_a85f4c37647727461cac684d4d9744a48"><div class="ttname"><a href="a02407.html#a85f4c37647727461cac684d4d9744a48">Foam::SprayCloud::averageParcelMass</a></div><div class="ttdeci">scalar averageParcelMass() const </div><div class="ttdoc">Return const-access to the average parcel mass. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00069">SprayCloudI.H:69</a></div></div>
+<div class="ttc" id="a02407_html_a0613eadbb459faa8ffeba0cfeb4520b0"><div class="ttname"><a href="a02407.html#a0613eadbb459faa8ffeba0cfeb4520b0">Foam::SprayCloud::atomization</a></div><div class="ttdeci">const AtomizationModel&lt; SprayCloud&lt; CloudType &gt; &gt; &amp; atomization() const </div><div class="ttdoc">Return const-access to the atomization model. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00038">SprayCloudI.H:38</a></div></div>
+<div class="ttc" id="a02407_html"><div class="ttname"><a href="a02407.html">Foam::SprayCloud</a></div><div class="ttdoc">Templated base class for spray cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00057">SprayCloud.H:57</a></div></div>
+<div class="ttc" id="a00162_html"><div class="ttname"><a href="a00162.html">Foam::BreakupModel</a></div><div class="ttdoc">Templated break-up model class. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00050">SprayCloud.H:50</a></div></div>
+<div class="ttc" id="a02407_html_ac6f9fb362e12363cb1f031fd6f48de10"><div class="ttname"><a href="a02407.html#ac6f9fb362e12363cb1f031fd6f48de10">Foam::SprayCloud::cloudCopy</a></div><div class="ttdeci">const SprayCloud &amp; cloudCopy() const </div><div class="ttdoc">Return a reference to the cloud copy. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00030">SprayCloudI.H:30</a></div></div>
+<div class="ttc" id="a00080_html"><div class="ttname"><a href="a00080.html">Foam::AtomizationModel</a></div><div class="ttdoc">Templated atomization model class. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00047">SprayCloud.H:47</a></div></div>
+<div class="ttc" id="a02407_html_ae6775d14a5180633b74a5b1b66e110a7"><div class="ttname"><a href="a02407.html#ae6775d14a5180633b74a5b1b66e110a7">Foam::SprayCloud::breakup</a></div><div class="ttdeci">const BreakupModel&lt; SprayCloud&lt; CloudType &gt; &gt; &amp; breakup() const </div><div class="ttdoc">Return const-access to the breakup model. </div><div class="ttdef"><b>Definition:</b> <a href="a06965_source.html#l00054">SprayCloudI.H:54</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_6e88ce7aa5483a0742ec9d8ca7a1206e.html">cubicUpwindFit</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_3b094e1ce2b3f641da0071aec2c4e694.html">limitedSchemes</a></li><li class="navelem"><a class="el" href="dir_3b1214cc54cd868ba75078ba7fb09184.html">MUSCL</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">cubicUpwindFit.C</div>  </div>
+<div class="title">MUSCL.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06024.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,35 +121,66 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06085.html">UpwindFitScheme.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06025.html">cubicUpwindFitPolynomial.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05797.html">upwindCFCCellToFaceStencilObject.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06012.html">LimitedScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06005.html">Limited01.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06025.html">MUSCL.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#adda8d2f21637cf437577b8bfeda5a259">defineTemplateTypeNameAndDebug</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    (</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        UpwindFitData&lt;cubicUpwindFitPolynomial&gt;,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        0</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    );</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10675.html#ac69f904970e6bf3ae4a94993f8643107">makeUpwindFitSurfaceInterpolationScheme</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        cubicUpwindFit,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        cubicUpwindFitPolynomial,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        upwindCFCCellToFaceStencilObject</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06025_html"><div class="ttname"><a href="a06025.html">cubicUpwindFitPolynomial.H</a></div></div>
-<div class="ttc" id="a05797_html"><div class="ttname"><a href="a05797.html">upwindCFCCellToFaceStencilObject.H</a></div></div>
-<div class="ttc" id="a06085_html"><div class="ttname"><a href="a06085.html">UpwindFitScheme.H</a></div></div>
-<div class="ttc" id="a10675_html_adda8d2f21637cf437577b8bfeda5a259"><div class="ttname"><a href="a10675.html#adda8d2f21637cf437577b8bfeda5a259">Foam::defineTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineTemplateTypeNameAndDebug(IOPtrList&lt; ensightPart &gt;, 0)</div></div>
-<div class="ttc" id="a10675_html_ac69f904970e6bf3ae4a94993f8643107"><div class="ttname"><a href="a10675.html#ac69f904970e6bf3ae4a94993f8643107">Foam::makeUpwindFitSurfaceInterpolationScheme</a></div><div class="ttdeci">makeUpwindFitSurfaceInterpolationScheme(cubicUpwindFit, cubicUpwindFitPolynomial, upwindCFCCellToFaceStencilObject)</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a06012.html#ac7c5533cfa4cc182326dc6b8acb0e199">makeLimitedSurfaceInterpolationScheme</a>(MUSCL, MUSCLLimiter)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a06012.html#a165a42a3e0cde4dc2749eebcccfc644f">makeLimitedVSurfaceInterpolationScheme</a>(MUSCLV, MUSCLLimiter)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a06012.html#a7249d23f2efe2ef1fb35dd0a1aaae8f9">makeLLimitedSurfaceInterpolationTypeScheme</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        limitedMUSCL,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        LimitedLimiter,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        MUSCLLimiter,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        NVDTVD,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        magSqr,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        scalar</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    )</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a06012.html#a7249d23f2efe2ef1fb35dd0a1aaae8f9">makeLLimitedSurfaceInterpolationTypeScheme</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    (</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        MUSCL01,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        Limited01Limiter,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        MUSCLLimiter,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        NVDTVD,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        magSqr,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        scalar</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    )</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">    makeLimitedSurfaceInterpolationTypeScheme</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">    (</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">        MUSCL,</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">        MUSCLLimiter,</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">        NVDTVD,</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">        rhoMagSqr,</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">        scalar</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">    )</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">    makeLimitedSurfaceInterpolationTypeScheme</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">    (</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">        MUSCL,</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">        MUSCLLimiter,</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">        NVDTVD,</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">        rhoMagSqr,</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">        vector</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">    )</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06012_html"><div class="ttname"><a href="a06012.html">LimitedScheme.H</a></div></div>
+<div class="ttc" id="a06005_html"><div class="ttname"><a href="a06005.html">Limited01.H</a></div></div>
+<div class="ttc" id="a06025_html"><div class="ttname"><a href="a06025.html">MUSCL.H</a></div></div>
+<div class="ttc" id="a06012_html_a7249d23f2efe2ef1fb35dd0a1aaae8f9"><div class="ttname"><a href="a06012.html#a7249d23f2efe2ef1fb35dd0a1aaae8f9">makeLLimitedSurfaceInterpolationTypeScheme</a></div><div class="ttdeci">#define makeLLimitedSurfaceInterpolationTypeScheme(                                                                                                                                                       SS,                                                                                                                                           LLIMITER,                                                                                                                               LIMITER,                                                                                                                                 NVDTVD,                                                                                                                                   LIMFUNC,                                                                                                                                 TYPE                                                                                                                                         )                                                                                                                                                      </div><div class="ttdef"><b>Definition:</b> <a href="a06012_source.html#l00200">LimitedScheme.H:200</a></div></div>
+<div class="ttc" id="a06012_html_a165a42a3e0cde4dc2749eebcccfc644f"><div class="ttname"><a href="a06012.html#a165a42a3e0cde4dc2749eebcccfc644f">makeLimitedVSurfaceInterpolationScheme</a></div><div class="ttdeci">#define makeLimitedVSurfaceInterpolationScheme(SS, LIMITER)                                  </div><div class="ttdef"><b>Definition:</b> <a href="a06012_source.html#l00196">LimitedScheme.H:196</a></div></div>
+<div class="ttc" id="a06012_html_ac7c5533cfa4cc182326dc6b8acb0e199"><div class="ttname"><a href="a06012.html#ac7c5533cfa4cc182326dc6b8acb0e199">makeLimitedSurfaceInterpolationScheme</a></div><div class="ttdeci">#define makeLimitedSurfaceInterpolationScheme(SS, LIMITER)                                    </div><div class="ttdef"><b>Definition:</b> <a href="a06012_source.html#l00180">LimitedScheme.H:180</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

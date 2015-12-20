@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_7c12a81ee82d3aaa033ce73b51dae3b7.html">faceToCell</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_29a0ec52e1bec07b305a38b682ef8704.html">cellToCell</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">extendedFaceToCellStencilTemplates.C</div>  </div>
+<div class="title">extendedCentredCellToCellStencil.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05806.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,145 +119,158 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05805.html">extendedFaceToCellStencil.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00696.html#a3aa1e92780c77003994676b9977a7c2e">Foam::extendedFaceToCellStencil::collectData</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00696.html#a08f46d9401c5969cef1fce5f19d438c2">   32</a></span>&#160;(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01393.html">mapDistribute</a>&amp; map,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">labelListList</a>&amp; stencil,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a>&amp; fld,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a01355.html">List</a>&lt;<a class="code" href="a01355.html">List&lt;Type&gt;</a> &gt;&amp; stencilFld</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// 1. Construct face data in compact addressing</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a01355.html">List&lt;Type&gt;</a> flatFld(map.<a class="code" href="a01393.html#a31e35cc37553bf187f244f12f1ad9c37">constructSize</a>(), <a class="code" href="a02006.html">pTraits&lt;Type&gt;::zero</a>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::extendedCentredCellToCellStencil</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    extendedCentredCellToCellStencil.C</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef extendedCentredCellToCellStencil_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define extendedCentredCellToCellStencil_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05803.html">extendedCellToCellStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05822.html">extendedCellToFaceStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Insert my internal values</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fld, cellI)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        flatFld[cellI] = fld[cellI];</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// Insert my boundary values</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fld.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>(), patchI)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00885.html">fvsPatchField&lt;Type&gt;</a>&amp; pfld = fld.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI];</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nCompact = pfld.<a class="code" href="a00885.html#ad735de1fbd0f85c12ad0c37deb62d22c">patch</a>().start();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pfld, i)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            flatFld[nCompact++] = pfld[i];</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">class </span>cellToCellStencil;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">              Class extendedCentredCellToCellStencil Declaration</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00697.html">   50</a></span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">class </span><a class="code" href="a00697.html">extendedCentredCellToCellStencil</a></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00695.html">extendedCellToCellStencil</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//- Swap map for getting neigbouring data</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a00086.html">autoPtr&lt;mapDistribute&gt;</a> mapPtr_;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Do all swapping</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    map.<a class="code" href="a01393.html#a33e0f8481eb68bf011731ec98e8f7c65">distribute</a>(flatFld);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">//- Per cell the stencil.</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a01364.html">labelListList</a> stencil_;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">// 2. Pull to stencil</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    stencilFld.setSize(stencil.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// Private Member Functions</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stencil, faceI)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; compactCells = stencil[faceI];</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        stencilFld[faceI].<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(compactCells.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="a00697.html">extendedCentredCellToCellStencil</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00697.html">extendedCentredCellToCellStencil</a>&amp;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        );</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(compactCells, i)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            stencilFld[faceI][i] = flatFld[compactCells[i]];</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a00697.html">extendedCentredCellToCellStencil</a>&amp;);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::GeometricField&lt;Type, Foam::fvPatchField, Foam::volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<a class="code" href="a00696.html#af9c11a9c6ceeeb8ad97e784f783035bc">Foam::extendedFaceToCellStencil::weightedSum</a></div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a00696.html#a5ed3b6f6eea7ed09194217ab4bfa013d">   83</a></span>&#160;(</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01393.html">mapDistribute</a>&amp; map,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">labelListList</a>&amp; stencil,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a>&amp; fld,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">List</a>&lt;<a class="code" href="a01355.html">List&lt;scalar&gt;</a> &gt;&amp; stencilWeights</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a> = fld.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="comment">//- Construct from uncompacted cell stencil</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="a00697.html">extendedCentredCellToCellStencil</a>(<span class="keyword">const</span> <a class="code" href="a00241.html">cellToCellStencil</a>&amp;);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a00697.html#ac2f38d8ae12ea9c1897269e957494bd7">   86</a></span>&#160;        <span class="comment">//- Return reference to the parallel distribution map</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01402.html">mapDistribute</a>&amp; <a class="code" href="a00697.html#ac2f38d8ae12ea9c1897269e957494bd7">map</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keywordflow">return</span> mapPtr_();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Collect internal and boundary values</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="a01355.html">List&lt;List&lt;Type&gt;</a> &gt; stencilFld;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    collectData(map, stencil, fld, stencilFld);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt; tsfCorr</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    (</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        (</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            (</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                fld.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>(),</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                mesh.<a class="code" href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            ),</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            mesh,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <a class="code" href="a00526.html">dimensioned&lt;Type&gt;</a></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            (</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                fld.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>(),</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                fld.<a class="code" href="a00527.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>(),</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <a class="code" href="a02006.html">pTraits&lt;Type&gt;::zero</a></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            )</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        )</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    );</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; <a class="code" href="a04277.html#ab318caaec810447a252e6134c88a7a77">sf</a> = tsfCorr();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// cells</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(sf, cellI)</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;Type&gt;</a>&amp; stField = stencilFld[cellI];</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;scalar&gt;</a>&amp; stWeight = stencilWeights[cellI];</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stField, i)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            sf[cellI] += stField[i]*stWeight[i];</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">// Boundaries values?</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordflow">return</span> tsfCorr;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a01393_html_a33e0f8481eb68bf011731ec98e8f7c65"><div class="ttname"><a href="a01393.html#a33e0f8481eb68bf011731ec98e8f7c65">Foam::mapDistribute::distribute</a></div><div class="ttdeci">static void distribute(const Pstream::commsTypes commsType, const List&lt; labelPair &gt; &amp;schedule, const label constructSize, const labelListList &amp;subMap, const labelListList &amp;constructMap, List&lt; T &gt; &amp;, const int tag=UPstream::msgType())</div><div class="ttdoc">Distribute data. Note:schedule only used for Pstream::scheduled. </div><div class="ttdef"><b>Definition:</b> <a href="a08565_source.html#l00037">mapDistributeTemplates.C:37</a></div></div>
-<div class="ttc" id="a00913_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00699">GeometricField.C:699</a></div></div>
-<div class="ttc" id="a00885_html_ad735de1fbd0f85c12ad0c37deb62d22c"><div class="ttname"><a href="a00885.html#ad735de1fbd0f85c12ad0c37deb62d22c">Foam::fvsPatchField::patch</a></div><div class="ttdeci">const fvPatch &amp; patch() const </div><div class="ttdoc">Return patch. </div><div class="ttdef"><b>Definition:</b> <a href="a05541_source.html#l00278">fvsPatchField.H:278</a></div></div>
-<div class="ttc" id="a04277_html_ab318caaec810447a252e6134c88a7a77"><div class="ttname"><a href="a04277.html#ab318caaec810447a252e6134c88a7a77">sf</a></div><div class="ttdeci">volScalarField sf(fieldObject, mesh)</div></div>
-<div class="ttc" id="a01393_html"><div class="ttname"><a href="a01393.html">Foam::mapDistribute</a></div><div class="ttdoc">Class containing processor-to-processor mapping information. </div><div class="ttdef"><b>Definition:</b> <a href="a08561_source.html#l00152">mapDistribute.H:152</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00527_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
-<div class="ttc" id="a05805_html"><div class="ttname"><a href="a05805.html">extendedFaceToCellStencil.H</a></div></div>
-<div class="ttc" id="a00868_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00243">fvMesh.H:243</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; labelList &gt;</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned</a></div><div class="ttdoc">Generic dimensioned Type class. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a01355_html_aedb985ffeaf1bdbfeccc2a8730405703"><div class="ttname"><a href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">Foam::List::setSize</a></div><div class="ttdeci">void setSize(const label)</div><div class="ttdoc">Reset size of List. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00318">List.C:318</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a02006_html"><div class="ttname"><a href="a02006.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08858_source.html#l00050">pTraits.H:50</a></div></div>
-<div class="ttc" id="a00527_html_a6098093e7de06370342a85cfae8b31f5"><div class="ttname"><a href="a00527.html#a6098093e7de06370342a85cfae8b31f5">Foam::DimensionedField::dimensions</a></div><div class="ttdeci">const dimensionSet &amp; dimensions() const </div><div class="ttdoc">Return dimensions. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00046">DimensionedFieldI.H:46</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00696_html_af9c11a9c6ceeeb8ad97e784f783035bc"><div class="ttname"><a href="a00696.html#af9c11a9c6ceeeb8ad97e784f783035bc">Foam::extendedFaceToCellStencil::weightedSum</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; weightedSum(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;fld, const List&lt; List&lt; scalar &gt; &gt; &amp;stencilWeights)</div><div class="ttdoc">Sum surface field contributions to create cell values. </div></div>
-<div class="ttc" id="a00696_html_a3aa1e92780c77003994676b9977a7c2e"><div class="ttname"><a href="a00696.html#a3aa1e92780c77003994676b9977a7c2e">Foam::extendedFaceToCellStencil::collectData</a></div><div class="ttdeci">static void collectData(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; T, fvsPatchField, surfaceMesh &gt; &amp;fld, List&lt; List&lt; T &gt; &gt; &amp;stencilFld)</div><div class="ttdoc">Use map to get the data into stencil order. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvsPatchField</a></div><div class="ttdoc">An abstract base class with a fat-interface to all derived classes covering all possible ways in whic...</div><div class="ttdef"><b>Definition:</b> <a href="a05541_source.html#l00065">fvsPatchField.H:65</a></div></div>
-<div class="ttc" id="a01393_html_a31e35cc37553bf187f244f12f1ad9c37"><div class="ttname"><a href="a01393.html#a31e35cc37553bf187f244f12f1ad9c37">Foam::mapDistribute::constructSize</a></div><div class="ttdeci">label constructSize() const </div><div class="ttdoc">Constructed data size. </div><div class="ttdef"><b>Definition:</b> <a href="a08561_source.html#l00461">mapDistribute.H:461</a></div></div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a00697.html#af77a68b26ffa11db646582041c25e692">   92</a></span>&#160;        <span class="comment">//- Return reference to the stencil</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelListList</a>&amp; <a class="code" href="a00697.html#af77a68b26ffa11db646582041c25e692">stencil</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">return</span> stencil_;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- After removing elements from the stencil adapt the schedule (map).</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00697.html#a043cdfc194924194e381a986c229569e">compact</a>();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">//- Use map to get the data into stencil order</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a00697.html#a10dc06ebbf1e2e3a6eca327491184e73">  103</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00697.html#a10dc06ebbf1e2e3a6eca327491184e73">collectData</a></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        (</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; <a class="code" href="a04275.html#ad4512456f4da706b47fd304150561080">fld</a>,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a01364.html">List</a>&lt;<a class="code" href="a01364.html">List&lt;Type&gt;</a> &gt;&amp; stencilFld</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            <a class="code" href="a00696.html#a5ad2e7543e803240f0dd50eac039ea73">extendedCellToFaceStencil::collectData</a></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            (</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <a class="code" href="a00697.html#ac2f38d8ae12ea9c1897269e957494bd7">map</a>(),</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                <a class="code" href="a00697.html#af77a68b26ffa11db646582041c25e692">stencil</a>(),</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                fld,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                stencilFld</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            );</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="comment">//- Sum vol field contributions to create cell values</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> WeightType&gt;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="a02618.html">tmp</a></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        &lt;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <a class="code" href="a00921.html">GeometricField</a></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            &lt;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="keyword">typename</span> <a class="code" href="a01738.html#a178b9c293efe9e4a0ed072901783c692">outerProduct&lt;WeightType, Type&gt;::type</a>,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <a class="code" href="a00886.html">fvPatchField</a>,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                <a class="code" href="a02805.html">volMesh</a></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            &gt;</div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="a00697.html#a2fdf26b57a3f9d50f0a3dbb1cac598db">  128</a></span>&#160;        &gt; <a class="code" href="a00697.html#a2fdf26b57a3f9d50f0a3dbb1cac598db">weightedSum</a></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        (</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; <a class="code" href="a04275.html#ad4512456f4da706b47fd304150561080">fld</a>,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">List</a>&lt;<a class="code" href="a01364.html">List&lt;WeightType&gt;</a> &gt;&amp; stencilWeights</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00695.html#a4fad99194046a1700711cf8aabb92d3a">extendedCellToCellStencil::weightedSum</a></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            (</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                <a class="code" href="a00697.html#ac2f38d8ae12ea9c1897269e957494bd7">map</a>(),</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                <a class="code" href="a00697.html#af77a68b26ffa11db646582041c25e692">stencil</a>(),</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                fld,</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                stencilWeights</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            );</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;};</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01402_html"><div class="ttname"><a href="a01402.html">Foam::mapDistribute</a></div><div class="ttdoc">Class containing processor-to-processor mapping information. </div><div class="ttdef"><b>Definition:</b> <a href="a08613_source.html#l00152">mapDistribute.H:152</a></div></div>
+<div class="ttc" id="a00697_html_a2fdf26b57a3f9d50f0a3dbb1cac598db"><div class="ttname"><a href="a00697.html#a2fdf26b57a3f9d50f0a3dbb1cac598db">Foam::extendedCentredCellToCellStencil::weightedSum</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; typename outerProduct&lt; WeightType, Type &gt;::type, fvPatchField, volMesh &gt; &gt; weightedSum(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;fld, const List&lt; List&lt; WeightType &gt; &gt; &amp;stencilWeights) const </div><div class="ttdoc">Sum vol field contributions to create cell values. </div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00128">extendedCentredCellToCellStencil.H:128</a></div></div>
+<div class="ttc" id="a00695_html_a4fad99194046a1700711cf8aabb92d3a"><div class="ttname"><a href="a00695.html#a4fad99194046a1700711cf8aabb92d3a">Foam::extendedCellToCellStencil::weightedSum</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; typename outerProduct&lt; WeightType, Type &gt;::type, fvPatchField, volMesh &gt; &gt; weightedSum(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;fld, const List&lt; List&lt; WeightType &gt; &gt; &amp;stencilWeights)</div><div class="ttdoc">Sum surface field contributions to create cell values. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; labelList &gt;</a></div></div>
+<div class="ttc" id="a00241_html"><div class="ttname"><a href="a00241.html">Foam::cellToCellStencil</a></div><div class="ttdoc">baseclass for extended cell centred addressing. Contains per cell a list of neighbouring cells and/or...</div><div class="ttdef"><b>Definition:</b> <a href="a05810_source.html#l00054">cellToCellStencil.H:54</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00695_html"><div class="ttname"><a href="a00695.html">Foam::extendedCellToCellStencil</a></div><div class="ttdoc">Baseclass for cell-to-cell stencils. </div><div class="ttdef"><b>Definition:</b> <a href="a05803_source.html#l00052">extendedCellToCellStencil.H:52</a></div></div>
+<div class="ttc" id="a01738_html_a178b9c293efe9e4a0ed072901783c692"><div class="ttname"><a href="a01738.html#a178b9c293efe9e4a0ed072901783c692">Foam::outerProduct::type</a></div><div class="ttdeci">typeOfRank&lt; typename pTraits&lt; arg1 &gt;::cmptType, int(pTraits&lt; arg1 &gt;::rank)+int(pTraits&lt; arg2 &gt;::rank) &gt;::type type</div><div class="ttdef"><b>Definition:</b> <a href="a09051_source.html#l00072">products.H:72</a></div></div>
+<div class="ttc" id="a00697_html_af77a68b26ffa11db646582041c25e692"><div class="ttname"><a href="a00697.html#af77a68b26ffa11db646582041c25e692">Foam::extendedCentredCellToCellStencil::stencil</a></div><div class="ttdeci">const labelListList &amp; stencil() const </div><div class="ttdoc">Return reference to the stencil. </div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00092">extendedCentredCellToCellStencil.H:92</a></div></div>
+<div class="ttc" id="a00696_html_a5ad2e7543e803240f0dd50eac039ea73"><div class="ttname"><a href="a00696.html#a5ad2e7543e803240f0dd50eac039ea73">Foam::extendedCellToFaceStencil::collectData</a></div><div class="ttdeci">static void collectData(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; T, fvPatchField, volMesh &gt; &amp;fld, List&lt; List&lt; T &gt; &gt; &amp;stencilFld)</div><div class="ttdoc">Use map to get the data into stencil order. </div></div>
+<div class="ttc" id="a00697_html_a043cdfc194924194e381a986c229569e"><div class="ttname"><a href="a00697.html#a043cdfc194924194e381a986c229569e">Foam::extendedCentredCellToCellStencil::compact</a></div><div class="ttdeci">void compact()</div><div class="ttdoc">After removing elements from the stencil adapt the schedule (map). </div><div class="ttdef"><b>Definition:</b> <a href="a05805_source.html#l00057">extendedCentredCellToCellStencil.C:57</a></div></div>
+<div class="ttc" id="a02805_html"><div class="ttname"><a href="a02805.html">Foam::volMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a06158_source.html#l00047">volMesh.H:47</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00697_html_a10dc06ebbf1e2e3a6eca327491184e73"><div class="ttname"><a href="a00697.html#a10dc06ebbf1e2e3a6eca327491184e73">Foam::extendedCentredCellToCellStencil::collectData</a></div><div class="ttdeci">void collectData(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;fld, List&lt; List&lt; Type &gt; &gt; &amp;stencilFld) const </div><div class="ttdoc">Use map to get the data into stencil order. </div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00103">extendedCentredCellToCellStencil.H:103</a></div></div>
+<div class="ttc" id="a00697_html_ac2f38d8ae12ea9c1897269e957494bd7"><div class="ttname"><a href="a00697.html#ac2f38d8ae12ea9c1897269e957494bd7">Foam::extendedCentredCellToCellStencil::map</a></div><div class="ttdeci">const mapDistribute &amp; map() const </div><div class="ttdoc">Return reference to the parallel distribution map. </div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00086">extendedCentredCellToCellStencil.H:86</a></div></div>
+<div class="ttc" id="a05822_html"><div class="ttname"><a href="a05822.html">extendedCellToFaceStencil.H</a></div></div>
+<div class="ttc" id="a00697_html"><div class="ttname"><a href="a00697.html">Foam::extendedCentredCellToCellStencil</a></div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00050">extendedCentredCellToCellStencil.H:50</a></div></div>
+<div class="ttc" id="a05803_html"><div class="ttname"><a href="a05803.html">extendedCellToCellStencil.H</a></div></div>
+<div class="ttc" id="a04275_html_ad4512456f4da706b47fd304150561080"><div class="ttname"><a href="a04275.html#ad4512456f4da706b47fd304150561080">fld</a></div><div class="ttdeci">gmvFile&lt;&lt; &quot;tracers &quot;&lt;&lt; particles.size()&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().x()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().y()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().z()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAll(lagrangianScalarNames, i){const word &amp;name=lagrangianScalarNames[i];IOField&lt; scalar &gt; fld(IOobject(                                       name,                                       runTime.timeName(),                                       cloud::prefix,                                       mesh,                                       IOobject::MUST_READ,                                       IOobject::NO_WRITE                       ))</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

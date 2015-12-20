@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_b630ab9569e31ffb9b2cc4747c3085db.html">fvPatches</a></li><li class="navelem"><a class="el" href="dir_b6c7056b4a691a5d4a6a253b324932ba.html">derived</a></li><li class="navelem"><a class="el" href="dir_be0be92ab094e5999d77dae247e9dae5.html">wall</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_7c12a81ee82d3aaa033ce73b51dae3b7.html">faceToCell</a></li><li class="navelem"><a class="el" href="dir_8739625bdb04fa932f57789a1cab8d00.html">globalIndexStencils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">wallFvPatch.C</div>  </div>
+<div class="title">faceToCellStencil.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05864.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,30 +121,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05865.html">wallFvPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05865.html">faceToCellStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(wallFvPatch, 0);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(fvPatch, wallFvPatch, polyPatch);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00737.html#acd0a65cdeb7177f949747834c24f41a7">   33</a></span>&#160;<a class="code" href="a00737.html#acd0a65cdeb7177f949747834c24f41a7">Foam::faceToCellStencil::faceToCellStencil</a>(<span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    mesh_(mesh),</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    globalNumbering_(mesh_.nFaces())</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a05865_html"><div class="ttname"><a href="a05865.html">wallFvPatch.H</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a05865_html"><div class="ttname"><a href="a05865.html">faceToCellStencil.H</a></div></div>
+<div class="ttc" id="a00737_html_acd0a65cdeb7177f949747834c24f41a7"><div class="ttname"><a href="a00737.html#acd0a65cdeb7177f949747834c24f41a7">Foam::faceToCellStencil::faceToCellStencil</a></div><div class="ttdeci">faceToCellStencil(const polyMesh &amp;)</div><div class="ttdoc">Construct from mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05864_source.html#l00033">faceToCellStencil.C:33</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_b0c2b0d6e5b08bdff054b28f26ba51e7.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_287a8ee951d3c46055211652d30251ed.html">dataConversion</a></li><li class="navelem"><a class="el" href="dir_f73f3a59aefc419d78bd8216641486ec.html">foamToVTK</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_b0c2b0d6e5b08bdff054b28f26ba51e7.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_287a8ee951d3c46055211652d30251ed.html">dataConversion</a></li><li class="navelem"><a class="el" href="dir_b6d44d03429d59376377c3fdbf970503.html">foamToEnsight</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">patchWriter.C</div>  </div>
+<div class="title">ensightStream.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04257.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,136 +119,111 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04258.html">patchWriter.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;writeFuns.H&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a01807.html#a1a09a4804eac1e90a8cc8c19f05c84f9">Foam::patchWriter::patchWriter</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> vtkMesh&amp; vMesh,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> binary,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> nearCellValue,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> fileName&amp; fName,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; patchIDs</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    vMesh_(vMesh),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    binary_(binary),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    nearCellValue_(nearCellValue),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    fName_(fName),</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    patchIDs_(patchIDs),</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    os_(fName.c_str())</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = vMesh_.<a class="code" href="a02799.html#a9687e6999ad5ae21072ec74623f049ff">mesh</a>();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> polyBoundaryMesh&amp; patches = mesh.<a class="code" href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// Write header</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">if</span> (patchIDs_.size() == 1)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="a02860.html#a95d6f3aa8da0288f6c7bf5222b8f0090">writeFuns::writeHeader</a>(os_, binary_, patches[patchIDs_[0]].<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>());</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a02860.html#a95d6f3aa8da0288f6c7bf5222b8f0090">writeFuns::writeHeader</a>(os_, binary_, <span class="stringliteral">&quot;patches&quot;</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    os_ &lt;&lt; <span class="stringliteral">&quot;DATASET POLYDATA&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">std::endl</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Write topology</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    nPoints_ = 0;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    nFaces_ = 0;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFaceVerts = 0;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::ensightStream</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Abstract base class for writing Ensight data</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    ensightStream.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef ensightStream_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define ensightStream_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08959.html">fileName.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07969.html">scalarField.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">                         Class ensightStream Declaration</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00658.html">   50</a></span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">class </span><a class="code" href="a00658.html">ensightStream</a></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a> name_;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a00658.html">ensightStream</a>(<span class="keyword">const</span> <a class="code" href="a00658.html">ensightStream</a>&amp;);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a00658.html">ensightStream</a>&amp;);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, i)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> polyPatch&amp; pp = patches[patchIDs_[i]];</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        nPoints_ += pp.nPoints();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        nFaces_ += pp.size();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pp, faceI)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            nFaceVerts += pp[faceI].size() + 1;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    os_ &lt;&lt; <span class="stringliteral">&quot;POINTS &quot;</span> &lt;&lt; nPoints_ &lt;&lt; <span class="stringliteral">&quot; float&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">std::endl</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a00658.html#a03ec1ec4c7ef0173286603a2b855e72b">   70</a></span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a00658.html">ensightStream</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; <a class="code" href="a03922.html#a888be93833ac7a23170555c69c690288">f</a>)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        :</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            name_(f)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a00658.html#ad9d4d2cbeb205832560442ed4e1d6f22">   77</a></span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00658.html#ad9d4d2cbeb205832560442ed4e1d6f22">~ensightStream</a>()</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    {}</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    DynamicList&lt;floatScalar&gt; ptField(3*nPoints_);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, i)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">const</span> polyPatch&amp; pp = patches[patchIDs_[i]];</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="a02860.html#af5d4687eff310ecdb691653263eb9701">writeFuns::insert</a>(pp.localPoints(), ptField);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="a02860.html#a881c4bc6bf9fad8cb80795ee78158f6f">writeFuns::write</a>(os_, binary_, ptField);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a00658.html#acd3da3556711337d571c60cf9ffb91cc">   83</a></span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; <a class="code" href="a00658.html#acd3da3556711337d571c60cf9ffb91cc">name</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">return</span> name_;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a00658.html#a4b0882b6cc48d931cab3232309607dca">ascii</a>() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    os_ &lt;&lt; <span class="stringliteral">&quot;POLYGONS &quot;</span> &lt;&lt; nFaces_ &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; nFaceVerts &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">std::endl</a>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00658.html#aa63372250d47b6e15c5fdfb88c94a2be">write</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>*) = 0;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    DynamicList&lt;label&gt; vertLabels(nFaceVerts);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00658.html#aa63372250d47b6e15c5fdfb88c94a2be">write</a>(<span class="keyword">const</span> <span class="keywordtype">int</span>) = 0;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> offset = 0;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00658.html#aa63372250d47b6e15c5fdfb88c94a2be">write</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp;) = 0;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, i)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> polyPatch&amp; pp = patches[patchIDs_[i]];</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00658.html#aa63372250d47b6e15c5fdfb88c94a2be">write</a>(<span class="keyword">const</span> <a class="code" href="a01364.html">List&lt;int&gt;</a>&amp;) = 0;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00658.html#a8ca75751c1c4553615d918b3d53afe93">writePartHeader</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>) = 0;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pp, faceI)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> face&amp; f = pp.localFaces()[faceI];</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            vertLabels.append(f.size());</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a02860.html#af5d4687eff310ecdb691653263eb9701">writeFuns::insert</a>(f + offset, vertLabels);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        offset += pp.nPoints();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a02860.html#a881c4bc6bf9fad8cb80795ee78158f6f">writeFuns::write</a>(os_, binary_, vertLabels);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01807.html#ac98681567ddd5f06fbdeead593e77914">Foam::patchWriter::writePatchIDs</a>()</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = vMesh_.mesh();</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    DynamicList&lt;floatScalar&gt; fField(nFaces_);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    os_ &lt;&lt; <span class="stringliteral">&quot;patchID 1 &quot;</span> &lt;&lt; nFaces_ &lt;&lt; <span class="stringliteral">&quot; float&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">std::endl</a>;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchIDs_, i)</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    {</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = patchIDs_[i];</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keyword">const</span> polyPatch&amp; pp = mesh.boundaryMesh()[patchI];</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keywordflow">if</span> (!isA&lt;emptyPolyPatch&gt;(pp))</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="a02860.html#af5d4687eff310ecdb691653263eb9701">writeFuns::insert</a>(<a class="code" href="a10675.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(pp.size(), patchI), fField);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="a02860.html#a881c4bc6bf9fad8cb80795ee78158f6f">writeFuns::write</a>(os_, binary_, fField);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02860_html_a881c4bc6bf9fad8cb80795ee78158f6f"><div class="ttname"><a href="a02860.html#a881c4bc6bf9fad8cb80795ee78158f6f">Foam::writeFuns::write</a></div><div class="ttdeci">static void write(std::ostream &amp;, const bool, DynamicList&lt; floatScalar &gt; &amp;)</div><div class="ttdoc">Write floats ascii or binary. </div></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a02860_html_af5d4687eff310ecdb691653263eb9701"><div class="ttname"><a href="a02860.html#af5d4687eff310ecdb691653263eb9701">Foam::writeFuns::insert</a></div><div class="ttdeci">static void insert(const point &amp;, DynamicList&lt; floatScalar &gt; &amp;dest)</div><div class="ttdoc">Append point to given DynamicList. </div></div>
-<div class="ttc" id="a01807_html_a1a09a4804eac1e90a8cc8c19f05c84f9"><div class="ttname"><a href="a01807.html#a1a09a4804eac1e90a8cc8c19f05c84f9">Foam::patchWriter::patchWriter</a></div><div class="ttdeci">patchWriter(const vtkMesh &amp;, const bool binary, const bool nearCellValue, const fileName &amp;, const labelList &amp;patchIDs)</div><div class="ttdoc">Construct from components. </div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10675.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07912_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
-<div class="ttc" id="a02799_html_a9687e6999ad5ae21072ec74623f049ff"><div class="ttname"><a href="a02799.html#a9687e6999ad5ae21072ec74623f049ff">Foam::vtkMesh::mesh</a></div><div class="ttdeci">const fvMesh &amp; mesh() const </div><div class="ttdoc">Access either mesh or submesh. </div><div class="ttdef"><b>Definition:</b> <a href="a04247_source.html#l00119">vtkMesh.H:119</a></div></div>
-<div class="ttc" id="a04258_html"><div class="ttname"><a href="a04258.html">patchWriter.H</a></div></div>
-<div class="ttc" id="a01905_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00421">polyMesh.H:421</a></div></div>
-<div class="ttc" id="a02860_html_a95d6f3aa8da0288f6c7bf5222b8f0090"><div class="ttname"><a href="a02860.html#a95d6f3aa8da0288f6c7bf5222b8f0090">Foam::writeFuns::writeHeader</a></div><div class="ttdeci">static void writeHeader(std::ostream &amp;, const bool isBinary, const std::string &amp;title)</div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a01807_html_ac98681567ddd5f06fbdeead593e77914"><div class="ttname"><a href="a01807.html#ac98681567ddd5f06fbdeead593e77914">Foam::patchWriter::writePatchIDs</a></div><div class="ttdeci">void writePatchIDs()</div><div class="ttdoc">Write cellIDs. </div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00658_html_aa63372250d47b6e15c5fdfb88c94a2be"><div class="ttname"><a href="a00658.html#aa63372250d47b6e15c5fdfb88c94a2be">Foam::ensightStream::write</a></div><div class="ttdeci">virtual void write(const char *)=0</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a03922_html_a888be93833ac7a23170555c69c690288"><div class="ttname"><a href="a03922.html#a888be93833ac7a23170555c69c690288">f</a></div><div class="ttdeci">labelList f(nPoints)</div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; int &gt;</a></div></div>
+<div class="ttc" id="a07969_html"><div class="ttname"><a href="a07969.html">scalarField.H</a></div></div>
+<div class="ttc" id="a00658_html"><div class="ttname"><a href="a00658.html">Foam::ensightStream</a></div><div class="ttdoc">Abstract base class for writing Ensight data. </div><div class="ttdef"><b>Definition:</b> <a href="a04257_source.html#l00050">ensightStream.H:50</a></div></div>
+<div class="ttc" id="a00658_html_acd3da3556711337d571c60cf9ffb91cc"><div class="ttname"><a href="a00658.html#acd3da3556711337d571c60cf9ffb91cc">Foam::ensightStream::name</a></div><div class="ttdeci">const fileName &amp; name() const </div><div class="ttdef"><b>Definition:</b> <a href="a04257_source.html#l00083">ensightStream.H:83</a></div></div>
+<div class="ttc" id="a00658_html_ad9d4d2cbeb205832560442ed4e1d6f22"><div class="ttname"><a href="a00658.html#ad9d4d2cbeb205832560442ed4e1d6f22">Foam::ensightStream::~ensightStream</a></div><div class="ttdeci">virtual ~ensightStream()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04257_source.html#l00077">ensightStream.H:77</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00658_html_a8ca75751c1c4553615d918b3d53afe93"><div class="ttname"><a href="a00658.html#a8ca75751c1c4553615d918b3d53afe93">Foam::ensightStream::writePartHeader</a></div><div class="ttdeci">virtual void writePartHeader(const label)=0</div></div>
+<div class="ttc" id="a00658_html_a4b0882b6cc48d931cab3232309607dca"><div class="ttname"><a href="a00658.html#a4b0882b6cc48d931cab3232309607dca">Foam::ensightStream::ascii</a></div><div class="ttdeci">virtual bool ascii() const  =0</div></div>
+<div class="ttc" id="a08959_html"><div class="ttname"><a href="a08959.html">fileName.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

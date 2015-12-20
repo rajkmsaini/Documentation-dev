@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_fd9be80e4ce10132ec26d36b30f21b7d.html">GAMG</a></li><li class="navelem"><a class="el" href="dir_b7abb153e8987c9544a572b6404d8f9c.html">interfaceFields</a></li><li class="navelem"><a class="el" href="dir_bed6829d3114989523219f02de1a9c8d.html">processorCyclicGAMGInterfaceField</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_27bacb8e19b5862d96d869422b2be03b.html">smoothers</a></li><li class="navelem"><a class="el" href="dir_4f27e694e2501b226ead51715341b08c.html">FDIC</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">processorCyclicGAMGInterfaceField.C</div>  </div>
+<div class="title">FDICSmoother.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08332.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,70 +121,150 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08333.html">processorCyclicGAMGInterfaceField.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08235.html">lduMatrix.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(processorCyclicGAMGInterfaceField, 0);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    (</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        GAMGInterfaceField,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        processorCyclicGAMGInterfaceField,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        lduInterface</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    );</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        GAMGInterfaceField,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        processorCyclicGAMGInterfaceField,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        lduInterfaceField</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    );</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;Foam::processorCyclicGAMGInterfaceField::processorCyclicGAMGInterfaceField</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a01968.html#aca822c1a1acd390e08c425097144ae55">   53</a></span>&#160;(</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00889.html">GAMGInterface</a>&amp; GAMGCp,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01271.html">lduInterfaceField</a>&amp; fineInterface</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a01977.html">processorGAMGInterfaceField</a>(GAMGCp, fineInterface)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;Foam::processorCyclicGAMGInterfaceField::processorCyclicGAMGInterfaceField</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a01968.html#acdc0af320e84a98a123107104dbc177e">   63</a></span>&#160;(</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00889.html">GAMGInterface</a>&amp; GAMGCp,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> doTransform,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> rank</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;)</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a01977.html">processorGAMGInterfaceField</a>(GAMGCp, doTransform, rank)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="a01968.html#a84b10589b780d372ef073a72cda16d40">   75</a></span>&#160;<a class="code" href="a01968.html#a84b10589b780d372ef073a72cda16d40">Foam::processorCyclicGAMGInterfaceField::~processorCyclicGAMGInterfaceField</a>()</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08235_html"><div class="ttname"><a href="a08235.html">lduMatrix.H</a></div></div>
-<div class="ttc" id="a01271_html"><div class="ttname"><a href="a01271.html">Foam::lduInterfaceField</a></div><div class="ttdoc">An abstract base class for implicitly-coupled interface fields e.g. processor and cyclic patch fields...</div><div class="ttdef"><b>Definition:</b> <a href="a08222_source.html#l00055">lduInterfaceField.H:55</a></div></div>
-<div class="ttc" id="a08333_html"><div class="ttname"><a href="a08333.html">processorCyclicGAMGInterfaceField.H</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a01968_html_a84b10589b780d372ef073a72cda16d40"><div class="ttname"><a href="a01968.html#a84b10589b780d372ef073a72cda16d40">Foam::processorCyclicGAMGInterfaceField::~processorCyclicGAMGInterfaceField</a></div><div class="ttdeci">virtual ~processorCyclicGAMGInterfaceField()</div><div class="ttdef"><b>Definition:</b> <a href="a08332_source.html#l00075">processorCyclicGAMGInterfaceField.C:75</a></div></div>
-<div class="ttc" id="a00889_html"><div class="ttname"><a href="a00889.html">Foam::GAMGInterface</a></div><div class="ttdoc">Abstract base class for GAMG agglomerated interfaces. </div><div class="ttdef"><b>Definition:</b> <a href="a08339_source.html#l00051">GAMGInterface.H:51</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a01977_html"><div class="ttname"><a href="a01977.html">Foam::processorGAMGInterfaceField</a></div><div class="ttdoc">GAMG agglomerated processor interface field. </div><div class="ttdef"><b>Definition:</b> <a href="a08335_source.html#l00050">processorGAMGInterfaceField.H:50</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08333.html">FDICSmoother.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08316.html">FDICPreconditioner.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(FDICSmoother, 0);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    lduMatrix::smoother::addsymMatrixConstructorToTable&lt;FDICSmoother&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a10725.html#aa76aa2e70ae13544fa8067ecbb2301be">   36</a></span>&#160;        <a class="code" href="a10725.html#aa76aa2e70ae13544fa8067ecbb2301be">addFDICSmootherSymMatrixConstructorToTable_</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="a00750.html#aac546a129ffb28b6798ac1e79a35a413">Foam::FDICSmoother::FDICSmoother</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00750.html#aac546a129ffb28b6798ac1e79a35a413">   43</a></span>&#160;(</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; fieldName,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01282.html">lduMatrix</a>&amp; matrix,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceBouCoeffs,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceIntCoeffs,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02764.html">lduInterfaceFieldPtrsList</a>&amp; interfaces</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a02356.html">lduMatrix::smoother</a></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    (</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        fieldName,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        matrix,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        interfaceBouCoeffs,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        interfaceIntCoeffs,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        interfaces</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    ),</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    rD_(matrix_.diag()),</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    rDuUpper_(matrix_.upper().size()),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    rDlUpper_(matrix_.upper().size())</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    scalar* __restrict__ rDPtr = rD_.begin();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    scalar* __restrict__ rDuUpperPtr = rDuUpper_.begin();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    scalar* __restrict__ rDlUpperPtr = rDlUpper_.begin();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* <span class="keyword">const</span> __restrict__ uPtr =</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        matrix_.lduAddr().upperAddr().begin();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* <span class="keyword">const</span> __restrict__ lPtr =</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        matrix_.lduAddr().lowerAddr().begin();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> scalar* <span class="keyword">const</span> __restrict__ upperPtr =</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        matrix_.upper().begin();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nCells = rD_.size();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFaces = matrix_.upper().size();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=0; <a class="code" href="a00715.html">face</a>&lt;nFaces; <a class="code" href="a00715.html">face</a>++)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        rDPtr[uPtr[<a class="code" href="a00715.html">face</a>]] -= <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(upperPtr[<a class="code" href="a00715.html">face</a>])/rDPtr[lPtr[face]];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Generate reciprocal FDIC</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00207.html">cell</a>=0; <a class="code" href="a00207.html">cell</a>&lt;nCells; <a class="code" href="a00207.html">cell</a>++)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        rDPtr[<a class="code" href="a00207.html">cell</a>] = 1.0/rDPtr[<a class="code" href="a00207.html">cell</a>];</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=0; <a class="code" href="a00715.html">face</a>&lt;nFaces; <a class="code" href="a00715.html">face</a>++)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        rDuUpperPtr[<a class="code" href="a00715.html">face</a>] = rDPtr[uPtr[<a class="code" href="a00715.html">face</a>]]*upperPtr[<a class="code" href="a00715.html">face</a>];</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        rDlUpperPtr[<a class="code" href="a00715.html">face</a>] = rDPtr[lPtr[<a class="code" href="a00715.html">face</a>]]*upperPtr[<a class="code" href="a00715.html">face</a>];</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00750.html#add1d7a70b695e21e3677e07a4805a97a">Foam::FDICSmoother::smooth</a></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="a00750.html#add1d7a70b695e21e3677e07a4805a97a">   99</a></span>&#160;(</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a00755.html">scalarField</a>&amp; psi,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; source,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nSweeps</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">const</span> scalar* <span class="keyword">const</span> __restrict__ rDuUpperPtr = rDuUpper_.begin();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">const</span> scalar* <span class="keyword">const</span> __restrict__ rDlUpperPtr = rDlUpper_.begin();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* <span class="keyword">const</span> __restrict__ uPtr =</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        matrix_.lduAddr().upperAddr().begin();</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>* <span class="keyword">const</span> __restrict__ lPtr =</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        matrix_.lduAddr().lowerAddr().begin();</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Temporary storage for the residual</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="a00755.html">scalarField</a> rA(rD_.size());</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    scalar* __restrict__ rAPtr = rA.<a class="code" href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">begin</a>();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a10759.html#a0ba98d69297b54282b0a15e74ec2ec67">sweep</a>=0; <a class="code" href="a10759.html#a0ba98d69297b54282b0a15e74ec2ec67">sweep</a>&lt;nSweeps; <a class="code" href="a10759.html#a0ba98d69297b54282b0a15e74ec2ec67">sweep</a>++)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        matrix_.residual</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        (</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            rA,</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            psi,</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            source,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            interfaceBouCoeffs_,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            interfaces_,</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            cmpt</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        );</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        rA *= rD_;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFaces = matrix_.upper().size();</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=0; <a class="code" href="a00715.html">face</a>&lt;nFaces; <a class="code" href="a00715.html">face</a>++)</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            rAPtr[uPtr[<a class="code" href="a00715.html">face</a>]] -= rDuUpperPtr[<a class="code" href="a00715.html">face</a>]*rAPtr[lPtr[<a class="code" href="a00715.html">face</a>]];</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFacesM1 = nFaces - 1;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00715.html">face</a>=nFacesM1; <a class="code" href="a00715.html">face</a>&gt;=0; <a class="code" href="a00715.html">face</a>--)</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            rAPtr[lPtr[<a class="code" href="a00715.html">face</a>]] -= rDlUpperPtr[<a class="code" href="a00715.html">face</a>]*rAPtr[uPtr[<a class="code" href="a00715.html">face</a>]];</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        }</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        psi += rA;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;}</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_aa76aa2e70ae13544fa8067ecbb2301be"><div class="ttname"><a href="a10725.html#aa76aa2e70ae13544fa8067ecbb2301be">Foam::addFDICSmootherSymMatrixConstructorToTable_</a></div><div class="ttdeci">lduMatrix::smoother::addsymMatrixConstructorToTable&lt; FDICSmoother &gt; addFDICSmootherSymMatrixConstructorToTable_</div><div class="ttdef"><b>Definition:</b> <a href="a08332_source.html#l00036">FDICSmoother.C:36</a></div></div>
+<div class="ttc" id="a00750_html_add1d7a70b695e21e3677e07a4805a97a"><div class="ttname"><a href="a00750.html#add1d7a70b695e21e3677e07a4805a97a">Foam::FDICSmoother::smooth</a></div><div class="ttdeci">void smooth(scalarField &amp;psi, const scalarField &amp;source, const direction cmpt, const label nSweeps) const </div><div class="ttdoc">Smooth the solution for a given number of sweeps. </div><div class="ttdef"><b>Definition:</b> <a href="a08332_source.html#l00099">FDICSmoother.C:99</a></div></div>
+<div class="ttc" id="a10725_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10725.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08824_source.html#l00043">direction.H:43</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a00715_html"><div class="ttname"><a href="a00715.html">Foam::face</a></div><div class="ttdoc">A face is a list of labels corresponding to mesh vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a08528_source.html#l00075">face.H:75</a></div></div>
+<div class="ttc" id="a00762_html"><div class="ttname"><a href="a00762.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07908_source.html#l00051">FieldField.H:51</a></div></div>
+<div class="ttc" id="a02356_html"><div class="ttname"><a href="a02356.html">Foam::lduMatrix::smoother</a></div><div class="ttdoc">Abstract base-class for lduMatrix smoothers. </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00265">lduMatrix.H:265</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02731_html_a8a0643ef7f391465066f7f07d45ce934"><div class="ttname"><a href="a02731.html#a8a0643ef7f391465066f7f07d45ce934">Foam::UList::begin</a></div><div class="ttdeci">iterator begin()</div><div class="ttdoc">Return an iterator to begin traversing the UList. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00216">UListI.H:216</a></div></div>
+<div class="ttc" id="a02764_html"><div class="ttname"><a href="a02764.html">Foam::UPtrList&lt; const lduInterfaceField &gt;</a></div></div>
+<div class="ttc" id="a01282_html"><div class="ttname"><a href="a01282.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00077">lduMatrix.H:77</a></div></div>
+<div class="ttc" id="a08333_html"><div class="ttname"><a href="a08333.html">FDICSmoother.H</a></div></div>
+<div class="ttc" id="a08316_html"><div class="ttname"><a href="a08316.html">FDICPreconditioner.H</a></div></div>
+<div class="ttc" id="a00750_html_aac546a129ffb28b6798ac1e79a35a413"><div class="ttname"><a href="a00750.html#aac546a129ffb28b6798ac1e79a35a413">Foam::FDICSmoother::FDICSmoother</a></div><div class="ttdeci">FDICSmoother(const word &amp;fieldName, const lduMatrix &amp;matrix, const FieldField&lt; Field, scalar &gt; &amp;interfaceBouCoeffs, const FieldField&lt; Field, scalar &gt; &amp;interfaceIntCoeffs, const lduInterfaceFieldPtrsList &amp;interfaces)</div><div class="ttdoc">Construct from matrix components. </div><div class="ttdef"><b>Definition:</b> <a href="a08332_source.html#l00043">FDICSmoother.C:43</a></div></div>
+<div class="ttc" id="a10759_html_a0ba98d69297b54282b0a15e74ec2ec67"><div class="ttname"><a href="a10759.html#a0ba98d69297b54282b0a15e74ec2ec67">Foam::fvc::sweep</a></div><div class="ttdeci">void sweep(volScalarField &amp;field, const volScalarField &amp;alpha, const label nLayers, const scalar alphaDiff=0.2)</div><div class="ttdef"><b>Definition:</b> <a href="a05697_source.html#l00222">fvcSmooth.C:222</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
+<div class="ttc" id="a00207_html"><div class="ttname"><a href="a00207.html">Foam::cell</a></div><div class="ttdoc">A cell is defined as a list of faces with extra functionality. </div><div class="ttdef"><b>Definition:</b> <a href="a08481_source.html#l00056">cell.H:56</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

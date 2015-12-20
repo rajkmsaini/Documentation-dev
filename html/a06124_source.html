@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_a38e3b643eae30d7add43af99171ff5d.html">fvMotionSolvers</a></li><li class="navelem"><a class="el" href="dir_7b20f18e0d7766bc859203c857d7b1a8.html">fvMotionSolverCore</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_4222bf86fc7d2e32bb18656d8b03e2ae.html">quadraticFit</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvMotionSolverCore.C</div>  </div>
+<div class="title">quadraticFit.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06124.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,33 +121,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06125.html">fvMotionSolverCore.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06073.html">CentredFitScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06125.html">quadraticFitPolynomial.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05842.html">centredCFCCellToFaceStencilObject.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(fvMotionSolverCore, 0);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="a00875.html#a340bcd8f368950ff2a760d4665e0d18b">   38</a></span>&#160;<a class="code" href="a00875.html#a340bcd8f368950ff2a760d4665e0d18b">Foam::fvMotionSolverCore::fvMotionSolverCore</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    fvMesh_(<a class="code" href="a10675.html#a28f53307dad4466f23067e79a948e2a1">refCast</a>&lt;const <a class="code" href="a00868.html">fvMesh</a>&gt;(mesh))</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{}</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a10675_html_a28f53307dad4466f23067e79a948e2a1"><div class="ttname"><a href="a10675.html#a28f53307dad4466f23067e79a948e2a1">Foam::refCast</a></div><div class="ttdeci">To &amp; refCast(From &amp;r)</div><div class="ttdoc">Reference type cast template function. </div><div class="ttdef"><b>Definition:</b> <a href="a07813_source.html#l00106">typeInfo.H:106</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00875_html_a340bcd8f368950ff2a760d4665e0d18b"><div class="ttname"><a href="a00875.html#a340bcd8f368950ff2a760d4665e0d18b">Foam::fvMotionSolverCore::fvMotionSolverCore</a></div><div class="ttdeci">fvMotionSolverCore(const polyMesh &amp;)</div><div class="ttdoc">Construct from polyMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a06124_source.html#l00038">fvMotionSolverCore.C:38</a></div></div>
-<div class="ttc" id="a06125_html"><div class="ttname"><a href="a06125.html">fvMotionSolverCore.H</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">defineTemplateTypeNameAndDebug</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    (</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        CentredFitData&lt;quadraticFitPolynomial&gt;,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        0</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    );</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">makeCentredFitSurfaceInterpolationScheme</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        quadraticFit,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        quadraticFitPolynomial,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        centredCFCCellToFaceStencilObject</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_adda8d2f21637cf437577b8bfeda5a259"><div class="ttname"><a href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">Foam::defineTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineTemplateTypeNameAndDebug(IOPtrList&lt; ensightPart &gt;, 0)</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06125_html"><div class="ttname"><a href="a06125.html">quadraticFitPolynomial.H</a></div></div>
+<div class="ttc" id="a06073_html"><div class="ttname"><a href="a06073.html">CentredFitScheme.H</a></div></div>
+<div class="ttc" id="a05842_html"><div class="ttname"><a href="a05842.html">centredCFCCellToFaceStencilObject.H</a></div></div>
+<div class="ttc" id="a10725_html_a5c99a18ad2ae76b7747f4ce5001a3d09"><div class="ttname"><a href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">Foam::makeCentredFitSurfaceInterpolationScheme</a></div><div class="ttdeci">makeCentredFitSurfaceInterpolationScheme(biLinearFit, biLinearFitPolynomial, centredCFCCellToFaceStencilObject)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_0c082c89dfcc226032574eee25dcdb41.html">driftFluxFoam</a></li><li class="navelem"><a class="el" href="dir_6785f5d6f26af236cd0d743b0d7f771e.html">relativeVelocityModels</a></li><li class="navelem"><a class="el" href="dir_2192b5129ba5d97f82141d8e9208d0e0.html">simple</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_0c082c89dfcc226032574eee25dcdb41.html">driftFluxFoam</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">simple.C</div>  </div>
+<div class="title">driftFluxFoam.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03288.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,69 +119,130 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03289.html">simple.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>relativeVelocityModels</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(<a class="code" href="a03180.html#a10dc3474cdabfe88f9c0c3083be23b3d">simple</a>, 0);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(relativeVelocityModel, <a class="code" href="a03180.html#a10dc3474cdabfe88f9c0c3083be23b3d">simple</a>, dictionary);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a02292.html#a92b4046a99137c46e464a9e6b2052954">Foam::relativeVelocityModels::simple::simple</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;(</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> incompressibleTwoPhaseInteractingMixture&amp; <a class="code" href="a04444.html#aec01930ce553076debdab4f4af7cce12">mixture</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    relativeVelocityModel(dict, mixture),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    a_(<span class="stringliteral">&quot;a&quot;</span>, <a class="code" href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, dict),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    V0_(<span class="stringliteral">&quot;V0&quot;</span>, <a class="code" href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">dimVelocity</a>, dict),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    residualAlpha_(<span class="stringliteral">&quot;residualAlpha&quot;</span>, <a class="code" href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, dict)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Application</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    driftFluxFoam</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Solver for 2 incompressible fluids using the mixture approach with the</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    drift-flux approximation for relative motion of the phases.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Used for simulating the settling of the dispersed phase and other similar</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    separation problems.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05075.html">fvCFD.H</a>&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05794.html">CMULES.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07550.html">subCycle.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03290.html">incompressibleTwoPhaseInteractingMixture.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03301.html">relativeVelocityModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10718.html">turbulenceModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10499.html">CompressibleTurbulenceModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05118.html">pimpleControl.H</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05061.html">fvOptions.H</a>&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05306.html">fixedFluxPressureFvPatchScalarField.H</a>&quot;</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05755.html">gaussLaplacianScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05781.html">uncorrectedSnGrad.H</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08213.html">setRootCase.H</a>&quot;</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08209.html">createTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08204.html">createMesh.H</a>&quot;</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="a02292.html#ad352f143750b24343f911510240e1c59">Foam::relativeVelocityModels::simple::~simple</a>()</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02292.html#aa40b482ba81fd8de31bdba348c184074">Foam::relativeVelocityModels::simple::correct</a>()</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    Udm_ = (rhoc_/<a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>())*V0_*<a class="code" href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">pow</a>(scalar(10), -a_*<a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(alphad_, scalar(0)));</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    pimpleControl <a class="code" href="a03203.html#a916971c3301f056eee0d974e4b249788">pimple</a>(<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a05074.html">createTimeControls.H</a>&quot;</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">    #include &quot;createFields.H&quot;</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">    #include &quot;createMRF.H&quot;</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a05070.html">createFvOptions.H</a>&quot;</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">    #include &quot;initContinuityErrs.H&quot;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a04427.html#aed4b8b16fb4baac655349603ee95b686">turbulence</a>-&gt;validate();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02292_html_ad352f143750b24343f911510240e1c59"><div class="ttname"><a href="a02292.html#ad352f143750b24343f911510240e1c59">Foam::relativeVelocityModels::simple::~simple</a></div><div class="ttdeci">~simple()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a04444_html_aec01930ce553076debdab4f4af7cce12"><div class="ttname"><a href="a04444.html#aec01930ce553076debdab4f4af7cce12">mixture</a></div><div class="ttdeci">Info&lt;&lt; &quot;Reading field p_rgh\n&quot;&lt;&lt; endl;volScalarField p_rgh(IOobject(&quot;p_rgh&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Reading field U\n&quot;&lt;&lt; endl;volVectorField U(IOobject(&quot;U&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Creating phaseChangeTwoPhaseMixture\n&quot;&lt;&lt; endl;autoPtr&lt; phaseChangeTwoPhaseMixture &gt; mixture</div><div class="ttdef"><b>Definition:</b> <a href="a04444_source.html#l00033">createFields.H:33</a></div></div>
-<div class="ttc" id="a10675_html_a48a6d59f43b62ef8c6bfa58c3db34dfa"><div class="ttname"><a href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">Foam::dimVelocity</a></div><div class="ttdeci">const dimensionSet dimVelocity</div></div>
-<div class="ttc" id="a02292_html_aa40b482ba81fd8de31bdba348c184074"><div class="ttname"><a href="a02292.html#aa40b482ba81fd8de31bdba348c184074">Foam::relativeVelocityModels::simple::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Update the diffusion velocity. </div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a10675_html_a7500c8e9d27a442adc75e287de074c7c"><div class="ttname"><a href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">Foam::pow</a></div><div class="ttdeci">dimensionedScalar pow(const dimensionedScalar &amp;ds, const dimensionedScalar &amp;expt)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00073">dimensionedScalar.C:73</a></div></div>
-<div class="ttc" id="a02292_html_a92b4046a99137c46e464a9e6b2052954"><div class="ttname"><a href="a02292.html#a92b4046a99137c46e464a9e6b2052954">Foam::relativeVelocityModels::simple::simple</a></div><div class="ttdeci">simple(const dictionary &amp;dict, const incompressibleTwoPhaseInteractingMixture &amp;mixture)</div><div class="ttdoc">Construct from components. </div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a10675_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00047">dimensionSets.H:47</a></div></div>
-<div class="ttc" id="a03180_html_a10dc3474cdabfe88f9c0c3083be23b3d"><div class="ttname"><a href="a03180.html#a10dc3474cdabfe88f9c0c3083be23b3d">simple</a></div><div class="ttdeci">const dictionary &amp; simple</div><div class="ttdef"><b>Definition:</b> <a href="a03180_source.html#l00001">readFluidMultiRegionSIMPLEControls.H:1</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a03289_html"><div class="ttname"><a href="a03289.html">simple.H</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;\nStarting time loop\n&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">while</span> (runTime.run())</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">        #include &quot;<a class="code" href="a05082.html">readTimeControls.H</a>&quot;</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">        #include &quot;CourantNo.H&quot;</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">        #include &quot;setDeltaT.H&quot;</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        runTime++;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Time = &quot;</span> &lt;&lt; runTime.timeName() &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">// --- Pressure-velocity PIMPLE corrector loop</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">while</span> (<a class="code" href="a03203.html#a916971c3301f056eee0d974e4b249788">pimple</a>.loop())</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">            #include &quot;alphaControls.H&quot;</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="a04480.html#a4bae8317794c8a9806c6f98179522de3">UdmModel</a>.correct();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">            #include &quot;alphaEqnSubCycle.H&quot;</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="a04483.html#aec01930ce553076debdab4f4af7cce12">mixture</a>.correct();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">            #include &quot;UEqn.H&quot;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="comment">// --- Pressure corrector loop</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keywordflow">while</span> (<a class="code" href="a03203.html#a916971c3301f056eee0d974e4b249788">pimple</a>.correct())</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">                #include &quot;pEqn.H&quot;</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="a03203.html#a916971c3301f056eee0d974e4b249788">pimple</a>.turbCorr())</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <a class="code" href="a04427.html#aed4b8b16fb4baac655349603ee95b686">turbulence</a>-&gt;correct();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        runTime.write();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;ExecutionTime = &quot;</span> &lt;&lt; runTime.elapsedCpuTime() &lt;&lt; <span class="stringliteral">&quot; s&quot;</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;  ClockTime = &quot;</span> &lt;&lt; runTime.elapsedClockTime() &lt;&lt; <span class="stringliteral">&quot; s&quot;</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;End\n&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a07550_html"><div class="ttname"><a href="a07550.html">subCycle.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a05755_html"><div class="ttname"><a href="a05755.html">gaussLaplacianScheme.H</a></div></div>
+<div class="ttc" id="a05082_html"><div class="ttname"><a href="a05082.html">readTimeControls.H</a></div><div class="ttdoc">Read the control parameters used by setDeltaT. </div></div>
+<div class="ttc" id="a05118_html"><div class="ttname"><a href="a05118.html">pimpleControl.H</a></div></div>
+<div class="ttc" id="a05070_html"><div class="ttname"><a href="a05070.html">createFvOptions.H</a></div></div>
+<div class="ttc" id="a05306_html"><div class="ttname"><a href="a05306.html">fixedFluxPressureFvPatchScalarField.H</a></div></div>
+<div class="ttc" id="a05075_html"><div class="ttname"><a href="a05075.html">fvCFD.H</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a08209_html"><div class="ttname"><a href="a08209.html">createTime.H</a></div></div>
+<div class="ttc" id="a03301_html"><div class="ttname"><a href="a03301.html">relativeVelocityModel.H</a></div></div>
+<div class="ttc" id="a05061_html"><div class="ttname"><a href="a05061.html">fvOptions.H</a></div></div>
+<div class="ttc" id="a05781_html"><div class="ttname"><a href="a05781.html">uncorrectedSnGrad.H</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a04427_html_aed4b8b16fb4baac655349603ee95b686"><div class="ttname"><a href="a04427.html#aed4b8b16fb4baac655349603ee95b686">turbulence</a></div><div class="ttdeci">autoPtr&lt; compressible::turbulenceModel &gt; turbulence</div><div class="ttdef"><b>Definition:</b> <a href="a04427_source.html#l00023">createFields.H:23</a></div></div>
+<div class="ttc" id="a08213_html"><div class="ttname"><a href="a08213.html">setRootCase.H</a></div></div>
+<div class="ttc" id="a03290_html"><div class="ttname"><a href="a03290.html">incompressibleTwoPhaseInteractingMixture.H</a></div></div>
+<div class="ttc" id="a03203_html_a916971c3301f056eee0d974e4b249788"><div class="ttname"><a href="a03203.html#a916971c3301f056eee0d974e4b249788">pimple</a></div><div class="ttdeci">const dictionary &amp; pimple</div><div class="ttdef"><b>Definition:</b> <a href="a03203_source.html#l00001">readFluidMultiRegionPIMPLEControls.H:1</a></div></div>
+<div class="ttc" id="a05074_html"><div class="ttname"><a href="a05074.html">createTimeControls.H</a></div><div class="ttdoc">Read the control parameters used by setDeltaT. </div></div>
+<div class="ttc" id="a04480_html_a4bae8317794c8a9806c6f98179522de3"><div class="ttname"><a href="a04480.html#a4bae8317794c8a9806c6f98179522de3">UdmModel</a></div><div class="ttdeci">relativeVelocityModel &amp; UdmModel(UdmModelPtr())</div></div>
+<div class="ttc" id="a04483_html_aec01930ce553076debdab4f4af7cce12"><div class="ttname"><a href="a04483.html#aec01930ce553076debdab4f4af7cce12">mixture</a></div><div class="ttdeci">Info&lt;&lt; &quot;Reading field p_rgh\n&quot;&lt;&lt; endl;volScalarField p_rgh(IOobject(&quot;p_rgh&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Reading field U\n&quot;&lt;&lt; endl;volVectorField U(IOobject(&quot;U&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Creating phaseChangeTwoPhaseMixture\n&quot;&lt;&lt; endl;autoPtr&lt; phaseChangeTwoPhaseMixture &gt; mixture</div><div class="ttdef"><b>Definition:</b> <a href="a04483_source.html#l00033">createFields.H:33</a></div></div>
+<div class="ttc" id="a05794_html"><div class="ttname"><a href="a05794.html">CMULES.H</a></div><div class="ttdoc">CMULES: Multidimensional universal limiter for explicit corrected implicit solution. </div></div>
+<div class="ttc" id="a08204_html"><div class="ttname"><a href="a08204.html">createMesh.H</a></div></div>
+<div class="ttc" id="a10718_html"><div class="ttname"><a href="a10718.html">turbulenceModel.H</a></div></div>
+<div class="ttc" id="a09417_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09417_source.html#l00054">postCalc.C:54</a></div></div>
+<div class="ttc" id="a10499_html"><div class="ttname"><a href="a10499.html">CompressibleTurbulenceModel.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

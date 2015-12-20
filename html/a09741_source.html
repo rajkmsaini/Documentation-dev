@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a5b93d9ceb327a1197b724c6aefedcbd.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_2bd0b39f0bfdd95a06f132e0ee9669a2.html">sixDoFRigidBodyMotionSolver</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_24a3817a3c61c11f04a0a72057522f4f.html">sampling</a></li><li class="navelem"><a class="el" href="dir_daf57321dd7c30092fd489dbb1aa8219.html">sampledSurface</a></li><li class="navelem"><a class="el" href="dir_e8fc266228915d4455fb775a69f2b72e.html">writers</a></li><li class="navelem"><a class="el" href="dir_d3c3ecee379c3ad2f85d2914637dd50f.html">proxy</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">pointPatchDist.C</div>  </div>
+<div class="title">proxySurfaceWriter.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09741.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,161 +119,105 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09742.html">pointPatchDist.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09739.html">externalPointEdgePoint.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08502.html">pointMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07106.html">PointEdgeWave.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;Foam::pointPatchDist::pointPatchDist</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a01881.html#a451e47597bac1aef90326136aacf1576">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01876.html">pointMesh</a>&amp; pMesh,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00974.html">labelHashSet</a>&amp; patchIDs,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">pointField</a>&amp; points</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10675.html#a7a921ce3162fe282b7f716d9ee5df88a">pointScalarField</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        (</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <span class="stringliteral">&quot;pointDistance&quot;</span>,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            pMesh.<a class="code" href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>().<a class="code" href="a01678.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            pMesh.<a class="code" href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        ),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        pMesh,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;y&quot;</span>, <a class="code" href="a10675.html#a2c2f48175b211109246a24c633d02441">dimLength</a>, GREAT)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    ),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    points_(points),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    patchIDs_(patchIDs),</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    nUnset_(0)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a>();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a01881.html#a3d0d7cc84aea14f1f57d36ddfd30c225">   61</a></span>&#160;<a class="code" href="a01881.html#a3d0d7cc84aea14f1f57d36ddfd30c225">Foam::pointPatchDist::~pointPatchDist</a>()</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::proxySurfaceWriter</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A surfaceWriter that writes the geometry via the MeshedSurfaceProxy, but</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    which does not support any fields.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    proxySurfaceWriter.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef proxySurfaceWriter_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define proxySurfaceWriter_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09747.html">surfaceWriter.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                     Class proxySurfaceWriter Declaration</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a02004.html">   49</a></span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a02004.html">proxySurfaceWriter</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02498.html">surfaceWriter</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//- The associated file extension</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a02869.html">word</a> ext_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a02004.html#abe7744bdf9e82d4e972fa017c8fd522a">TypeName</a>(<span class="stringliteral">&quot;proxy&quot;</span>);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a01881.html#a3ae44b28050c3aa494c1d8e18cf618c1">   67</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01881.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::pointPatchDist::correct</a>()</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01857.html">pointBoundaryMesh</a>&amp; pbm = <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<a class="code" href="a00868.html#a971347d65410875e38ea654dfd193a19">boundary</a>();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//- Construct for a given extension</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="a02004.html#a82bae4b03b70350c471380c2a10b8ad9">proxySurfaceWriter</a>(<span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; ext);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04235.html#a4e3cff1e2db0a2643803f58beab1a643">nPoints</a> = 0;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00974.html">labelHashSet</a>, patchIDs_, iter)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = iter.key();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        nPoints += pbm[patchI].meshPoints().<a class="code" href="a02020.html#a723361dc2020160f5492e8fe2d09fa44">size</a>();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02004.html#a008c38ebe8c016168269879f91147d47">~proxySurfaceWriter</a>();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a02632.html">externalPointEdgePoint::trackingData</a> td(points_);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Set initial changed points to all the patch points(if patch present)</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="a01355.html">List&lt;externalPointEdgePoint&gt;</a> wallInfo(nPoints);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a01355.html">labelList</a> wallPoints(nPoints);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    nPoints = 0;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//- True if the surface format supports geometry in a separate file.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a02004.html#a84cef10dbb87b526c3a1f97f80c445eb">   80</a></span>&#160;        <span class="comment">//  False if geometry and field must be in a single file</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a02004.html#a84cef10dbb87b526c3a1f97f80c445eb">separateGeometry</a>()</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        }</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00974.html">labelHashSet</a>, patchIDs_, iter)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = iter.key();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// Retrieve the patch now we have its index in patches.</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; <a class="code" href="a10685.html#acf3824c54f656f495de90ea7666135d5">mp</a> = pbm[patchI].meshPoints();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(mp, ppI)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> meshPointI = mp[ppI];</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            wallPoints[<a class="code" href="a04235.html#a4e3cff1e2db0a2643803f58beab1a643">nPoints</a>] = meshPointI;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            wallInfo[<a class="code" href="a04235.html#a4e3cff1e2db0a2643803f58beab1a643">nPoints</a>] = <a class="code" href="a00703.html">externalPointEdgePoint</a></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            (</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                td.<a class="code" href="a02632.html#a1434d1bb0915e9ee7b51844df71e2968">points_</a>[meshPointI],</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                0.0</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            );</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            nPoints++;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Write single surface geometry to file.</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02004.html#ad5913f94e1297015c7ff49f70e093fe4">write</a></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        (</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; outputDir,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; surfaceName,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">faceList</a>&amp; faces,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> verbose = <span class="keyword">false</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="comment">// Current info on points</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a01355.html">List&lt;externalPointEdgePoint&gt;</a> allPointInfo(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()().<a class="code" href="a04235.html#a4e3cff1e2db0a2643803f58beab1a643">nPoints</a>());</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="comment">// Current info on edges</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a01355.html">List&lt;externalPointEdgePoint&gt;</a> allEdgeInfo(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()().nEdges());</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="a01866.html">PointEdgeWave</a></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    &lt;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <a class="code" href="a00703.html">externalPointEdgePoint</a>,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="a02632.html">externalPointEdgePoint::trackingData</a></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    &gt; wallCalc</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    (</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()(),</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        wallPoints,</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        wallInfo,</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        allPointInfo,</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        allEdgeInfo,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().globalData().nTotalPoints(), <span class="comment">// max iterations</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        td</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    );</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="a00913.html">pointScalarField</a>&amp; psf = *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(allPointInfo, pointI)</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">if</span> (allPointInfo[pointI].valid(td))</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            psf[pointI] = <a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a>(allPointInfo[pointI].distSqr());</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        {</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            nUnset_++;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    }</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a09739_html"><div class="ttname"><a href="a09739.html">externalPointEdgePoint.H</a></div></div>
-<div class="ttc" id="a10675_html_a2c2f48175b211109246a24c633d02441"><div class="ttname"><a href="a10675.html#a2c2f48175b211109246a24c633d02441">Foam::dimLength</a></div><div class="ttdeci">const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00050">dimensionSets.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a8616bd62eebf2342a80222fecb1bda71"><div class="ttname"><a href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a></div><div class="ttdeci">dimensionedScalar sqrt(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00142">dimensionedScalar.C:142</a></div></div>
-<div class="ttc" id="a09742_html"><div class="ttname"><a href="a09742.html">pointPatchDist.H</a></div></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a04235_html_a4e3cff1e2db0a2643803f58beab1a643"><div class="ttname"><a href="a04235.html#a4e3cff1e2db0a2643803f58beab1a643">nPoints</a></div><div class="ttdeci">label nPoints</div><div class="ttdef"><b>Definition:</b> <a href="a04235_source.html#l00002">gmvOutputHeader.H:2</a></div></div>
-<div class="ttc" id="a07106_html"><div class="ttname"><a href="a07106.html">PointEdgeWave.H</a></div></div>
-<div class="ttc" id="a00703_html"><div class="ttname"><a href="a00703.html">Foam::externalPointEdgePoint</a></div><div class="ttdoc">Holds information regarding nearest wall point. Used in PointEdgeWave. (so not standard FaceCellWave)...</div><div class="ttdef"><b>Definition:</b> <a href="a09739_source.html#l00055">externalPointEdgePoint.H:55</a></div></div>
-<div class="ttc" id="a02020_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02020.html#a723361dc2020160f5492e8fe2d09fa44">Foam::PtrList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the PtrList. </div><div class="ttdef"><b>Definition:</b> <a href="a07605_source.html#l00032">PtrListI.H:32</a></div></div>
-<div class="ttc" id="a02940_html_a8f2ec7df0ad2ec79360a5d964f55de87"><div class="ttname"><a href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div><div class="ttdeci">Info&lt;&lt; &quot;Predicted p max-min : &quot;&lt;&lt; max(p).value()&lt;&lt; &quot; &quot;&lt;&lt; min(p).value()&lt;&lt; endl;rho==max(psi *p+alphal *rhol0+((alphav *psiv+alphal *psil)-psi)*pSat, rhoMin);#1&quot;/home/dm2/henry/OpenFOAM/OpenFOAM-dev/applications/solvers/multiphase/cavitatingFoam/alphavPsi.H&quot;1{alphav=max(min((rho-rholSat)/(rhovSat-rholSat), scalar(1)), scalar(0));alphal=1.0-alphav;Info&lt;&lt; &quot;max-min alphav: &quot;&lt;&lt; max(alphav).value()&lt;&lt; &quot; &quot;&lt;&lt; min(alphav).value()&lt;&lt; endl;psiModel-&gt; correct()</div><div class="ttdef"><b>Definition:</b> <a href="a02940_source.html#l00074">pEqn.H:74</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01876_html"><div class="ttname"><a href="a01876.html">Foam::pointMesh</a></div><div class="ttdoc">Mesh representing a set of points created from polyMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08502_source.html#l00048">pointMesh.H:48</a></div></div>
-<div class="ttc" id="a02632_html_a1434d1bb0915e9ee7b51844df71e2968"><div class="ttname"><a href="a02632.html#a1434d1bb0915e9ee7b51844df71e2968">Foam::externalPointEdgePoint::trackingData::points_</a></div><div class="ttdeci">const pointField &amp; points_</div><div class="ttdef"><b>Definition:</b> <a href="a09739_source.html#l00097">externalPointEdgePoint.H:97</a></div></div>
-<div class="ttc" id="a01881_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a01881.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::pointPatchDist::correct</a></div><div class="ttdeci">void correct()</div><div class="ttdoc">Correct for mesh geom/topo changes. </div><div class="ttdef"><b>Definition:</b> <a href="a09741_source.html#l00067">pointPatchDist.C:67</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a10675_html_a7a921ce3162fe282b7f716d9ee5df88a"><div class="ttname"><a href="a10675.html#a7a921ce3162fe282b7f716d9ee5df88a">Foam::pointScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, pointPatchField, pointMesh &gt; pointScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00049">pointFields.H:49</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, pointPatchField, pointMesh &gt;</a></div></div>
-<div class="ttc" id="a08502_html"><div class="ttname"><a href="a08502.html">pointMesh.H</a></div></div>
-<div class="ttc" id="a02632_html"><div class="ttname"><a href="a02632.html">Foam::externalPointEdgePoint::trackingData</a></div><div class="ttdoc">Class used to pass data into container. </div><div class="ttdef"><b>Definition:</b> <a href="a09739_source.html#l00094">externalPointEdgePoint.H:94</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00974_html"><div class="ttname"><a href="a00974.html">Foam::HashSet&lt; label, Hash&lt; label &gt; &gt;</a></div></div>
-<div class="ttc" id="a01866_html"><div class="ttname"><a href="a01866.html">Foam::PointEdgeWave</a></div><div class="ttdoc">Wave propagation of information through grid. Every iteration information goes through one layer of e...</div><div class="ttdef"><b>Definition:</b> <a href="a07106_source.html#l00085">PointEdgeWave.H:85</a></div></div>
-<div class="ttc" id="a10685_html_acf3824c54f656f495de90ea7666135d5"><div class="ttname"><a href="a10685.html#acf3824c54f656f495de90ea7666135d5">Foam::constant::atomic::mp</a></div><div class="ttdeci">const dimensionedScalar mp</div><div class="ttdoc">Proton mass. </div></div>
-<div class="ttc" id="a01678_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a01678.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::objectRegistry::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return time. </div><div class="ttdef"><b>Definition:</b> <a href="a07781_source.html#l00117">objectRegistry.H:117</a></div></div>
-<div class="ttc" id="a01857_html"><div class="ttname"><a href="a01857.html">Foam::pointBoundaryMesh</a></div><div class="ttdoc">Foam::pointBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08500_source.html#l00052">pointBoundaryMesh.H:52</a></div></div>
-<div class="ttc" id="a01881_html_a3d0d7cc84aea14f1f57d36ddfd30c225"><div class="ttname"><a href="a01881.html#a3d0d7cc84aea14f1f57d36ddfd30c225">Foam::pointPatchDist::~pointPatchDist</a></div><div class="ttdeci">virtual ~pointPatchDist()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09741_source.html#l00061">pointPatchDist.C:61</a></div></div>
-<div class="ttc" id="a01170_html_adf469b34fcd0250cef43ac4ce3f153ab"><div class="ttname"><a href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">Foam::IOobject::db</a></div><div class="ttdeci">const objectRegistry &amp; db() const </div><div class="ttdoc">Return the local objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07693_source.html#l00245">IOobject.C:245</a></div></div>
-<div class="ttc" id="a00868_html_a971347d65410875e38ea654dfd193a19"><div class="ttname"><a href="a00868.html#a971347d65410875e38ea654dfd193a19">Foam::fvMesh::boundary</a></div><div class="ttdeci">const fvBoundaryMesh &amp; boundary() const </div><div class="ttdoc">Return reference to boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05815_source.html#l00552">fvMesh.C:552</a></div></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02004_html"><div class="ttname"><a href="a02004.html">Foam::proxySurfaceWriter</a></div><div class="ttdoc">A surfaceWriter that writes the geometry via the MeshedSurfaceProxy, but which does not support any f...</div><div class="ttdef"><b>Definition:</b> <a href="a09741_source.html#l00049">proxySurfaceWriter.H:49</a></div></div>
+<div class="ttc" id="a09747_html"><div class="ttname"><a href="a09747.html">surfaceWriter.H</a></div></div>
+<div class="ttc" id="a02004_html_a82bae4b03b70350c471380c2a10b8ad9"><div class="ttname"><a href="a02004.html#a82bae4b03b70350c471380c2a10b8ad9">Foam::proxySurfaceWriter::proxySurfaceWriter</a></div><div class="ttdeci">proxySurfaceWriter(const word &amp;ext)</div><div class="ttdoc">Construct for a given extension. </div><div class="ttdef"><b>Definition:</b> <a href="a09740_source.html#l00044">proxySurfaceWriter.C:44</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02004_html_abe7744bdf9e82d4e972fa017c8fd522a"><div class="ttname"><a href="a02004.html#abe7744bdf9e82d4e972fa017c8fd522a">Foam::proxySurfaceWriter::TypeName</a></div><div class="ttdeci">TypeName(&quot;proxy&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; face &gt;</a></div></div>
+<div class="ttc" id="a02004_html_a008c38ebe8c016168269879f91147d47"><div class="ttname"><a href="a02004.html#a008c38ebe8c016168269879f91147d47">Foam::proxySurfaceWriter::~proxySurfaceWriter</a></div><div class="ttdeci">virtual ~proxySurfaceWriter()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09740_source.html#l00053">proxySurfaceWriter.C:53</a></div></div>
+<div class="ttc" id="a02004_html_a84cef10dbb87b526c3a1f97f80c445eb"><div class="ttname"><a href="a02004.html#a84cef10dbb87b526c3a1f97f80c445eb">Foam::proxySurfaceWriter::separateGeometry</a></div><div class="ttdeci">virtual bool separateGeometry()</div><div class="ttdoc">True if the surface format supports geometry in a separate file. </div><div class="ttdef"><b>Definition:</b> <a href="a09741_source.html#l00080">proxySurfaceWriter.H:80</a></div></div>
+<div class="ttc" id="a02498_html"><div class="ttname"><a href="a02498.html">Foam::surfaceWriter</a></div><div class="ttdoc">Base class for surface writers. </div><div class="ttdef"><b>Definition:</b> <a href="a09747_source.html#l00054">surfaceWriter.H:54</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a04274_html_a1adbc4c519b2cee284a47d6682036276"><div class="ttname"><a href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a></div><div class="ttdeci">const pointField &amp; points</div><div class="ttdef"><b>Definition:</b> <a href="a04274_source.html#l00001">gmvOutputHeader.H:1</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a02004_html_ad5913f94e1297015c7ff49f70e093fe4"><div class="ttname"><a href="a02004.html#ad5913f94e1297015c7ff49f70e093fe4">Foam::proxySurfaceWriter::write</a></div><div class="ttdeci">virtual void write(const fileName &amp;outputDir, const fileName &amp;surfaceName, const pointField &amp;points, const faceList &amp;faces, const bool verbose=false) const </div><div class="ttdoc">Write single surface geometry to file. </div><div class="ttdef"><b>Definition:</b> <a href="a09740_source.html#l00060">proxySurfaceWriter.C:60</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

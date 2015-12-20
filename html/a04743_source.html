@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_75ed56908277ba9008d6d651379664b5.html">layerAdditionRemoval</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7045e8b584c9485727394e576736d39b.html">dynamicFvMesh</a></li><li class="navelem"><a class="el" href="dir_c66c19a279e502a1da3f334b3d68e252.html">solidBodyMotionFvMesh</a></li><li class="navelem"><a class="el" href="dir_00414e1b674a3b367b4ee7d8595bfb40.html">solidBodyMotionFunctions</a></li><li class="navelem"><a class="el" href="dir_27079b5664fd24c846bb5a4e4f3dcebd.html">rotatingMotion</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">setLayerPairing.C</div>  </div>
+<div class="title">rotatingMotion.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04743.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,247 +119,138 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Remove a layer of cells and prepare addressing data</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::solidBodyMotionFunctions::rotatingMotion</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04741.html">layerAdditionRemoval.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08579.html">polyMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08663.html">primitiveMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04846.html">polyTopoChange.H</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08486.html">oppositeFace.H</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04872.html">polyTopoChanger.H</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    SolidBodyMotionFvMesh 6DoF motion function.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    The rotation is defined by an origin and axis of rotation and an angular</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    speed.</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    rotatingMotion.C</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">bool</span> Foam::layerAdditionRemoval::setLayerPairing()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Note:</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// This is also the most complex part of the topological change.</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Therefore it will be calculated here and stored as temporary</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// data until the actual topological change, after which it will</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// be cleared.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// Algorithm for point collapse</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// 1)  Go through the master cell layer and for every face of</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">//     the face zone find the opposite face in the master cell.</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">//     Check the direction of the opposite face and adjust as</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">//     necessary.  Check other faces to find an edge defining</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">//     relative orientation of the two faces and adjust the face</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">//     as necessary.  Once the face is adjusted, record the</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">//     addressing between the master and slave vertex layer.</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> polyMesh&amp; mesh = <a class="code" href="a01910.html#a6b027dcf176e6ae6f2cfa5954b02825b">topoChanger</a>().<a class="code" href="a01927.html#aa51573bc757d5d5bb058db0464886447">mesh</a>();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; mc =</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()].masterCells();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; mf = mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()];</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">boolList</a>&amp; mfFlip =</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()].flipMap();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">faceList</a>&amp; faces = mesh.faces();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a2c583867ddebdf4c38d53c3dd4fa0c00">cellList</a>&amp; cells = mesh.cells();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// Grab the local faces from the master zone</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">faceList</a>&amp; mlf =</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()]().localFaces();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; meshPoints =</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()]().meshPoints();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Create a list of points to collapse for every point of</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// the master patch</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (pointsPairingPtr_ || facesPairingPtr_)</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        (</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="stringliteral">&quot;void Foam::layerAdditionRemoval::setLayerPairing() const&quot;</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Problem with layer pairing data&quot;</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    pointsPairingPtr_ = <span class="keyword">new</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(meshPoints.size(), -1);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; ptc = *pointsPairingPtr_;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef rotatingMotion_H</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define rotatingMotion_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04747.html">solidBodyMotionFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07962.html">primitiveFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08774.html">point.H</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08835.html">DataEntry.H</a>&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08446.html">autoPtr.H</a>&quot;</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">namespace </span>solidBodyMotionFunctions</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">                          Class rotatingMotion Declaration</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a02214.html">   57</a></span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">class </span><a class="code" href="a02214.html">rotatingMotion</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02363.html">solidBodyMotionFunction</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//- Origin of the axis</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a> origin_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Axis vector</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a> axis_;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//- Angular velocty (rad/sec)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a00086.html">autoPtr&lt;DataEntry&lt;scalar&gt;</a> &gt; omega_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Disallow copy construct</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="a02214.html">rotatingMotion</a>(<span class="keyword">const</span> <a class="code" href="a02214.html">rotatingMotion</a>&amp;);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02214.html">rotatingMotion</a>&amp;);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="a02214.html#a028911cae4b29db148a39ddd47db3517">TypeName</a>(<span class="stringliteral">&quot;rotatingMotion&quot;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    facesPairingPtr_ = <span class="keyword">new</span> <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>(mf.size(), -1);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; ftc = *facesPairingPtr_;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">if</span> (debug &gt; 1)</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;meshPoints: &quot;</span> &lt;&lt; meshPoints &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;localPoints: &quot;</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            &lt;&lt; mesh.faceZones()[faceZoneID_.<a class="code" href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>()]().localPoints()</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// For all faces, create the mapping</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nPointErrors = 0;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFaceErrors = 0;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(mf, faceI)</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">// Get the local master face</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        face curLocalFace = mlf[faceI];</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">// Flip face based on flip index to recover original orientation</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span> (mfFlip[faceI])</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            curLocalFace.flip();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a02214.html">rotatingMotion</a></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        (</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; SBMFCoeffs,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02606.html">Time</a>&amp; runTime</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        );</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="a02214.html#ab07223bb1503054cb2aaa64426dd12a8">   98</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a00086.html">autoPtr&lt;solidBodyMotionFunction&gt;</a> <a class="code" href="a02214.html#ab07223bb1503054cb2aaa64426dd12a8">clone</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;solidBodyMotionFunction&gt;</a></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            (</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keyword">new</span> <a class="code" href="a02214.html">rotatingMotion</a></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                (</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <a class="code" href="a02363.html#a5e7d1d214294a74acce6abb09d0fa8e5">SBMFCoeffs_</a>,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    <a class="code" href="a02363.html#a1372c16310f0a7cbeaf8b4c0cfc9363b">time_</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                )</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            );</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02214.html#aaa8e5b7541541274550b0d9bfe90aa7c">~rotatingMotion</a>();</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">// Get the opposing face from the master cell</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        oppositeFace lidFace =</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            cells[mc[faceI]].opposingFace(mf[faceI], faces);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">if</span> (!lidFace.found())</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="comment">// This is not a valid layer; cannot continue</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            nFaceErrors++;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="comment">//- Return the solid-body motion transformation septernion</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02273.html">septernion</a> <a class="code" href="a02214.html#a81f0dd436b8f71ebb3ed3d093d828a2f">transformation</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="comment">//- Update properties from given dictionary</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a02214.html#afeed4512a4be2653bc44cb43a1ae0788">read</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; SBMFCoeffs);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">if</span> (debug &gt; 1)</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        {</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;curMasterFace: &quot;</span> &lt;&lt; faces[mf[faceI]] &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;cell shape: &quot;</span> &lt;&lt; mesh.cellShapes()[mc[faceI]] &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;curLocalFace: &quot;</span> &lt;&lt; curLocalFace &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;lidFace: &quot;</span> &lt;&lt; lidFace</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; master index: &quot;</span> &lt;&lt; lidFace.masterIndex()</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; oppositeIndex: &quot;</span> &lt;&lt; lidFace.oppositeIndex() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="comment">// Grab the opposite face for face collapse addressing</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        ftc[faceI] = lidFace.oppositeIndex();</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="comment">// Using the local face insert the points into the lid list</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(curLocalFace, pointI)</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        {</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> clp = curLocalFace[pointI];</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <span class="keywordflow">if</span> (ptc[clp] == -1)</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            {</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                <span class="comment">// Point not mapped yet.  Insert the label</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                ptc[clp] = lidFace[pointI];</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            }</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            {</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                <span class="comment">// Point mapped from some other face.  Check the label</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                <span class="keywordflow">if</span> (ptc[clp] != lidFace[pointI])</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                {</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                    nPointErrors++;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                    <span class="keywordflow">if</span> (debug &gt; 1)</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                    {</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                        <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Topological error in cell layer pairing.  &quot;</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot;This mesh is either topologically incorrect &quot;</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot;or the master face layer is not defined &quot;</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot;consistently.  Please check the &quot;</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot;face zone flip map.&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot;First index: &quot;</span> &lt;&lt; ptc[clp]</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                            &lt;&lt; <span class="stringliteral">&quot; new index: &quot;</span> &lt;&lt; lidFace[pointI] &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                    }</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            }</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        }</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    }</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <a class="code" href="a10675.html#a7ffd6af4acc2eb9ba72ee296b5ecda23">reduce</a>(nPointErrors, sumOp&lt;label&gt;());</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="a10675.html#a7ffd6af4acc2eb9ba72ee296b5ecda23">reduce</a>(nFaceErrors, sumOp&lt;label&gt;());</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">if</span> (nPointErrors &gt; 0 || nFaceErrors &gt; 0)</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    {</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        clearAddressing();</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    }</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    {</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="comment">// Valid layer</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;}</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="keyword">const</span> <a class="code" href="a01355.html">Foam::labelList</a>&amp; Foam::layerAdditionRemoval::pointsPairing()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordflow">if</span> (!pointsPairingPtr_)</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    {</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        (</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            <span class="stringliteral">&quot;const labelList&amp; layerAdditionRemoval::pointsPairing() const&quot;</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Problem with layer pairing data for object &quot;</span> &lt;&lt; <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordflow">return</span> *pointsPairingPtr_;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="keyword">const</span> <a class="code" href="a01355.html">Foam::labelList</a>&amp; Foam::layerAdditionRemoval::facesPairing()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordflow">if</span> (!facesPairingPtr_)</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    {</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        (</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;            <span class="stringliteral">&quot;const labelList&amp; layerAdditionRemoval::facesPairing() const&quot;</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Problem with layer pairing data for object &quot;</span> &lt;&lt; <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    }</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">return</span> *facesPairingPtr_;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01266.html#a4a962b56dd7cf30972c468258fa888e5">Foam::layerAdditionRemoval::modifyMotionPoints</a></div>
-<div class="line"><a name="l00220"></a><span class="lineno"><a class="line" href="a01266.html#a4a962b56dd7cf30972c468258fa888e5">  220</a></span>&#160;(</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <a class="code" href="a00749.html">pointField</a>&amp; motionPoints</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;{</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;void layerAdditionRemoval::modifyMotionPoints(&quot;</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;pointField&amp; motionPoints) const for object &quot;</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>() &lt;&lt; <span class="stringliteral">&quot; : &quot;</span>;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    }</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;No motion point adjustment&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    }</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;}</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08579_html"><div class="ttname"><a href="a08579.html">polyMesh.H</a></div></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a10675_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00053">IOstreams.H:53</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a10675_html_a2c583867ddebdf4c38d53c3dd4fa0c00"><div class="ttname"><a href="a10675.html#a2c583867ddebdf4c38d53c3dd4fa0c00">Foam::cellList</a></div><div class="ttdeci">List&lt; cell &gt; cellList</div><div class="ttdoc">list of cells </div><div class="ttdef"><b>Definition:</b> <a href="a08433_source.html#l00042">cellList.H:42</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a08663_html"><div class="ttname"><a href="a08663.html">primitiveMesh.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a04741_html"><div class="ttname"><a href="a04741.html">layerAdditionRemoval.H</a></div></div>
-<div class="ttc" id="a10675_html_a5e3d604f75e54acc2c36172444a6f612"><div class="ttname"><a href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">Foam::boolList</a></div><div class="ttdeci">List&lt; bool &gt; boolList</div><div class="ttdoc">Bool container classes. </div><div class="ttdef"><b>Definition:</b> <a href="a08753_source.html#l00050">boolList.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a08486_html"><div class="ttname"><a href="a08486.html">oppositeFace.H</a></div></div>
-<div class="ttc" id="a01927_html_aa51573bc757d5d5bb058db0464886447"><div class="ttname"><a href="a01927.html#aa51573bc757d5d5bb058db0464886447">Foam::polyTopoChanger::mesh</a></div><div class="ttdeci">const polyMesh &amp; mesh() const </div><div class="ttdoc">Return the mesh reference. </div><div class="ttdef"><b>Definition:</b> <a href="a04872_source.html#l00102">polyTopoChanger.H:102</a></div></div>
-<div class="ttc" id="a00593_html_a7d1e8acadb27bd2b4e61457d47b71b6f"><div class="ttname"><a href="a00593.html#a7d1e8acadb27bd2b4e61457d47b71b6f">Foam::DynamicID::index</a></div><div class="ttdeci">label index() const </div><div class="ttdoc">Return index of first matching zone. </div><div class="ttdef"><b>Definition:</b> <a href="a08411_source.html#l00107">DynamicID.H:107</a></div></div>
-<div class="ttc" id="a01910_html_a6b027dcf176e6ae6f2cfa5954b02825b"><div class="ttname"><a href="a01910.html#a6b027dcf176e6ae6f2cfa5954b02825b">Foam::polyMeshModifier::topoChanger</a></div><div class="ttdeci">const polyTopoChanger &amp; topoChanger() const </div><div class="ttdoc">Return reference to morph engine. </div><div class="ttdef"><b>Definition:</b> <a href="a04821_source.html#l00069">polyMeshModifier.C:69</a></div></div>
-<div class="ttc" id="a01266_html_a4a962b56dd7cf30972c468258fa888e5"><div class="ttname"><a href="a01266.html#a4a962b56dd7cf30972c468258fa888e5">Foam::layerAdditionRemoval::modifyMotionPoints</a></div><div class="ttdeci">virtual void modifyMotionPoints(pointField &amp;motionPoints) const </div><div class="ttdoc">Modify motion points to comply with the topological change. </div><div class="ttdef"><b>Definition:</b> <a href="a04743_source.html#l00220">setLayerPairing.C:220</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a04846_html"><div class="ttname"><a href="a04846.html">polyTopoChange.H</a></div></div>
-<div class="ttc" id="a10675_html_adda0c8c9739c889f59a56f2998c5a9b8"><div class="ttname"><a href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">Foam::faceList</a></div><div class="ttdeci">List&lt; face &gt; faceList</div><div class="ttdef"><b>Definition:</b> <a href="a08484_source.html#l00043">faceListFwd.H:43</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a10675_html_a7ffd6af4acc2eb9ba72ee296b5ecda23"><div class="ttname"><a href="a10675.html#a7ffd6af4acc2eb9ba72ee296b5ecda23">Foam::reduce</a></div><div class="ttdeci">void reduce(const List&lt; UPstream::commsStruct &gt; &amp;comms, T &amp;Value, const BinaryOp &amp;bop, const int tag, const label comm)</div><div class="ttdef"><b>Definition:</b> <a href="a07747_source.html#l00043">PstreamReduceOps.H:43</a></div></div>
-<div class="ttc" id="a04872_html"><div class="ttname"><a href="a04872.html">polyTopoChanger.H</a></div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// End namespace solidBodyMotionFunctions</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a08835_html"><div class="ttname"><a href="a08835.html">DataEntry.H</a></div></div>
+<div class="ttc" id="a02363_html_a5e7d1d214294a74acce6abb09d0fa8e5"><div class="ttname"><a href="a02363.html#a5e7d1d214294a74acce6abb09d0fa8e5">Foam::solidBodyMotionFunction::SBMFCoeffs_</a></div><div class="ttdeci">dictionary SBMFCoeffs_</div><div class="ttdef"><b>Definition:</b> <a href="a04747_source.html#l00066">solidBodyMotionFunction.H:66</a></div></div>
+<div class="ttc" id="a07962_html"><div class="ttname"><a href="a07962.html">primitiveFields.H</a></div><div class="ttdoc">Specialisations of Field<T> for scalar, vector and tensor. </div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02273_html"><div class="ttname"><a href="a02273.html">Foam::septernion</a></div><div class="ttdoc">Septernion class used to perform translations and rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08946_source.html#l00064">septernion.H:64</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a04747_html"><div class="ttname"><a href="a04747.html">solidBodyMotionFunction.H</a></div></div>
+<div class="ttc" id="a08446_html"><div class="ttname"><a href="a08446.html">autoPtr.H</a></div></div>
+<div class="ttc" id="a02214_html_a81f0dd436b8f71ebb3ed3d093d828a2f"><div class="ttname"><a href="a02214.html#a81f0dd436b8f71ebb3ed3d093d828a2f">Foam::solidBodyMotionFunctions::rotatingMotion::transformation</a></div><div class="ttdeci">virtual septernion transformation() const </div><div class="ttdoc">Return the solid-body motion transformation septernion. </div><div class="ttdef"><b>Definition:</b> <a href="a04742_source.html#l00073">rotatingMotion.C:73</a></div></div>
+<div class="ttc" id="a02214_html_a028911cae4b29db148a39ddd47db3517"><div class="ttname"><a href="a02214.html#a028911cae4b29db148a39ddd47db3517">Foam::solidBodyMotionFunctions::rotatingMotion::TypeName</a></div><div class="ttdeci">TypeName(&quot;rotatingMotion&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a02606_html"><div class="ttname"><a href="a02606.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07855_source.html#l00068">Time.H:68</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a08774_html"><div class="ttname"><a href="a08774.html">point.H</a></div></div>
+<div class="ttc" id="a02363_html"><div class="ttname"><a href="a02363.html">Foam::solidBodyMotionFunction</a></div><div class="ttdoc">Base class for defining solid-body motions. </div><div class="ttdef"><b>Definition:</b> <a href="a04747_source.html#l00060">solidBodyMotionFunction.H:60</a></div></div>
+<div class="ttc" id="a02214_html_ab07223bb1503054cb2aaa64426dd12a8"><div class="ttname"><a href="a02214.html#ab07223bb1503054cb2aaa64426dd12a8">Foam::solidBodyMotionFunctions::rotatingMotion::clone</a></div><div class="ttdeci">virtual autoPtr&lt; solidBodyMotionFunction &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a04743_source.html#l00098">rotatingMotion.H:98</a></div></div>
+<div class="ttc" id="a02214_html"><div class="ttname"><a href="a02214.html">Foam::solidBodyMotionFunctions::rotatingMotion</a></div><div class="ttdoc">SolidBodyMotionFvMesh 6DoF motion function. </div><div class="ttdef"><b>Definition:</b> <a href="a04743_source.html#l00057">rotatingMotion.H:57</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a02363_html_a1372c16310f0a7cbeaf8b4c0cfc9363b"><div class="ttname"><a href="a02363.html#a1372c16310f0a7cbeaf8b4c0cfc9363b">Foam::solidBodyMotionFunction::time_</a></div><div class="ttdeci">const Time &amp; time_</div><div class="ttdef"><b>Definition:</b> <a href="a04747_source.html#l00067">solidBodyMotionFunction.H:67</a></div></div>
+<div class="ttc" id="a02214_html_aaa8e5b7541541274550b0d9bfe90aa7c"><div class="ttname"><a href="a02214.html#aaa8e5b7541541274550b0d9bfe90aa7c">Foam::solidBodyMotionFunctions::rotatingMotion::~rotatingMotion</a></div><div class="ttdeci">virtual ~rotatingMotion()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04742_source.html#l00066">rotatingMotion.C:66</a></div></div>
+<div class="ttc" id="a02214_html_afeed4512a4be2653bc44cb43a1ae0788"><div class="ttname"><a href="a02214.html#afeed4512a4be2653bc44cb43a1ae0788">Foam::solidBodyMotionFunctions::rotatingMotion::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;SBMFCoeffs)</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04742_source.html#l00091">rotatingMotion.C:91</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

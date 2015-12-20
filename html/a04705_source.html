@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7045e8b584c9485727394e576736d39b.html">dynamicFvMesh</a></li><li class="navelem"><a class="el" href="dir_c66c19a279e502a1da3f334b3d68e252.html">solidBodyMotionFvMesh</a></li><li class="navelem"><a class="el" href="dir_00414e1b674a3b367b4ee7d8595bfb40.html">solidBodyMotionFunctions</a></li><li class="navelem"><a class="el" href="dir_b0855a2fd52a8d3ad4bff60aeccb3e27.html">SDA</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_22e3beccf9f956a3c7bfcabae9a0dde0.html">conversion</a></li><li class="navelem"><a class="el" href="dir_361c5d4ca892f30ce05586fb2c66f9b1.html">meshTables</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">SDA.C</div>  </div>
+<div class="title">cellTable.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04705.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,149 +119,232 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04706.html">SDA.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08112.html">mathematicalConstants.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10687.html">Foam::constant::mathematical</a>;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>solidBodyMotionFunctions</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(SDA, 0);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(solidBodyMotionFunction, SDA, dictionary);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;Foam::solidBodyMotionFunctions::SDA::SDA</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a02239.html#aacaaad745e619abe02e4f8fa0d4220f7">   47</a></span>&#160;(</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; SBMFCoeffs,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02596.html">Time</a>&amp; runTime</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a02351.html">solidBodyMotionFunction</a>(SBMFCoeffs, runTime),</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    CofG_(SBMFCoeffs_.lookup(<span class="stringliteral">&quot;CofG&quot;</span>))</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(SBMFCoeffs);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a02239.html#a3f8d1053e40509d77fb17698b1e32a56">   61</a></span>&#160;<a class="code" href="a02239.html#a3f8d1053e40509d77fb17698b1e32a56">Foam::solidBodyMotionFunctions::SDA::~SDA</a>()</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a02239.html#a81f0dd436b8f71ebb3ed3d093d828a2f">   67</a></span>&#160;<a class="code" href="a02262.html">Foam::septernion</a> <a class="code" href="a02239.html#a81f0dd436b8f71ebb3ed3d093d828a2f">Foam::solidBodyMotionFunctions::SDA::transformation</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    scalar time = time_.value();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::cellTable</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    The cellTable persistent data saved as a Map&lt;dictionary&gt;.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    The meshReader supports cellTable information.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    The &lt;tt&gt;constant/cellTable&lt;/tt&gt; file is an \c IOMap&lt;dictionary&gt; that is</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    used to save the information persistently. It contains the cellTable</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    information of the following form:</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    \verbatim</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">        (</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">            ID</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">            {</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">                Label           WORD;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">                MaterialType    WORD;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">                MaterialId      INT;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">                PorosityId      INT;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">                ColorIdx        INT;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                ...</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">            }</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">        ...</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">        )</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">    \endverbatim</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">    If the \a Label is missing, a value &lt;tt&gt;cellTable_{ID}&lt;/tt&gt; will be</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">    inferred. If the \a MaterialType is missing, the value @a fluid will</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">    be inferred.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">    cellTable.C</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#ifndef cellTable_H</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define cellTable_H</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07579.html">Map.H</a>&quot;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07684.html">dictionary.H</a>&quot;</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08887.html">labelList.H</a>&quot;</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08973.html">wordReList.H</a>&quot;</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    scalar Tpi = Tp_ + dTp_*(time/dTi_);   <span class="comment">// Current roll period [sec]</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    scalar wr = <a class="code" href="a10687.html#a7574b446d33e802339e1708574670c00">twoPi</a>/Tpi; <span class="comment">// Current Freq [/sec]</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Current Phase for roll [rad]</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    scalar r = dTp_/dTi_;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    scalar u = Tp_ + r*time;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    scalar phr = <a class="code" href="a10687.html#a7574b446d33e802339e1708574670c00">twoPi</a>*((Tp_/u - 1) + <a class="code" href="a10675.html#a6e89590da9859ad497977e08f110d4b5">log</a>(<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(u)) - <a class="code" href="a10675.html#a6e89590da9859ad497977e08f110d4b5">log</a>(Tp_))/r;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Current Phase for Sway [rad]</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    scalar phs = phr + <a class="code" href="a10687.html#a731b8788a4c01586c35266c7ca4fed04">pi</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Current Phase for Heave [rad]</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    scalar phh = phr + <a class="code" href="a10687.html#a63ba3cd9aa9e4a07b53a7c13ae0b7415">piByTwo</a>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    scalar rollA = <a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(rollAmax_*<a class="code" href="a10675.html#a12bca6c677fcf0977532179c3cb9bb89">exp</a>(-<a class="code" href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(Tpi - Tpn_)/(2*Q_)), rollAmin_);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">                         Class cellTable Declaration</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a00239.html">   77</a></span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">class </span><a class="code" href="a00239.html">cellTable</a></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;:</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01400.html">Map</a>&lt;dictionary&gt;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;       <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> defaultMaterial_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a02776.html">vector</a> <a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    (</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        0,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        swayA_*(<a class="code" href="a10675.html#a4517d680df5510934705011b30dcefa6">sin</a>(wr*time + phs) - <a class="code" href="a10675.html#a4517d680df5510934705011b30dcefa6">sin</a>(phs)),</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        heaveA_*(<a class="code" href="a10675.html#a4517d680df5510934705011b30dcefa6">sin</a>(wr*time + phh) - <a class="code" href="a10675.html#a4517d680df5510934705011b30dcefa6">sin</a>(phh))</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    );</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="a02040.html">quaternion</a> <a class="code" href="a08817.html#a45e6077c6122a27618617931f817bc2c">R</a>(rollA*<a class="code" href="a10675.html#a4517d680df5510934705011b30dcefa6">sin</a>(wr*time + phr), 0, 0);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a02262.html">septernion</a> TR(<a class="code" href="a02262.html">septernion</a>(CofG_ + T)*R*<a class="code" href="a02262.html">septernion</a>(-CofG_));</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;solidBodyMotionFunctions::SDA::transformation(): &quot;</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;Time = &quot;</span> &lt;&lt; time &lt;&lt; <span class="stringliteral">&quot; transformation: &quot;</span> &lt;&lt; TR &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span> TR;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//- Map from cellTable ID =&gt; zone number</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a01400.html">Map&lt;label&gt;</a> zoneMap() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//- A contiguous list of cellTable names</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a01364.html">List&lt;word&gt;</a> namesList() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">//- Add required entries - MaterialType</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordtype">void</span> addDefaults();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> setEntry(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; keyWord, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; value);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a00239.html#a97e6b6ec64addcadb88c00a95367d8ad">cellTable</a>(<span class="keyword">const</span> <a class="code" href="a00239.html">cellTable</a>&amp;);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a02239.html#afeed4512a4be2653bc44cb43a1ae0788">  103</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02239.html#afeed4512a4be2653bc44cb43a1ae0788">Foam::solidBodyMotionFunctions::SDA::read</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; SBMFCoeffs)</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="a02351.html#abd55f4bae5a7d1d58dbe7d6f7f58901a">solidBodyMotionFunction::read</a>(SBMFCoeffs);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;CofG&quot;</span>) &gt;&gt; CofG_;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;lamda&quot;</span>) &gt;&gt; lamda_;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;rollAmax&quot;</span>) &gt;&gt; rollAmax_;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;rollAmin&quot;</span>) &gt;&gt; rollAmin_;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;heaveA&quot;</span>) &gt;&gt; heaveA_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;swayA&quot;</span>) &gt;&gt; swayA_;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;Q&quot;</span>) &gt;&gt; Q_;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;Tp&quot;</span>) &gt;&gt; Tp_;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;Tpn&quot;</span>) &gt;&gt; Tpn_;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;dTi&quot;</span>) &gt;&gt; dTi_;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;dTp&quot;</span>) &gt;&gt; dTp_;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="comment">//- Construct null</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="a00239.html#a97e6b6ec64addcadb88c00a95367d8ad">cellTable</a>();</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">//- Construct read from registry, name. instance</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="a00239.html#a97e6b6ec64addcadb88c00a95367d8ad">cellTable</a></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        (</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01688.html">objectRegistry</a>&amp;,</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a00239.html#aee9ae03794d3d8e1115b2405ac8f1cd7">name</a> = <span class="stringliteral">&quot;cellTable&quot;</span>,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; instance = <span class="stringliteral">&quot;constant&quot;</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        );</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// Rescale parameters according to the given scale parameter</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">if</span> (lamda_ &gt; 1 + SMALL)</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        heaveA_ /= lamda_;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        swayA_ /= lamda_;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        Tp_ /= <a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(lamda_);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        Tpn_ /= <a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(lamda_);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        dTi_ /= <a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(lamda_);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        dTp_ /= <a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(lamda_);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="a00239.html#a5d85fca6b6d545f473ff809e64a143a9">~cellTable</a>();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">//- Append to the end, return index</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00239.html#ae6930793ed91ec61c49ee3d914b88d85">append</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp;);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="comment">//- Return index corresponding to name</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="comment">//  returns -1 if not found</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00239.html#a3ef67347f60b60a6ce42d7b35fb7a1ed">findIndex</a>(<span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a00239.html#aee9ae03794d3d8e1115b2405ac8f1cd7">name</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02351_html_abd55f4bae5a7d1d58dbe7d6f7f58901a"><div class="ttname"><a href="a02351.html#abd55f4bae5a7d1d58dbe7d6f7f58901a">Foam::solidBodyMotionFunction::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;SBMFCoeffs)=0</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04707_source.html#l00065">solidBodyMotionFunction.C:65</a></div></div>
-<div class="ttc" id="a02351_html"><div class="ttname"><a href="a02351.html">Foam::solidBodyMotionFunction</a></div><div class="ttdoc">Base class for defining solid-body motions. </div><div class="ttdef"><b>Definition:</b> <a href="a04708_source.html#l00060">solidBodyMotionFunction.H:60</a></div></div>
-<div class="ttc" id="a10687_html_a7574b446d33e802339e1708574670c00"><div class="ttname"><a href="a10687.html#a7574b446d33e802339e1708574670c00">Foam::constant::mathematical::twoPi</a></div><div class="ttdeci">const scalar twoPi(2 *pi)</div></div>
-<div class="ttc" id="a10675_html_a8616bd62eebf2342a80222fecb1bda71"><div class="ttname"><a href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a></div><div class="ttdeci">dimensionedScalar sqrt(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00142">dimensionedScalar.C:142</a></div></div>
-<div class="ttc" id="a10675_html_ae57fda0abb14bb0944947c463c6e09d4"><div class="ttname"><a href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">Foam::T</a></div><div class="ttdeci">void T(FieldField&lt; Field, Type &gt; &amp;f1, const FieldField&lt; Field, Type &gt; &amp;f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00055">FieldFieldFunctions.C:55</a></div></div>
-<div class="ttc" id="a10675_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08826_source.html#l00087">int32IO.C:87</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a08112_html"><div class="ttname"><a href="a08112.html">mathematicalConstants.H</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02262_html"><div class="ttname"><a href="a02262.html">Foam::septernion</a></div><div class="ttdoc">Septernion class used to perform translations and rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08894_source.html#l00064">septernion.H:64</a></div></div>
-<div class="ttc" id="a02596_html"><div class="ttname"><a href="a02596.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07804_source.html#l00068">Time.H:68</a></div></div>
-<div class="ttc" id="a04706_html"><div class="ttname"><a href="a04706.html">SDA.H</a></div></div>
-<div class="ttc" id="a02239_html_afeed4512a4be2653bc44cb43a1ae0788"><div class="ttname"><a href="a02239.html#afeed4512a4be2653bc44cb43a1ae0788">Foam::solidBodyMotionFunctions::SDA::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;SBMFCoeffs)</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04705_source.html#l00103">SDA.C:103</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a10687_html_a63ba3cd9aa9e4a07b53a7c13ae0b7415"><div class="ttname"><a href="a10687.html#a63ba3cd9aa9e4a07b53a7c13ae0b7415">Foam::constant::mathematical::piByTwo</a></div><div class="ttdeci">const scalar piByTwo(0.5 *pi)</div></div>
-<div class="ttc" id="a10675_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07819_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
-<div class="ttc" id="a10675_html_a4517d680df5510934705011b30dcefa6"><div class="ttname"><a href="a10675.html#a4517d680df5510934705011b30dcefa6">Foam::sin</a></div><div class="ttdeci">dimensionedScalar sin(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00255">dimensionedScalar.C:255</a></div></div>
-<div class="ttc" id="a10687_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10687.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
-<div class="ttc" id="a02239_html_a81f0dd436b8f71ebb3ed3d093d828a2f"><div class="ttname"><a href="a02239.html#a81f0dd436b8f71ebb3ed3d093d828a2f">Foam::solidBodyMotionFunctions::SDA::transformation</a></div><div class="ttdeci">virtual septernion transformation() const </div><div class="ttdoc">Return the solid-body motion transformation septernion. </div><div class="ttdef"><b>Definition:</b> <a href="a04705_source.html#l00067">SDA.C:67</a></div></div>
-<div class="ttc" id="a10675_html_a6e89590da9859ad497977e08f110d4b5"><div class="ttname"><a href="a10675.html#a6e89590da9859ad497977e08f110d4b5">Foam::log</a></div><div class="ttdeci">dimensionedScalar log(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00253">dimensionedScalar.C:253</a></div></div>
-<div class="ttc" id="a10675_html_a12bca6c677fcf0977532179c3cb9bb89"><div class="ttname"><a href="a10675.html#a12bca6c677fcf0977532179c3cb9bb89">Foam::exp</a></div><div class="ttdeci">dimensionedScalar exp(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00252">dimensionedScalar.C:252</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a02040_html"><div class="ttname"><a href="a02040.html">Foam::quaternion</a></div><div class="ttdoc">Quaternion class used to perform rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08860_source.html#l00060">quaternion.H:60</a></div></div>
-<div class="ttc" id="a02239_html_a3f8d1053e40509d77fb17698b1e32a56"><div class="ttname"><a href="a02239.html#a3f8d1053e40509d77fb17698b1e32a56">Foam::solidBodyMotionFunctions::SDA::~SDA</a></div><div class="ttdeci">virtual ~SDA()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04705_source.html#l00061">SDA.C:61</a></div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a08817_html_a45e6077c6122a27618617931f817bc2c"><div class="ttname"><a href="a08817.html#a45e6077c6122a27618617931f817bc2c">R</a></div><div class="ttdeci">#define R(A, B, C, D, E, F, K, M)                                                                                            </div></div>
-<div class="ttc" id="a10687_html"><div class="ttname"><a href="a10687.html">Foam::constant::mathematical</a></div><div class="ttdoc">mathematical constants. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="comment">//- Return the name corresponding to id</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">//  returns cellTable_ID if not otherwise defined</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <a class="code" href="a02869.html">word</a> <a class="code" href="a00239.html#aee9ae03794d3d8e1115b2405ac8f1cd7">name</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <span class="keywordtype">id</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; name)</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#aa5fbe62bad8adf16b09f13154e98e1cb">names</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; names) selected by patterns</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#aa5fbe62bad8adf16b09f13154e98e1cb">names</a>(<span class="keyword">const</span> <a class="code" href="a02731.html">UList&lt;wordRe&gt;</a>&amp; patterns) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; name) for materialType</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="comment">//  (fluid | solid | shell)</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#a2fed0ba45b7494402709203ac3f9c7d2">selectType</a>(<span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; materialType) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; name) for fluids</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#ab31cc1c31abb20fbda14c10fa9c49618">fluids</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; name) for shells</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#a4d487622594009039817791f4166eb5b">shells</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; name) for solids</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#ac0aac915fc7752543ff06b3a60bd0129">solids</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="comment">//- Return a Map of (id =&gt; fluid|solid|shell)</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <a class="code" href="a01400.html">Map&lt;word&gt;</a> <a class="code" href="a00239.html#a65dcf78b7e69ff2d0fa9c3bda78549d0">materialTypes</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="comment">//- Assign material Type</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#a14e9563d877731fe1f2b9c4dab09fadf">setMaterial</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp;);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="comment">//- Assign name</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#aa3d77040d26e0f1b0c5806b2137eba76">setName</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp;);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="comment">//- Assign default name if not already set</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#aa3d77040d26e0f1b0c5806b2137eba76">setName</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>);</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="comment">//- Read constant/cellTable</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#a57e56444a03a71b0673d869fbbf5bcc7">readDict</a></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        (</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01688.html">objectRegistry</a>&amp;,</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; name = <span class="stringliteral">&quot;cellTable&quot;</span>,</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; instance = <span class="stringliteral">&quot;constant&quot;</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        );</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="comment">//- Write constant/cellTable for later reuse</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#a7f45e4b7995dd70575d8f9453f0de76d">writeDict</a></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        (</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01688.html">objectRegistry</a>&amp;,</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; name = <span class="stringliteral">&quot;cellTable&quot;</span>,</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; instance = <span class="stringliteral">&quot;constant&quot;</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="comment">// Member Operators</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="comment">//- Assignment</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#aab98e70389c02f054214c6595b3916a7">operator=</a>(<span class="keyword">const</span> <a class="code" href="a00239.html">cellTable</a>&amp;);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="comment">//- Assign from Map&lt;dictionary&gt;</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#aab98e70389c02f054214c6595b3916a7">operator=</a>(<span class="keyword">const</span> <a class="code" href="a01400.html">Map&lt;dictionary&gt;</a>&amp;);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="comment">//- Assign from cellZones</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#aab98e70389c02f054214c6595b3916a7">operator=</a>(<span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp;);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="comment">// Friend Functions</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="comment">//- Classify tableIds into cellZones according to the cellTable</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#a3e09b5787b5e4efb26cd459e05e4dafd">addCellZones</a>(<a class="code" href="a01916.html">polyMesh</a>&amp;, <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; tableIds) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        <span class="comment">//- Combine tableIds together</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        <span class="comment">//  each dictionary entry is a wordList</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00239.html#a8f772dc348dc8f16911640a1c4157cb2">combine</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp;, <a class="code" href="a01364.html">labelList</a>&amp; tableIds);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;};</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a07579_html"><div class="ttname"><a href="a07579.html">Map.H</a></div></div>
+<div class="ttc" id="a00239_html"><div class="ttname"><a href="a00239.html">Foam::cellTable</a></div><div class="ttdoc">The cellTable persistent data saved as a Map<dictionary>. </div><div class="ttdef"><b>Definition:</b> <a href="a04705_source.html#l00077">cellTable.H:77</a></div></div>
+<div class="ttc" id="a07684_html"><div class="ttname"><a href="a07684.html">dictionary.H</a></div></div>
+<div class="ttc" id="a00239_html_a7f45e4b7995dd70575d8f9453f0de76d"><div class="ttname"><a href="a00239.html#a7f45e4b7995dd70575d8f9453f0de76d">Foam::cellTable::writeDict</a></div><div class="ttdeci">void writeDict(const objectRegistry &amp;, const word &amp;name=&quot;cellTable&quot;, const fileName &amp;instance=&quot;constant&quot;) const </div><div class="ttdoc">Write constant/cellTable for later reuse. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00348">cellTable.C:348</a></div></div>
+<div class="ttc" id="a00239_html_a2fed0ba45b7494402709203ac3f9c7d2"><div class="ttname"><a href="a00239.html#a2fed0ba45b7494402709203ac3f9c7d2">Foam::cellTable::selectType</a></div><div class="ttdeci">Map&lt; word &gt; selectType(const word &amp;materialType) const </div><div class="ttdoc">Return a Map of (id => name) for materialType. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00242">cellTable.C:242</a></div></div>
+<div class="ttc" id="a08887_html"><div class="ttname"><a href="a08887.html">labelList.H</a></div></div>
+<div class="ttc" id="a00239_html_a3e09b5787b5e4efb26cd459e05e4dafd"><div class="ttname"><a href="a00239.html#a3e09b5787b5e4efb26cd459e05e4dafd">Foam::cellTable::addCellZones</a></div><div class="ttdeci">void addCellZones(polyMesh &amp;, const labelList &amp;tableIds) const </div><div class="ttdoc">Classify tableIds into cellZones according to the cellTable. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00441">cellTable.C:441</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00239_html_a5d85fca6b6d545f473ff809e64a143a9"><div class="ttname"><a href="a00239.html#a5d85fca6b6d545f473ff809e64a143a9">Foam::cellTable::~cellTable</a></div><div class="ttdeci">~cellTable()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00124">cellTable.C:124</a></div></div>
+<div class="ttc" id="a01688_html"><div class="ttname"><a href="a01688.html">Foam::objectRegistry</a></div><div class="ttdoc">Registry of regIOobjects. </div><div class="ttdef"><b>Definition:</b> <a href="a07832_source.html#l00050">objectRegistry.H:50</a></div></div>
+<div class="ttc" id="a00239_html_a57e56444a03a71b0673d869fbbf5bcc7"><div class="ttname"><a href="a00239.html#a57e56444a03a71b0673d869fbbf5bcc7">Foam::cellTable::readDict</a></div><div class="ttdeci">void readDict(const objectRegistry &amp;, const word &amp;name=&quot;cellTable&quot;, const fileName &amp;instance=&quot;constant&quot;)</div><div class="ttdoc">Read constant/cellTable. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00313">cellTable.C:313</a></div></div>
+<div class="ttc" id="a00239_html_a4d487622594009039817791f4166eb5b"><div class="ttname"><a href="a00239.html#a4d487622594009039817791f4166eb5b">Foam::cellTable::shells</a></div><div class="ttdeci">Map&lt; word &gt; shells() const </div><div class="ttdoc">Return a Map of (id => name) for shells. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00282">cellTable.C:282</a></div></div>
+<div class="ttc" id="a00239_html_a3ef67347f60b60a6ce42d7b35fb7a1ed"><div class="ttname"><a href="a00239.html#a3ef67347f60b60a6ce42d7b35fb7a1ed">Foam::cellTable::findIndex</a></div><div class="ttdeci">label findIndex(const word &amp;name) const </div><div class="ttdoc">Return index corresponding to name. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00206">cellTable.C:206</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; word &gt;</a></div></div>
+<div class="ttc" id="a00239_html_aa5fbe62bad8adf16b09f13154e98e1cb"><div class="ttname"><a href="a00239.html#aa5fbe62bad8adf16b09f13154e98e1cb">Foam::cellTable::names</a></div><div class="ttdeci">Map&lt; word &gt; names() const </div><div class="ttdoc">Return a Map of (id => name) </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00146">cellTable.C:146</a></div></div>
+<div class="ttc" id="a00239_html_a14e9563d877731fe1f2b9c4dab09fadf"><div class="ttname"><a href="a00239.html#a14e9563d877731fe1f2b9c4dab09fadf">Foam::cellTable::setMaterial</a></div><div class="ttdeci">void setMaterial(const label, const word &amp;)</div><div class="ttdoc">Assign material Type. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00289">cellTable.C:289</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a01400_html"><div class="ttname"><a href="a01400.html">Foam::Map</a></div><div class="ttdoc">A HashTable to objects of type <T> with a label key. </div><div class="ttdef"><b>Definition:</b> <a href="a07579_source.html#l00049">Map.H:49</a></div></div>
+<div class="ttc" id="a00239_html_ab31cc1c31abb20fbda14c10fa9c49618"><div class="ttname"><a href="a00239.html#ab31cc1c31abb20fbda14c10fa9c49618">Foam::cellTable::fluids</a></div><div class="ttdeci">Map&lt; word &gt; fluids() const </div><div class="ttdoc">Return a Map of (id => name) for fluids. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00270">cellTable.C:270</a></div></div>
+<div class="ttc" id="a00239_html_aab98e70389c02f054214c6595b3916a7"><div class="ttname"><a href="a00239.html#aab98e70389c02f054214c6595b3916a7">Foam::cellTable::operator=</a></div><div class="ttdeci">void operator=(const cellTable &amp;)</div><div class="ttdoc">Assignment. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00381">cellTable.C:381</a></div></div>
+<div class="ttc" id="a00239_html_a97e6b6ec64addcadb88c00a95367d8ad"><div class="ttname"><a href="a00239.html#a97e6b6ec64addcadb88c00a95367d8ad">Foam::cellTable::cellTable</a></div><div class="ttdeci">cellTable()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00103">cellTable.C:103</a></div></div>
+<div class="ttc" id="a08973_html"><div class="ttname"><a href="a08973.html">wordReList.H</a></div></div>
+<div class="ttc" id="a00239_html_a65dcf78b7e69ff2d0fa9c3bda78549d0"><div class="ttname"><a href="a00239.html#a65dcf78b7e69ff2d0fa9c3bda78549d0">Foam::cellTable::materialTypes</a></div><div class="ttdeci">Map&lt; word &gt; materialTypes() const </div><div class="ttdoc">Return a Map of (id => fluid|solid|shell) </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00225">cellTable.C:225</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00239_html_a8f772dc348dc8f16911640a1c4157cb2"><div class="ttname"><a href="a00239.html#a8f772dc348dc8f16911640a1c4157cb2">Foam::cellTable::combine</a></div><div class="ttdeci">void combine(const dictionary &amp;, labelList &amp;tableIds)</div><div class="ttdoc">Combine tableIds together. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00507">cellTable.C:507</a></div></div>
+<div class="ttc" id="a00239_html_ae6930793ed91ec61c49ee3d914b88d85"><div class="ttname"><a href="a00239.html#ae6930793ed91ec61c49ee3d914b88d85">Foam::cellTable::append</a></div><div class="ttdeci">label append(const dictionary &amp;)</div><div class="ttdoc">Append to the end, return index. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00130">cellTable.C:130</a></div></div>
+<div class="ttc" id="a02731_html"><div class="ttname"><a href="a02731.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00060">HashTable.H:60</a></div></div>
+<div class="ttc" id="a00239_html_aa3d77040d26e0f1b0c5806b2137eba76"><div class="ttname"><a href="a00239.html#aa3d77040d26e0f1b0c5806b2137eba76">Foam::cellTable::setName</a></div><div class="ttdeci">void setName(const label, const word &amp;)</div><div class="ttdoc">Assign name. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00295">cellTable.C:295</a></div></div>
+<div class="ttc" id="a00239_html_ac0aac915fc7752543ff06b3a60bd0129"><div class="ttname"><a href="a00239.html#ac0aac915fc7752543ff06b3a60bd0129">Foam::cellTable::solids</a></div><div class="ttdeci">Map&lt; word &gt; solids() const </div><div class="ttdoc">Return a Map of (id => name) for solids. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00276">cellTable.C:276</a></div></div>
+<div class="ttc" id="a00239_html_aee9ae03794d3d8e1115b2405ac8f1cd7"><div class="ttname"><a href="a00239.html#aee9ae03794d3d8e1115b2405ac8f1cd7">Foam::cellTable::name</a></div><div class="ttdeci">word name(const label id) const </div><div class="ttdoc">Return the name corresponding to id. </div><div class="ttdef"><b>Definition:</b> <a href="a04704_source.html#l00192">cellTable.C:192</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

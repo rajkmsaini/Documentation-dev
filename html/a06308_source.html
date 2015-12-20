@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_6061a3ee916a9160a3a185551ff9959f.html">coalCombustion</a></li><li class="navelem"><a class="el" href="dir_7044a8f42d5cea127f2070d81c925321.html">coalCloudList</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_ab5426228c8fb14cfc52c0ebfb464378.html">sources</a></li><li class="navelem"><a class="el" href="dir_72795626a818b0414b803468c9fe69a0.html">general</a></li><li class="navelem"><a class="el" href="dir_6bf80c03527053062f9a69c3eb0e4df2.html">semiImplicitSource</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">coalCloudList.C</div>  </div>
+<div class="title">semiImplicitSource.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06308.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,97 +121,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06309.html">coalCloudList.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="a00297.html#a4557023397aad50dca7e2902a2f22d19">Foam::coalCloudList::coalCloudList</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a00297.html#a4557023397aad50dca7e2902a2f22d19">   31</a></span>&#160;(</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; rho,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; U,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00526.html">dimensionedVector</a>&amp; g,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02321.html">SLGThermo</a>&amp; slgThermo</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a02020.html">PtrList&lt;coalCloud&gt;</a>(),</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    mesh_(rho.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>())</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a01163.html">IOdictionary</a> props</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        (</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="stringliteral">&quot;coalCloudList&quot;</span>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            mesh_.time().constant(),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            mesh_,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            IOobject::MUST_READ</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        )</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    );</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00974.html">wordHashSet</a> cloudNames(<a class="code" href="a10675.html#a0db843a5d9291aef04734d582a0ec2ee">wordList</a>(props.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;clouds&quot;</span>)));</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a03883.html#a6f8d72476baf295a054f72dfbc9c61c3">setSize</a>(cloudNames.<a class="code" href="a00976.html#a723361dc2020160f5492e8fe2d09fa44">size</a>());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i = 0;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00974.html">wordHashSet</a>, cloudNames, iter)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a> = iter.key();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;creating cloud: &quot;</span> &lt;&lt; name &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        set</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        (</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            i++,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keyword">new</span> <a class="code" href="a00296.html">coalCloud</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                name,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                rho,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                U,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                g,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                slgThermo</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            )</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        );</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a00297.html#a9e3bb886209d951167cd385c1ffe0b00">   83</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00297.html#a9e3bb886209d951167cd385c1ffe0b00">Foam::coalCloudList::evolve</a>()</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(*<span class="keyword">this</span>, i)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="a02020.html#af15a484723b2f04f96702bd3b5fe2572">operator[]</a>(i).evolve();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a06309_html"><div class="ttname"><a href="a06309.html">coalCloudList.H</a></div></div>
-<div class="ttc" id="a00296_html"><div class="ttname"><a href="a00296.html">Foam::coalCloud</a></div><div class="ttdoc">Cloud class to introduce coal parcels. </div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a0db843a5d9291aef04734d582a0ec2ee"><div class="ttname"><a href="a10675.html#a0db843a5d9291aef04734d582a0ec2ee">Foam::wordList</a></div><div class="ttdeci">List&lt; word &gt; wordList</div><div class="ttdoc">A List of words. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00054">fileName.H:54</a></div></div>
-<div class="ttc" id="a00527_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
-<div class="ttc" id="a02321_html"><div class="ttname"><a href="a02321.html">Foam::SLGThermo</a></div><div class="ttdoc">Thermo package for (S)olids (L)iquids and (G)ases Takes reference to thermo package, and provides: </div><div class="ttdef"><b>Definition:</b> <a href="a10163_source.html#l00062">SLGThermo.H:62</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01163_html"><div class="ttname"><a href="a01163.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07706_source.html#l00053">IOdictionary.H:53</a></div></div>
-<div class="ttc" id="a00297_html_a9e3bb886209d951167cd385c1ffe0b00"><div class="ttname"><a href="a00297.html#a9e3bb886209d951167cd385c1ffe0b00">Foam::coalCloudList::evolve</a></div><div class="ttdeci">void evolve()</div><div class="ttdoc">Evolve the cloud collection. </div><div class="ttdef"><b>Definition:</b> <a href="a06308_source.html#l00083">coalCloudList.C:83</a></div></div>
-<div class="ttc" id="a00976_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a00976.html#a723361dc2020160f5492e8fe2d09fa44">Foam::HashTable::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return number of elements in table. </div><div class="ttdef"><b>Definition:</b> <a href="a07526_source.html#l00065">HashTableI.H:65</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a00297_html_a4557023397aad50dca7e2902a2f22d19"><div class="ttname"><a href="a00297.html#a4557023397aad50dca7e2902a2f22d19">Foam::coalCloudList::coalCloudList</a></div><div class="ttdeci">coalCloudList(const volScalarField &amp;rho, const volVectorField &amp;U, const dimensionedVector &amp;g, const SLGThermo &amp;slgThermo)</div><div class="ttdef"><b>Definition:</b> <a href="a06308_source.html#l00031">coalCloudList.C:31</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a02020_html"><div class="ttname"><a href="a02020.html">Foam::PtrList&lt; coalCloud &gt;</a></div></div>
-<div class="ttc" id="a02020_html_af15a484723b2f04f96702bd3b5fe2572"><div class="ttname"><a href="a02020.html#af15a484723b2f04f96702bd3b5fe2572">Foam::PtrList&lt; coalCloud &gt;::operator[]</a></div><div class="ttdeci">const coalCloud &amp; operator[](const label) const</div><div class="ttdoc">Return element const reference. </div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00974_html"><div class="ttname"><a href="a00974.html">Foam::HashSet</a></div><div class="ttdoc">A HashTable with keys but without contents. </div><div class="ttdef"><b>Definition:</b> <a href="a07522_source.html#l00059">HashSet.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a03883_html_a6f8d72476baf295a054f72dfbc9c61c3"><div class="ttname"><a href="a03883.html#a6f8d72476baf295a054f72dfbc9c61c3">setSize</a></div><div class="ttdeci">points setSize(newPointi)</div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05062.html">makeFvOption.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06309.html">SemiImplicitSource.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a>(SemiImplicitSource, scalar);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a>(SemiImplicitSource, <a class="code" href="a10725.html#a7ea82552101f041fad7635b3ed036a84">vector</a>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a>(SemiImplicitSource, <a class="code" href="a10725.html#a1c80fd5035e8c5cf0a92b733153dff96">sphericalTensor</a>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a>(SemiImplicitSource, <a class="code" href="a10725.html#a4abedc496c75ae36ae5b37d8ec9e2a05">symmTensor</a>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a>(SemiImplicitSource, <a class="code" href="a10725.html#a2d3833265c99c683af8c5d2e430b7425">tensor</a>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05062_html"><div class="ttname"><a href="a05062.html">makeFvOption.H</a></div></div>
+<div class="ttc" id="a10725_html_a4abedc496c75ae36ae5b37d8ec9e2a05"><div class="ttname"><a href="a10725.html#a4abedc496c75ae36ae5b37d8ec9e2a05">Foam::symmTensor</a></div><div class="ttdeci">SymmTensor&lt; scalar &gt; symmTensor</div><div class="ttdoc">SymmTensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a09001_source.html#l00048">symmTensor.H:48</a></div></div>
+<div class="ttc" id="a06309_html"><div class="ttname"><a href="a06309.html">SemiImplicitSource.H</a></div></div>
+<div class="ttc" id="a10725_html_a1c80fd5035e8c5cf0a92b733153dff96"><div class="ttname"><a href="a10725.html#a1c80fd5035e8c5cf0a92b733153dff96">Foam::sphericalTensor</a></div><div class="ttdeci">SphericalTensor&lt; scalar &gt; sphericalTensor</div><div class="ttdoc">SphericalTensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a08952_source.html#l00048">sphericalTensor.H:48</a></div></div>
+<div class="ttc" id="a06308_html_a17f527c97f750c5cbc157c36ba16de73"><div class="ttname"><a href="a06308.html#a17f527c97f750c5cbc157c36ba16de73">makeFvOption</a></div><div class="ttdeci">makeFvOption(SemiImplicitSource, scalar)</div></div>
+<div class="ttc" id="a10725_html_a2d3833265c99c683af8c5d2e430b7425"><div class="ttname"><a href="a10725.html#a2d3833265c99c683af8c5d2e430b7425">Foam::tensor</a></div><div class="ttdeci">Tensor&lt; scalar &gt; tensor</div><div class="ttdoc">Tensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a09017_source.html#l00051">tensor.H:51</a></div></div>
+<div class="ttc" id="a10725_html_a7ea82552101f041fad7635b3ed036a84"><div class="ttname"><a href="a10725.html#a7ea82552101f041fad7635b3ed036a84">Foam::vector</a></div><div class="ttdeci">Vector&lt; scalar &gt; vector</div><div class="ttdoc">A scalar version of the templated Vector. </div><div class="ttdef"><b>Definition:</b> <a href="a09045_source.html#l00049">vector.H:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

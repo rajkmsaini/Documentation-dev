@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_9d5336f012de1459bf0f96ab97c17717.html">meshCut</a></li><li class="navelem"><a class="el" href="dir_a5023815b95dd1bf0d12c1ec38a4f7d2.html">cellLooper</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7045e8b584c9485727394e576736d39b.html">dynamicFvMesh</a></li><li class="navelem"><a class="el" href="dir_c66c19a279e502a1da3f334b3d68e252.html">solidBodyMotionFvMesh</a></li><li class="navelem"><a class="el" href="dir_00414e1b674a3b367b4ee7d8595bfb40.html">solidBodyMotionFunctions</a></li><li class="navelem"><a class="el" href="dir_ce95bf2c9eeaa085a8c75f55ece9846b.html">tabulated6DoFMotion</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">geomCellLooper.H</div>  </div>
+<div class="title">tabulated6DoFMotion.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04749.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,198 +119,189 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::geomCellLooper</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Implementation of cellLooper. Does pure geometric cut through cell.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    Handles all cell shapes in the same way: cut edges with plane through</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    cell centre and normal in direction of provided direction. Snaps cuts</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    close to edge endpoints (close = snapTol * minEdgeLen) to vertices.</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    Currently determines cuts through edges (and edgeendpoints close to plane)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    in random order and then sorts them acc. to angle. Could be converted to</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    use walk but problem is that face can be cut multiple times (since does</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    not need to be convex). Another problem is that edges parallel to plane</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    might not be cut. So these are handled by looking at the distance from</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    edge endpoints to the plane.</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">    geomCellLooper.C</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#ifndef geomCellLooper_H</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define geomCellLooper_H</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04747.html">cellLooper.H</a>&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07813.html">typeInfo.H</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04750.html">tabulated6DoFMotion.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09028.html">Tuple2.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07769.html">IFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08219.html">interpolateSplineXY.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08163.html">mathematicalConstants.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10737.html">Foam::constant::mathematical</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span>solidBodyMotionFunctions</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(tabulated6DoFMotion, 0);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    (</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        solidBodyMotionFunction,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        tabulated6DoFMotion,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        dictionary</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    );</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// Forward declaration of classes</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">class </span>plane;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">                           Class geomCellLooper Declaration</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00909.html">   63</a></span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">class </span><a class="code" href="a00909.html">geomCellLooper</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00213.html">cellLooper</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Static</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;Foam::solidBodyMotionFunctions::tabulated6DoFMotion::tabulated6DoFMotion</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a02551.html#a1a192230c5983c10389039646c514143">   55</a></span>&#160;(</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; SBMFCoeffs,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02606.html">Time</a>&amp; runTime</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a02363.html">solidBodyMotionFunction</a>(SBMFCoeffs, runTime)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(SBMFCoeffs);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a02551.html#af9900bf46ffe86f975278991def3b6c9">   68</a></span>&#160;<a class="code" href="a02551.html#af9900bf46ffe86f975278991def3b6c9">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::~tabulated6DoFMotion</a>()</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{}</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- Tolerance for point equal test. Fraction of edge length.</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> scalar pointEqualTol_;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//- Tolerance for cut through edges to get snapped to edge end point.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//  Fraction of length of minimum connected edge length.</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">static</span> scalar snapTol_;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<a class="code" href="a02273.html">Foam::septernion</a></div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="a02551.html#a81f0dd436b8f71ebb3ed3d093d828a2f">   75</a></span>&#160;<a class="code" href="a02551.html#a81f0dd436b8f71ebb3ed3d093d828a2f">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    scalar t = time_.value();</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">//- Min length of attached edges</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        scalar minEdgeLen(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> vertI) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Return true and set weight if edge is cut</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordtype">bool</span> cutEdge</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        (</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01845.html">plane</a>&amp; cutPlane,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> edgeI,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            scalar&amp; weight</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//- Snaps cut through edge by cut through vertex (if weight closer than</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//  tol to 0 or 1). Returns vertex label snapped to or -1.</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> snapToVert</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        (</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keyword">const</span> scalar tol,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> edgeI,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">const</span> scalar weight</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">//- Gets two (random) vectors perpendicular to n and each other to be</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//  used as base.</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">void</span> getBase</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        (</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; <a class="code" href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a>,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a02776.html">vector</a>&amp; e0,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <a class="code" href="a02776.html">vector</a>&amp; e1</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (t &lt; times_[0])</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;current time (&quot;</span> &lt;&lt; t</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;) is less than the minimum in the data table (&quot;</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            &lt;&lt; times_[0] &lt;&lt; <span class="charliteral">&#39;)&#39;</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span> (t &gt; times_.last())</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;current time (&quot;</span> &lt;&lt; t</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;) is greater than the maximum in the data table (&quot;</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            &lt;&lt; times_.last() &lt;&lt; <span class="charliteral">&#39;)&#39;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="a02788.html">translationRotationVectors</a> TRV = <a class="code" href="a10725.html#abdfa03f158ce22a61e7d94d5019072c5">interpolateSplineXY</a></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    (</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        t,</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        times_,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        values_</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    );</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">// Convert the rotational motion from deg to rad</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    TRV[1] *= <a class="code" href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">pi</a>/180.0;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a02051.html">quaternion</a> <a class="code" href="a08869.html#a45e6077c6122a27618617931f817bc2c">R</a>(TRV[1].<a class="code" href="a06985.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a>(), TRV[1].<a class="code" href="a06984.html#afa8b67a0d5607da908ad92ed485e19e8">y</a>(), TRV[1].z());</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="a02273.html">septernion</a> TR(<a class="code" href="a02273.html">septernion</a>(CofG_ + TRV[0])*R*<a class="code" href="a02273.html">septernion</a>(-CofG_));</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="comment">//- Return true if the cut edge at loop[index] is inbetween the cuts</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">//  through the edge end points.</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordtype">bool</span> edgeEndsCut(<span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp;, <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> index) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <a class="code" href="a00909.html">geomCellLooper</a>(<span class="keyword">const</span> <a class="code" href="a00909.html">geomCellLooper</a>&amp;);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a00909.html">geomCellLooper</a>&amp;);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;solidBodyMotionFunctions::tabulated6DoFMotion::transformation(): &quot;</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;Time = &quot;</span> &lt;&lt; t &lt;&lt; <span class="stringliteral">&quot; transformation: &quot;</span> &lt;&lt; TR &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> TR;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02551.html#afeed4512a4be2653bc44cb43a1ae0788">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::read</a></div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="a02551.html#afeed4512a4be2653bc44cb43a1ae0788">  118</a></span>&#160;(</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; SBMFCoeffs</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;{</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="a02363.html#abd55f4bae5a7d1d58dbe7d6f7f58901a">solidBodyMotionFunction::read</a>(SBMFCoeffs);</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="a00909.html#a8bf7a602b59077ce258b2d7bc11503c8">TypeName</a>(<span class="stringliteral">&quot;geomCellLooper&quot;</span>);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="comment">// Static Functions</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="a00909.html#a1a2ed7b52d838b8b1faad80b2e30fb35">  129</a></span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">static</span> scalar <a class="code" href="a00909.html#a1a2ed7b52d838b8b1faad80b2e30fb35">snapTol</a>()</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keywordflow">return</span> snapTol_;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="a00909.html#a40d86cd70822d0e848b72b9bd9bdbae0">  134</a></span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00909.html#a40d86cd70822d0e848b72b9bd9bdbae0">setSnapTol</a>(<span class="keyword">const</span> scalar tol)</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            snapTol_ = tol;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        }</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <a class="code" href="a00909.html">geomCellLooper</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a00616.html#aa51573bc757d5d5bb058db0464886447">mesh</a>);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00909.html#ae04bc49003c838442ce0a729bb3bf9c2">~geomCellLooper</a>();</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="comment">//- Create cut along circumference of cellI. Gets current mesh cuts.</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="comment">//  Cut along circumference is expressed as loop of cuts plus weights</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="comment">//  for cuts along edges (only valid for edge cuts).</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">//  Return true if successful cut.</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a00909.html#a57a0014495f8049ba5a41bc5fba01230">cut</a></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        (</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; refDir,</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">boolList</a>&amp; vertIsCut,</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">boolList</a>&amp; edgeIsCut,</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; edgeWeight,</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <a class="code" href="a01355.html">labelList</a>&amp; loop,</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; loopWeights</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="comment">//- Same but now also base point of cut provided (instead of always</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="comment">//  cell centre)</span></div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a00909.html#a57a0014495f8049ba5a41bc5fba01230">cut</a></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        (</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01845.html">plane</a>&amp; cutPlane,</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">boolList</a>&amp; vertIsCut,</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">boolList</a>&amp; edgeIsCut,</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; edgeWeight,</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <a class="code" href="a01355.html">labelList</a>&amp; loop,</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; loopWeights</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;};</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06955_html_a830e93cc5b8d859299d1a788c12be8ac"><div class="ttname"><a href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a></div><div class="ttdeci">label n</div><div class="ttdef"><b>Definition:</b> <a href="a06955_source.html#l00031">TABSMDCalcMethod2.H:31</a></div></div>
-<div class="ttc" id="a00909_html_a1a2ed7b52d838b8b1faad80b2e30fb35"><div class="ttname"><a href="a00909.html#a1a2ed7b52d838b8b1faad80b2e30fb35">Foam::geomCellLooper::snapTol</a></div><div class="ttdeci">static scalar snapTol()</div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00129">geomCellLooper.H:129</a></div></div>
-<div class="ttc" id="a00909_html_ae04bc49003c838442ce0a729bb3bf9c2"><div class="ttname"><a href="a00909.html#ae04bc49003c838442ce0a729bb3bf9c2">Foam::geomCellLooper::~geomCellLooper</a></div><div class="ttdeci">virtual ~geomCellLooper()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04748_source.html#l00222">geomCellLooper.C:222</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04747_html"><div class="ttname"><a href="a04747.html">cellLooper.H</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a00909_html"><div class="ttname"><a href="a00909.html">Foam::geomCellLooper</a></div><div class="ttdoc">Implementation of cellLooper. Does pure geometric cut through cell. </div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00063">geomCellLooper.H:63</a></div></div>
-<div class="ttc" id="a07813_html"><div class="ttname"><a href="a07813.html">typeInfo.H</a></div></div>
-<div class="ttc" id="a00909_html_a40d86cd70822d0e848b72b9bd9bdbae0"><div class="ttname"><a href="a00909.html#a40d86cd70822d0e848b72b9bd9bdbae0">Foam::geomCellLooper::setSnapTol</a></div><div class="ttdeci">static void setSnapTol(const scalar tol)</div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00134">geomCellLooper.H:134</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00213_html"><div class="ttname"><a href="a00213.html">Foam::cellLooper</a></div><div class="ttdoc">Abstract base class. Concrete implementations know how to cut a cell (i.e. determine a loop around th...</div><div class="ttdef"><b>Definition:</b> <a href="a04747_source.html#l00069">cellLooper.H:69</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a00909_html_a8bf7a602b59077ce258b2d7bc11503c8"><div class="ttname"><a href="a00909.html#a8bf7a602b59077ce258b2d7bc11503c8">Foam::geomCellLooper::TypeName</a></div><div class="ttdeci">TypeName(&quot;geomCellLooper&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00616_html_aa51573bc757d5d5bb058db0464886447"><div class="ttname"><a href="a00616.html#aa51573bc757d5d5bb058db0464886447">Foam::edgeVertex::mesh</a></div><div class="ttdeci">const polyMesh &amp; mesh() const </div><div class="ttdef"><b>Definition:</b> <a href="a04760_source.html#l00098">edgeVertex.H:98</a></div></div>
-<div class="ttc" id="a00909_html_a57a0014495f8049ba5a41bc5fba01230"><div class="ttname"><a href="a00909.html#a57a0014495f8049ba5a41bc5fba01230">Foam::geomCellLooper::cut</a></div><div class="ttdeci">virtual bool cut(const vector &amp;refDir, const label cellI, const boolList &amp;vertIsCut, const boolList &amp;edgeIsCut, const scalarField &amp;edgeWeight, labelList &amp;loop, scalarField &amp;loopWeights) const </div><div class="ttdoc">Create cut along circumference of cellI. Gets current mesh cuts. </div><div class="ttdef"><b>Definition:</b> <a href="a04748_source.html#l00229">geomCellLooper.C:229</a></div></div>
-<div class="ttc" id="a01845_html"><div class="ttname"><a href="a01845.html">Foam::plane</a></div><div class="ttdoc">Geometric class that creates a 2D plane and can return the intersection point between a line and the ...</div><div class="ttdef"><b>Definition:</b> <a href="a08721_source.html#l00060">plane.H:60</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// If the timeDataFileName has changed read the file</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <a class="code" href="a00780.html">fileName</a> newTimeDataFileName</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    (</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="a00780.html">fileName</a>(SBMFCoeffs_.lookup(<span class="stringliteral">&quot;timeDataFileName&quot;</span>)).<a class="code" href="a10810.html#ab41d029160c93b62b379cdbfbc2918a7">expand</a>()</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    );</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordflow">if</span> (newTimeDataFileName != timeDataFileName_)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        timeDataFileName_ = newTimeDataFileName;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <a class="code" href="a01031.html">IFstream</a> dataStream(timeDataFileName_);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">if</span> (dataStream.<a class="code" href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        {</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            <a class="code" href="a01364.html">List&lt;Tuple2&lt;scalar, translationRotationVectors&gt;</a> &gt; timeValues</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            (</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                dataStream</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            );</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            times_.setSize(timeValues.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            values_.setSize(timeValues.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(timeValues, i)</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            {</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                times_[i] = timeValues[i].<a class="code" href="a02731.html#a1c9828bc3de9502754d944c95a2ce0d9">first</a>();</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                values_[i] = timeValues[i].second();</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Cannot open time data file &quot;</span> &lt;&lt; timeDataFileName_</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    SBMFCoeffs_.lookup(<span class="stringliteral">&quot;CofG&quot;</span>) &gt;&gt; CofG_;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02051_html"><div class="ttname"><a href="a02051.html">Foam::quaternion</a></div><div class="ttdoc">Quaternion class used to perform rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08912_source.html#l00060">quaternion.H:60</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a08869_html_a45e6077c6122a27618617931f817bc2c"><div class="ttname"><a href="a08869.html#a45e6077c6122a27618617931f817bc2c">R</a></div><div class="ttdeci">#define R(A, B, C, D, E, F, K, M)                                                                                            </div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a02273_html"><div class="ttname"><a href="a02273.html">Foam::septernion</a></div><div class="ttdoc">Septernion class used to perform translations and rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08946_source.html#l00064">septernion.H:64</a></div></div>
+<div class="ttc" id="a10737_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
+<div class="ttc" id="a08163_html"><div class="ttname"><a href="a08163.html">mathematicalConstants.H</a></div></div>
+<div class="ttc" id="a10737_html"><div class="ttname"><a href="a10737.html">Foam::constant::mathematical</a></div><div class="ttdoc">mathematical constants. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02731_html_a1c9828bc3de9502754d944c95a2ce0d9"><div class="ttname"><a href="a02731.html#a1c9828bc3de9502754d944c95a2ce0d9">Foam::UList::first</a></div><div class="ttdeci">T &amp; first()</div><div class="ttdoc">Return the first element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00117">UListI.H:117</a></div></div>
+<div class="ttc" id="a02363_html_abd55f4bae5a7d1d58dbe7d6f7f58901a"><div class="ttname"><a href="a02363.html#abd55f4bae5a7d1d58dbe7d6f7f58901a">Foam::solidBodyMotionFunction::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;SBMFCoeffs)=0</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04746_source.html#l00065">solidBodyMotionFunction.C:65</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02788_html"><div class="ttname"><a href="a02788.html">Foam::Vector2D</a></div><div class="ttdoc">Templated 2D Vector derived from VectorSpace adding construction from 2 components, element access using x() and y() member functions and the inner-product (dot-product). </div><div class="ttdef"><b>Definition:</b> <a href="a09047_source.html#l00051">Vector2D.H:51</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a04750_html"><div class="ttname"><a href="a04750.html">tabulated6DoFMotion.H</a></div></div>
+<div class="ttc" id="a02551_html_afeed4512a4be2653bc44cb43a1ae0788"><div class="ttname"><a href="a02551.html#afeed4512a4be2653bc44cb43a1ae0788">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;SBMFCoeffs)</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00118">tabulated6DoFMotion.C:118</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a02551_html_a81f0dd436b8f71ebb3ed3d093d828a2f"><div class="ttname"><a href="a02551.html#a81f0dd436b8f71ebb3ed3d093d828a2f">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation</a></div><div class="ttdeci">virtual septernion transformation() const </div><div class="ttdoc">Return the solid-body motion transformation septernion. </div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00075">tabulated6DoFMotion.C:75</a></div></div>
+<div class="ttc" id="a06985_html_a9336ebf25087d91c818ee6e9ec29f8c1"><div class="ttname"><a href="a06985.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a></div><div class="ttdeci">x</div><div class="ttdef"><b>Definition:</b> <a href="a06985_source.html#l00052">LISASMDCalcMethod2.H:52</a></div></div>
+<div class="ttc" id="a07769_html"><div class="ttname"><a href="a07769.html">IFstream.H</a></div></div>
+<div class="ttc" id="a02606_html"><div class="ttname"><a href="a02606.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07855_source.html#l00068">Time.H:68</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a02363_html"><div class="ttname"><a href="a02363.html">Foam::solidBodyMotionFunction</a></div><div class="ttdoc">Base class for defining solid-body motions. </div><div class="ttdef"><b>Definition:</b> <a href="a04747_source.html#l00060">solidBodyMotionFunction.H:60</a></div></div>
+<div class="ttc" id="a01185_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::IOstream::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdoc">Return true if next operation might succeed. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00333">IOstream.H:333</a></div></div>
+<div class="ttc" id="a06984_html_afa8b67a0d5607da908ad92ed485e19e8"><div class="ttname"><a href="a06984.html#afa8b67a0d5607da908ad92ed485e19e8">y</a></div><div class="ttdeci">scalar y</div><div class="ttdef"><b>Definition:</b> <a href="a06984_source.html#l00014">LISASMDCalcMethod1.H:14</a></div></div>
+<div class="ttc" id="a08219_html"><div class="ttname"><a href="a08219.html">interpolateSplineXY.H</a></div><div class="ttdoc">Interpolates y values from one curve to another with a different x distribution. </div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a09028_html"><div class="ttname"><a href="a09028.html">Tuple2.H</a></div></div>
+<div class="ttc" id="a02551_html_af9900bf46ffe86f975278991def3b6c9"><div class="ttname"><a href="a02551.html#af9900bf46ffe86f975278991def3b6c9">Foam::solidBodyMotionFunctions::tabulated6DoFMotion::~tabulated6DoFMotion</a></div><div class="ttdeci">virtual ~tabulated6DoFMotion()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04749_source.html#l00068">tabulated6DoFMotion.C:68</a></div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a10810_html_ab41d029160c93b62b379cdbfbc2918a7"><div class="ttname"><a href="a10810.html#ab41d029160c93b62b379cdbfbc2918a7">Foam::stringOps::expand</a></div><div class="ttdeci">string expand(const string &amp;, const HashTable&lt; string, word, string::hash &gt; &amp;mapping, const char sigil= '$')</div><div class="ttdoc">Expand occurences of variables according to the mapping. </div><div class="ttdef"><b>Definition:</b> <a href="a08982_source.html#l00074">stringOps.C:74</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a01031_html"><div class="ttname"><a href="a01031.html">Foam::IFstream</a></div><div class="ttdoc">Input from file stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07769_source.html#l00081">IFstream.H:81</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a10725_html_abdfa03f158ce22a61e7d94d5019072c5"><div class="ttname"><a href="a10725.html#abdfa03f158ce22a61e7d94d5019072c5">Foam::interpolateSplineXY</a></div><div class="ttdeci">Field&lt; Type &gt; interpolateSplineXY(const scalarField &amp;xNew, const scalarField &amp;xOld, const Field&lt; Type &gt; &amp;yOld)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_ebc4a50cd94b4d9cf2a6a622cea77dff.html">cavitatingFoam</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_ab9cb4592fb2c4cce1bcf4c9207454a5.html">compressible</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">setDeltaT.H</div>  </div>
+<div class="title">rhoEqn.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05036.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,44 +120,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Global</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    setDeltaT</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    rhoEqn</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Reset the timestep to maintain a constant maximum courant Number.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Reduction of time-step is imediate but increase is damped to avoid</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    unstable oscillations.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a05036.html#ae64d60def649600fb9f624abf0393592">   31</a></span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordflow">if</span> (<a class="code" href="a05024.html#ad3a700e1652b37d5382eaeda5cbf3824">adjustTimeStep</a>)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    scalar maxDeltaTFact =</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a05024.html#ad9decffd39ebb2e0a9c0c7169076b13f">maxCo</a>/(<a class="code" href="a04993.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a> + SMALL), <a class="code" href="a02961.html#aedad3edd748f6cfee97e7890839b7f10">maxAcousticCo</a>/(<a class="code" href="a05094.html#a5bbc215bfc3c3f8a510a69b0bfefc93c">acousticCoNum</a> + SMALL));</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    scalar deltaTFact = <a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.2);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Solve the continuity for density.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a3188f9410e198feec45dc78b2bcb8a8b">fvScalarMatrix</a> rhoEqn</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    (</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="a10759.html#a5dc871206ab86042756c8ccfdc5797ad">fvm::ddt</a>(<a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      + <a class="code" href="a10759.html#a585533948ad80abfe589d920c641f251">fvc::div</a>(<a class="code" href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      ==</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a03195.html#a17798bb69ca5f9a5d28c2a824053b8a6">fvOptions</a>(<a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    );</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    runTime.setDeltaT</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        (</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            deltaTFact*runTime.deltaTValue(),</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <a class="code" href="a05024.html#a7f6739b865c2d5e693900f678f68117a">maxDeltaT</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        )</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    );</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;deltaT = &quot;</span> &lt;&lt;  runTime.deltaTValue() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a05024_html_ad3a700e1652b37d5382eaeda5cbf3824"><div class="ttname"><a href="a05024.html#ad3a700e1652b37d5382eaeda5cbf3824">adjustTimeStep</a></div><div class="ttdeci">bool adjustTimeStep</div><div class="ttdef"><b>Definition:</b> <a href="a05024_source.html#l00029">createTimeControls.H:29</a></div></div>
-<div class="ttc" id="a10675_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a05094_html_a5bbc215bfc3c3f8a510a69b0bfefc93c"><div class="ttname"><a href="a05094.html#a5bbc215bfc3c3f8a510a69b0bfefc93c">acousticCoNum</a></div><div class="ttdeci">scalar acousticCoNum</div><div class="ttdef"><b>Definition:</b> <a href="a05094_source.html#l00031">CourantNo.H:31</a></div></div>
-<div class="ttc" id="a05024_html_a7f6739b865c2d5e693900f678f68117a"><div class="ttname"><a href="a05024.html#a7f6739b865c2d5e693900f678f68117a">maxDeltaT</a></div><div class="ttdeci">scalar maxDeltaT</div><div class="ttdef"><b>Definition:</b> <a href="a05024_source.html#l00035">createTimeControls.H:35</a></div></div>
-<div class="ttc" id="a05024_html_ad9decffd39ebb2e0a9c0c7169076b13f"><div class="ttname"><a href="a05024.html#ad9decffd39ebb2e0a9c0c7169076b13f">maxCo</a></div><div class="ttdeci">scalar maxCo</div><div class="ttdef"><b>Definition:</b> <a href="a05024_source.html#l00032">createTimeControls.H:32</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a04993_html_ab7212aaf6d0ec5a5b5cd0b3b6a0c2741"><div class="ttname"><a href="a04993.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a></div><div class="ttdeci">scalar CoNum</div><div class="ttdef"><b>Definition:</b> <a href="a04993_source.html#l00029">compressibleCourantNo.H:29</a></div></div>
-<div class="ttc" id="a02961_html_aedad3edd748f6cfee97e7890839b7f10"><div class="ttname"><a href="a02961.html#aedad3edd748f6cfee97e7890839b7f10">maxAcousticCo</a></div><div class="ttdeci">maxAcousticCo</div><div class="ttdef"><b>Definition:</b> <a href="a02961_source.html#l00003">readControls.H:3</a></div></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a03195.html#a17798bb69ca5f9a5d28c2a824053b8a6">fvOptions</a>.constrain(rhoEqn);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    rhoEqn.solve();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a03195.html#a17798bb69ca5f9a5d28c2a824053b8a6">fvOptions</a>.correct(<a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a03195_html_a17798bb69ca5f9a5d28c2a824053b8a6"><div class="ttname"><a href="a03195.html#a17798bb69ca5f9a5d28c2a824053b8a6">fvOptions</a></div><div class="ttdeci">fv::options &amp; fvOptions</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00016">setRegionFluidFields.H:16</a></div></div>
+<div class="ttc" id="a02978_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02978_source.html#l00096">readInitialConditions.H:96</a></div></div>
+<div class="ttc" id="a10725_html_a3188f9410e198feec45dc78b2bcb8a8b"><div class="ttname"><a href="a10725.html#a3188f9410e198feec45dc78b2bcb8a8b">Foam::fvScalarMatrix</a></div><div class="ttdeci">fvMatrix&lt; scalar &gt; fvScalarMatrix</div><div class="ttdef"><b>Definition:</b> <a href="a05785_source.html#l00042">fvMatricesFwd.H:42</a></div></div>
+<div class="ttc" id="a03195_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
+<div class="ttc" id="a10759_html_a5dc871206ab86042756c8ccfdc5797ad"><div class="ttname"><a href="a10759.html#a5dc871206ab86042756c8ccfdc5797ad">Foam::fvc::ddt</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; ddt(const dimensioned&lt; Type &gt; dt, const fvMesh &amp;mesh)</div><div class="ttdef"><b>Definition:</b> <a href="a05678_source.html#l00045">fvcDdt.C:45</a></div></div>
+<div class="ttc" id="a10759_html_a585533948ad80abfe589d920c641f251"><div class="ttname"><a href="a10759.html#a585533948ad80abfe589d920c641f251">Foam::fvc::div</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; div(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05681_source.html#l00047">fvcDiv.C:47</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

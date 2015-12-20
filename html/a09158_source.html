@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_efb3ad8e9cbb3414a44ef268cb98c0b2.html">field</a></li><li class="navelem"><a class="el" href="dir_1bce965a5bf38e495a5f169c678f6b15.html">fieldValues</a></li><li class="navelem"><a class="el" href="dir_c8c4e637a5dd2bd81ac41de9b9335942.html">fieldValueDelta</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e8edcdfe104a2a1ceea328e2145ca73e.html">foamCalcFunctions</a></li><li class="navelem"><a class="el" href="dir_bfcb018a42f8a829ae9e479a66188d55.html">field</a></li><li class="navelem"><a class="el" href="dir_b3079051bd095a02590c3a0b5c976e09.html">randomise</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fieldValueDeltaFunctionObject.H</div>  </div>
+<div class="title">writeRandomField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09158.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,41 +119,72 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::fieldValueDeltaFunctionObject</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    FunctionObject wrapper around fieldValueDelta to allow it to be</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    created via the functions entry within controlDict.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    fieldValueDeltaFunctionObject.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef fieldValueDeltaFunctionObject_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define fieldValueDeltaFunctionObject_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09156.html">fieldValueDelta.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07690.html">OutputFilterFunctionObject.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">typedef</span> OutputFilterFunctionObject&lt;fieldValues::fieldValueDelta&gt;</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a10675.html#a8b9f9a1fb976ddb6bb3d322dcbbe951e">   47</a></span>&#160;        <a class="code" href="a10675.html#a8b9f9a1fb976ddb6bb3d322dcbbe951e">fieldValueDeltaFunctionObject</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02064.html#a737af16a1590d56e038307712bf03d6c">Foam::calcTypes::randomise::writeRandomField</a></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="a02064.html#a737af16a1590d56e038307712bf03d6c">   28</a></span>&#160;(</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01179.html">IOobject</a>&amp; header,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">const</span> scalar pertMag,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="a02062.html">Random</a>&amp; rand,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span>&amp; processed</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> fieldType;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">if</span> (header.<a class="code" href="a01179.html#a88c20567fd22659923753b6b3e3966c3">headerClassName</a>() == fieldType::typeName)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Reading &quot;</span> &lt;&lt; header.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        fieldType field(header, mesh);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(field, cellI)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            Type rndPert;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            rand.<a class="code" href="a02062.html#a0dfc79922245a1b7421f618d4e446ce0">randomise</a>(rndPert);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            rndPert = 2.0*rndPert - <a class="code" href="a02017.html">pTraits&lt;Type&gt;::one</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            rndPert /= <a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(rndPert);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            field[cellI] += pertMag*rndPert;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a09156_html"><div class="ttname"><a href="a09156.html">fieldValueDelta.H</a></div></div>
-<div class="ttc" id="a10675_html_a8b9f9a1fb976ddb6bb3d322dcbbe951e"><div class="ttname"><a href="a10675.html#a8b9f9a1fb976ddb6bb3d322dcbbe951e">Foam::fieldValueDeltaFunctionObject</a></div><div class="ttdeci">OutputFilterFunctionObject&lt; fieldValues::fieldValueDelta &gt; fieldValueDeltaFunctionObject</div><div class="ttdoc">FunctionObject wrapper around fieldValueDelta to allow it to be created via the functions entry withi...</div><div class="ttdef"><b>Definition:</b> <a href="a09158_source.html#l00047">fieldValueDeltaFunctionObject.H:47</a></div></div>
-<div class="ttc" id="a07690_html"><div class="ttname"><a href="a07690.html">OutputFilterFunctionObject.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        fieldType randomisedField</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        (</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <a class="code" href="a01179.html">IOobject</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            (</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                header.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="stringliteral">&quot;Random&quot;</span>,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                mesh.<a class="code" href="a00876.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02606.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                IOobject::NO_READ</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            ),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            field</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        );</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Writing &quot;</span> &lt;&lt; header.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <span class="stringliteral">&quot;Random&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        randomisedField.<a class="code" href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a>();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        processed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a02606_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02606.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07854_source.html#l00741">Time.C:741</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a01179_html_a88c20567fd22659923753b6b3e3966c3"><div class="ttname"><a href="a01179.html#a88c20567fd22659923753b6b3e3966c3">Foam::IOobject::headerClassName</a></div><div class="ttdeci">const word &amp; headerClassName() const </div><div class="ttdoc">Return name of the class name read from header. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00266">IOobject.H:266</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02062_html_a0dfc79922245a1b7421f618d4e446ce0"><div class="ttname"><a href="a02062.html#a0dfc79922245a1b7421f618d4e446ce0">Foam::Random::randomise</a></div><div class="ttdeci">void randomise(scalar &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08918_source.html#l00138">Random.C:138</a></div></div>
+<div class="ttc" id="a02064_html_a737af16a1590d56e038307712bf03d6c"><div class="ttname"><a href="a02064.html#a737af16a1590d56e038307712bf03d6c">Foam::calcTypes::randomise::writeRandomField</a></div><div class="ttdeci">void writeRandomField(const IOobject &amp;header, const scalar pertMag, Random &amp;rand, const fvMesh &amp;mesh, bool &amp;processed)</div><div class="ttdoc">Write component fields. </div><div class="ttdef"><b>Definition:</b> <a href="a09158_source.html#l00028">writeRandomField.C:28</a></div></div>
+<div class="ttc" id="a02062_html"><div class="ttname"><a href="a02062.html">Foam::Random</a></div><div class="ttdoc">Simple random number generator. </div><div class="ttdef"><b>Definition:</b> <a href="a08919_source.html#l00049">Random.H:49</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01736_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
+<div class="ttc" id="a02017_html"><div class="ttname"><a href="a02017.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08910_source.html#l00050">pTraits.H:50</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a00876_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00876.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00243">fvMesh.H:243</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

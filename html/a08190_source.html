@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_e764f87aebd421bcba631b254777cd25.html">interpolations</a></li><li class="navelem"><a class="el" href="dir_cb8fa07fd9be2ed302d73f31d0bb935b.html">interpolationWeights</a></li><li class="navelem"><a class="el" href="dir_73c894a9801cbaa56688b14a06518e12.html">interpolationWeights</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_0fdbe385b7770877731446f8c754e682.html">graph</a></li><li class="navelem"><a class="el" href="dir_4186ef7d082dc05bc2b228141df39fcb.html">writers</a></li><li class="navelem"><a class="el" href="dir_352046011ec4213851dc9b8a91385200.html">jplotGraph</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">interpolationWeightsTemplates.C</div>  </div>
+<div class="title">jplotGraph.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08190.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,70 +121,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08189.html">interpolationWeights.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07594.html">ListOps.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07694.html">IOobject.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07522.html">HashSet.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07781.html">objectRegistry.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ListType1, <span class="keyword">class</span> ListType2&gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">typename</span> <a class="code" href="a01727.html">Foam::outerProduct</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;&lt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">typename</span> ListType1::value_type,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">typename</span> ListType2::value_type</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;&gt;<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">::type</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a01152.html#a65e27c375559056e5b55f51af622c1ad">Foam::interpolationWeights::weightedSum</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01152.html#a77779120827e89b26d2f1713cfdd0a20">   46</a></span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> ListType1&amp; <a class="code" href="a04386.html#a5b4b6290162aa22a61932356154d652a">f1</a>,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> ListType2&amp; f2</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a01727.html">outerProduct</a></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    &lt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">typename</span> ListType1::value_type,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">typename</span> ListType2::value_type</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    &gt;<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">::type</a> returnType;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (f1.size())</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        returnType SumProd = f1[0]*f2[0];</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i = 1; i &lt; f1.size(); ++i)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            SumProd += f1[i]*f2[i];</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> SumProd;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a02006.html">pTraits&lt;returnType&gt;::zero</a>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01727_html"><div class="ttname"><a href="a01727.html">Foam::outerProduct</a></div><div class="ttdef"><b>Definition:</b> <a href="a08999_source.html#l00064">products.H:64</a></div></div>
-<div class="ttc" id="a01152_html_a65e27c375559056e5b55f51af622c1ad"><div class="ttname"><a href="a01152.html#a65e27c375559056e5b55f51af622c1ad">Foam::interpolationWeights::weightedSum</a></div><div class="ttdeci">static outerProduct&lt; typename ListType1::value_type, typename ListType2::value_type &gt;::type weightedSum(const ListType1 &amp;f1, const ListType2 &amp;f2)</div><div class="ttdoc">Helper: weighted sum. </div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a07781_html"><div class="ttname"><a href="a07781.html">objectRegistry.H</a></div></div>
-<div class="ttc" id="a04386_html_a5b4b6290162aa22a61932356154d652a"><div class="ttname"><a href="a04386.html#a5b4b6290162aa22a61932356154d652a">f1</a></div><div class="ttdeci">scalar f1</div><div class="ttdef"><b>Definition:</b> <a href="a04386_source.html#l00028">createFields.H:28</a></div></div>
-<div class="ttc" id="a02006_html"><div class="ttname"><a href="a02006.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08858_source.html#l00050">pTraits.H:50</a></div></div>
-<div class="ttc" id="a08189_html"><div class="ttname"><a href="a08189.html">interpolationWeights.H</a></div></div>
-<div class="ttc" id="a07694_html"><div class="ttname"><a href="a07694.html">IOobject.H</a></div></div>
-<div class="ttc" id="a07594_html"><div class="ttname"><a href="a07594.html">ListOps.H</a></div><div class="ttdoc">Various functions to operate on Lists. </div></div>
-<div class="ttc" id="a07522_html"><div class="ttname"><a href="a07522.html">HashSet.H</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08191.html">jplotGraph.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(jplotGraph, 0);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> word <a class="code" href="a01222.html#ad1dbbfec2ef8e7e349dde5d0c85cd1cf">jplotGraph::ext_</a>(<span class="stringliteral">&quot;dat&quot;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">typedef</span> graph::writer <a class="code" href="a10725.html#a75c3b24ffda662adff500772be5e9167">graphWriter</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(graphWriter, jplotGraph, word);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a01222.html#ab88e57639fbd935e7ca4d747f4a612c5">   43</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01222.html#ab88e57639fbd935e7ca4d747f4a612c5">Foam::jplotGraph::write</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; <a class="code" href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a>, <a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    os  &lt;&lt; <span class="stringliteral">&quot;# JPlot file&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;# column 1: &quot;</span> &lt;&lt; g.<a class="code" href="a00945.html#aa8accb3ff6861a0ff3c3c9f5e8f84931">xName</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> fieldI = 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00945.html">graph</a>, g, iter)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        os  &lt;&lt; <span class="stringliteral">&quot;# column &quot;</span> &lt;&lt; fieldI + 2 &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; (*iter()).<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        fieldI++;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    g.<a class="code" href="a00945.html#a30a8aeb06f459adf54933d45bbbec838">writeTable</a>(os);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00945_html_a30a8aeb06f459adf54933d45bbbec838"><div class="ttname"><a href="a00945.html#a30a8aeb06f459adf54933d45bbbec838">Foam::graph::writeTable</a></div><div class="ttdeci">void writeTable(Ostream &amp;) const </div><div class="ttdoc">Write out graph data as a simple table. </div><div class="ttdef"><b>Definition:</b> <a href="a08186_source.html#l00206">graph.C:206</a></div></div>
+<div class="ttc" id="a03195_html_ae0b3bf70bd591e6682c5eaa2191bafe7"><div class="ttname"><a href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a></div><div class="ttdeci">const dimensionedVector &amp; g</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00033">setRegionFluidFields.H:33</a></div></div>
+<div class="ttc" id="a01222_html_ab88e57639fbd935e7ca4d747f4a612c5"><div class="ttname"><a href="a01222.html#ab88e57639fbd935e7ca4d747f4a612c5">Foam::jplotGraph::write</a></div><div class="ttdeci">void write(const graph &amp;, Ostream &amp;os) const </div><div class="ttdoc">Write graph in appropriate format. </div><div class="ttdef"><b>Definition:</b> <a href="a08190_source.html#l00043">jplotGraph.C:43</a></div></div>
+<div class="ttc" id="a07669_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00449">UList.H:449</a></div></div>
+<div class="ttc" id="a00945_html_aa8accb3ff6861a0ff3c3c9f5e8f84931"><div class="ttname"><a href="a00945.html#aa8accb3ff6861a0ff3c3c9f5e8f84931">Foam::graph::xName</a></div><div class="ttdeci">const string &amp; xName() const </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00154">graph.H:154</a></div></div>
+<div class="ttc" id="a10725_html_a75c3b24ffda662adff500772be5e9167"><div class="ttname"><a href="a10725.html#a75c3b24ffda662adff500772be5e9167">Foam::graphWriter</a></div><div class="ttdeci">graph::writer graphWriter</div><div class="ttdef"><b>Definition:</b> <a href="a08186_source.html#l00036">graph.C:36</a></div></div>
+<div class="ttc" id="a00945_html"><div class="ttname"><a href="a00945.html">Foam::graph</a></div><div class="ttdoc">Class to create, store and output qgraph files. </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00058">graph.H:58</a></div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a01222_html_ad1dbbfec2ef8e7e349dde5d0c85cd1cf"><div class="ttname"><a href="a01222.html#ad1dbbfec2ef8e7e349dde5d0c85cd1cf">Foam::jplotGraph::ext_</a></div><div class="ttdeci">static const word ext_</div><div class="ttdoc">FileName extension for this graph format. </div><div class="ttdef"><b>Definition:</b> <a href="a08191_source.html#l00059">jplotGraph.H:59</a></div></div>
+<div class="ttc" id="a08191_html"><div class="ttname"><a href="a08191.html">jplotGraph.H</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

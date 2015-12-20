@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a88fe22feb23ce5f078a04a1df67721.html">surfMesh</a></li><li class="navelem"><a class="el" href="dir_3ad8f5f9808d8196d04eb1769c1a10a8.html">surfaceFormats</a></li><li class="navelem"><a class="el" href="dir_d5882ded542ce1b2fc65f2a9f77bd4de.html">obj</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a5b93d9ceb327a1197b724c6aefedcbd.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_7bf5f2e6b4a44539c2947a2841ca313c.html">sixDoFRigidBodyMotion</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">OBJstream.H</div>  </div>
+<div class="title">sixDoFRigidBodyMotionIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09785.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,199 +119,125 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::OBJstream</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    OFstream which keeps track of vertices</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    OBJstream.C</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef OBJstream_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define OBJstream_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07720.html">OFstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08722.html">point.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08469.html">edge.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08476.html">face.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08739.html">triPointRef.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08710.html">linePointRef.H</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09783.html">sixDoFRigidBodyMotion.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07775.html">IOstreams.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a02325.html#a6ce0c64db98eb6144d363dbfc86104eb">   31</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02325.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::sixDoFRigidBodyMotion::read</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;mass&quot;</span>) &gt;&gt; mass_;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;momentOfInertia&quot;</span>) &gt;&gt; momentOfInertia_;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    aRelax_ = dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;scalar&gt;(<span class="stringliteral">&quot;accelerationRelaxation&quot;</span>, 1.0);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    aDamp_ = dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;scalar&gt;(<span class="stringliteral">&quot;accelerationDamping&quot;</span>, 1.0);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    report_ = dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;<a class="code" href="a02514.html">Switch</a>&gt;(<span class="stringliteral">&quot;report&quot;</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    restraints_.clear();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a02325.html#aab527a28d55b5ef6f92763390ca4f50d">addRestraints</a>(dict);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    constraints_.clear();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a02325.html#a23dd71414ffe550535f783a02bea023b">addConstraints</a>(dict);</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">                          Class OBJstream Declaration</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a01680.html">   53</a></span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a01680.html">OBJstream</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01692.html">OFstream</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">bool</span> startOfLine_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nVertices_;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">void</span> writeAndCheck(<span class="keyword">const</span> <span class="keywordtype">char</span>);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Declare name of the class and its debug switch</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a01680.html#aed0120741f23e6d0be9c609056630154">ClassName</a>(<span class="stringliteral">&quot;OBJstream&quot;</span>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a02325.html#a0941061ad5a26be83b4107d05750ace6">   49</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02325.html#a0941061ad5a26be83b4107d05750ace6">Foam::sixDoFRigidBodyMotion::write</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    motionState_.write(os);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;centreOfMass&quot;</span>)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        &lt;&lt; initialCentreOfMass_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;initialOrientation&quot;</span>)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        &lt;&lt; initialQ_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;mass&quot;</span>)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        &lt;&lt; mass_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;momentOfInertia&quot;</span>)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        &lt;&lt; momentOfInertia_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;accelerationRelaxation&quot;</span>)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        &lt;&lt; aRelax_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;accelerationDamping&quot;</span>)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        &lt;&lt; aDamp_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;report&quot;</span>)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        &lt;&lt; report_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (!restraints_.empty())</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <span class="stringliteral">&quot;restraints&quot;</span> &lt;&lt; nl</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">incrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(restraints_, rI)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <a class="code" href="a02869.html">word</a> restraintType = restraints_[rI].type();</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//- Construct from pathname</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a01680.html#aef271428371a4ddd07ea2c6403b4edb7">OBJstream</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        (</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; pathname,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">streamFormat</a> <a class="code" href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">format</a>=<a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d">ASCII</a>,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <a class="code" href="a02786.html">versionNumber</a> <a class="code" href="a01177.html#ac12266e2067a7baeb13af68a5e643edd">version</a>=<a class="code" href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">currentVersion</a>,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <a class="code" href="a01177.html#aae1d1588038b444591f723c61c9aacad">compressionType</a> <a class="code" href="a01177.html#a2d6fbebb85ebc05900feee8fa0a0d090">compression</a>=<a class="code" href="a01177.html#aae1d1588038b444591f723c61c9aacada268875f90c27aa5b5b3b0b89798f35e8">UNCOMPRESSED</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        );</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a01680.html#a99d994d843dfab13ce2886d5902cf840">~OBJstream</a>();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            os  &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; restraints_[rI].<a class="code" href="a01185.html#ab27acd1d200f0d245337451aa2f31517">name</a>() &lt;&lt; nl</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">incrIndent</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;sixDoFRigidBodyMotionRestraint&quot;</span>)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                &lt;&lt; restraintType &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            restraints_[rI].write(os);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            os  &lt;&lt; <a class="code" href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">decrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">decrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">// Access</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="a01680.html#afab43b19f8852fc512d6bc050592702b">   95</a></span>&#160;            <span class="comment">//- Return the number of vertices written</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01680.html#afab43b19f8852fc512d6bc050592702b">nVertices</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">            </span>{</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="keywordflow">return</span> nVertices_;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">// Ostream implementation</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="comment">//- Inherit write from Ostream</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">using</span> <a class="code" href="a01725.html#a81a19ad9e4098b4701cc8bab9a59d78b">Ostream::write</a>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="comment">//- Write character</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">if</span> (!constraints_.empty())</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <span class="stringliteral">&quot;constraints&quot;</span> &lt;&lt; nl</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">incrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(constraints_, rI)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <a class="code" href="a02869.html">word</a> constraintType = constraints_[rI].type();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            os  &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; constraints_[rI].<a class="code" href="a01185.html#ab27acd1d200f0d245337451aa2f31517">name</a>() &lt;&lt; nl</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">incrIndent</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;sixDoFRigidBodyMotionConstraint&quot;</span>)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                &lt;&lt; constraintType &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            constraints_[rI].sixDoFRigidBodyMotionConstraint::write(os);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            constraints_[rI].write(os);</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="comment">//- Write character string</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>*);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            os  &lt;&lt; <a class="code" href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">decrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        }</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="comment">//- Write word</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp;);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp;);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">decrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="comment">//- Write std::string surrounded by quotes.</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="comment">//  Optional write without quotes.</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#a40c64d7f8975f303da0b0245c16fe906">writeQuoted</a></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            (</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                <span class="keyword">const</span> std::string&amp;,</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">bool</span> quoted=<span class="keyword">true</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            );</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="comment">// Direct write functionality</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="comment">//- Write point</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a02776.html">point</a>&amp;);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="comment">//- Write point and vector normal (&#39;vn&#39;)</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a02776.html">point</a>&amp;, <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp;);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="comment">//- Write edge as points with line</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a00606.html">edge</a>&amp;, <span class="keyword">const</span> <a class="code" href="a02720.html">UList&lt;point&gt;</a>&amp;);</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <span class="comment">//- Write line</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a01321.html">linePointRef</a>&amp;);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="comment">//- Write line with points and vector normals (&#39;vn&#39;)</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            (</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01321.html">linePointRef</a>&amp;,</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; n0,</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; n1</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            );</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="comment">//- Write triangle as points with lines or filled polygon</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a>(<span class="keyword">const</span> <a class="code" href="a02664.html">triPointRef</a>&amp;, <span class="keyword">const</span> <span class="keywordtype">bool</span> lines = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            <span class="comment">//- Write face as points with lines or filled polygon</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            (</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00709.html">face</a>&amp;,</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02720.html">UList&lt;point&gt;</a>&amp;,</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">bool</span> lines = <span class="keyword">true</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            );</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <span class="comment">//- Write patch as points and faces with lines or filled polygons</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">write</a></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            (</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01355.html">faceList</a>&amp;,</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00749.html">pointField</a>&amp;,</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">bool</span> lines = <span class="keyword">true</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            );</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;};</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01692_html"><div class="ttname"><a href="a01692.html">Foam::OFstream</a></div><div class="ttdoc">Output to file stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07720_source.html#l00081">OFstream.H:81</a></div></div>
-<div class="ttc" id="a01680_html_a99d994d843dfab13ce2886d5902cf840"><div class="ttname"><a href="a01680.html#a99d994d843dfab13ce2886d5902cf840">Foam::OBJstream::~OBJstream</a></div><div class="ttdeci">~OBJstream()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09784_source.html#l00076">OBJstream.C:76</a></div></div>
-<div class="ttc" id="a01680_html"><div class="ttname"><a href="a01680.html">Foam::OBJstream</a></div><div class="ttdoc">OFstream which keeps track of vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a09785_source.html#l00053">OBJstream.H:53</a></div></div>
-<div class="ttc" id="a01177_html_a2d6fbebb85ebc05900feee8fa0a0d090"><div class="ttname"><a href="a01177.html#a2d6fbebb85ebc05900feee8fa0a0d090">Foam::IOstream::compression</a></div><div class="ttdeci">compressionType compression() const </div><div class="ttdoc">Return the stream compression. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00416">IOstream.H:416</a></div></div>
-<div class="ttc" id="a01680_html_aed0120741f23e6d0be9c609056630154"><div class="ttname"><a href="a01680.html#aed0120741f23e6d0be9c609056630154">Foam::OBJstream::ClassName</a></div><div class="ttdeci">ClassName(&quot;OBJstream&quot;)</div></div>
-<div class="ttc" id="a01177_html_ac12266e2067a7baeb13af68a5e643edd"><div class="ttname"><a href="a01177.html#ac12266e2067a7baeb13af68a5e643edd">Foam::IOstream::version</a></div><div class="ttdeci">versionNumber version() const </div><div class="ttdoc">Return the stream version. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00399">IOstream.H:399</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a01680_html_a40c64d7f8975f303da0b0245c16fe906"><div class="ttname"><a href="a01680.html#a40c64d7f8975f303da0b0245c16fe906">Foam::OBJstream::writeQuoted</a></div><div class="ttdeci">virtual Ostream &amp; writeQuoted(const std::string &amp;, const bool quoted=true)</div><div class="ttdoc">Write std::string surrounded by quotes. </div><div class="ttdef"><b>Definition:</b> <a href="a09784_source.html#l00150">OBJstream.C:150</a></div></div>
-<div class="ttc" id="a01177_html_aae1d1588038b444591f723c61c9aacada268875f90c27aa5b5b3b0b89798f35e8"><div class="ttname"><a href="a01177.html#aae1d1588038b444591f723c61c9aacada268875f90c27aa5b5b3b0b89798f35e8">Foam::IOstream::UNCOMPRESSED</a></div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00195">IOstream.H:195</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00606_html"><div class="ttname"><a href="a00606.html">Foam::edge</a></div><div class="ttdoc">An edge is a list of two point labels. The functionality it provides supports the discretisation on a...</div><div class="ttdef"><b>Definition:</b> <a href="a08469_source.html#l00058">edge.H:58</a></div></div>
-<div class="ttc" id="a02664_html"><div class="ttname"><a href="a02664.html">Foam::triangle</a></div><div class="ttdoc">A triangle primitive used to calculate face normals and swept volumes. </div><div class="ttdef"><b>Definition:</b> <a href="a08737_source.html#l00057">triangle.H:57</a></div></div>
-<div class="ttc" id="a01321_html"><div class="ttname"><a href="a01321.html">Foam::line</a></div><div class="ttdoc">A line primitive. </div><div class="ttdef"><b>Definition:</b> <a href="a08707_source.html#l00056">line.H:56</a></div></div>
-<div class="ttc" id="a07720_html"><div class="ttname"><a href="a07720.html">OFstream.H</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; face &gt;</a></div></div>
-<div class="ttc" id="a00709_html"><div class="ttname"><a href="a00709.html">Foam::face</a></div><div class="ttdoc">A face is a list of labels corresponding to mesh vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a08476_source.html#l00075">face.H:75</a></div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">Foam::IOstream::streamFormat</a></div><div class="ttdeci">streamFormat</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00086">IOstream.H:86</a></div></div>
-<div class="ttc" id="a08469_html"><div class="ttname"><a href="a08469.html">edge.H</a></div></div>
-<div class="ttc" id="a01680_html_ab2f5598b4b95c3e980071b92457e8d90"><div class="ttname"><a href="a01680.html#ab2f5598b4b95c3e980071b92457e8d90">Foam::OBJstream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const char)</div><div class="ttdoc">Write character. </div><div class="ttdef"><b>Definition:</b> <a href="a09784_source.html#l00082">OBJstream.C:82</a></div></div>
-<div class="ttc" id="a01177_html_a1e2dd3d90088c6d1ed0a27bd75d814fb"><div class="ttname"><a href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">Foam::IOstream::format</a></div><div class="ttdeci">streamFormat format() const </div><div class="ttdoc">Return current stream format. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00377">IOstream.H:377</a></div></div>
-<div class="ttc" id="a01725_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01725.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
-<div class="ttc" id="a01680_html_aef271428371a4ddd07ea2c6403b4edb7"><div class="ttname"><a href="a01680.html#aef271428371a4ddd07ea2c6403b4edb7">Foam::OBJstream::OBJstream</a></div><div class="ttdeci">OBJstream(const fileName &amp;pathname, streamFormat format=ASCII, versionNumber version=currentVersion, compressionType compression=UNCOMPRESSED)</div><div class="ttdoc">Construct from pathname. </div><div class="ttdef"><b>Definition:</b> <a href="a09784_source.html#l00061">OBJstream.C:61</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a01680_html_afab43b19f8852fc512d6bc050592702b"><div class="ttname"><a href="a01680.html#afab43b19f8852fc512d6bc050592702b">Foam::OBJstream::nVertices</a></div><div class="ttdeci">label nVertices() const </div><div class="ttdoc">Return the number of vertices written. </div><div class="ttdef"><b>Definition:</b> <a href="a09785_source.html#l00095">OBJstream.H:95</a></div></div>
-<div class="ttc" id="a01177_html_aae1d1588038b444591f723c61c9aacad"><div class="ttname"><a href="a01177.html#aae1d1588038b444591f723c61c9aacad">Foam::IOstream::compressionType</a></div><div class="ttdeci">compressionType</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00193">IOstream.H:193</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a02720_html"><div class="ttname"><a href="a02720.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00060">HashTable.H:60</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a08722_html"><div class="ttname"><a href="a08722.html">point.H</a></div></div>
-<div class="ttc" id="a08710_html"><div class="ttname"><a href="a08710.html">linePointRef.H</a></div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97af9c208c7d7a0f102f2683165540c882d">Foam::IOstream::ASCII</a></div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00088">IOstream.H:88</a></div></div>
-<div class="ttc" id="a08739_html"><div class="ttname"><a href="a08739.html">triPointRef.H</a></div></div>
-<div class="ttc" id="a02786_html"><div class="ttname"><a href="a02786.html">Foam::IOstream::versionNumber</a></div><div class="ttdoc">Version number type. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00096">IOstream.H:96</a></div></div>
-<div class="ttc" id="a01177_html_a2eebbb2b682d3d80e0de1d414d1a4fb2"><div class="ttname"><a href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">Foam::IOstream::currentVersion</a></div><div class="ttdeci">static const versionNumber currentVersion</div><div class="ttdoc">Current version number. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00206">IOstream.H:206</a></div></div>
-<div class="ttc" id="a08476_html"><div class="ttname"><a href="a08476.html">face.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a5baff2b2334a238271b33f039e5dde5c"><div class="ttname"><a href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">Foam::incrIndent</a></div><div class="ttdeci">Ostream &amp; incrIndent(Ostream &amp;os)</div><div class="ttdoc">Increment the indent level. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00228">Ostream.H:228</a></div></div>
+<div class="ttc" id="a02325_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a02325.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::sixDoFRigidBodyMotion::read</a></div><div class="ttdeci">bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read coefficients dictionary and update system parameters,. </div><div class="ttdef"><b>Definition:</b> <a href="a09785_source.html#l00031">sixDoFRigidBodyMotionIO.C:31</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02325_html_a23dd71414ffe550535f783a02bea023b"><div class="ttname"><a href="a02325.html#a23dd71414ffe550535f783a02bea023b">Foam::sixDoFRigidBodyMotion::addConstraints</a></div><div class="ttdeci">void addConstraints(const dictionary &amp;dict)</div><div class="ttdoc">Add restraints to the motion, public to allow external. </div><div class="ttdef"><b>Definition:</b> <a href="a09782_source.html#l00220">sixDoFRigidBodyMotion.C:220</a></div></div>
+<div class="ttc" id="a01736_html_a3c58b2bb9174ea3c4a5fa58095d1290e"><div class="ttname"><a href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">Foam::Ostream::writeKeyword</a></div><div class="ttdeci">Ostream &amp; writeKeyword(const keyType &amp;)</div><div class="ttdoc">Write the keyword followed by an appropriate indentation. </div><div class="ttdef"><b>Definition:</b> <a href="a07783_source.html#l00059">Ostream.C:59</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">Foam::token::END_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00105">token.H:105</a></div></div>
+<div class="ttc" id="a02325_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a02325.html#a0941061ad5a26be83b4107d05750ace6">Foam::sixDoFRigidBodyMotion::write</a></div><div class="ttdeci">void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a09785_source.html#l00049">sixDoFRigidBodyMotionIO.C:49</a></div></div>
+<div class="ttc" id="a07775_html"><div class="ttname"><a href="a07775.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a01185_html_ab27acd1d200f0d245337451aa2f31517"><div class="ttname"><a href="a01185.html#ab27acd1d200f0d245337451aa2f31517">Foam::IOstream::name</a></div><div class="ttdeci">virtual const fileName &amp; name() const </div><div class="ttdoc">Return the name of the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00297">IOstream.H:297</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">Foam::token::END_STATEMENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00099">token.H:99</a></div></div>
+<div class="ttc" id="a10725_html_ae297c57ea5b952a8bc9e4f30f7ea8701"><div class="ttname"><a href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">Foam::indent</a></div><div class="ttdeci">Ostream &amp; indent(Ostream &amp;os)</div><div class="ttdoc">Indent stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00221">Ostream.H:221</a></div></div>
+<div class="ttc" id="a09783_html"><div class="ttname"><a href="a09783.html">sixDoFRigidBodyMotion.H</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a02514_html"><div class="ttname"><a href="a02514.html">Foam::Switch</a></div><div class="ttdoc">A simple wrapper around bool so that it can be read as a word: true/false, on/off, yes/no, y/n, t/f, or none. </div><div class="ttdef"><b>Definition:</b> <a href="a08807_source.html#l00060">Switch.H:60</a></div></div>
+<div class="ttc" id="a00524_html_ab188313de67c2c7ad4a5e8151eefb49d"><div class="ttname"><a href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">Foam::dictionary::lookupOrDefault</a></div><div class="ttdeci">T lookupOrDefault(const word &amp;, const T &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return a T,. </div><div class="ttdef"><b>Definition:</b> <a href="a07689_source.html#l00033">dictionaryTemplates.C:33</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">Foam::token::BEGIN_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00104">token.H:104</a></div></div>
+<div class="ttc" id="a10725_html_a1c3a44e035fae1cd9d5a4a60a7e1c32b"><div class="ttname"><a href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">Foam::decrIndent</a></div><div class="ttdeci">Ostream &amp; decrIndent(Ostream &amp;os)</div><div class="ttdoc">Decrement the indent level. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00235">Ostream.H:235</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a02325_html_aab527a28d55b5ef6f92763390ca4f50d"><div class="ttname"><a href="a02325.html#aab527a28d55b5ef6f92763390ca4f50d">Foam::sixDoFRigidBodyMotion::addRestraints</a></div><div class="ttdeci">void addRestraints(const dictionary &amp;dict)</div><div class="ttdoc">Add restraints to the motion, public to allow external. </div><div class="ttdef"><b>Definition:</b> <a href="a09782_source.html#l00186">sixDoFRigidBodyMotion.C:186</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

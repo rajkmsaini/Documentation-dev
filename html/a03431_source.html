@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_ac187bbca992c8e90ac4c7812a06e744.html">interfacialCompositionModels</a></li><li class="navelem"><a class="el" href="dir_15c321a6e888c3fb921fa4e5c6c5a002.html">massTransferModels</a></li><li class="navelem"><a class="el" href="dir_b4446df2673a291c29ac66436e4ca239.html">Frossling</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_ac187bbca992c8e90ac4c7812a06e744.html">interfacialCompositionModels</a></li><li class="navelem"><a class="el" href="dir_4f27a06b7e58381c82b665f35f23a190.html">interfaceCompositionModels</a></li><li class="navelem"><a class="el" href="dir_01176563bb9771f447d1adfd575943c1.html">Henry</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Frossling.H</div>  </div>
+<div class="title">Henry.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03431.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,98 +120,129 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::massTransferModels::Frossling</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::Henry</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Frossling correlation for turbulent mass transfer from the surface of a</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    sphere to the surrounding fluid.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    Frossling.C</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Henry&#39;s law for gas solubiliy in liquid. The concentration of the dissolved</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    species in the liquid is proportional to its partial pressure in the gas.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    The dimensionless constant of proportionality between concentrations on</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    each side of the interface is \f$k\f$, and is given for each species.</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    Mixing in the gas is assumed to be ideal.</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef Frossling_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define Frossling_H</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    Henry.C</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03433.html">massTransferModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef Henry_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define Henry_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03434.html">InterfaceCompositionModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">class </span>phasePair;</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a10728.html">   47</a></span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">namespace </span>massTransferModels</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">                          Class Frossling Declaration</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a00855.html">   54</a></span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">class </span><a class="code" href="a00855.html">Frossling</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01426.html">massTransferModel</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Lewis number</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00526.html">dimensionedScalar</a> Le_;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span>phasePair;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a10765.html">   50</a></span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">namespace </span>interfaceCompositionModels</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">                         Class Henry Declaration</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a00999.html">   58</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Thermo, <span class="keyword">class</span> OtherThermo&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">class </span><a class="code" href="a00999.html">Henry</a></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01140.html">InterfaceCompositionModel</a>&lt;Thermo, OtherThermo&gt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private data</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a00855.html#a6a060012c021dbb996a13a7216a8ef30">TypeName</a>(<span class="stringliteral">&quot;Frossling&quot;</span>);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Solubility coefficients</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">scalarList</a> k_;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//- The remaining solvent species fraction</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a00921.html">volScalarField</a> YSolvent_;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a00855.html#aa2e0c7da022f9d8c31d6122511cdd4ec">Frossling</a></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        (</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01830.html">phasePair</a>&amp; pair</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        );</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00855.html#ab01c7807c2b6870c030de1c5764ff6fa">~Frossling</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="a00999.html#a9d19596993474e297f6a22876e520f69">TypeName</a>(<span class="stringliteral">&quot;Henry&quot;</span>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="a00999.html#a21f56bd4f9a830c512a5d26661bab572">Henry</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        (</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01841.html">phasePair</a>&amp; pair</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        );</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//- The implicit mass transfer coefficient</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a00855.html#a9e857543830fed4378771096fbd84e90">K</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00999.html#a914047473714735ef97bb6c474655f2c">~Henry</a>();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;} <span class="comment">// End namespace massTransferModels</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00855_html_aa2e0c7da022f9d8c31d6122511cdd4ec"><div class="ttname"><a href="a00855.html#aa2e0c7da022f9d8c31d6122511cdd4ec">Foam::massTransferModels::Frossling::Frossling</a></div><div class="ttdeci">Frossling(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from components. </div></div>
-<div class="ttc" id="a00855_html_ab01c7807c2b6870c030de1c5764ff6fa"><div class="ttname"><a href="a00855.html#ab01c7807c2b6870c030de1c5764ff6fa">Foam::massTransferModels::Frossling::~Frossling</a></div><div class="ttdeci">virtual ~Frossling()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a01830_html"><div class="ttname"><a href="a01830.html">Foam::phasePair</a></div><div class="ttdef"><b>Definition:</b> <a href="a03655_source.html#l00049">phasePair.H:49</a></div></div>
-<div class="ttc" id="a00855_html"><div class="ttname"><a href="a00855.html">Foam::massTransferModels::Frossling</a></div><div class="ttdoc">Frossling correlation for turbulent mass transfer from the surface of a sphere to the surrounding flu...</div><div class="ttdef"><b>Definition:</b> <a href="a03431_source.html#l00054">Frossling.H:54</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01426_html"><div class="ttname"><a href="a01426.html">Foam::massTransferModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a03433_source.html#l00051">massTransferModel.H:51</a></div></div>
-<div class="ttc" id="a03433_html"><div class="ttname"><a href="a03433.html">massTransferModel.H</a></div></div>
-<div class="ttc" id="a00855_html_a9e857543830fed4378771096fbd84e90"><div class="ttname"><a href="a00855.html#a9e857543830fed4378771096fbd84e90">Foam::massTransferModels::Frossling::K</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; K() const </div><div class="ttdoc">The implicit mass transfer coefficient. </div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00855_html_a6a060012c021dbb996a13a7216a8ef30"><div class="ttname"><a href="a00855.html#a6a060012c021dbb996a13a7216a8ef30">Foam::massTransferModels::Frossling::TypeName</a></div><div class="ttdeci">TypeName(&quot;Frossling&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">//- Update the composition</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00999.html#af53505129f8a7e67cd56477b939db70a">update</a>(<span class="keyword">const</span> <a class="code" href="a00921.html">volScalarField</a>&amp; Tf);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- The interface species fraction</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a00999.html#af1bea66e9865bd6c4ec5565a7b0aee0d">Yf</a></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        (</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; speciesName,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00921.html">volScalarField</a>&amp; Tf</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- The interface species fraction derivative w.r.t. temperature</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a00999.html#ade20cd9b44f824b652d4c2409a3d7907">YfPrime</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        (</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; speciesName,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00921.html">volScalarField</a>&amp; Tf</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;};</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;} <span class="comment">// End namespace interfaceCompositionModels</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a03430.html">Henry.C</a>&quot;</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a00999_html_a9d19596993474e297f6a22876e520f69"><div class="ttname"><a href="a00999.html#a9d19596993474e297f6a22876e520f69">Foam::interfaceCompositionModels::Henry::TypeName</a></div><div class="ttdeci">TypeName(&quot;Henry&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a03430_html"><div class="ttname"><a href="a03430.html">Henry.C</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a00999_html_af1bea66e9865bd6c4ec5565a7b0aee0d"><div class="ttname"><a href="a00999.html#af1bea66e9865bd6c4ec5565a7b0aee0d">Foam::interfaceCompositionModels::Henry::Yf</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; Yf(const word &amp;speciesName, const volScalarField &amp;Tf) const </div><div class="ttdoc">The interface species fraction. </div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a00999_html_ade20cd9b44f824b652d4c2409a3d7907"><div class="ttname"><a href="a00999.html#ade20cd9b44f824b652d4c2409a3d7907">Foam::interfaceCompositionModels::Henry::YfPrime</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; YfPrime(const word &amp;speciesName, const volScalarField &amp;Tf) const </div><div class="ttdoc">The interface species fraction derivative w.r.t. temperature. </div></div>
+<div class="ttc" id="a00999_html"><div class="ttname"><a href="a00999.html">Foam::interfaceCompositionModels::Henry</a></div><div class="ttdef"><b>Definition:</b> <a href="a03431_source.html#l00058">Henry.H:58</a></div></div>
+<div class="ttc" id="a00999_html_a914047473714735ef97bb6c474655f2c"><div class="ttname"><a href="a00999.html#a914047473714735ef97bb6c474655f2c">Foam::interfaceCompositionModels::Henry::~Henry</a></div><div class="ttdeci">virtual ~Henry()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a01841_html"><div class="ttname"><a href="a01841.html">Foam::phasePair</a></div><div class="ttdef"><b>Definition:</b> <a href="a03686_source.html#l00049">phasePair.H:49</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00999_html_a21f56bd4f9a830c512a5d26661bab572"><div class="ttname"><a href="a00999.html#a21f56bd4f9a830c512a5d26661bab572">Foam::interfaceCompositionModels::Henry::Henry</a></div><div class="ttdeci">Henry(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from components. </div></div>
+<div class="ttc" id="a03434_html"><div class="ttname"><a href="a03434.html">InterfaceCompositionModel.H</a></div></div>
+<div class="ttc" id="a01140_html"><div class="ttname"><a href="a01140.html">Foam::InterfaceCompositionModel</a></div><div class="ttdoc">Base class for interface composition models, templated on the two thermodynamic models either side of...</div><div class="ttdef"><b>Definition:</b> <a href="a03434_source.html#l00055">InterfaceCompositionModel.H:55</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00999_html_af53505129f8a7e67cd56477b939db70a"><div class="ttname"><a href="a00999.html#af53505129f8a7e67cd56477b939db70a">Foam::interfaceCompositionModels::Henry::update</a></div><div class="ttdeci">virtual void update(const volScalarField &amp;Tf)</div><div class="ttdoc">Update the composition. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

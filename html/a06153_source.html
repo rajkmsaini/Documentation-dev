@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_8ab94aa558c9b87721da8bbf3fb9229e.html">motionDiffusivity</a></li><li class="navelem"><a class="el" href="dir_ccfb0ac24b15cc3e9063e7401f463558.html">manipulators</a></li><li class="navelem"><a class="el" href="dir_cc8037f5df05a910234914923028b12c.html">quadratic</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_dd9fc39a8f9a2ae23f0e64eaf0f03929.html">volPointInterpolation</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">quadraticDiffusivity.H</div>  </div>
+<div class="title">pointConstraintsTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06153.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,98 +119,164 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::quadraticDiffusivity</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Mesh motion diffusivity maipulator which returns the sqr of the given</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    diffusivity.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    quadraticDiffusivity.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef quadraticDiffusivity_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define quadraticDiffusivity_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06155.html">motionDiffusivity.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                           Class quadraticDiffusivity Declaration</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a02035.html">   49</a></span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a02035.html">quadraticDiffusivity</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01518.html">motionDiffusivity</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a00084.html">autoPtr&lt;motionDiffusivity&gt;</a> basicDiffusivityPtr_;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a02035.html">quadraticDiffusivity</a>(<span class="keyword">const</span> <a class="code" href="a02035.html">quadraticDiffusivity</a>&amp;);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06152.html">pointConstraints.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08044.html">pointFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08067.html">valuePointPatchFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> CombineOp&gt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01871.html#a60a2f4543c7dc5c768bd06768d7004c6">Foam::pointConstraints::syncUntransformedData</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a01871.html#a60a2f4543c7dc5c768bd06768d7004c6">   34</a></span>&#160;(</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a01364.html">List&lt;Type&gt;</a>&amp; pointData,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> CombineOp&amp; cop</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Transfer onto coupled patch</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00933.html">globalMeshData</a>&amp; gmd = mesh.<a class="code" href="a01916.html#ad152d9d2d71b7bb6ab77c5ef580cb8ee">globalData</a>();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01970.html">indirectPrimitivePatch</a>&amp; cpp = gmd.<a class="code" href="a00933.html#afbcae5ee9ab7ebe172d3809f611d745d">coupledPatch</a>();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; meshPoints = cpp.<a class="code" href="a01970.html#ae4935f85c38392518565dd7c666e3caf">meshPoints</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01402.html">mapDistribute</a>&amp; slavesMap = gmd.<a class="code" href="a00933.html#ab52285621ca75e00b03f68a0a65c16bc">globalCoPointSlavesMap</a>();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelListList</a>&amp; slaves = gmd.<a class="code" href="a00933.html#a1fcda682b7be60ff6140dbc752924d7c">globalCoPointSlaves</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a01364.html">List&lt;Type&gt;</a> elems(slavesMap.<a class="code" href="a01402.html#a31e35cc37553bf187f244f12f1ad9c37">constructSize</a>());</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(meshPoints, i)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        elems[i] = pointData[meshPoints[i]];</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Pull slave data onto master. No need to update transformed slots.</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    slavesMap.<a class="code" href="a01402.html#a33e0f8481eb68bf011731ec98e8f7c65">distribute</a>(elems, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Combine master data with slave data</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(slaves, i)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        Type&amp; elem = elems[i];</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; slavePoints = slaves[i];</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02035.html">quadraticDiffusivity</a>&amp;);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">// Combine master with untransformed slave data</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(slavePoints, j)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            cop(elem, elems[slavePoints[j]]);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a02035.html#a54b6ed76133daecf64e274fee05fc2cc">TypeName</a>(<span class="stringliteral">&quot;quadratic&quot;</span>);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Construct for the given fvMesh and data Istream</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="a02035.html">quadraticDiffusivity</a>(<span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a01518.html#a9687e6999ad5ae21072ec74623f049ff">mesh</a>, <a class="code" href="a01191.html">Istream</a>&amp; mdData);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Copy result back to slave slots</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(slavePoints, j)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            elems[slavePoints[j]] = elem;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Push slave-slot data back to slaves</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    slavesMap.<a class="code" href="a01402.html#ae5978ec7d5cfaaa710d2266027280062">reverseDistribute</a>(elems.size(), elems, <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02035.html#aecaa200603d9d4766273d20a022befef">~quadraticDiffusivity</a>();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//- Return diffusivity field</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02608.html">tmp&lt;surfaceScalarField&gt;</a> <a class="code" href="a02035.html#a16190f5583783fc152b13c4d9e263671">operator()</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//- Correct the motion diffusivity</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02035.html#a3ae44b28050c3aa494c1d8e18cf618c1">correct</a>();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Extract back onto mesh</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(meshPoints, i)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        pointData[meshPoints[i]] = elems[i];</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01871.html#a1b6bb2c50c9e39688aa71d2263865d68">Foam::pointConstraints::setPatchFields</a></div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a01871.html#a1b6bb2c50c9e39688aa71d2263865d68">   90</a></span>&#160;(</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="a00921.html">GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a>&amp; pf</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>(), patchI)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="code" href="a01893.html">pointPatchField&lt;Type&gt;</a>&amp; ppf = pf.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI];</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a06155_html"><div class="ttname"><a href="a06155.html">motionDiffusivity.H</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a02035_html"><div class="ttname"><a href="a02035.html">Foam::quadraticDiffusivity</a></div><div class="ttdoc">Mesh motion diffusivity maipulator which returns the sqr of the given diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06153_source.html#l00049">quadraticDiffusivity.H:49</a></div></div>
-<div class="ttc" id="a02035_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a02035.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::quadraticDiffusivity::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Correct the motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06152_source.html#l00073">quadraticDiffusivity.C:73</a></div></div>
-<div class="ttc" id="a01518_html_a9687e6999ad5ae21072ec74623f049ff"><div class="ttname"><a href="a01518.html#a9687e6999ad5ae21072ec74623f049ff">Foam::motionDiffusivity::mesh</a></div><div class="ttdeci">const fvMesh &amp; mesh() const </div><div class="ttdoc">Return reference to the mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a06155_source.html#l00100">motionDiffusivity.H:100</a></div></div>
-<div class="ttc" id="a01518_html"><div class="ttname"><a href="a01518.html">Foam::motionDiffusivity</a></div><div class="ttdoc">Abstract base class for cell-centre mesh motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06155_source.html#l00049">motionDiffusivity.H:49</a></div></div>
-<div class="ttc" id="a02035_html_aecaa200603d9d4766273d20a022befef"><div class="ttname"><a href="a02035.html#aecaa200603d9d4766273d20a022befef">Foam::quadraticDiffusivity::~quadraticDiffusivity</a></div><div class="ttdeci">virtual ~quadraticDiffusivity()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06152_source.html#l00060">quadraticDiffusivity.C:60</a></div></div>
-<div class="ttc" id="a02035_html_a16190f5583783fc152b13c4d9e263671"><div class="ttname"><a href="a02035.html#a16190f5583783fc152b13c4d9e263671">Foam::quadraticDiffusivity::operator()</a></div><div class="ttdeci">virtual tmp&lt; surfaceScalarField &gt; operator()() const </div><div class="ttdoc">Return diffusivity field. </div><div class="ttdef"><b>Definition:</b> <a href="a06152_source.html#l00067">quadraticDiffusivity.C:67</a></div></div>
-<div class="ttc" id="a02035_html_a54b6ed76133daecf64e274fee05fc2cc"><div class="ttname"><a href="a02035.html#a54b6ed76133daecf64e274fee05fc2cc">Foam::quadraticDiffusivity::TypeName</a></div><div class="ttdeci">TypeName(&quot;quadratic&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a7f38c7df863d37f5357047d27dab7711">isA</a>&lt;<a class="code" href="a02777.html">valuePointPatchField&lt;Type&gt;</a> &gt;(ppf))</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            refCast&lt;valuePointPatchField&lt;Type&gt; &gt;(ppf) =</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                ppf.<a class="code" href="a01893.html#a7297309ea242a9e6c0ace823006bfb2e">patchInternalField</a>();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01871.html#aa10642d7069e2e649077c368bfa6eabe">Foam::pointConstraints::constrainCorners</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="a01871.html#aa10642d7069e2e649077c368bfa6eabe">  109</a></span>&#160;(</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a00921.html">GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a>&amp; pf</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchPatchPointConstraintPoints_, pointi)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        pf[patchPatchPointConstraintPoints_[pointi]] = <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        (</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            patchPatchPointConstraintTensors_[pointi],</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            pf[patchPatchPointConstraintPoints_[pointi]]</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        );</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01871.html#a576e061a04a2ed6840f18c2d8306bbd0">Foam::pointConstraints::constrain</a></div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a01871.html#a576e061a04a2ed6840f18c2d8306bbd0">  126</a></span>&#160;(</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="a00921.html">GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a>&amp; pf,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> overrideFixedValue</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;{</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">// Override constrained pointPatchField types with the constraint value.</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="comment">// This relies on only constrained pointPatchField implementing the evaluate</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">// function</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    pf.<a class="code" href="a00921.html#acaf6878ef900e593c4b20812f1b567d6">correctBoundaryConditions</a>();</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="comment">// Sync any dangling points</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    syncUntransformedData(<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()(), pf.<a class="code" href="a00921.html#a9536140d36d69bbac40496f6b817aa0a">internalField</a>(), <a class="code" href="a01442.html">maxMagSqrEqOp&lt;Type&gt;</a>());</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="comment">// Apply multiple constraints on edge/corner points</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    constrainCorners(pf);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">if</span> (overrideFixedValue)</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        setPatchFields(pf);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;}</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a01402_html"><div class="ttname"><a href="a01402.html">Foam::mapDistribute</a></div><div class="ttdoc">Class containing processor-to-processor mapping information. </div><div class="ttdef"><b>Definition:</b> <a href="a08613_source.html#l00152">mapDistribute.H:152</a></div></div>
+<div class="ttc" id="a08067_html"><div class="ttname"><a href="a08067.html">valuePointPatchFields.H</a></div></div>
+<div class="ttc" id="a01402_html_a31e35cc37553bf187f244f12f1ad9c37"><div class="ttname"><a href="a01402.html#a31e35cc37553bf187f244f12f1ad9c37">Foam::mapDistribute::constructSize</a></div><div class="ttdeci">label constructSize() const </div><div class="ttdoc">Constructed data size. </div><div class="ttdef"><b>Definition:</b> <a href="a08613_source.html#l00461">mapDistribute.H:461</a></div></div>
+<div class="ttc" id="a01970_html_ae4935f85c38392518565dd7c666e3caf"><div class="ttname"><a href="a01970.html#ae4935f85c38392518565dd7c666e3caf">Foam::PrimitivePatch::meshPoints</a></div><div class="ttdeci">const labelList &amp; meshPoints() const </div><div class="ttdoc">Return labelList of mesh points in patch. They are constructed. </div><div class="ttdef"><b>Definition:</b> <a href="a08741_source.html#l00408">PrimitivePatch.C:408</a></div></div>
+<div class="ttc" id="a01893_html"><div class="ttname"><a href="a01893.html">Foam::pointPatchField</a></div><div class="ttdoc">Abstract base class for point-mesh patch fields. </div><div class="ttdef"><b>Definition:</b> <a href="a05983_source.html#l00058">pointMVCWeight.H:58</a></div></div>
+<div class="ttc" id="a01442_html"><div class="ttname"><a href="a01442.html">Foam::maxMagSqrEqOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00080">ops.H:80</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; Type &gt;</a></div></div>
+<div class="ttc" id="a01402_html_ae5978ec7d5cfaaa710d2266027280062"><div class="ttname"><a href="a01402.html#ae5978ec7d5cfaaa710d2266027280062">Foam::mapDistribute::reverseDistribute</a></div><div class="ttdeci">void reverseDistribute(const label constructSize, List&lt; T &gt; &amp;, const bool dummyTransform=true, const int tag=UPstream::msgType()) const </div><div class="ttdoc">Reverse distribute data using default commsType. </div><div class="ttdef"><b>Definition:</b> <a href="a08617_source.html#l00962">mapDistributeTemplates.C:962</a></div></div>
+<div class="ttc" id="a01871_html_a1b6bb2c50c9e39688aa71d2263865d68"><div class="ttname"><a href="a01871.html#a1b6bb2c50c9e39688aa71d2263865d68">Foam::pointConstraints::setPatchFields</a></div><div class="ttdeci">static void setPatchFields(GeometricField&lt; Type, pointPatchField, pointMesh &gt; &amp;)</div><div class="ttdoc">Helper: set patchField values from internal values (on. </div><div class="ttdef"><b>Definition:</b> <a href="a06153_source.html#l00090">pointConstraintsTemplates.C:90</a></div></div>
+<div class="ttc" id="a00921_html_acaf6878ef900e593c4b20812f1b567d6"><div class="ttname"><a href="a00921.html#acaf6878ef900e593c4b20812f1b567d6">Foam::GeometricField::correctBoundaryConditions</a></div><div class="ttdeci">void correctBoundaryConditions()</div><div class="ttdoc">Correct boundary field. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00836">GeometricField.C:836</a></div></div>
+<div class="ttc" id="a01970_html"><div class="ttname"><a href="a01970.html">Foam::PrimitivePatch</a></div><div class="ttdoc">A list of faces which address into the list of points. </div><div class="ttdef"><b>Definition:</b> <a href="a08742_source.html#l00087">PrimitivePatch.H:87</a></div></div>
+<div class="ttc" id="a06152_html"><div class="ttname"><a href="a06152.html">pointConstraints.H</a></div></div>
+<div class="ttc" id="a00921_html_a9536140d36d69bbac40496f6b817aa0a"><div class="ttname"><a href="a00921.html#a9536140d36d69bbac40496f6b817aa0a">Foam::GeometricField::internalField</a></div><div class="ttdeci">InternalField &amp; internalField()</div><div class="ttdoc">Return internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00675">GeometricField.C:675</a></div></div>
+<div class="ttc" id="a01871_html_a60a2f4543c7dc5c768bd06768d7004c6"><div class="ttname"><a href="a01871.html#a60a2f4543c7dc5c768bd06768d7004c6">Foam::pointConstraints::syncUntransformedData</a></div><div class="ttdeci">static void syncUntransformedData(const polyMesh &amp;mesh, List&lt; Type &gt; &amp;pointData, const CombineOp &amp;cop)</div><div class="ttdoc">Helper: sync data on collocated points only. </div><div class="ttdef"><b>Definition:</b> <a href="a06153_source.html#l00034">pointConstraintsTemplates.C:34</a></div></div>
+<div class="ttc" id="a01916_html_ad152d9d2d71b7bb6ab77c5ef580cb8ee"><div class="ttname"><a href="a01916.html#ad152d9d2d71b7bb6ab77c5ef580cb8ee">Foam::polyMesh::globalData</a></div><div class="ttdeci">const globalMeshData &amp; globalData() const </div><div class="ttdoc">Return parallel info. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01143">polyMesh.C:1143</a></div></div>
+<div class="ttc" id="a01871_html_aa10642d7069e2e649077c368bfa6eabe"><div class="ttname"><a href="a01871.html#aa10642d7069e2e649077c368bfa6eabe">Foam::pointConstraints::constrainCorners</a></div><div class="ttdeci">void constrainCorners(GeometricField&lt; Type, pointPatchField, pointMesh &gt; &amp;pf) const </div><div class="ttdoc">Apply patch-patch constraints only. </div><div class="ttdef"><b>Definition:</b> <a href="a06153_source.html#l00109">pointConstraintsTemplates.C:109</a></div></div>
+<div class="ttc" id="a00921_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00686">GeometricField.C:686</a></div></div>
+<div class="ttc" id="a00933_html"><div class="ttname"><a href="a00933.html">Foam::globalMeshData</a></div><div class="ttdoc">Various mesh related information for a parallel run. Upon construction, constructs all info using par...</div><div class="ttdef"><b>Definition:</b> <a href="a08599_source.html#l00106">globalMeshData.H:106</a></div></div>
+<div class="ttc" id="a00933_html_a1fcda682b7be60ff6140dbc752924d7c"><div class="ttname"><a href="a00933.html#a1fcda682b7be60ff6140dbc752924d7c">Foam::globalMeshData::globalCoPointSlaves</a></div><div class="ttdeci">const labelListList &amp; globalCoPointSlaves() const </div><div class="ttdef"><b>Definition:</b> <a href="a08598_source.html#l02353">globalMeshData.C:2353</a></div></div>
+<div class="ttc" id="a00933_html_ab52285621ca75e00b03f68a0a65c16bc"><div class="ttname"><a href="a00933.html#ab52285621ca75e00b03f68a0a65c16bc">Foam::globalMeshData::globalCoPointSlavesMap</a></div><div class="ttdeci">const mapDistribute &amp; globalCoPointSlavesMap() const </div><div class="ttdef"><b>Definition:</b> <a href="a08598_source.html#l02363">globalMeshData.C:2363</a></div></div>
+<div class="ttc" id="a10725_html_a7f38c7df863d37f5357047d27dab7711"><div class="ttname"><a href="a10725.html#a7f38c7df863d37f5357047d27dab7711">Foam::isA</a></div><div class="ttdeci">bool isA(const Type &amp;t)</div><div class="ttdoc">Check if a dynamic_cast to typeid is possible. </div><div class="ttdef"><b>Definition:</b> <a href="a07864_source.html#l00134">typeInfo.H:134</a></div></div>
+<div class="ttc" id="a08044_html"><div class="ttname"><a href="a08044.html">pointFields.H</a></div></div>
+<div class="ttc" id="a00933_html_afbcae5ee9ab7ebe172d3809f611d745d"><div class="ttname"><a href="a00933.html#afbcae5ee9ab7ebe172d3809f611d745d">Foam::globalMeshData::coupledPatch</a></div><div class="ttdeci">const indirectPrimitivePatch &amp; coupledPatch() const </div><div class="ttdoc">Return patch of all coupled faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08598_source.html#l02046">globalMeshData.C:2046</a></div></div>
+<div class="ttc" id="a10725_html_a919915170941701c1223291531ad010c"><div class="ttname"><a href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div><div class="ttdeci">dimensionSet transform(const dimensionSet &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a07878_source.html#l00465">dimensionSet.C:465</a></div></div>
+<div class="ttc" id="a01871_html_a576e061a04a2ed6840f18c2d8306bbd0"><div class="ttname"><a href="a01871.html#a576e061a04a2ed6840f18c2d8306bbd0">Foam::pointConstraints::constrain</a></div><div class="ttdeci">void constrain(GeometricField&lt; Type, pointPatchField, pointMesh &gt; &amp;pf, const bool overrideValue=false) const </div><div class="ttdoc">Apply boundary conditions (single-patch constraints) and. </div><div class="ttdef"><b>Definition:</b> <a href="a06153_source.html#l00126">pointConstraintsTemplates.C:126</a></div></div>
+<div class="ttc" id="a02777_html"><div class="ttname"><a href="a02777.html">Foam::valuePointPatchField</a></div><div class="ttdoc">Foam::valuePointPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a08065_source.html#l00049">valuePointPatchField.H:49</a></div></div>
+<div class="ttc" id="a01893_html_a7297309ea242a9e6c0ace823006bfb2e"><div class="ttname"><a href="a01893.html#a7297309ea242a9e6c0ace823006bfb2e">Foam::pointPatchField::patchInternalField</a></div><div class="ttdeci">tmp&lt; Field&lt; Type &gt; &gt; patchInternalField() const </div><div class="ttdoc">Return field created from appropriate internal field values. </div><div class="ttdef"><b>Definition:</b> <a href="a08132_source.html#l00128">pointPatchField.C:128</a></div></div>
+<div class="ttc" id="a01402_html_a33e0f8481eb68bf011731ec98e8f7c65"><div class="ttname"><a href="a01402.html#a33e0f8481eb68bf011731ec98e8f7c65">Foam::mapDistribute::distribute</a></div><div class="ttdeci">static void distribute(const Pstream::commsTypes commsType, const List&lt; labelPair &gt; &amp;schedule, const label constructSize, const labelListList &amp;subMap, const labelListList &amp;constructMap, List&lt; T &gt; &amp;, const int tag=UPstream::msgType())</div><div class="ttdoc">Distribute data. Note:schedule only used for Pstream::scheduled. </div><div class="ttdef"><b>Definition:</b> <a href="a08617_source.html#l00037">mapDistributeTemplates.C:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

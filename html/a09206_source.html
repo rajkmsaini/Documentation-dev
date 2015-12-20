@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_efb3ad8e9cbb3414a44ef268cb98c0b2.html">field</a></li><li class="navelem"><a class="el" href="dir_bc213642e04ad47eda03f259d08b0758.html">surfaceInterpolateFields</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_efb3ad8e9cbb3414a44ef268cb98c0b2.html">field</a></li><li class="navelem"><a class="el" href="dir_1bce965a5bf38e495a5f169c678f6b15.html">fieldValues</a></li><li class="navelem"><a class="el" href="dir_ad1cec5e636c5b8f5e13841269237d3b.html">fieldValue</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">surfaceInterpolateFieldsTemplates.C</div>  </div>
+<div class="title">fieldValueTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09206.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,74 +121,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09203.html">surfaceInterpolateFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;linear.H&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09203.html">fieldValue.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07643.html">ListListOps.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07794.html">Pstream.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02469.html#a0e0d2f76c1271bda619f9b1f8b3cb8f7">Foam::surfaceInterpolateFields::interpolateFields</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a02469.html#a0e0d2f76c1271bda619f9b1f8b3cb8f7">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a02020.html">PtrList</a>&lt;<a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> &gt;&amp; sflds</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> vfType;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> sfType;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00773.html#ae9e87db5645f020a41378fc7fcd9b8bd">   33</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00773.html#ae9e87db5645f020a41378fc7fcd9b8bd">Foam::fieldValue::combineFields</a>(<a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; field)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a01364.html">List&lt;Field&lt;Type&gt;</a> &gt; allValues(<a class="code" href="a02762.html#aada0e04d8127eda8ee95be0772754a4f">Pstream::nProcs</a>());</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    allValues[<a class="code" href="a02762.html#afc74d89573de32a3032c916f8cdd1733">Pstream::myProcNo</a>()] = field;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a02015.html#afbdf64fb42cd760690d51a9a321792d9">Pstream::gatherList</a>(allValues);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// Convert field to map</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a00976.html">HashTable&lt;word&gt;</a> fieldMap(2*fieldSet_.size());</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fieldSet_, i)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        fieldMap.insert(fieldSet_[i].first(), fieldSet_[i].second());</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a00976.html">HashTable&lt;const vfType*&gt;</a> flds(obr_.lookupClass&lt;vfType&gt;());</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<span class="keyword">typename</span> <a class="code" href="a00976.html">HashTable&lt;const vfType*&gt;</a>, flds, iter)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> vfType&amp; <a class="code" href="a04236.html#ad4512456f4da706b47fd304150561080">fld</a> = *iter();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">if</span> (fieldMap.found(fld.name()))</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="comment">//const word sName = &quot;interpolate(&quot; + fld.name() + &#39;)&#39;;</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; sName = fieldMap[fld.name()];</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a02762.html#a36af549940a0aae3733774649594489f">Pstream::master</a>())</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        field =</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            ListListOps::combine&lt;Field&lt;Type&gt; &gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            (</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                allValues,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                <a class="code" href="a00015.html">accessOp&lt;Field&lt;Type&gt;</a> &gt;()</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            );</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a00773.html#a258bea5a47a1da11dba64d6c0e019184">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00773.html#ae9e87db5645f020a41378fc7fcd9b8bd">Foam::fieldValue::combineFields</a>(<a class="code" href="a02618.html">tmp</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a> &gt;&amp; field)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    combineFields(field());</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keywordflow">if</span> (obr_.found(sName))</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        surface field &quot;</span> &lt;&lt; sName &lt;&lt; <span class="stringliteral">&quot; already exists&quot;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> sz = sflds.size();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                sflds.setSize(sz+1);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                sflds.set(sz, <span class="keyword">new</span> sfType(sName, <a class="code" href="a10675.html#a77094c8cc487d2a53de247336f41e78f">linearInterpolate</a>(fld)));</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;        interpolated &quot;</span> &lt;&lt; fld.name() &lt;&lt; <span class="stringliteral">&quot; to create &quot;</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                    &lt;&lt; sflds[sz].name() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a77094c8cc487d2a53de247336f41e78f"><div class="ttname"><a href="a10675.html#a77094c8cc487d2a53de247336f41e78f">Foam::linearInterpolate</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; linearInterpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a06041_source.html#l00107">linear.H:107</a></div></div>
-<div class="ttc" id="a09203_html"><div class="ttname"><a href="a09203.html">surfaceInterpolateFields.H</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a00976_html"><div class="ttname"><a href="a00976.html">Foam::HashTable</a></div><div class="ttdoc">An STL-conforming hash table. </div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00061">HashTable.H:61</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02469_html_a0e0d2f76c1271bda619f9b1f8b3cb8f7"><div class="ttname"><a href="a02469.html#a0e0d2f76c1271bda619f9b1f8b3cb8f7">Foam::surfaceInterpolateFields::interpolateFields</a></div><div class="ttdeci">void interpolateFields(PtrList&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; &amp;) const </div><div class="ttdef"><b>Definition:</b> <a href="a09206_source.html#l00034">surfaceInterpolateFieldsTemplates.C:34</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a04236_html_ad4512456f4da706b47fd304150561080"><div class="ttname"><a href="a04236.html#ad4512456f4da706b47fd304150561080">fld</a></div><div class="ttdeci">gmvFile&lt;&lt; &quot;tracers &quot;&lt;&lt; particles.size()&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().x()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().y()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().z()&lt;&lt;  ' ';}gmvFile&lt;&lt; nl;forAll(lagrangianScalarNames, i){const word &amp;name=lagrangianScalarNames[i];IOField&lt; scalar &gt; fld(IOobject(                                       name,                                       runTime.timeName(),                                       cloud::prefix,                                       mesh,                                       IOobject::MUST_READ,                                       IOobject::NO_WRITE                       ))</div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a02020_html"><div class="ttname"><a href="a02020.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07587_source.html#l00061">List.H:61</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a09203_html"><div class="ttname"><a href="a09203.html">fieldValue.H</a></div></div>
+<div class="ttc" id="a07643_html"><div class="ttname"><a href="a07643.html">ListListOps.H</a></div></div>
+<div class="ttc" id="a00015_html"><div class="ttname"><a href="a00015.html">Foam::accessOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a07643_source.html#l00098">ListListOps.H:98</a></div></div>
+<div class="ttc" id="a02015_html_afbdf64fb42cd760690d51a9a321792d9"><div class="ttname"><a href="a02015.html#afbdf64fb42cd760690d51a9a321792d9">Foam::Pstream::gatherList</a></div><div class="ttdeci">static void gatherList(const List&lt; commsStruct &gt; &amp;comms, List&lt; T &gt; &amp;Values, const int tag, const label comm)</div><div class="ttdoc">Gather data but keep individual values separate. </div><div class="ttdef"><b>Definition:</b> <a href="a07788_source.html#l00049">gatherScatterList.C:49</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a00773_html_ae9e87db5645f020a41378fc7fcd9b8bd"><div class="ttname"><a href="a00773.html#ae9e87db5645f020a41378fc7fcd9b8bd">Foam::fieldValue::combineFields</a></div><div class="ttdeci">void combineFields(Field&lt; Type &gt; &amp;field)</div><div class="ttdoc">Combine fields from all processor domains into single field. </div><div class="ttdef"><b>Definition:</b> <a href="a09206_source.html#l00033">fieldValueTemplates.C:33</a></div></div>
+<div class="ttc" id="a02762_html_a36af549940a0aae3733774649594489f"><div class="ttname"><a href="a02762.html#a36af549940a0aae3733774649594489f">Foam::UPstream::master</a></div><div class="ttdeci">static bool master(const label communicator=0)</div><div class="ttdoc">Am I the master process. </div><div class="ttdef"><b>Definition:</b> <a href="a07806_source.html#l00398">UPstream.H:398</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a07794_html"><div class="ttname"><a href="a07794.html">Pstream.H</a></div></div>
+<div class="ttc" id="a02762_html_aada0e04d8127eda8ee95be0772754a4f"><div class="ttname"><a href="a02762.html#aada0e04d8127eda8ee95be0772754a4f">Foam::UPstream::nProcs</a></div><div class="ttdeci">static label nProcs(const label communicator=0)</div><div class="ttdoc">Number of processes in parallel run. </div><div class="ttdef"><b>Definition:</b> <a href="a07806_source.html#l00386">UPstream.H:386</a></div></div>
+<div class="ttc" id="a02762_html_afc74d89573de32a3032c916f8cdd1733"><div class="ttname"><a href="a02762.html#afc74d89573de32a3032c916f8cdd1733">Foam::UPstream::myProcNo</a></div><div class="ttdeci">static int myProcNo(const label communicator=0)</div><div class="ttdoc">Number of this process (starting from masterNo() = 0) </div><div class="ttdef"><b>Definition:</b> <a href="a07806_source.html#l00404">UPstream.H:404</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

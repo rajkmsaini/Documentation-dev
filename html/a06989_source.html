@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7be0d8c199b9408ae01f5d77515b8def.html">mesh</a></li><li class="navelem"><a class="el" href="dir_c04cd1fd02bb0d2c4c2f2aa3e7a8ece5.html">autoMesh</a></li><li class="navelem"><a class="el" href="dir_2ed70c589061122d8c252fc1024d37eb.html">autoHexMesh</a></li><li class="navelem"><a class="el" href="dir_39a845b99ff4e6281f01698b450f2151.html">externalDisplacementMeshMover</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_3b5845e7b77836e95b25ac2dbb8dfd76.html">spray</a></li><li class="navelem"><a class="el" href="dir_03a209607acdac05f1cb82250460b2d6.html">submodels</a></li><li class="navelem"><a class="el" href="dir_7862d93b0f83aa5120e5fba7616a1684.html">BreakupModel</a></li><li class="navelem"><a class="el" href="dir_960cc54e61b1c0cc02c9fe03d6c537da.html">BreakupModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">displacementMeshMoverMotionSolver.C</div>  </div>
+<div class="title">BreakupModel.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06989.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,161 +119,257 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06990.html">displacementMeshMoverMotionSolver.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07284.html">localPointRegion.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(displacementMeshMoverMotionSolver, 0);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::BreakupModel</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Templated break-up model class</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    BreakupModel.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    BreakupModelNew.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    (</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        motionSolver,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        displacementMeshMoverMotionSolver,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        dictionary</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    );</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef BreakupModel_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define BreakupModel_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07757.html">IOdictionary.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08446.html">autoPtr.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07840.html">runTimeSelectionTables.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;Foam::displacementMeshMoverMotionSolver::displacementMeshMoverMotionSolver</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a00547.html#aa381f95987f717f08d7215f5760d1c81">   51</a></span>&#160;(</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01163.html">IOdictionary</a>&amp; dict</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a00548.html">displacementMotionSolver</a>(mesh, dict, typeName) <span class="comment">// read pointDisplacement</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                       Class BreakupModel Declaration</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span>BreakupModel</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">public</span> CloudSubModelBase&lt;CloudType&gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a00547.html#a3c39fd01dfcc3b7380f2f0f235ce97a0">Foam::displacementMeshMoverMotionSolver::</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00547.html#a3c39fd01dfcc3b7380f2f0f235ce97a0">   63</a></span>&#160;<a class="code" href="a00547.html#a3c39fd01dfcc3b7380f2f0f235ce97a0">~displacementMeshMoverMotionSolver</a>()</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="a00702.html">Foam::externalDisplacementMeshMover</a>&amp;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="a00547.html#a456ddf9af29a539575cab378127ad87d">   71</a></span>&#160;<a class="code" href="a00547.html#a456ddf9af29a539575cab378127ad87d">Foam::displacementMeshMoverMotionSolver::meshMover</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (!meshMoverPtr_.valid())</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02856.html">word</a> moverType(coeffDict().<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;meshMover&quot;</span>));</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Protected data</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a00162.html#ae9dff45c6b6b74c53ed4c8568e2d875a">   61</a></span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a02514.html">Switch</a> <a class="code" href="a00162.html#ae9dff45c6b6b74c53ed4c8568e2d875a">solveOscillationEq_</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00162.html#a5e1e4ecb376150cc1e862d0146c8f51b">   63</a></span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="a00162.html#a79536f4b17d7f9af5a766b185f358469">   64</a></span>&#160;        scalar <a class="code" href="a00162.html#a5e1e4ecb376150cc1e862d0146c8f51b">y0_</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        scalar <a class="code" href="a00162.html#a79536f4b17d7f9af5a766b185f358469">yDot0_</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a00162.html#a5eb5fb4b8210a963bf2795feab38237a">   66</a></span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a00162.html#aac9959c6d71d1965057dc58516462c70">   67</a></span>&#160;        scalar <a class="code" href="a00162.html#a5eb5fb4b8210a963bf2795feab38237a">TABComega_</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00162.html#a58dedc9a71cb215598317a7d4a21a098">   68</a></span>&#160;        scalar <a class="code" href="a00162.html#aac9959c6d71d1965057dc58516462c70">TABCmu_</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        scalar <a class="code" href="a00162.html#a58dedc9a71cb215598317a7d4a21a098">TABtwoWeCrit_</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a00162.html#ad3c306f0bee524840f62b2fe7f43197f">TypeName</a>(<span class="stringliteral">&quot;breakupModel&quot;</span>);</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        meshMoverPtr_ = <a class="code" href="a00702.html#a844ff1f0ae8076cf133a81d0d8b52758">externalDisplacementMeshMover::New</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        (</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            moverType,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            coeffDict().subDict(moverType + <span class="stringliteral">&quot;Coeffs&quot;</span>),</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <a class="code" href="a01369.html#ada4b8f94bf6f76d8d4342d0d169ce358">localPointRegion::findDuplicateFacePairs</a>(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()),</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            pointDisplacement_</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        );</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> meshMoverPtr_();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::pointField&gt;</a></div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a00547.html#a897bb9550f17845c9ab361582659cbee">   90</a></span>&#160;<a class="code" href="a00547.html#a897bb9550f17845c9ab361582659cbee">Foam::displacementMeshMoverMotionSolver::curPoints</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Return actual points. Cannot do a reference since complains about</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// assignment to self in polyMesh::movePoints</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02608.html">tmp&lt;pointField&gt;</a>(<span class="keyword">new</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<a class="code" href="a04235.html#a1adbc4c519b2cee284a47d6682036276">points</a>()));</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="a00547.html#af7d39f0eac0af0ed5785935ac72a1e7d">   98</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00547.html#af7d39f0eac0af0ed5785935ac72a1e7d">Foam::displacementMeshMoverMotionSolver::solve</a>()</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// The points have moved so before calculation update</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// the mesh and motionSolver accordingly</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    movePoints(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<a class="code" href="a04235.html#a1adbc4c519b2cee284a47d6682036276">points</a>());</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">// Update any point motion bcs (e.g. timevarying)</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    pointDisplacement().boundaryField().updateCoeffs();</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nAllowableErrors = 0;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="a01355.html">labelList</a> checkFaces(<a class="code" href="a10675.html#a36af96cb841435845fffb4fe69208490">identity</a>(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().nFaces()));</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    meshMover().move</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    (</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        coeffDict().subDict(meshMover().<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;Coeffs&quot;</span>),</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        nAllowableErrors,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        checkFaces</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    );</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//- Declare runtime constructor selection table</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a00162.html#aa955ded112d8d2a8b2cd92d92ae5a392">declareRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    (</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="a00086.html">autoPtr</a>,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a00162.html">BreakupModel</a>,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="a00524.html">dictionary</a>,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        (</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a02464.html#a193891e89d96c3d3699885e60fe0a609">dict</a>,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <a class="code" href="a00583.html">CloudType</a>&amp; <a class="code" href="a00290.html#a6335ee485deb9e618ac66a9dc32a7a76">owner</a></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        ),</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        (dict, owner)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    );</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Construct null from owner</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a00162.html#a7843b53cdf63c20a9b651ab6272e544f">BreakupModel</a>(<a class="code" href="a00583.html">CloudType</a>&amp; owner);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//- Construct from dictionary</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <a class="code" href="a00162.html#a7843b53cdf63c20a9b651ab6272e544f">BreakupModel</a></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        (</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict,</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a00583.html">CloudType</a>&amp; owner,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">type</a>,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keywordtype">bool</span> <a class="code" href="a00162.html#a99b4b24064a8813ec78e577cd1972390">solveOscillationEq</a> = <span class="keyword">false</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        );</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Construct copy</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="code" href="a00162.html#a7843b53cdf63c20a9b651ab6272e544f">BreakupModel</a>(<span class="keyword">const</span> <a class="code" href="a00162.html">BreakupModel&lt;CloudType&gt;</a>&amp; bum);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a00086.html">autoPtr&lt;BreakupModel&lt;CloudType&gt;</a> &gt; <a class="code" href="a00162.html#a376e000aafbc39f04c524ee12c9b154b">clone</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00162.html#a946873746d702298089c07f08a77dd98">~BreakupModel</a>();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">// This will have updated the mesh and implicitly the pointDisplacement</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    pointDisplacement().correctBoundaryConditions();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="a00547.html#ab62834098bae1d3887f578c700754f39">  121</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00547.html#ab62834098bae1d3887f578c700754f39">Foam::displacementMeshMoverMotionSolver::movePoints</a>(<span class="keyword">const</span> <a class="code" href="a00749.html">pointField</a>&amp; <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="a00548.html#ab62834098bae1d3887f578c700754f39">displacementMotionSolver::movePoints</a>(p);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="comment">// Update meshMover for new geometry</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">if</span> (meshMoverPtr_.valid())</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    {</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        meshMover().movePoints(p);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00547.html#ad57565956fd4064299f4bd3c4eebb1d4">Foam::displacementMeshMoverMotionSolver::updateMesh</a></div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="a00547.html#ad57565956fd4064299f4bd3c4eebb1d4">  134</a></span>&#160;(</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01422.html">mapPolyMesh</a>&amp; map</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;)</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;{</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <a class="code" href="a00548.html#ad57565956fd4064299f4bd3c4eebb1d4">displacementMotionSolver::updateMesh</a>(map);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="comment">// Update meshMover for new topology</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    meshMoverPtr_.clear();</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a5997a67f2e85a15c0e13a1724273aa5f"><div class="ttname"><a href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">Foam::pointField</a></div><div class="ttdeci">vectorField pointField</div><div class="ttdoc">pointField is a vectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a08724_source.html#l00042">pointFieldFwd.H:42</a></div></div>
-<div class="ttc" id="a00548_html_ad57565956fd4064299f4bd3c4eebb1d4"><div class="ttname"><a href="a00548.html#ad57565956fd4064299f4bd3c4eebb1d4">Foam::displacementMotionSolver::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(const mapPolyMesh &amp;)</div><div class="ttdoc">Update local data for topology changes. </div><div class="ttdef"><b>Definition:</b> <a href="a04800_source.html#l00175">displacementMotionSolver.C:175</a></div></div>
-<div class="ttc" id="a07284_html"><div class="ttname"><a href="a07284.html">localPointRegion.H</a></div></div>
-<div class="ttc" id="a00547_html_a897bb9550f17845c9ab361582659cbee"><div class="ttname"><a href="a00547.html#a897bb9550f17845c9ab361582659cbee">Foam::displacementMeshMoverMotionSolver::curPoints</a></div><div class="ttdeci">virtual tmp&lt; pointField &gt; curPoints() const </div><div class="ttdoc">Return point location obtained from the current motion field. </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00090">displacementMeshMoverMotionSolver.C:90</a></div></div>
-<div class="ttc" id="a01422_html"><div class="ttname"><a href="a01422.html">Foam::mapPolyMesh</a></div><div class="ttdoc">Class containing mesh-to-mesh mapping information after a change in polyMesh topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08568_source.html#l00158">mapPolyMesh.H:158</a></div></div>
-<div class="ttc" id="a00702_html_a844ff1f0ae8076cf133a81d0d8b52758"><div class="ttname"><a href="a00702.html#a844ff1f0ae8076cf133a81d0d8b52758">Foam::externalDisplacementMeshMover::New</a></div><div class="ttdeci">static autoPtr&lt; externalDisplacementMeshMover &gt; New(const word &amp;type, const dictionary &amp;dict, const List&lt; labelPair &gt; &amp;baffles, pointVectorField &amp;pointDisplacement)</div><div class="ttdoc">Return a reference to the selected meshMover model. </div><div class="ttdef"><b>Definition:</b> <a href="a06991_source.html#l00056">externalDisplacementMeshMover.C:56</a></div></div>
-<div class="ttc" id="a00547_html_ad57565956fd4064299f4bd3c4eebb1d4"><div class="ttname"><a href="a00547.html#ad57565956fd4064299f4bd3c4eebb1d4">Foam::displacementMeshMoverMotionSolver::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(const mapPolyMesh &amp;)</div><div class="ttdoc">Update topology. </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00134">displacementMeshMoverMotionSolver.C:134</a></div></div>
-<div class="ttc" id="a04235_html_a1adbc4c519b2cee284a47d6682036276"><div class="ttname"><a href="a04235.html#a1adbc4c519b2cee284a47d6682036276">points</a></div><div class="ttdeci">const pointField &amp; points</div><div class="ttdef"><b>Definition:</b> <a href="a04235_source.html#l00001">gmvOutputHeader.H:1</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a36af96cb841435845fffb4fe69208490"><div class="ttname"><a href="a10675.html#a36af96cb841435845fffb4fe69208490">Foam::identity</a></div><div class="ttdeci">labelList identity(const label len)</div><div class="ttdoc">Create identity map (map[i] == i) of given length. </div><div class="ttdef"><b>Definition:</b> <a href="a07593_source.html#l00104">ListOps.C:104</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00547_html_a456ddf9af29a539575cab378127ad87d"><div class="ttname"><a href="a00547.html#a456ddf9af29a539575cab378127ad87d">Foam::displacementMeshMoverMotionSolver::meshMover</a></div><div class="ttdeci">externalDisplacementMeshMover &amp; meshMover() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00071">displacementMeshMoverMotionSolver.C:71</a></div></div>
-<div class="ttc" id="a06990_html"><div class="ttname"><a href="a06990.html">displacementMeshMoverMotionSolver.H</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a04395_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00051">createFields.H:51</a></div></div>
-<div class="ttc" id="a01369_html_ada4b8f94bf6f76d8d4342d0d169ce358"><div class="ttname"><a href="a01369.html#ada4b8f94bf6f76d8d4342d0d169ce358">Foam::localPointRegion::findDuplicateFacePairs</a></div><div class="ttdeci">static labelPairList findDuplicateFacePairs(const polyMesh &amp;)</div><div class="ttdoc">Helper routine to find all baffles (two boundary faces. </div><div class="ttdef"><b>Definition:</b> <a href="a07283_source.html#l00589">localPointRegion.C:589</a></div></div>
-<div class="ttc" id="a00547_html_af7d39f0eac0af0ed5785935ac72a1e7d"><div class="ttname"><a href="a00547.html#af7d39f0eac0af0ed5785935ac72a1e7d">Foam::displacementMeshMoverMotionSolver::solve</a></div><div class="ttdeci">virtual void solve()</div><div class="ttdoc">Solve for motion. </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00098">displacementMeshMoverMotionSolver.C:98</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a01163_html"><div class="ttname"><a href="a01163.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07706_source.html#l00053">IOdictionary.H:53</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a00548_html_ab62834098bae1d3887f578c700754f39"><div class="ttname"><a href="a00548.html#ab62834098bae1d3887f578c700754f39">Foam::displacementMotionSolver::movePoints</a></div><div class="ttdeci">virtual void movePoints(const pointField &amp;)</div><div class="ttdoc">Update local data for geometry changes. </div><div class="ttdef"><b>Definition:</b> <a href="a04800_source.html#l00169">displacementMotionSolver.C:169</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a00547_html_ab62834098bae1d3887f578c700754f39"><div class="ttname"><a href="a00547.html#ab62834098bae1d3887f578c700754f39">Foam::displacementMeshMoverMotionSolver::movePoints</a></div><div class="ttdeci">virtual void movePoints(const pointField &amp;)</div><div class="ttdoc">Update local data for geometry changes. </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00121">displacementMeshMoverMotionSolver.C:121</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a00547_html_a3c39fd01dfcc3b7380f2f0f235ce97a0"><div class="ttname"><a href="a00547.html#a3c39fd01dfcc3b7380f2f0f235ce97a0">Foam::displacementMeshMoverMotionSolver::~displacementMeshMoverMotionSolver</a></div><div class="ttdeci">~displacementMeshMoverMotionSolver()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00063">displacementMeshMoverMotionSolver.C:63</a></div></div>
-<div class="ttc" id="a03837_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00702_html"><div class="ttname"><a href="a00702.html">Foam::externalDisplacementMeshMover</a></div><div class="ttdoc">Virtual base class for mesh movers with externally provided displacement field giving the boundary co...</div><div class="ttdef"><b>Definition:</b> <a href="a06992_source.html#l00056">externalDisplacementMeshMover.H:56</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a00548_html"><div class="ttname"><a href="a00548.html">Foam::displacementMotionSolver</a></div><div class="ttdoc">Virtual base class for displacement motion solver. </div><div class="ttdef"><b>Definition:</b> <a href="a04801_source.html#l00055">displacementMotionSolver.H:55</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">//- Selector</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keyword">static</span> <a class="code" href="a00086.html">autoPtr&lt;BreakupModel&lt;CloudType&gt;</a> &gt; <a class="code" href="a00162.html#a1c9db777c34303cbc596278074896bac">New</a></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    (</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict,</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="a00583.html">CloudType</a>&amp; owner</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    );</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// Access</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="a00162.html#a99b4b24064a8813ec78e577cd1972390">  125</a></span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a02514.html">Switch</a>&amp; <a class="code" href="a00162.html#a99b4b24064a8813ec78e577cd1972390">solveOscillationEq</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#ae9dff45c6b6b74c53ed4c8568e2d875a">solveOscillationEq_</a>;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="a00162.html#a99830db56e3596a09ca52edd249e17c7">  130</a></span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> scalar&amp; <a class="code" href="a00162.html#a99830db56e3596a09ca52edd249e17c7">y0</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#a5e1e4ecb376150cc1e862d0146c8f51b">y0_</a>;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        }</div>
+<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="a00162.html#abaa6d6e88124b56cbfc4bccb487f58cc">  135</a></span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> scalar&amp; <a class="code" href="a00162.html#abaa6d6e88124b56cbfc4bccb487f58cc">yDot0</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#a79536f4b17d7f9af5a766b185f358469">yDot0_</a>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        }</div>
+<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="a00162.html#a7b668188c4a69637e2d3ad09d0ad8a08">  140</a></span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> scalar&amp; <a class="code" href="a00162.html#a7b668188c4a69637e2d3ad09d0ad8a08">TABComega</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#a5eb5fb4b8210a963bf2795feab38237a">TABComega_</a>;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        }</div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="a00162.html#aaa7a17d5c20273606bf3e337fb15428a">  145</a></span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> scalar&amp; <a class="code" href="a00162.html#aaa7a17d5c20273606bf3e337fb15428a">TABCmu</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#aac9959c6d71d1965057dc58516462c70">TABCmu_</a>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        }</div>
+<div class="line"><a name="l00150"></a><span class="lineno"><a class="line" href="a00162.html#aa738e10b377943685df83a80492324c1">  150</a></span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> scalar&amp; <a class="code" href="a00162.html#aa738e10b377943685df83a80492324c1">TABtwoWeCrit</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00162.html#a58dedc9a71cb215598317a7d4a21a098">TABtwoWeCrit_</a>;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="comment">//- Update the parcel properties and return true if a child parcel</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">//  should be added</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a00162.html#a4bf93f3bba2ec14cb68acd7b5c20c62a">update</a></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        (</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keyword">const</span> scalar dt,</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; <a class="code" href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a>,</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            scalar&amp; d,</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            scalar&amp; tc,</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            scalar&amp; ms,</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            scalar&amp; nParticle,</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            scalar&amp; KHindex,</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            scalar&amp; <a class="code" href="a06984.html#afa8b67a0d5607da908ad92ed485e19e8">y</a>,</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            scalar&amp; yDot,</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="keyword">const</span> scalar d0,</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keyword">const</span> scalar <a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="keyword">const</span> scalar <a class="code" href="a10738.html#a8d2432cc748eee3d28d002a6fbefcd1d">mu</a>,</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            <span class="keyword">const</span> scalar <a class="code" href="a10738.html#a8417ed1fef963cd0ac584cb222d1b69a">sigma</a>,</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; <a class="code" href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            <span class="keyword">const</span> scalar rhoc,</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="keyword">const</span> scalar muc,</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; <a class="code" href="a02940.html#a931ea4efeb0de1e2fe90a8ffd0d012e1">Urel</a>,</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="keyword">const</span> scalar Urmag,</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="keyword">const</span> scalar tMom,</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            scalar&amp; dChild,</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            scalar&amp; massChild</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        ) = 0;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;};</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="a06989.html#a186c0d05d5a8474d14f3e9f2b4c79c46">  193</a></span>&#160;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#define makeBreakupModel(CloudType)                                           \</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">    typedef Foam::CloudType::sprayCloudType sprayCloudType;                   \</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="preprocessor">    defineNamedTemplateTypeNameAndDebug                                       \</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="preprocessor">    (                                                                         \</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor">        Foam::BreakupModel&lt;sprayCloudType&gt;,                                   \</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">        0                                                                     \</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">    );                                                                        \</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">    namespace Foam                                                            \</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">    {                                                                         \</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">        defineTemplateRunTimeSelectionTable                                   \</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">        (                                                                     \</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">            BreakupModel&lt;sprayCloudType&gt;,                                     \</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="preprocessor">            dictionary                                                        \</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="preprocessor">        );                                                                    \</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;</div>
+<div class="line"><a name="l00212"></a><span class="lineno"><a class="line" href="a06989.html#a22952975df6cbbc4e17f7dce6fcabc69">  212</a></span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="preprocessor">#define makeBreakupModelType(SS, CloudType)                                   \</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="preprocessor">    typedef Foam::CloudType::sprayCloudType sprayCloudType;                   \</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="preprocessor">    defineNamedTemplateTypeNameAndDebug(Foam::SS&lt;sprayCloudType&gt;, 0);         \</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="preprocessor">    Foam::BreakupModel&lt;sprayCloudType&gt;::                                      \</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="preprocessor">        adddictionaryConstructorToTable&lt;Foam::SS&lt;sprayCloudType&gt; &gt;            \</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="preprocessor">            add##SS##CloudType##sprayCloudType##ConstructorToTable_;</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a06988.html">BreakupModel.C</a>&quot;</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a06988_html"><div class="ttname"><a href="a06988.html">BreakupModel.C</a></div></div>
+<div class="ttc" id="a00162_html_a7b668188c4a69637e2d3ad09d0ad8a08"><div class="ttname"><a href="a00162.html#a7b668188c4a69637e2d3ad09d0ad8a08">Foam::BreakupModel::TABComega</a></div><div class="ttdeci">const scalar &amp; TABComega() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00140">BreakupModel.H:140</a></div></div>
+<div class="ttc" id="a00162_html_a376e000aafbc39f04c524ee12c9b154b"><div class="ttname"><a href="a00162.html#a376e000aafbc39f04c524ee12c9b154b">Foam::BreakupModel::clone</a></div><div class="ttdeci">virtual autoPtr&lt; BreakupModel&lt; CloudType &gt; &gt; clone() const  =0</div><div class="ttdoc">Construct and return a clone. </div></div>
+<div class="ttc" id="a00162_html"><div class="ttname"><a href="a00162.html">Foam::BreakupModel</a></div><div class="ttdoc">Templated break-up model class. </div><div class="ttdef"><b>Definition:</b> <a href="a06964_source.html#l00050">SprayCloud.H:50</a></div></div>
+<div class="ttc" id="a00162_html_a5eb5fb4b8210a963bf2795feab38237a"><div class="ttname"><a href="a00162.html#a5eb5fb4b8210a963bf2795feab38237a">Foam::BreakupModel::TABComega_</a></div><div class="ttdeci">scalar TABComega_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00066">BreakupModel.H:66</a></div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a00162_html_a4bf93f3bba2ec14cb68acd7b5c20c62a"><div class="ttname"><a href="a00162.html#a4bf93f3bba2ec14cb68acd7b5c20c62a">Foam::BreakupModel::update</a></div><div class="ttdeci">virtual bool update(const scalar dt, const vector &amp;g, scalar &amp;d, scalar &amp;tc, scalar &amp;ms, scalar &amp;nParticle, scalar &amp;KHindex, scalar &amp;y, scalar &amp;yDot, const scalar d0, const scalar rho, const scalar mu, const scalar sigma, const vector &amp;U, const scalar rhoc, const scalar muc, const vector &amp;Urel, const scalar Urmag, const scalar tMom, scalar &amp;dChild, scalar &amp;massChild)=0</div><div class="ttdoc">Update the parcel properties and return true if a child parcel. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02978_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02978_source.html#l00096">readInitialConditions.H:96</a></div></div>
+<div class="ttc" id="a02464_html_a193891e89d96c3d3699885e60fe0a609"><div class="ttname"><a href="a02464.html#a193891e89d96c3d3699885e60fe0a609">Foam::subModelBase::dict</a></div><div class="ttdeci">const dictionary &amp; dict() const </div><div class="ttdoc">Return const access to the cloud dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a08993_source.html#l00110">subModelBase.C:110</a></div></div>
+<div class="ttc" id="a08446_html"><div class="ttname"><a href="a08446.html">autoPtr.H</a></div></div>
+<div class="ttc" id="a00162_html_a946873746d702298089c07f08a77dd98"><div class="ttname"><a href="a00162.html#a946873746d702298089c07f08a77dd98">Foam::BreakupModel::~BreakupModel</a></div><div class="ttdeci">virtual ~BreakupModel()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06988_source.html#l00093">BreakupModel.C:93</a></div></div>
+<div class="ttc" id="a10738_html_a8d2432cc748eee3d28d002a6fbefcd1d"><div class="ttname"><a href="a10738.html#a8d2432cc748eee3d28d002a6fbefcd1d">Foam::constant::physicoChemical::mu</a></div><div class="ttdeci">const dimensionedScalar mu</div><div class="ttdoc">Atomic mass unit. </div><div class="ttdef"><b>Definition:</b> <a href="a04442_source.html#l00013">createFields.H:13</a></div></div>
+<div class="ttc" id="a00162_html_aaa7a17d5c20273606bf3e337fb15428a"><div class="ttname"><a href="a00162.html#aaa7a17d5c20273606bf3e337fb15428a">Foam::BreakupModel::TABCmu</a></div><div class="ttdeci">const scalar &amp; TABCmu() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00145">BreakupModel.H:145</a></div></div>
+<div class="ttc" id="a00162_html_aa955ded112d8d2a8b2cd92d92ae5a392"><div class="ttname"><a href="a00162.html#aa955ded112d8d2a8b2cd92d92ae5a392">Foam::BreakupModel::declareRunTimeSelectionTable</a></div><div class="ttdeci">declareRunTimeSelectionTable(autoPtr, BreakupModel, dictionary,(                                       const dictionary &amp;dict,                                       CloudType &amp;owner                       ),(dict, owner))</div><div class="ttdoc">Declare runtime constructor selection table. </div></div>
+<div class="ttc" id="a00162_html_a5e1e4ecb376150cc1e862d0146c8f51b"><div class="ttname"><a href="a00162.html#a5e1e4ecb376150cc1e862d0146c8f51b">Foam::BreakupModel::y0_</a></div><div class="ttdeci">scalar y0_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00063">BreakupModel.H:63</a></div></div>
+<div class="ttc" id="a03195_html_ae0b3bf70bd591e6682c5eaa2191bafe7"><div class="ttname"><a href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a></div><div class="ttdeci">const dimensionedVector &amp; g</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00033">setRegionFluidFields.H:33</a></div></div>
+<div class="ttc" id="a00162_html_a79536f4b17d7f9af5a766b185f358469"><div class="ttname"><a href="a00162.html#a79536f4b17d7f9af5a766b185f358469">Foam::BreakupModel::yDot0_</a></div><div class="ttdeci">scalar yDot0_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00064">BreakupModel.H:64</a></div></div>
+<div class="ttc" id="a07840_html"><div class="ttname"><a href="a07840.html">runTimeSelectionTables.H</a></div><div class="ttdoc">Macros to ease declaration of run-time selection tables. </div></div>
+<div class="ttc" id="a00162_html_a99b4b24064a8813ec78e577cd1972390"><div class="ttname"><a href="a00162.html#a99b4b24064a8813ec78e577cd1972390">Foam::BreakupModel::solveOscillationEq</a></div><div class="ttdeci">const Switch &amp; solveOscillationEq() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00125">BreakupModel.H:125</a></div></div>
+<div class="ttc" id="a07757_html"><div class="ttname"><a href="a07757.html">IOdictionary.H</a></div></div>
+<div class="ttc" id="a00162_html_ae9dff45c6b6b74c53ed4c8568e2d875a"><div class="ttname"><a href="a00162.html#ae9dff45c6b6b74c53ed4c8568e2d875a">Foam::BreakupModel::solveOscillationEq_</a></div><div class="ttdeci">Switch solveOscillationEq_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00061">BreakupModel.H:61</a></div></div>
+<div class="ttc" id="a00583_html"><div class="ttname"><a href="a00583.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06404_source.html#l00068">DSMCCloud.H:68</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02514_html"><div class="ttname"><a href="a02514.html">Foam::Switch</a></div><div class="ttdoc">A simple wrapper around bool so that it can be read as a word: true/false, on/off, yes/no, y/n, t/f, or none. </div><div class="ttdef"><b>Definition:</b> <a href="a08807_source.html#l00060">Switch.H:60</a></div></div>
+<div class="ttc" id="a00162_html_aac9959c6d71d1965057dc58516462c70"><div class="ttname"><a href="a00162.html#aac9959c6d71d1965057dc58516462c70">Foam::BreakupModel::TABCmu_</a></div><div class="ttdeci">scalar TABCmu_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00067">BreakupModel.H:67</a></div></div>
+<div class="ttc" id="a02919_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02919_source.html#l00082">pEqn.H:82</a></div></div>
+<div class="ttc" id="a06984_html_afa8b67a0d5607da908ad92ed485e19e8"><div class="ttname"><a href="a06984.html#afa8b67a0d5607da908ad92ed485e19e8">y</a></div><div class="ttdeci">scalar y</div><div class="ttdef"><b>Definition:</b> <a href="a06984_source.html#l00014">LISASMDCalcMethod1.H:14</a></div></div>
+<div class="ttc" id="a00162_html_abaa6d6e88124b56cbfc4bccb487f58cc"><div class="ttname"><a href="a00162.html#abaa6d6e88124b56cbfc4bccb487f58cc">Foam::BreakupModel::yDot0</a></div><div class="ttdeci">const scalar &amp; yDot0() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00135">BreakupModel.H:135</a></div></div>
+<div class="ttc" id="a10738_html_a8417ed1fef963cd0ac584cb222d1b69a"><div class="ttname"><a href="a10738.html#a8417ed1fef963cd0ac584cb222d1b69a">Foam::constant::physicoChemical::sigma</a></div><div class="ttdeci">const dimensionedScalar sigma</div><div class="ttdoc">Stefan-Boltzmann constant: default SI units: [W/m2/K4]. </div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a02940_html_a931ea4efeb0de1e2fe90a8ffd0d012e1"><div class="ttname"><a href="a02940.html#a931ea4efeb0de1e2fe90a8ffd0d012e1">Urel</a></div><div class="ttdeci">Urel</div><div class="ttdef"><b>Definition:</b> <a href="a02940_source.html#l00053">pEqn.H:53</a></div></div>
+<div class="ttc" id="a00162_html_ad3c306f0bee524840f62b2fe7f43197f"><div class="ttname"><a href="a00162.html#ad3c306f0bee524840f62b2fe7f43197f">Foam::BreakupModel::TypeName</a></div><div class="ttdeci">TypeName(&quot;breakupModel&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a00162_html_a58dedc9a71cb215598317a7d4a21a098"><div class="ttname"><a href="a00162.html#a58dedc9a71cb215598317a7d4a21a098">Foam::BreakupModel::TABtwoWeCrit_</a></div><div class="ttdeci">scalar TABtwoWeCrit_</div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00068">BreakupModel.H:68</a></div></div>
+<div class="ttc" id="a00162_html_a7843b53cdf63c20a9b651ab6272e544f"><div class="ttname"><a href="a00162.html#a7843b53cdf63c20a9b651ab6272e544f">Foam::BreakupModel::BreakupModel</a></div><div class="ttdeci">BreakupModel(CloudType &amp;owner)</div><div class="ttdoc">Construct null from owner. </div><div class="ttdef"><b>Definition:</b> <a href="a06988_source.html#l00032">BreakupModel.C:32</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00290_html_a6335ee485deb9e618ac66a9dc32a7a76"><div class="ttname"><a href="a00290.html#a6335ee485deb9e618ac66a9dc32a7a76">Foam::CloudSubModelBase::owner</a></div><div class="ttdeci">const CloudType &amp; owner() const </div><div class="ttdoc">Return const access to the owner cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06606_source.html#l00103">CloudSubModelBase.C:103</a></div></div>
+<div class="ttc" id="a00162_html_aa738e10b377943685df83a80492324c1"><div class="ttname"><a href="a00162.html#aa738e10b377943685df83a80492324c1">Foam::BreakupModel::TABtwoWeCrit</a></div><div class="ttdeci">const scalar &amp; TABtwoWeCrit() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00150">BreakupModel.H:150</a></div></div>
+<div class="ttc" id="a00162_html_a1c9db777c34303cbc596278074896bac"><div class="ttname"><a href="a00162.html#a1c9db777c34303cbc596278074896bac">Foam::BreakupModel::New</a></div><div class="ttdeci">static autoPtr&lt; BreakupModel&lt; CloudType &gt; &gt; New(const dictionary &amp;dict, CloudType &amp;owner)</div><div class="ttdoc">Selector. </div><div class="ttdef"><b>Definition:</b> <a href="a06990_source.html#l00033">BreakupModelNew.C:33</a></div></div>
+<div class="ttc" id="a00162_html_a99830db56e3596a09ca52edd249e17c7"><div class="ttname"><a href="a00162.html#a99830db56e3596a09ca52edd249e17c7">Foam::BreakupModel::y0</a></div><div class="ttdeci">const scalar &amp; y0() const </div><div class="ttdef"><b>Definition:</b> <a href="a06989_source.html#l00130">BreakupModel.H:130</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

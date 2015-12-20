@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_fd9be80e4ce10132ec26d36b30f21b7d.html">GAMG</a></li><li class="navelem"><a class="el" href="dir_e29b5ea92f1450a27f449a4b2bdeb476.html">GAMGProcAgglomerations</a></li><li class="navelem"><a class="el" href="dir_6c69053bb960fca8507553d6181abc67.html">manualGAMGProcAgglomeration</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_ad1279e85697e0f0972e5fabfcfcce34.html">LduMatrix</a></li><li class="navelem"><a class="el" href="dir_327cfc93208df70ea0524932ac6580b3.html">Preconditioners</a></li><li class="navelem"><a class="el" href="dir_83b61b62854642d840acee041aea552b.html">DILUPreconditioner</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">manualGAMGProcAgglomeration.H</div>  </div>
+<div class="title">TDILUPreconditioner.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08314.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,134 +120,122 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::manualGAMGProcAgglomeration</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::TDILUPreconditioner</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Manual processor agglomeration of GAMGAgglomerations.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    In the GAMG control dictionary:</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">        processorAgglomerator manual;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">        // List of level+procagglomeration where</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">        // procagglomeration is a set of labelLists. Each labelList is</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">        // a cluster of processor which gets combined onto the first element</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">        // in the list.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">        processorAgglomeration</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">        (</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">            (</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">                3           //at level 3</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">                (</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">                    (0 1)   //coarse 0 from 0,1 (and moved onto 0)</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">                    (3 2)   //coarse 1 from 2,3 (and moved onto 3)</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">                )</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">            )</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">            (</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                6           //at level6</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">                (</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                    (0 1)   //coarse 0 from 0,1 (and moved onto 0)</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">                )</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">            )</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">        );</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">    manualGAMGProcAgglomeration.C</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#ifndef manualGAMGProcAgglomeration_H</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define manualGAMGProcAgglomeration_H</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08312.html">GAMGProcAgglomeration.H</a>&quot;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07576.html">DynamicList.H</a>&quot;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08976.html">Tuple2.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Simplified diagonal-based incomplete LU preconditioner for asymmetric</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    matrices.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    The inverse (reciprocal for scalar) of the preconditioned diagonal is</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    calculated and stored.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    TDILUPreconditioner.C</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef TDILUPreconditioner_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define TDILUPreconditioner_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08285.html">LduMatrix.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">                           Class TDILUPreconditioner Declaration</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a02558.html">   53</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> DType, <span class="keyword">class</span> LUType&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a02558.html">TDILUPreconditioner</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01283.html">LduMatrix</a>&lt;Type, DType, LUType&gt;::preconditioner</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">//- The inverse (reciprocal for scalar) preconditioned diagonal</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a00755.html">Field&lt;DType&gt;</a> rD_;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">class </span>GAMGAgglomeration;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">              Class manualGAMGProcAgglomeration Declaration</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a01388.html">   76</a></span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">class </span><a class="code" href="a01388.html">manualGAMGProcAgglomeration</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;:</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00892.html">GAMGProcAgglomeration</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">//- Per level the agglomeration map</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;Tuple2&lt;label, List&lt;labelList&gt;</a> &gt; &gt; procAgglomMaps_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a02558.html#a03e7e4f75f9c5e1dda2293199bf4cd47">TypeName</a>(<span class="stringliteral">&quot;DILU&quot;</span>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//- Construct from matrix components and preconditioner data dictionary</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a02558.html#a83033f343d8a210d84737857afb069b8">TDILUPreconditioner</a></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        (</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="a02379.html">LduMatrix&lt;Type, DType, LUType&gt;::solver</a>&amp; sol,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; preconditionerDict</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        );</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Destructor</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="a02558.html#a31d07522721fd96b74a7acf750a665d1">   81</a></span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02558.html#a31d07522721fd96b74a7acf750a665d1">~TDILUPreconditioner</a>()</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        {}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//- Any allocated communicators</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="a00598.html">DynamicList&lt;label&gt;</a> comms_;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a01388.html">manualGAMGProcAgglomeration</a></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        (</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01388.html">manualGAMGProcAgglomeration</a>&amp;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        );</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a01388.html">manualGAMGProcAgglomeration</a>&amp;);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">//- Calculate the reciprocal of the preconditioned diagonal</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a02558.html#a4285bbd6c558576051d236d84b20d26d">calcInvD</a></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        (</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="a00755.html">Field&lt;DType&gt;</a>&amp; rD,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01283.html">LduMatrix&lt;Type, DType, LUType&gt;</a>&amp; matrix</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        );</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">//- Return wA the preconditioned form of residual rA</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02558.html#a9e183efadd05e71551ce388f7643ddb1">precondition</a></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        (</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; wA,</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; rA</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        ) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="a01388.html#a78d4899ab20fbaf0a44e0714bdeb1160">TypeName</a>(<span class="stringliteral">&quot;manual&quot;</span>);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="comment">//- Construct given agglomerator and controls</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="a01388.html">manualGAMGProcAgglomeration</a></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        (</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <a class="code" href="a00888.html">GAMGAgglomeration</a>&amp; agglom,</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a02958.html#a11d7fc5562a23e182599d89ddfcfae84">controlDict</a></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        );</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Return wT the transpose-matrix preconditioned form of</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">//  residual rT.</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02558.html#ac1474eeb046e50412ad545241f15a571">preconditionT</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        (</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; wT,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; rT</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01388.html#a49707f364a73bdc81d2a125230348e96">~manualGAMGProcAgglomeration</a>();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a08313.html">TDILUPreconditioner.C</a>&quot;</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;       <span class="comment">//- Modify agglomeration. Return true if modified</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a01388.html#aafdd9615cff0be3c3c601afb8526aee5">agglomerate</a>();</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;};</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00888_html"><div class="ttname"><a href="a00888.html">Foam::GAMGAgglomeration</a></div><div class="ttdoc">Geometric agglomerated algebraic multigrid agglomeration class. </div><div class="ttdef"><b>Definition:</b> <a href="a08304_source.html#l00061">GAMGAgglomeration.H:61</a></div></div>
-<div class="ttc" id="a08312_html"><div class="ttname"><a href="a08312.html">GAMGProcAgglomeration.H</a></div></div>
-<div class="ttc" id="a01388_html"><div class="ttname"><a href="a01388.html">Foam::manualGAMGProcAgglomeration</a></div><div class="ttdoc">Manual processor agglomeration of GAMGAgglomerations. </div><div class="ttdef"><b>Definition:</b> <a href="a08314_source.html#l00076">manualGAMGProcAgglomeration.H:76</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a01388_html_a49707f364a73bdc81d2a125230348e96"><div class="ttname"><a href="a01388.html#a49707f364a73bdc81d2a125230348e96">Foam::manualGAMGProcAgglomeration::~manualGAMGProcAgglomeration</a></div><div class="ttdeci">virtual ~manualGAMGProcAgglomeration()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00064">manualGAMGProcAgglomeration.C:64</a></div></div>
-<div class="ttc" id="a00598_html"><div class="ttname"><a href="a00598.html">Foam::DynamicList&lt; label &gt;</a></div></div>
-<div class="ttc" id="a02958_html_a11d7fc5562a23e182599d89ddfcfae84"><div class="ttname"><a href="a02958.html#a11d7fc5562a23e182599d89ddfcfae84">controlDict</a></div><div class="ttdeci">runTime controlDict().lookup(&quot;adjustTimeStep&quot;) &gt;&gt; adjustTimeStep</div></div>
-<div class="ttc" id="a00892_html"><div class="ttname"><a href="a00892.html">Foam::GAMGProcAgglomeration</a></div><div class="ttdoc">Processor agglomeration of GAMGAgglomerations. </div><div class="ttdef"><b>Definition:</b> <a href="a08312_source.html#l00052">GAMGProcAgglomeration.H:52</a></div></div>
-<div class="ttc" id="a01388_html_a78d4899ab20fbaf0a44e0714bdeb1160"><div class="ttname"><a href="a01388.html#a78d4899ab20fbaf0a44e0714bdeb1160">Foam::manualGAMGProcAgglomeration::TypeName</a></div><div class="ttdeci">TypeName(&quot;manual&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a01388_html_aafdd9615cff0be3c3c601afb8526aee5"><div class="ttname"><a href="a01388.html#aafdd9615cff0be3c3c601afb8526aee5">Foam::manualGAMGProcAgglomeration::agglomerate</a></div><div class="ttdeci">virtual bool agglomerate()</div><div class="ttdoc">Modify agglomeration. Return true if modified. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00078">manualGAMGProcAgglomeration.C:78</a></div></div>
-<div class="ttc" id="a07576_html"><div class="ttname"><a href="a07576.html">DynamicList.H</a></div></div>
-<div class="ttc" id="a08976_html"><div class="ttname"><a href="a08976.html">Tuple2.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02558_html_a4285bbd6c558576051d236d84b20d26d"><div class="ttname"><a href="a02558.html#a4285bbd6c558576051d236d84b20d26d">Foam::TDILUPreconditioner::calcInvD</a></div><div class="ttdeci">static void calcInvD(Field&lt; DType &gt; &amp;rD, const LduMatrix&lt; Type, DType, LUType &gt; &amp;matrix)</div><div class="ttdoc">Calculate the reciprocal of the preconditioned diagonal. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00048">TDILUPreconditioner.C:48</a></div></div>
+<div class="ttc" id="a02558_html_a83033f343d8a210d84737857afb069b8"><div class="ttname"><a href="a02558.html#a83033f343d8a210d84737857afb069b8">Foam::TDILUPreconditioner::TDILUPreconditioner</a></div><div class="ttdeci">TDILUPreconditioner(const typename LduMatrix&lt; Type, DType, LUType &gt;::solver &amp;sol, const dictionary &amp;preconditionerDict)</div><div class="ttdoc">Construct from matrix components and preconditioner data dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00032">TDILUPreconditioner.C:32</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; DType &gt;</a></div></div>
+<div class="ttc" id="a02379_html"><div class="ttname"><a href="a02379.html">Foam::LduMatrix::solver</a></div><div class="ttdoc">Abstract base-class for LduMatrix solvers. </div><div class="ttdef"><b>Definition:</b> <a href="a08285_source.html#l00112">LduMatrix.H:112</a></div></div>
+<div class="ttc" id="a02558_html_a9e183efadd05e71551ce388f7643ddb1"><div class="ttname"><a href="a02558.html#a9e183efadd05e71551ce388f7643ddb1">Foam::TDILUPreconditioner::precondition</a></div><div class="ttdeci">virtual void precondition(Field&lt; Type &gt; &amp;wA, const Field&lt; Type &gt; &amp;rA) const </div><div class="ttdoc">Return wA the preconditioned form of residual rA. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00081">TDILUPreconditioner.C:81</a></div></div>
+<div class="ttc" id="a08313_html"><div class="ttname"><a href="a08313.html">TDILUPreconditioner.C</a></div></div>
+<div class="ttc" id="a01283_html"><div class="ttname"><a href="a01283.html">Foam::LduMatrix</a></div><div class="ttdoc">LduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08285_source.html#l00069">LduMatrix.H:69</a></div></div>
+<div class="ttc" id="a02558_html_a31d07522721fd96b74a7acf750a665d1"><div class="ttname"><a href="a02558.html#a31d07522721fd96b74a7acf750a665d1">Foam::TDILUPreconditioner::~TDILUPreconditioner</a></div><div class="ttdeci">virtual ~TDILUPreconditioner()</div><div class="ttdef"><b>Definition:</b> <a href="a08314_source.html#l00081">TDILUPreconditioner.H:81</a></div></div>
+<div class="ttc" id="a02558_html"><div class="ttname"><a href="a02558.html">Foam::TDILUPreconditioner</a></div><div class="ttdoc">Simplified diagonal-based incomplete LU preconditioner for asymmetric matrices. </div><div class="ttdef"><b>Definition:</b> <a href="a08314_source.html#l00053">TDILUPreconditioner.H:53</a></div></div>
+<div class="ttc" id="a02558_html_a03e7e4f75f9c5e1dda2293199bf4cd47"><div class="ttname"><a href="a02558.html#a03e7e4f75f9c5e1dda2293199bf4cd47">Foam::TDILUPreconditioner::TypeName</a></div><div class="ttdeci">TypeName(&quot;DILU&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a08285_html"><div class="ttname"><a href="a08285.html">LduMatrix.H</a></div></div>
+<div class="ttc" id="a02558_html_ac1474eeb046e50412ad545241f15a571"><div class="ttname"><a href="a02558.html#ac1474eeb046e50412ad545241f15a571">Foam::TDILUPreconditioner::preconditionT</a></div><div class="ttdeci">virtual void preconditionT(Field&lt; Type &gt; &amp;wT, const Field&lt; Type &gt; &amp;rT) const </div><div class="ttdoc">Return wT the transpose-matrix preconditioned form of. </div><div class="ttdef"><b>Definition:</b> <a href="a08313_source.html#l00131">TDILUPreconditioner.C:131</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

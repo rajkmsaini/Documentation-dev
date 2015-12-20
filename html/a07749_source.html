@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_466e4f5b4cc1582939ab4ceba36098d8.html">IOstreams</a></li><li class="navelem"><a class="el" href="dir_b0a74f56c151a0d905a130de42a6b451.html">Pstreams</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_4f09ac4e91f69db1491e8df2f92c001c.html">IOobject</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">UIPstream.H</div>  </div>
+<div class="title">IOobjectWriteHeader.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07749.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,210 +119,77 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::UIPstream</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Input inter-processor communications stream operating on external</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    buffer.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    UIPstream.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07743.html">Pstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef UIPstream_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define UIPstream_H</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07755.html">UPstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07731.html">Istream.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07745.html">PstreamBuffers.H</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">                           Class UIPstream Declaration</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a02719.html">   53</a></span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a02719.html">UIPstream</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02751.html">UPstream</a>,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01191.html">Istream</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Writes the header description of the File to the stream</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">    associated with the File.</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07745.html">IOobject.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07832.html">objectRegistry.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a01179.html#a0eb19e4807b9f72e892a5e44d90f5054">   35</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01179.html#a3018c18b444825677c9e3a797ac2482c">Foam::IOobject::writeHeader</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">type</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span> (!os.<a class="code" href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;IOobject::writeHeader(Ostream&amp;) : &quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;no stream open for write&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            &lt;&lt; os.<a class="code" href="a01185.html#ad9ba2293cdfe23f026d9ef56efbaa3ea">info</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a01179.html#a02fe83a3242334d79d9798f542c1b780">writeBanner</a>(os)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;FoamFile\n{\n&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;    version     &quot;</span> &lt;&lt; os.<a class="code" href="a01185.html#ac12266e2067a7baeb13af68a5e643edd">version</a>() &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;    format      &quot;</span> &lt;&lt; os.<a class="code" href="a01185.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">format</a>() &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;    class       &quot;</span> &lt;&lt; type &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01179.html#a6f42a51d969cbb5ab649cc46e99bd52c">note</a>().size())</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        os  &lt;&lt; <span class="stringliteral">&quot;    note        &quot;</span> &lt;&lt; <a class="code" href="a01179.html#a6f42a51d969cbb5ab649cc46e99bd52c">note</a>() &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    os  &lt;&lt; <span class="stringliteral">&quot;    location    &quot;</span> &lt;&lt; <a class="code" href="a01179.html#a927868ca22fb186135659bc0acadd47b">instance</a>()/<a class="code" href="a01179.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>().<a class="code" href="a01688.html#a67b30e5633d486ff299537406b0ca471">dbDir</a>()/<a class="code" href="a01179.html#aa784d5f121f1d965ddd196476ceb0ea6">local</a>() &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;    object      &quot;</span> &lt;&lt; <a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <span class="stringliteral">&quot;;\n&quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;}&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">int</span> fromProcNo_;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a01179.html#ab9dfd1788c127840b478e7c3b95b2e51">writeDivider</a>(os) &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a00598.html">DynamicList&lt;char&gt;</a>&amp; externalBuf_;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&amp; externalBufPosition_;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> tag_;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> comm_;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">bool</span> clearAtEnd_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a01179.html#a3018c18b444825677c9e3a797ac2482c">   67</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01179.html#a3018c18b444825677c9e3a797ac2482c">Foam::IOobject::writeHeader</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> writeHeader(os, <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">type</a>());</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordtype">int</span> messageSize_;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//- Check the bufferPosition against messageSize_ for EOF</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> checkEof();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">//- Read a T from the transfer buffer</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> readFromBuffer(<a class="code" href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>&amp;);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">//- Read data from the transfer buffer</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> readFromBuffer(<span class="keywordtype">void</span>* <a class="code" href="a00496.html">data</a>, <span class="keywordtype">size_t</span> count, <span class="keywordtype">size_t</span> align);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Construct given process index to read from and optional buffer size,</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">//  read format and IO version</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a02719.html#a605c63312235a3636dd437fe6c9c9747">UIPstream</a></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        (</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02751.html#a12cf32e9b7820a2c00bf40c8617ab55b">commsTypes</a> <a class="code" href="a02751.html#af0924e420eb86860f69aaf3502076780">commsType</a>,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">int</span> fromProcNo,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <a class="code" href="a00598.html">DynamicList&lt;char&gt;</a>&amp; externalBuf,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&amp; externalBufPosition,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">int</span> tag = <a class="code" href="a02751.html#ae5b8fe6652f6320aa6c7f5c44b6f01b7">UPstream::msgType</a>(),</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> comm = <a class="code" href="a02751.html#a844448bea513dc344c5b441a9e004b9d">UPstream::worldComm</a>,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> clearAtEnd = <span class="keyword">false</span>,   <span class="comment">// destroy externalBuf if at end</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">streamFormat</a> <a class="code" href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">format</a>=<a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97aecafbc1299672a8c1521cc0d5f1ae986">BINARY</a>,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <a class="code" href="a02786.html">versionNumber</a> <a class="code" href="a01177.html#ac12266e2067a7baeb13af68a5e643edd">version</a>=<a class="code" href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">currentVersion</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        );</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="comment">//- Construct given buffers</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="a02719.html#a605c63312235a3636dd437fe6c9c9747">UIPstream</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> fromProcNo, <a class="code" href="a02005.html">PstreamBuffers</a>&amp;);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="a02719.html#a17a7ee4841c706feefb3043d692e3bcf">~UIPstream</a>();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="comment">// Inquiry</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="a02719.html#aae0c4712818b0e951b1043a1ae55f279">  120</a></span>&#160;            <span class="comment">//- Return flags of output stream</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            ios_base::fmtflags <a class="code" href="a02719.html#aae0c4712818b0e951b1043a1ae55f279">flags</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">            </span>{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                <span class="keywordflow">return</span> ios_base::fmtflags(0);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            }</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="comment">// Read functions</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="comment">//- Read into given buffer from given processor and return the</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="comment">//  message size</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keyword">static</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            (</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02751.html#a12cf32e9b7820a2c00bf40c8617ab55b">commsTypes</a> commsType,</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">int</span> fromProcNo,</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                <span class="keywordtype">char</span>* buf,</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                <span class="keyword">const</span> std::streamsize bufSize,</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">int</span> tag = <a class="code" href="a02751.html#ae5b8fe6652f6320aa6c7f5c44b6f01b7">UPstream::msgType</a>(),</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> communicator = 0</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            );</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="comment">//- Return next token from stream</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<a class="code" href="a02609.html">token</a>&amp;);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <span class="comment">//- Read a character</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<span class="keywordtype">char</span>&amp;);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="comment">//- Read a word</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<a class="code" href="a02856.html">word</a>&amp;);</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            <span class="comment">// Read a string (including enclosing double-quotes)</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<span class="keywordtype">string</span>&amp;);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">//- Read a label</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&amp;);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            <span class="comment">//- Read a floatScalar</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<a class="code" href="a10675.html#a97cd9032b38d123c8497231ba6b60b57">floatScalar</a>&amp;);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="comment">//- Read a doubleScalar</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<a class="code" href="a10675.html#a3f90c9f0a43ba502c3a059b503112d5f">doubleScalar</a>&amp;);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            <span class="comment">//- Read binary block</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a732980587e5b9c409ae433d73ca8698e">read</a>(<span class="keywordtype">char</span>*, std::streamsize);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            <span class="comment">//- Rewind and return the stream so that it may be read again</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a02719.html#a05672413dc96a628155fb940ab50362d">rewind</a>();</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="comment">// Edit</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="a02719.html#a82cca7e83c1c39a4f1599c1d0481d044">  171</a></span>&#160;            <span class="comment">//- Set flags of stream</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            ios_base::fmtflags <a class="code" href="a02719.html#aae0c4712818b0e951b1043a1ae55f279">flags</a>(<span class="keyword">const</span> ios_base::fmtflags)</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            {</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                <span class="keywordflow">return</span> ios_base::fmtflags(0);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            }</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="comment">// Print</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="comment">//- Print description of IOstream to Ostream</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="keywordtype">void</span> <a class="code" href="a02719.html#a396408e517abe1f8cae9d2844a18ad1e">print</a>(<a class="code" href="a01725.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;};</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a97cd9032b38d123c8497231ba6b60b57"><div class="ttname"><a href="a10675.html#a97cd9032b38d123c8497231ba6b60b57">Foam::floatScalar</a></div><div class="ttdeci">float floatScalar</div><div class="ttdoc">Float precision floating point scalar type. </div><div class="ttdef"><b>Definition:</b> <a href="a08882_source.html#l00049">floatScalar.H:49</a></div></div>
-<div class="ttc" id="a02751_html"><div class="ttname"><a href="a02751.html">Foam::UPstream</a></div><div class="ttdoc">Inter-processor communications stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07755_source.html#l00058">UPstream.H:58</a></div></div>
-<div class="ttc" id="a07755_html"><div class="ttname"><a href="a07755.html">UPstream.H</a></div></div>
-<div class="ttc" id="a07743_html"><div class="ttname"><a href="a07743.html">Pstream.H</a></div></div>
-<div class="ttc" id="a10675_html_ae57fda0abb14bb0944947c463c6e09d4"><div class="ttname"><a href="a10675.html#ae57fda0abb14bb0944947c463c6e09d4">Foam::T</a></div><div class="ttdeci">void T(FieldField&lt; Field, Type &gt; &amp;f1, const FieldField&lt; Field, Type &gt; &amp;f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00055">FieldFieldFunctions.C:55</a></div></div>
-<div class="ttc" id="a02719_html"><div class="ttname"><a href="a02719.html">Foam::UIPstream</a></div><div class="ttdoc">Input inter-processor communications stream operating on external buffer. </div><div class="ttdef"><b>Definition:</b> <a href="a07749_source.html#l00053">UIPstream.H:53</a></div></div>
-<div class="ttc" id="a01177_html_ac12266e2067a7baeb13af68a5e643edd"><div class="ttname"><a href="a01177.html#ac12266e2067a7baeb13af68a5e643edd">Foam::IOstream::version</a></div><div class="ttdeci">versionNumber version() const </div><div class="ttdoc">Return the stream version. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00399">IOstream.H:399</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a02719_html_a05672413dc96a628155fb940ab50362d"><div class="ttname"><a href="a02719.html#a05672413dc96a628155fb940ab50362d">Foam::UIPstream::rewind</a></div><div class="ttdeci">Istream &amp; rewind()</div><div class="ttdoc">Rewind and return the stream so that it may be read again. </div><div class="ttdef"><b>Definition:</b> <a href="a07748_source.html#l00330">UIPstream.C:330</a></div></div>
-<div class="ttc" id="a02719_html_a732980587e5b9c409ae433d73ca8698e"><div class="ttname"><a href="a02719.html#a732980587e5b9c409ae433d73ca8698e">Foam::UIPstream::read</a></div><div class="ttdeci">static label read(const commsTypes commsType, const int fromProcNo, char *buf, const std::streamsize bufSize, const int tag=UPstream::msgType(), const label communicator=0)</div><div class="ttdoc">Read into given buffer from given processor and return the. </div><div class="ttdef"><b>Definition:</b> <a href="a09366_source.html#l00079">UIPread.C:79</a></div></div>
-<div class="ttc" id="a00496_html"><div class="ttname"><a href="a00496.html">Foam::data</a></div><div class="ttdoc">Database for solution data, solver performance and other reduced data. </div><div class="ttdef"><b>Definition:</b> <a href="a08409_source.html#l00052">data.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">Foam::IOstream::streamFormat</a></div><div class="ttdeci">streamFormat</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00086">IOstream.H:86</a></div></div>
-<div class="ttc" id="a10675_html_a3f90c9f0a43ba502c3a059b503112d5f"><div class="ttname"><a href="a10675.html#a3f90c9f0a43ba502c3a059b503112d5f">Foam::doubleScalar</a></div><div class="ttdeci">double doubleScalar</div><div class="ttdoc">Double precision floating point scalar type. </div><div class="ttdef"><b>Definition:</b> <a href="a08880_source.html#l00049">doubleScalar.H:49</a></div></div>
-<div class="ttc" id="a02751_html_a12cf32e9b7820a2c00bf40c8617ab55b"><div class="ttname"><a href="a02751.html#a12cf32e9b7820a2c00bf40c8617ab55b">Foam::UPstream::commsTypes</a></div><div class="ttdeci">commsTypes</div><div class="ttdoc">Types of communications. </div><div class="ttdef"><b>Definition:</b> <a href="a07755_source.html#l00064">UPstream.H:64</a></div></div>
-<div class="ttc" id="a07745_html"><div class="ttname"><a href="a07745.html">PstreamBuffers.H</a></div></div>
-<div class="ttc" id="a01177_html_a1e2dd3d90088c6d1ed0a27bd75d814fb"><div class="ttname"><a href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">Foam::IOstream::format</a></div><div class="ttdeci">streamFormat format() const </div><div class="ttdoc">Return current stream format. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00377">IOstream.H:377</a></div></div>
-<div class="ttc" id="a07731_html"><div class="ttname"><a href="a07731.html">Istream.H</a></div></div>
-<div class="ttc" id="a02719_html_a17a7ee4841c706feefb3043d692e3bcf"><div class="ttname"><a href="a02719.html#a17a7ee4841c706feefb3043d692e3bcf">Foam::UIPstream::~UIPstream</a></div><div class="ttdeci">~UIPstream()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07748_source.html#l00081">UIPstream.C:81</a></div></div>
-<div class="ttc" id="a02751_html_ae5b8fe6652f6320aa6c7f5c44b6f01b7"><div class="ttname"><a href="a02751.html#ae5b8fe6652f6320aa6c7f5c44b6f01b7">Foam::UPstream::msgType</a></div><div class="ttdeci">static int &amp; msgType()</div><div class="ttdoc">Message tag of standard messages. </div><div class="ttdef"><b>Definition:</b> <a href="a07755_source.html#l00451">UPstream.H:451</a></div></div>
-<div class="ttc" id="a02609_html"><div class="ttname"><a href="a02609.html">Foam::token</a></div><div class="ttdoc">A token holds items read from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07774_source.html#l00067">token.H:67</a></div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97aecafbc1299672a8c1521cc0d5f1ae986"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97aecafbc1299672a8c1521cc0d5f1ae986">Foam::IOstream::BINARY</a></div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00089">IOstream.H:89</a></div></div>
-<div class="ttc" id="a02751_html_af0924e420eb86860f69aaf3502076780"><div class="ttname"><a href="a02751.html#af0924e420eb86860f69aaf3502076780">Foam::UPstream::commsType</a></div><div class="ttdeci">commsTypes commsType() const </div><div class="ttdoc">Get the communications type of the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07755_source.html#l00458">UPstream.H:458</a></div></div>
-<div class="ttc" id="a02719_html_a605c63312235a3636dd437fe6c9c9747"><div class="ttname"><a href="a02719.html#a605c63312235a3636dd437fe6c9c9747">Foam::UIPstream::UIPstream</a></div><div class="ttdeci">UIPstream(const commsTypes commsType, const int fromProcNo, DynamicList&lt; char &gt; &amp;externalBuf, label &amp;externalBufPosition, const int tag=UPstream::msgType(), const label comm=UPstream::worldComm, const bool clearAtEnd=false, streamFormat format=BINARY, versionNumber version=currentVersion)</div><div class="ttdoc">Construct given process index to read from and optional buffer size,. </div><div class="ttdef"><b>Definition:</b> <a href="a09366_source.html#l00034">UIPread.C:34</a></div></div>
-<div class="ttc" id="a02005_html"><div class="ttname"><a href="a02005.html">Foam::PstreamBuffers</a></div><div class="ttdoc">Buffers for inter-processor communications streams (UOPstream, UIPstream). </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00085">PstreamBuffers.H:85</a></div></div>
-<div class="ttc" id="a00598_html"><div class="ttname"><a href="a00598.html">Foam::DynamicList&lt; char &gt;</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a02786_html"><div class="ttname"><a href="a02786.html">Foam::IOstream::versionNumber</a></div><div class="ttdoc">Version number type. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00096">IOstream.H:96</a></div></div>
-<div class="ttc" id="a02751_html_a844448bea513dc344c5b441a9e004b9d"><div class="ttname"><a href="a02751.html#a844448bea513dc344c5b441a9e004b9d">Foam::UPstream::worldComm</a></div><div class="ttdeci">static label worldComm</div><div class="ttdoc">Default communicator (all processors) </div><div class="ttdef"><b>Definition:</b> <a href="a07755_source.html#l00261">UPstream.H:261</a></div></div>
-<div class="ttc" id="a01177_html_a2eebbb2b682d3d80e0de1d414d1a4fb2"><div class="ttname"><a href="a01177.html#a2eebbb2b682d3d80e0de1d414d1a4fb2">Foam::IOstream::currentVersion</a></div><div class="ttdeci">static const versionNumber currentVersion</div><div class="ttdoc">Current version number. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00206">IOstream.H:206</a></div></div>
-<div class="ttc" id="a02719_html_a396408e517abe1f8cae9d2844a18ad1e"><div class="ttname"><a href="a02719.html#a396408e517abe1f8cae9d2844a18ad1e">Foam::UIPstream::print</a></div><div class="ttdeci">void print(Ostream &amp;) const </div><div class="ttdoc">Print description of IOstream to Ostream. </div><div class="ttdef"><b>Definition:</b> <a href="a07748_source.html#l00337">UIPstream.C:337</a></div></div>
-<div class="ttc" id="a02719_html_aae0c4712818b0e951b1043a1ae55f279"><div class="ttname"><a href="a02719.html#aae0c4712818b0e951b1043a1ae55f279">Foam::UIPstream::flags</a></div><div class="ttdeci">ios_base::fmtflags flags() const </div><div class="ttdoc">Return flags of output stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07749_source.html#l00120">UIPstream.H:120</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01179_html_a6f42a51d969cbb5ab649cc46e99bd52c"><div class="ttname"><a href="a01179.html#a6f42a51d969cbb5ab649cc46e99bd52c">Foam::IOobject::note</a></div><div class="ttdeci">string &amp; note()</div><div class="ttdoc">Return non-constant access to the optional note. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00272">IOobject.H:272</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01688_html_a67b30e5633d486ff299537406b0ca471"><div class="ttname"><a href="a01688.html#a67b30e5633d486ff299537406b0ca471">Foam::objectRegistry::dbDir</a></div><div class="ttdeci">virtual const fileName &amp; dbDir() const </div><div class="ttdoc">Local directory path of this objectRegistry relative to the time. </div><div class="ttdef"><b>Definition:</b> <a href="a07832_source.html#l00129">objectRegistry.H:129</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a01179_html_a02fe83a3242334d79d9798f542c1b780"><div class="ttname"><a href="a01179.html#a02fe83a3242334d79d9798f542c1b780">Foam::IOobject::writeBanner</a></div><div class="ttdeci">static Stream &amp; writeBanner(Stream &amp;os, bool noHint=false)</div><div class="ttdoc">Write the standard OpenFOAM file/dictionary banner. </div><div class="ttdef"><b>Definition:</b> <a href="a07746_source.html#l00045">IOobjectI.H:45</a></div></div>
+<div class="ttc" id="a01179_html_a3018c18b444825677c9e3a797ac2482c"><div class="ttname"><a href="a01179.html#a3018c18b444825677c9e3a797ac2482c">Foam::IOobject::writeHeader</a></div><div class="ttdeci">bool writeHeader(Ostream &amp;) const </div><div class="ttdoc">Write header. </div><div class="ttdef"><b>Definition:</b> <a href="a07749_source.html#l00067">IOobjectWriteHeader.C:67</a></div></div>
+<div class="ttc" id="a01185_html_a1e2dd3d90088c6d1ed0a27bd75d814fb"><div class="ttname"><a href="a01185.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">Foam::IOstream::format</a></div><div class="ttdeci">streamFormat format() const </div><div class="ttdoc">Return current stream format. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00377">IOstream.H:377</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a01179_html_adf469b34fcd0250cef43ac4ce3f153ab"><div class="ttname"><a href="a01179.html#adf469b34fcd0250cef43ac4ce3f153ab">Foam::IOobject::db</a></div><div class="ttdeci">const objectRegistry &amp; db() const </div><div class="ttdoc">Return the local objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07744_source.html#l00218">IOobject.C:218</a></div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a01179_html_aa784d5f121f1d965ddd196476ceb0ea6"><div class="ttname"><a href="a01179.html#aa784d5f121f1d965ddd196476ceb0ea6">Foam::IOobject::local</a></div><div class="ttdeci">const fileName &amp; local() const </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00347">IOobject.H:347</a></div></div>
+<div class="ttc" id="a07832_html"><div class="ttname"><a href="a07832.html">objectRegistry.H</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01179_html_ab9dfd1788c127840b478e7c3b95b2e51"><div class="ttname"><a href="a01179.html#ab9dfd1788c127840b478e7c3b95b2e51">Foam::IOobject::writeDivider</a></div><div class="ttdeci">static Stream &amp; writeDivider(Stream &amp;os)</div><div class="ttdoc">Write the standard file section divider. </div><div class="ttdef"><b>Definition:</b> <a href="a07746_source.html#l00098">IOobjectI.H:98</a></div></div>
+<div class="ttc" id="a07745_html"><div class="ttname"><a href="a07745.html">IOobject.H</a></div></div>
+<div class="ttc" id="a01185_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::IOstream::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdoc">Return true if next operation might succeed. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00333">IOstream.H:333</a></div></div>
+<div class="ttc" id="a01185_html_ad9ba2293cdfe23f026d9ef56efbaa3ea"><div class="ttname"><a href="a01185.html#ad9ba2293cdfe23f026d9ef56efbaa3ea">Foam::IOstream::info</a></div><div class="ttdeci">InfoProxy&lt; IOstream &gt; info() const </div><div class="ttdoc">Return info proxy. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00531">IOstream.H:531</a></div></div>
+<div class="ttc" id="a01179_html_a927868ca22fb186135659bc0acadd47b"><div class="ttname"><a href="a01179.html#a927868ca22fb186135659bc0acadd47b">Foam::IOobject::instance</a></div><div class="ttdeci">const fileName &amp; instance() const </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00337">IOobject.H:337</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a01185_html_ac12266e2067a7baeb13af68a5e643edd"><div class="ttname"><a href="a01185.html#ac12266e2067a7baeb13af68a5e643edd">Foam::IOstream::version</a></div><div class="ttdeci">versionNumber version() const </div><div class="ttdoc">Return the stream version. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00399">IOstream.H:399</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

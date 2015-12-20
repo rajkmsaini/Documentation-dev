@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_3b094e1ce2b3f641da0071aec2c4e694.html">limitedSchemes</a></li><li class="navelem"><a class="el" href="dir_4cf76509597f722ea8dc37c00c691f42.html">QUICK</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_c993260712d995df6dda7964041544db.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_59a3ebb0508c5af69726c155bef2374c.html">interpolationPointMVC</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">QUICKV.H</div>  </div>
+<div class="title">interpolationPointMVC.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05978.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,106 +119,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::QUICKVLimiter</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Class with limiter function which returns the limiter for the</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    quadratic-upwind differencing scheme.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Note that the weighting factors are not bounded between upwind and</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    central-differencing, some downwind contribution is possible although</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    the interpolate is limited to be between the upwind and downwind cell</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    values.</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    Used in conjunction with the template class LimitedScheme.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    QUICKV.C</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#ifndef QUICKV_H</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define QUICKV_H</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08993.html">vector.H</a>&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05979.html">interpolationPointMVC.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06156.html">volPointInterpolation.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a01159.html#a1599f3339fa8ea92ac1d436bc277d961">Foam::interpolationPointMVC&lt;Type&gt;::interpolationPointMVC</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a01159.html#a1599f3339fa8ea92ac1d436bc277d961">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; psi</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a01151.html">interpolation&lt;Type&gt;</a>(<a class="code" href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a>),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    psip_</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    (</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">volPointInterpolation::New</a>(psi.<a class="code" href="a00533.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>()).<a class="code" href="a10783.html#a4d62f21551985d814104861e7c1d9b4f">interpolate</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            psi,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="stringliteral">&quot;volPointInterpolate(&quot;</span> + psi.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="charliteral">&#39;)&#39;</span>,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <span class="keyword">true</span>            <span class="comment">// use cache</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        )</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    )</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">                           Class QUICKVLimiter Declaration</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a02042.html">   57</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> LimiterFunc&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">class </span><a class="code" href="a02042.html">QUICKVLimiter</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;:</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">public</span> LimiterFunc</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="a02042.html#acd86159bb1e34ba3b5703d45d8740456">   64</a></span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="a02042.html#acd86159bb1e34ba3b5703d45d8740456">QUICKVLimiter</a>(<a class="code" href="a01191.html">Istream</a>&amp;)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a02042.html#aa84aee3749c316a126b3219a08f862f6">   68</a></span>&#160;    scalar <a class="code" href="a02042.html#aa84aee3749c316a126b3219a08f862f6">limiter</a></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    (</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">const</span> scalar cdWeight,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> scalar faceFlux,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">const</span> <span class="keyword">typename</span> LimiterFunc::phiType&amp; phiP,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">const</span> <span class="keyword">typename</span> LimiterFunc::phiType&amp; phiN,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">const</span> <span class="keyword">typename</span> LimiterFunc::gradPhiType&amp; gradcP,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">const</span> <span class="keyword">typename</span> LimiterFunc::gradPhiType&amp; gradcN,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; d</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    )<span class="keyword"> const</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a02776.html">vector</a> gradfV = phiN - phiP;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        scalar phiCD = gradfV &amp; (cdWeight*phiP + (1 - cdWeight)*phiN);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        scalar phiU, phif;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (faceFlux &gt; 0)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            phiU = gradfV &amp; phiP;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            phif = 0.5*(phiCD + phiU + (1 - cdWeight)*(gradfV &amp; (d &amp; gradcP)));</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            phiU = gradfV &amp; phiN;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            phif = 0.5*(phiCD + phiU - cdWeight*(gradfV &amp; (d &amp; gradcN)));</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">// Calculate the effective limiter for the QUICK interpolation</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        scalar QLimiter = (phif - phiU)/<a class="code" href="a10675.html#a1f3543a73e4e73c68a5d03e4dba703dd">stabilise</a>(phiCD - phiU, SMALL);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">// Limit the limiter between upwind and downwind</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(QLimiter, 2), 0);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02042_html"><div class="ttname"><a href="a02042.html">Foam::QUICKVLimiter</a></div><div class="ttdoc">Class with limiter function which returns the limiter for the quadratic-upwind differencing scheme...</div><div class="ttdef"><b>Definition:</b> <a href="a05978_source.html#l00057">QUICKV.H:57</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a1f3543a73e4e73c68a5d03e4dba703dd"><div class="ttname"><a href="a10675.html#a1f3543a73e4e73c68a5d03e4dba703dd">Foam::stabilise</a></div><div class="ttdeci">tmp&lt; DimensionedField&lt; scalar, GeoMesh &gt; &gt; stabilise(const DimensionedField&lt; scalar, GeoMesh &gt; &amp;dsf, const dimensioned&lt; scalar &gt; &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07848_source.html#l00040">DimensionedScalarField.C:40</a></div></div>
-<div class="ttc" id="a10675_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a08993_html"><div class="ttname"><a href="a08993.html">vector.H</a></div></div>
-<div class="ttc" id="a02042_html_acd86159bb1e34ba3b5703d45d8740456"><div class="ttname"><a href="a02042.html#acd86159bb1e34ba3b5703d45d8740456">Foam::QUICKVLimiter::QUICKVLimiter</a></div><div class="ttdeci">QUICKVLimiter(Istream &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a05978_source.html#l00064">QUICKV.H:64</a></div></div>
-<div class="ttc" id="a02042_html_aa84aee3749c316a126b3219a08f862f6"><div class="ttname"><a href="a02042.html#aa84aee3749c316a126b3219a08f862f6">Foam::QUICKVLimiter::limiter</a></div><div class="ttdeci">scalar limiter(const scalar cdWeight, const scalar faceFlux, const typename LimiterFunc::phiType &amp;phiP, const typename LimiterFunc::phiType &amp;phiN, const typename LimiterFunc::gradPhiType &amp;gradcP, const typename LimiterFunc::gradPhiType &amp;gradcN, const vector &amp;d) const </div><div class="ttdef"><b>Definition:</b> <a href="a05978_source.html#l00068">QUICKV.H:68</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01151_html"><div class="ttname"><a href="a01151.html">Foam::interpolation</a></div><div class="ttdoc">Abstract base class for interpolation. </div><div class="ttdef"><b>Definition:</b> <a href="a05366_source.html#l00057">mappedPatchFieldBase.H:57</a></div></div>
+<div class="ttc" id="a05979_html"><div class="ttname"><a href="a05979.html">interpolationPointMVC.H</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a10783_html_a4d62f21551985d814104861e7c1d9b4f"><div class="ttname"><a href="a10783.html#a4d62f21551985d814104861e7c1d9b4f">Foam::MULES::interpolate</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; interpolate(const RhoType &amp;rho)</div><div class="ttdef"><b>Definition:</b> <a href="a05798_source.html#l00040">IMULESTemplates.C:40</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a00533_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00533.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07892_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
+<div class="ttc" id="a01159_html_a1599f3339fa8ea92ac1d436bc277d961"><div class="ttname"><a href="a01159.html#a1599f3339fa8ea92ac1d436bc277d961">Foam::interpolationPointMVC::interpolationPointMVC</a></div><div class="ttdeci">interpolationPointMVC(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;psi)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a05978_source.html#l00033">interpolationPointMVC.C:33</a></div></div>
+<div class="ttc" id="a06156_html"><div class="ttname"><a href="a06156.html">volPointInterpolation.H</a></div></div>
+<div class="ttc" id="a04435_html_aba679271c41582099c8ccf4827fdf217"><div class="ttname"><a href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a></div><div class="ttdeci">const volScalarField &amp; psi</div><div class="ttdef"><b>Definition:</b> <a href="a04435_source.html#l00024">createFields.H:24</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

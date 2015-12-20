@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_1a4209badf8dc5d7c181708103efea60.html">volMesh</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_863f5a43b6aa310a14bb70f68a33ff73.html">linearFit</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">volMesh.H</div>  </div>
+<div class="title">linearFit.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06102.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,93 +119,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::volMesh</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Mesh data needed to do the Finite Volume discretisation.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06073.html">CentredFitScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06103.html">linearFitPolynomial.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05842.html">centredCFCCellToFaceStencilObject.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef volMesh_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define volMesh_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08410.html">GeoMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08663.html">primitiveMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                           Class volMesh Declaration</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a02794.html">   47</a></span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span><a class="code" href="a02794.html">volMesh</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00911.html">GeoMesh</a>&lt;fvMesh&gt;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a02794.html#ae40bb50777186181cd6ca281d6061686">   57</a></span>&#160;        <span class="comment">//- Construct from fvMesh</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="a02794.html#ae40bb50777186181cd6ca281d6061686">volMesh</a>(<span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        :</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <a class="code" href="a00911.html">GeoMesh</a>&lt;<a class="code" href="a00868.html">fvMesh</a>&gt;(mesh)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        {}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a02794.html#a65cea301e2d6033c43932d12d91c792f">   66</a></span>&#160;        <span class="comment">//- Return size</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02794.html#a65cea301e2d6033c43932d12d91c792f">size</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02794.html#a65cea301e2d6033c43932d12d91c792f">size</a>(<a class="code" href="a00911.html#a6963fdfd9334023f851bccdb39b92ea0">mesh_</a>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="a02794.html#a11d0ec54576ddac4bddb58128aaa76eb">   72</a></span>&#160;        <span class="comment">//- Return size</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">static</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02794.html#a65cea301e2d6033c43932d12d91c792f">size</a>(<span class="keyword">const</span> <a class="code" href="a00868.html">Mesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keywordflow">return</span> mesh.<a class="code" href="a01956.html#ae79b5e96cf8d9a4e6b3993e6f2709374">nCells</a>();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="a02794.html#a64a2623814a51eee0128e892b821e8e6">   78</a></span>&#160;        <span class="comment">//- Return cell centres</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a02794.html#a64a2623814a51eee0128e892b821e8e6">C</a>()</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00911.html#a6963fdfd9334023f851bccdb39b92ea0">mesh_</a>.<a class="code" href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">C</a>();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;};</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02794_html"><div class="ttname"><a href="a02794.html">Foam::volMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a06102_source.html#l00047">volMesh.H:47</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00911_html_a6963fdfd9334023f851bccdb39b92ea0"><div class="ttname"><a href="a00911.html#a6963fdfd9334023f851bccdb39b92ea0">Foam::GeoMesh&lt; fvMesh &gt;::mesh_</a></div><div class="ttdeci">const fvMesh &amp; mesh_</div><div class="ttdoc">Reference to Mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08410_source.html#l00054">GeoMesh.H:54</a></div></div>
-<div class="ttc" id="a02794_html_ae40bb50777186181cd6ca281d6061686"><div class="ttname"><a href="a02794.html#ae40bb50777186181cd6ca281d6061686">Foam::volMesh::volMesh</a></div><div class="ttdeci">volMesh(const fvMesh &amp;mesh)</div><div class="ttdoc">Construct from fvMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a06102_source.html#l00057">volMesh.H:57</a></div></div>
-<div class="ttc" id="a08663_html"><div class="ttname"><a href="a08663.html">primitiveMesh.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a02794_html_a64a2623814a51eee0128e892b821e8e6"><div class="ttname"><a href="a02794.html#a64a2623814a51eee0128e892b821e8e6">Foam::volMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C()</div><div class="ttdoc">Return cell centres. </div><div class="ttdef"><b>Definition:</b> <a href="a06102_source.html#l00078">volMesh.H:78</a></div></div>
-<div class="ttc" id="a00868_html_add65fc7bb62260f0f5144592e78ccdba"><div class="ttname"><a href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">Foam::fvMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C() const </div><div class="ttdoc">Return cell centres as volVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00369">fvMeshGeometry.C:369</a></div></div>
-<div class="ttc" id="a02794_html_a65cea301e2d6033c43932d12d91c792f"><div class="ttname"><a href="a02794.html#a65cea301e2d6033c43932d12d91c792f">Foam::volMesh::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return size. </div><div class="ttdef"><b>Definition:</b> <a href="a06102_source.html#l00066">volMesh.H:66</a></div></div>
-<div class="ttc" id="a01956_html_ae79b5e96cf8d9a4e6b3993e6f2709374"><div class="ttname"><a href="a01956.html#ae79b5e96cf8d9a4e6b3993e6f2709374">Foam::primitiveMesh::nCells</a></div><div class="ttdeci">label nCells() const </div><div class="ttdef"><b>Definition:</b> <a href="a08681_source.html#l00094">primitiveMeshI.H:94</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a00911_html"><div class="ttname"><a href="a00911.html">Foam::GeoMesh</a></div><div class="ttdoc">Generic mesh wrapper used by volMesh, surfaceMesh, pointMesh etc. </div><div class="ttdef"><b>Definition:</b> <a href="a08410_source.html#l00046">GeoMesh.H:46</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a08410_html"><div class="ttname"><a href="a08410.html">GeoMesh.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">defineTemplateTypeNameAndDebug</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    (</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        CentredFitData&lt;linearFitPolynomial&gt;,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        0</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    );</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">makeCentredFitSurfaceInterpolationScheme</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        linearFit,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        linearFitPolynomial,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        centredCFCCellToFaceStencilObject</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_adda8d2f21637cf437577b8bfeda5a259"><div class="ttname"><a href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">Foam::defineTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineTemplateTypeNameAndDebug(IOPtrList&lt; ensightPart &gt;, 0)</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06073_html"><div class="ttname"><a href="a06073.html">CentredFitScheme.H</a></div></div>
+<div class="ttc" id="a05842_html"><div class="ttname"><a href="a05842.html">centredCFCCellToFaceStencilObject.H</a></div></div>
+<div class="ttc" id="a10725_html_a5c99a18ad2ae76b7747f4ce5001a3d09"><div class="ttname"><a href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">Foam::makeCentredFitSurfaceInterpolationScheme</a></div><div class="ttdeci">makeCentredFitSurfaceInterpolationScheme(biLinearFit, biLinearFitPolynomial, centredCFCCellToFaceStencilObject)</div></div>
+<div class="ttc" id="a06103_html"><div class="ttname"><a href="a06103.html">linearFitPolynomial.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

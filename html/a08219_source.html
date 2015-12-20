@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_12547202c65033a69d4e18947f2fbe2a.html">lduAddressing</a></li><li class="navelem"><a class="el" href="dir_dcd52ee40db40a986002fe7976fc48d2.html">lduInterfaceFields</a></li><li class="navelem"><a class="el" href="dir_c07ee2431c19cba287fa9092d3954576.html">cyclicLduInterfaceField</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_e764f87aebd421bcba631b254777cd25.html">interpolations</a></li><li class="navelem"><a class="el" href="dir_b6b030d7166311d76fab0435b15dc48a.html">interpolateSplineXY</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">cyclicLduInterfaceField.C</div>  </div>
+<div class="title">interpolateSplineXY.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08219.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,59 +119,73 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08220.html">cyclicLduInterfaceField.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07881.html">diagTensorField.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(cyclicLduInterfaceField, 0);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00475.html#a3078f6dbffe77a6be36762d15e06bdda">   39</a></span>&#160;<a class="code" href="a00475.html#a3078f6dbffe77a6be36762d15e06bdda">Foam::cyclicLduInterfaceField::~cyclicLduInterfaceField</a>()</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00475.html#aa655b8ec61590cb366dc249e0aeb2434">Foam::cyclicLduInterfaceField::transformCoupleField</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a00475.html#ac3eabbddb9916ed65e7b3eea819b4dfd">   46</a></span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; f,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">if</span> (doTransform())</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">if</span> (forwardT().size() == 1)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            f *= <a class="code" href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">pow</a>(<a class="code" href="a10675.html#a8cdb0ba0633c91ed7041368519cd217c">diag</a>(forwardT()[0]).<a class="code" href="a10675.html#a38788135ad21a6daaf3af2a761b33508">component</a>(cmpt), rank());</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            f *= <a class="code" href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">pow</a>(<a class="code" href="a10675.html#a8cdb0ba0633c91ed7041368519cd217c">diag</a>(forwardT())().<a class="code" href="a10675.html#a38788135ad21a6daaf3af2a761b33508">component</a>(cmpt), rank());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a07881_html"><div class="ttname"><a href="a07881.html">diagTensorField.H</a></div></div>
-<div class="ttc" id="a00475_html_aa655b8ec61590cb366dc249e0aeb2434"><div class="ttname"><a href="a00475.html#aa655b8ec61590cb366dc249e0aeb2434">Foam::cyclicLduInterfaceField::transformCoupleField</a></div><div class="ttdeci">void transformCoupleField(Field&lt; Type &gt; &amp;f) const </div><div class="ttdoc">Transform given patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a08220_source.html#l00109">cyclicLduInterfaceField.H:109</a></div></div>
-<div class="ttc" id="a08220_html"><div class="ttname"><a href="a08220.html">cyclicLduInterfaceField.H</a></div></div>
-<div class="ttc" id="a10675_html_a7500c8e9d27a442adc75e287de074c7c"><div class="ttname"><a href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">Foam::pow</a></div><div class="ttdeci">dimensionedScalar pow(const dimensionedScalar &amp;ds, const dimensionedScalar &amp;expt)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00073">dimensionedScalar.C:73</a></div></div>
-<div class="ttc" id="a10675_html_a8cdb0ba0633c91ed7041368519cd217c"><div class="ttname"><a href="a10675.html#a8cdb0ba0633c91ed7041368519cd217c">Foam::diag</a></div><div class="ttdeci">void diag(pointPatchField&lt; vector &gt; &amp;, const pointPatchField&lt; tensor &gt; &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08083_source.html#l00262">pointPatchFieldFunctions.H:262</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a38788135ad21a6daaf3af2a761b33508"><div class="ttname"><a href="a10675.html#a38788135ad21a6daaf3af2a761b33508">Foam::component</a></div><div class="ttdeci">void component(FieldField&lt; Field, typename FieldField&lt; Field, Type &gt;::cmptType &gt; &amp;sf, const FieldField&lt; Field, Type &gt; &amp;f, const direction d)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00041">FieldFieldFunctions.C:41</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a00475_html_a3078f6dbffe77a6be36762d15e06bdda"><div class="ttname"><a href="a00475.html#a3078f6dbffe77a6be36762d15e06bdda">Foam::cyclicLduInterfaceField::~cyclicLduInterfaceField</a></div><div class="ttdeci">virtual ~cyclicLduInterfaceField()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08219_source.html#l00039">cyclicLduInterfaceField.C:39</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InNamespace</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Interpolates y values from one curve to another with a different x</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    distribution.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Uses Catmull-Rom spline interpolation between points.</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    interpolateSplineXY.C</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef interpolateSplineXY_H</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define interpolateSplineXY_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08944.html">scalar.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07963.html">primitiveFieldsFwd.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;Field&lt;Type&gt; <a class="code" href="a10725.html#abdfa03f158ce22a61e7d94d5019072c5">interpolateSplineXY</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;(</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>&amp; xNew,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>&amp; xOld,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> Field&lt;Type&gt;&amp; yOld</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;Type <a class="code" href="a10725.html#abdfa03f158ce22a61e7d94d5019072c5">interpolateSplineXY</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;(</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> scalar <a class="code" href="a06985.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a>,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>&amp; xOld,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> Field&lt;Type&gt;&amp; yOld</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a08218.html">interpolateSplineXY.C</a>&quot;</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a08218_html"><div class="ttname"><a href="a08218.html">interpolateSplineXY.C</a></div></div>
+<div class="ttc" id="a07963_html"><div class="ttname"><a href="a07963.html">primitiveFieldsFwd.H</a></div><div class="ttdoc">Forward declarations of the specialisations of Field<T> for scalar, vector and tensor. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06985_html_a9336ebf25087d91c818ee6e9ec29f8c1"><div class="ttname"><a href="a06985.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a></div><div class="ttdeci">x</div><div class="ttdef"><b>Definition:</b> <a href="a06985_source.html#l00052">LISASMDCalcMethod2.H:52</a></div></div>
+<div class="ttc" id="a08944_html"><div class="ttname"><a href="a08944.html">scalar.H</a></div></div>
+<div class="ttc" id="a10725_html_abdfa03f158ce22a61e7d94d5019072c5"><div class="ttname"><a href="a10725.html#abdfa03f158ce22a61e7d94d5019072c5">Foam::interpolateSplineXY</a></div><div class="ttdeci">Field&lt; Type &gt; interpolateSplineXY(const scalarField &amp;xNew, const scalarField &amp;xOld, const Field&lt; Type &gt; &amp;yOld)</div></div>
+<div class="ttc" id="a10725_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10725.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07963_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

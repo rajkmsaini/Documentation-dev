@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_a5850494bc77049b2a182260f0d1f703.html">fvPatchFields</a></li><li class="navelem"><a class="el" href="dir_546b14c9025d30bb5b92fa069dbdd82c.html">basic</a></li><li class="navelem"><a class="el" href="dir_19aefac0403ec26c4f1abba23987c6ec.html">directionMixed</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_c5259e3096ae0265e0b8b287024f0a94.html">general</a></li><li class="navelem"><a class="el" href="dir_e111b7571eb84571841d37972aec8430.html">solutionControl</a></li><li class="navelem"><a class="el" href="dir_af47b2471b3573ea1aa080d70933eb75.html">pimpleControl</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">directionMixedFvPatchFields.C</div>  </div>
+<div class="title">pimpleControlI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05119.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,29 +121,95 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05120.html">directionMixedFvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a10675.html#a8a07f6a6e8849a406c6f0ac3175a3486">makePatchFields</a>(directionMixed);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="a01852.html#a190e7ba167f2d957933b2820cdc8b130">   28</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a01852.html#a190e7ba167f2d957933b2820cdc8b130">Foam::pimpleControl::nCorrPIMPLE</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01852.html#a74a4897b47ff979252376f31a7a34502">nCorrPIMPLE_</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a01852.html#a06a2aca4bf0d41a69a3f42317ca8d2f7">   34</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a01852.html#a06a2aca4bf0d41a69a3f42317ca8d2f7">Foam::pimpleControl::nCorrPISO</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> nCorrPISO_;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05120_html"><div class="ttname"><a href="a05120.html">directionMixedFvPatchFields.H</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a10675_html_a8a07f6a6e8849a406c6f0ac3175a3486"><div class="ttname"><a href="a10675.html#a8a07f6a6e8849a406c6f0ac3175a3486">Foam::makePatchFields</a></div><div class="ttdeci">makePatchFields(calculated)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a01852.html#a2016b9feab4bd21d9114d4752eec46b6">   40</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a01852.html#a2016b9feab4bd21d9114d4752eec46b6">Foam::pimpleControl::corrPISO</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> corrPISO_;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01852.html#a964daab2755d32e82bff1b36c0a26e90">   46</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#a964daab2755d32e82bff1b36c0a26e90">Foam::pimpleControl::correct</a>()</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    corrPISO_++;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; algorithmName_ &lt;&lt; <span class="stringliteral">&quot; correct: corrPISO = &quot;</span> &lt;&lt; corrPISO_ &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (corrPISO_ &lt;= nCorrPISO_)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        corrPISO_ = 0;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a01852.html#a5dbcd78e274b0c8042cfda08920dd300">   67</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#a5dbcd78e274b0c8042cfda08920dd300">Foam::pimpleControl::storeInitialResiduals</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Start from second PIMPLE iteration</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> (corr_ == 2) &amp;&amp; (corrPISO_ == 0) &amp;&amp; (corrNonOrtho_ == 0);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a01852.html#a27f00eccb8bc0255b841e68e8ab890de">   74</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#a27f00eccb8bc0255b841e68e8ab890de">Foam::pimpleControl::firstIter</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> corr_ == 1;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a01852.html#aaaf1be25fda17855527fcbb735065e60">   80</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#aaaf1be25fda17855527fcbb735065e60">Foam::pimpleControl::finalIter</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> converged_ || (corr_ == nCorrPIMPLE_);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a01852.html#ad3f325e26dec2a4a57b65690f3d1cda5">   86</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#ad3f325e26dec2a4a57b65690f3d1cda5">Foam::pimpleControl::finalInnerIter</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;       finalIter()</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    &amp;&amp; corrPISO_ == nCorrPISO_</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    &amp;&amp; corrNonOrtho_ == nNonOrthCorr_ + 1;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="a01852.html#acee5556739a544beb8bf60c8632dec87">   95</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a01852.html#acee5556739a544beb8bf60c8632dec87">Foam::pimpleControl::turbCorr</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> !turbOnFinalIterOnly_ || finalIter();</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01852_html_a964daab2755d32e82bff1b36c0a26e90"><div class="ttname"><a href="a01852.html#a964daab2755d32e82bff1b36c0a26e90">Foam::pimpleControl::correct</a></div><div class="ttdeci">bool correct()</div><div class="ttdoc">Pressure corrector loop. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00046">pimpleControlI.H:46</a></div></div>
+<div class="ttc" id="a01852_html_ad3f325e26dec2a4a57b65690f3d1cda5"><div class="ttname"><a href="a01852.html#ad3f325e26dec2a4a57b65690f3d1cda5">Foam::pimpleControl::finalInnerIter</a></div><div class="ttdeci">bool finalInnerIter() const </div><div class="ttdoc">Helper function to identify final inner iteration. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00086">pimpleControlI.H:86</a></div></div>
+<div class="ttc" id="a01852_html_a27f00eccb8bc0255b841e68e8ab890de"><div class="ttname"><a href="a01852.html#a27f00eccb8bc0255b841e68e8ab890de">Foam::pimpleControl::firstIter</a></div><div class="ttdeci">bool firstIter() const </div><div class="ttdoc">Helper function to identify first PIMPLE (outer) iteration. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00074">pimpleControlI.H:74</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01852_html_a06a2aca4bf0d41a69a3f42317ca8d2f7"><div class="ttname"><a href="a01852.html#a06a2aca4bf0d41a69a3f42317ca8d2f7">Foam::pimpleControl::nCorrPISO</a></div><div class="ttdeci">label nCorrPISO() const </div><div class="ttdoc">Maximum number of PISO correctors. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00034">pimpleControlI.H:34</a></div></div>
+<div class="ttc" id="a01852_html_a74a4897b47ff979252376f31a7a34502"><div class="ttname"><a href="a01852.html#a74a4897b47ff979252376f31a7a34502">Foam::pimpleControl::nCorrPIMPLE_</a></div><div class="ttdeci">label nCorrPIMPLE_</div><div class="ttdoc">Maximum number of PIMPLE correctors. </div><div class="ttdef"><b>Definition:</b> <a href="a05118_source.html#l00069">pimpleControl.H:69</a></div></div>
+<div class="ttc" id="a01852_html_a190e7ba167f2d957933b2820cdc8b130"><div class="ttname"><a href="a01852.html#a190e7ba167f2d957933b2820cdc8b130">Foam::pimpleControl::nCorrPIMPLE</a></div><div class="ttdeci">label nCorrPIMPLE() const </div><div class="ttdoc">Maximum number of PIMPLE correctors. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00028">pimpleControlI.H:28</a></div></div>
+<div class="ttc" id="a01852_html_a5dbcd78e274b0c8042cfda08920dd300"><div class="ttname"><a href="a01852.html#a5dbcd78e274b0c8042cfda08920dd300">Foam::pimpleControl::storeInitialResiduals</a></div><div class="ttdeci">bool storeInitialResiduals() const </div><div class="ttdoc">Helper function to identify when to store the intial residuals. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00067">pimpleControlI.H:67</a></div></div>
+<div class="ttc" id="a01852_html_acee5556739a544beb8bf60c8632dec87"><div class="ttname"><a href="a01852.html#acee5556739a544beb8bf60c8632dec87">Foam::pimpleControl::turbCorr</a></div><div class="ttdeci">bool turbCorr() const </div><div class="ttdoc">Helper function to identify whether to solve for turbulence. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00095">pimpleControlI.H:95</a></div></div>
+<div class="ttc" id="a01852_html_aaaf1be25fda17855527fcbb735065e60"><div class="ttname"><a href="a01852.html#aaaf1be25fda17855527fcbb735065e60">Foam::pimpleControl::finalIter</a></div><div class="ttdeci">bool finalIter() const </div><div class="ttdoc">Helper function to identify final PIMPLE (outer) iteration. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00080">pimpleControlI.H:80</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a01852_html_a2016b9feab4bd21d9114d4752eec46b6"><div class="ttname"><a href="a01852.html#a2016b9feab4bd21d9114d4752eec46b6">Foam::pimpleControl::corrPISO</a></div><div class="ttdeci">label corrPISO() const </div><div class="ttdoc">Current PISO corrector index. </div><div class="ttdef"><b>Definition:</b> <a href="a05119_source.html#l00040">pimpleControlI.H:40</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

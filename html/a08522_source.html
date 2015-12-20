@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_44915d476cda87f9c46b97924fb23879.html">pointMesh</a></li><li class="navelem"><a class="el" href="dir_0b50d648241520de5cf03d68a603ea6e.html">pointPatches</a></li><li class="navelem"><a class="el" href="dir_e167ef4ffdb4a3e074def457cb9fd663.html">constraint</a></li><li class="navelem"><a class="el" href="dir_bfebc5a614df2e44492529925e580a7d.html">processor</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_b8e2732bc99f8fb2a379dad81aa6030e.html">meshShapes</a></li><li class="navelem"><a class="el" href="dir_05ec013dcc31a6c6df38dcfca56fa4b9.html">edge</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">processorPointPatch.C</div>  </div>
+<div class="title">edgeI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08522.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,137 +121,198 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08523.html">processorPointPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08500.html">pointBoundaryMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08502.html">pointMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08483.html">faceList.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08688.html">primitiveFacePatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08602.html">emptyPolyPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07775.html">IOstreams.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08996.html">Swap.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// return</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//  -  0: different</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//  - +1: identical</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//  - -1: same edge, but different orientation</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00612.html#a5c505b19063f93e22536f3d2bac9ae29">   36</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="a00612.html#a5c505b19063f93e22536f3d2bac9ae29">Foam::edge::compare</a>(<span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; a, <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>)</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(processorPointPatch, 0);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        facePointPatch,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        processorPointPatch,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        polyPatch</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    );</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::initGeometry(PstreamBuffers&amp; pBufs)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Algorithm:</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Depending on whether the patch is a master or a slave, get the primitive</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// patch points and filter away the points from the global patch.</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// Create the reversed patch and pick up its points</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// so that the order is correct</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> polyPatch&amp; pp = <a class="code" href="a00724.html#a205fadce5134baf710e41c91caf55b98">patch</a>();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">faceList</a> masterFaces(pp.size());</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pp, faceI)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        masterFaces[faceI] = pp[faceI].reverseFace();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    reverseMeshPoints_ = <a class="code" href="a10675.html#ac21d7e4a822d25f975925673aed6885f">primitiveFacePatch</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        masterFaces,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        pp.points()</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    ).<a class="code" href="a00724.html#a991a34b3e33f0351a3ae30898010d27b">meshPoints</a>();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::calcGeometry(PstreamBuffers&amp; pBufs)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">if</span> (a[0] == b[0] &amp;&amp; a[1] == b[1])</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (a[0] == b[1] &amp;&amp; a[1] == b[0])</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">   55</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">Foam::edge::edge</a>()</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00612.html#a3a361079484126ca1ac63d91842f52e6">   59</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">Foam::edge::edge</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> a, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    start() = a;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    end() = <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a00612.html#a1b0c04be3bb06f00c075e5a8f49be829">   66</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">Foam::edge::edge</a>(<span class="keyword">const</span> <a class="code" href="a00824.html">FixedList&lt;label, 2&gt;</a>&amp; a)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    start() = a[0];</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    end() = a[1];</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="a00612.html#af18eb2cd27718008dc94c1c13180ab63">   73</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">Foam::edge::edge</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;:</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a00824.html">FixedList</a>&lt;<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>, 2&gt;(is)</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{}</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::initMovePoints</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;(</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    PstreamBuffers&amp;,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">   81</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">Foam::edge::start</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> operator[](0);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::movePoints(PstreamBuffers&amp;, <span class="keyword">const</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp;)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a00612.html#a90bfabba4ed7c4296a120e58af00ecea">   86</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a>&amp; <a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">Foam::edge::start</a>()</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span> operator[](0);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::initUpdateMesh(PstreamBuffers&amp; pBufs)</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="a00724.html#aba14098b759b2f349996ba9d0c33544c">facePointPatch::initUpdateMesh</a>(pBufs);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    processorPointPatch::initGeometry(pBufs);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a00612.html#a8ed0e876210c2c116b5694307a830518">   92</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">Foam::edge::end</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">return</span> operator[](1);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span> Foam::processorPointPatch::updateMesh(PstreamBuffers&amp; pBufs)</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a00724.html#a06139aa7a91eeed82560f0c3d03d1845">facePointPatch::updateMesh</a>(pBufs);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    processorPointPatch::calcGeometry(pBufs);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;Foam::processorPointPatch::processorPointPatch</div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="a01981.html#ab98be4cfacfde1f664bf142dffda45f3">  108</a></span>&#160;(</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp; patch,</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01857.html">pointBoundaryMesh</a>&amp; bm</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;)</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;:</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="a00410.html">coupledFacePointPatch</a>(patch, bm),</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    procPolyPatch_(refCast&lt;const processorPolyPatch&gt;(patch))</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="a00612.html#a993b089c81d7bb7c05691a0365a92812">   97</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a>&amp; <a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">Foam::edge::end</a>()</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span> operator[](1);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a00612.html#ab53e2468b3b9d33c35dc8be5c6867e0f">  103</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a00612.html#ab53e2468b3b9d33c35dc8be5c6867e0f">Foam::edge::otherVertex</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> a)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">if</span> (a == start())</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">return</span> end();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (a == end())</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> start();</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">// The given vertex is not on the edge in the first place.</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="a01981.html#af2bd8b739d3834d5e2809730ee4dce55">  120</a></span>&#160;<a class="code" href="a01981.html#af2bd8b739d3834d5e2809730ee4dce55">Foam::processorPointPatch::~processorPointPatch</a>()</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;{}</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a01981.html#a5440d8117b69492c6724c8705e723979">  126</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a01355.html">Foam::labelList</a>&amp; <a class="code" href="a01981.html#a5440d8117b69492c6724c8705e723979">Foam::processorPointPatch::reverseMeshPoints</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">return</span> reverseMeshPoints_;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08523_html"><div class="ttname"><a href="a08523.html">processorPointPatch.H</a></div></div>
-<div class="ttc" id="a10675_html_a5997a67f2e85a15c0e13a1724273aa5f"><div class="ttname"><a href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">Foam::pointField</a></div><div class="ttdeci">vectorField pointField</div><div class="ttdoc">pointField is a vectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a08724_source.html#l00042">pointFieldFwd.H:42</a></div></div>
-<div class="ttc" id="a00410_html"><div class="ttname"><a href="a00410.html">Foam::coupledFacePointPatch</a></div><div class="ttdoc">coupled patch for post-processing. Used as the base class for processor and cyclic pointPatches ...</div><div class="ttdef"><b>Definition:</b> <a href="a08533_source.html#l00053">coupledFacePointPatch.H:53</a></div></div>
-<div class="ttc" id="a10675_html_ac21d7e4a822d25f975925673aed6885f"><div class="ttname"><a href="a10675.html#ac21d7e4a822d25f975925673aed6885f">Foam::primitiveFacePatch</a></div><div class="ttdeci">PrimitivePatch&lt; face, List, const pointField &amp; &gt; primitiveFacePatch</div><div class="ttdoc">Foam::primitiveFacePatch. </div><div class="ttdef"><b>Definition:</b> <a href="a08688_source.html#l00045">primitiveFacePatch.H:45</a></div></div>
-<div class="ttc" id="a01922_html"><div class="ttname"><a href="a01922.html">Foam::polyPatch</a></div><div class="ttdoc">A patch is a list of labels that address the faces in the global face list. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00066">polyPatch.H:66</a></div></div>
-<div class="ttc" id="a00724_html_a991a34b3e33f0351a3ae30898010d27b"><div class="ttname"><a href="a00724.html#a991a34b3e33f0351a3ae30898010d27b">Foam::facePointPatch::meshPoints</a></div><div class="ttdeci">virtual const labelList &amp; meshPoints() const </div><div class="ttdoc">Return mesh points. </div><div class="ttdef"><b>Definition:</b> <a href="a08537_source.html#l00180">facePointPatch.H:180</a></div></div>
-<div class="ttc" id="a08483_html"><div class="ttname"><a href="a08483.html">faceList.H</a></div></div>
-<div class="ttc" id="a08500_html"><div class="ttname"><a href="a08500.html">pointBoundaryMesh.H</a></div></div>
-<div class="ttc" id="a00724_html_a205fadce5134baf710e41c91caf55b98"><div class="ttname"><a href="a00724.html#a205fadce5134baf710e41c91caf55b98">Foam::facePointPatch::patch</a></div><div class="ttdeci">const polyPatch &amp; patch() const </div><div class="ttdoc">Return the polyPatch. </div><div class="ttdef"><b>Definition:</b> <a href="a08537_source.html#l00150">facePointPatch.H:150</a></div></div>
-<div class="ttc" id="a01981_html_a5440d8117b69492c6724c8705e723979"><div class="ttname"><a href="a01981.html#a5440d8117b69492c6724c8705e723979">Foam::processorPointPatch::reverseMeshPoints</a></div><div class="ttdeci">const labelList &amp; reverseMeshPoints() const </div><div class="ttdoc">Return mesh points in the correct order for the receiving side. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00126">processorPointPatch.C:126</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a01981_html_af2bd8b739d3834d5e2809730ee4dce55"><div class="ttname"><a href="a01981.html#af2bd8b739d3834d5e2809730ee4dce55">Foam::processorPointPatch::~processorPointPatch</a></div><div class="ttdeci">virtual ~processorPointPatch()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00120">processorPointPatch.C:120</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a10675_html_adda0c8c9739c889f59a56f2998c5a9b8"><div class="ttname"><a href="a10675.html#adda0c8c9739c889f59a56f2998c5a9b8">Foam::faceList</a></div><div class="ttdeci">List&lt; face &gt; faceList</div><div class="ttdef"><b>Definition:</b> <a href="a08484_source.html#l00043">faceListFwd.H:43</a></div></div>
-<div class="ttc" id="a08602_html"><div class="ttname"><a href="a08602.html">emptyPolyPatch.H</a></div></div>
-<div class="ttc" id="a08502_html"><div class="ttname"><a href="a08502.html">pointMesh.H</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00724_html_a06139aa7a91eeed82560f0c3d03d1845"><div class="ttname"><a href="a00724.html#a06139aa7a91eeed82560f0c3d03d1845">Foam::facePointPatch::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(PstreamBuffers &amp;)</div><div class="ttdoc">Update of the patch topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08536_source.html#l00075">facePointPatch.C:75</a></div></div>
-<div class="ttc" id="a00724_html_aba14098b759b2f349996ba9d0c33544c"><div class="ttname"><a href="a00724.html#aba14098b759b2f349996ba9d0c33544c">Foam::facePointPatch::initUpdateMesh</a></div><div class="ttdeci">virtual void initUpdateMesh(PstreamBuffers &amp;)</div><div class="ttdoc">Initialise the update of the patch topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08536_source.html#l00069">facePointPatch.C:69</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01857_html"><div class="ttname"><a href="a01857.html">Foam::pointBoundaryMesh</a></div><div class="ttdoc">Foam::pointBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08500_source.html#l00052">pointBoundaryMesh.H:52</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a08688_html"><div class="ttname"><a href="a08688.html">primitiveFacePatch.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="a00612.html#aa2b6e905a6dbfa5a860c842efbcf4d9e">  121</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a00612.html#aa2b6e905a6dbfa5a860c842efbcf4d9e">Foam::edge::commonVertex</a>(<span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; a)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">if</span> (start() == a.<a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">start</a>() || start() == a.<a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">end</a>())</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">return</span> start();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (end() == a.<a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">start</a>() || end() == a.<a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">end</a>())</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">return</span> end();</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="comment">// No shared vertex.</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="a00612.html#a126cb0362ae2e7935520fb27343bad31">  139</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="a00612.html#a126cb0362ae2e7935520fb27343bad31">Foam::edge::flip</a>()</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;{</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <a class="code" href="a10725.html#ac6e6a40a7bda559df02d5ab6cc6f7e00">Swap</a>(<span class="keyword">operator</span>[](0), <span class="keyword">operator</span>[](1));</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="a00612.html#a52fe3f7a94e7d5c1deafc1de4656aed3">  145</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00612.html">Foam::edge</a> <a class="code" href="a00612.html#a52fe3f7a94e7d5c1deafc1de4656aed3">Foam::edge::reverseEdge</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00612.html">edge</a>(end(), start());</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;}</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="a00612.html#ae686335a8e426b97037d6845043b7151">  151</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a02787.html">Foam::point</a> <a class="code" href="a00612.html#ae686335a8e426b97037d6845043b7151">Foam::edge::centre</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordflow">return</span> 0.5*(p[start()] + p[end()]);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;}</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="a00612.html#a9c85e25fb010469f9d04cd70d9250419">  157</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a02787.html">Foam::vector</a> <a class="code" href="a00612.html#a9c85e25fb010469f9d04cd70d9250419">Foam::edge::vec</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">return</span> p[end()] - p[start()];</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="a00612.html#ac47b383852677ce70d239fc1c06b500d">  163</a></span>&#160;<span class="keyword">inline</span> Foam::scalar <a class="code" href="a00612.html#ac47b383852677ce70d239fc1c06b500d">Foam::edge::mag</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">return ::Foam::mag</a>(vec(p));</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;}</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="a00612.html#aefea0e4a074dd0ba02419922ed063888">  169</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a01329.html">Foam::linePointRef</a> <a class="code" href="a00612.html#aefea0e4a074dd0ba02419922ed063888">Foam::edge::line</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10725.html#a2e0318a3a140a9ee64174b45fbfd45f0">linePointRef</a>(p[start()], p[end()]);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;}</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno"><a class="line" href="a10725.html#a0fe8612ce5191d6ae18e9437f4c4cb41">  177</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a10725.html#a28a45d2e3cca6152b024de57575abbf1">Foam::operator==</a>(<span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; a, <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>)</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;{</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00612.html#a5c505b19063f93e22536f3d2bac9ae29">edge::compare</a>(a,b) != 0;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;}</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
+<div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="a10725.html#a958e42991a499a43adcd6c28606c08db">  183</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a10725.html#a0a0b5e26315df48032957661a6fafb29">Foam::operator!=</a>(<span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; a, <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>)</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;{</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00612.html#a5c505b19063f93e22536f3d2bac9ae29">edge::compare</a>(a,b) == 0;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00824_html"><div class="ttname"><a href="a00824.html">Foam::FixedList&lt; label, 2 &gt;</a></div></div>
+<div class="ttc" id="a08996_html"><div class="ttname"><a href="a08996.html">Swap.H</a></div><div class="ttdoc">Swap its arguments. </div></div>
+<div class="ttc" id="a10725_html_a0a0b5e26315df48032957661a6fafb29"><div class="ttname"><a href="a10725.html#a0a0b5e26315df48032957661a6fafb29">Foam::operator!=</a></div><div class="ttdeci">bool operator!=(const particle &amp;, const particle &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a06349_source.html#l00147">particle.C:147</a></div></div>
+<div class="ttc" id="a07775_html"><div class="ttname"><a href="a07775.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
+<div class="ttc" id="a00612_html_ab53e2468b3b9d33c35dc8be5c6867e0f"><div class="ttname"><a href="a00612.html#ab53e2468b3b9d33c35dc8be5c6867e0f">Foam::edge::otherVertex</a></div><div class="ttdeci">label otherVertex(const label a) const </div><div class="ttdoc">Given one vertex, return the other. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00103">edgeI.H:103</a></div></div>
+<div class="ttc" id="a10725_html_ac6e6a40a7bda559df02d5ab6cc6f7e00"><div class="ttname"><a href="a10725.html#ac6e6a40a7bda559df02d5ab6cc6f7e00">Foam::Swap</a></div><div class="ttdeci">void Swap(T &amp;a, T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="a08996_source.html#l00043">Swap.H:43</a></div></div>
+<div class="ttc" id="a00612_html_a8ed0e876210c2c116b5694307a830518"><div class="ttname"><a href="a00612.html#a8ed0e876210c2c116b5694307a830518">Foam::edge::end</a></div><div class="ttdeci">label end() const </div><div class="ttdoc">Return end vertex label. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00092">edgeI.H:92</a></div></div>
+<div class="ttc" id="a00612_html_a98db3b5518b4e9ab28f5e415594f6ab1"><div class="ttname"><a href="a00612.html#a98db3b5518b4e9ab28f5e415594f6ab1">Foam::edge::edge</a></div><div class="ttdeci">edge()</div><div class="ttdoc">Null constructor for lists. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00055">edgeI.H:55</a></div></div>
+<div class="ttc" id="a00612_html_ac47b383852677ce70d239fc1c06b500d"><div class="ttname"><a href="a00612.html#ac47b383852677ce70d239fc1c06b500d">Foam::edge::mag</a></div><div class="ttdeci">scalar mag(const pointField &amp;) const </div><div class="ttdoc">Return scalar magnitude. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00163">edgeI.H:163</a></div></div>
+<div class="ttc" id="a10738_html_a00faad9a19c0dc0bcae765415926e925"><div class="ttname"><a href="a10738.html#a00faad9a19c0dc0bcae765415926e925">Foam::constant::physicoChemical::b</a></div><div class="ttdeci">const dimensionedScalar b</div><div class="ttdoc">Wien displacement law constant: default SI units: [m.K]. </div><div class="ttdef"><b>Definition:</b> <a href="a04437_source.html#l00028">createFields.H:28</a></div></div>
+<div class="ttc" id="a10725_html_a28a45d2e3cca6152b024de57575abbf1"><div class="ttname"><a href="a10725.html#a28a45d2e3cca6152b024de57575abbf1">Foam::operator==</a></div><div class="ttdeci">tmp&lt; fvMatrix&lt; Type &gt; &gt; operator==(const fvMatrix&lt; Type &gt; &amp;, const fvMatrix&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a00612_html_aefea0e4a074dd0ba02419922ed063888"><div class="ttname"><a href="a00612.html#aefea0e4a074dd0ba02419922ed063888">Foam::edge::line</a></div><div class="ttdeci">linePointRef line(const pointField &amp;) const </div><div class="ttdoc">Return edge line. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00169">edgeI.H:169</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a00612_html"><div class="ttname"><a href="a00612.html">Foam::edge</a></div><div class="ttdoc">An edge is a list of two point labels. The functionality it provides supports the discretisation on a...</div><div class="ttdef"><b>Definition:</b> <a href="a08521_source.html#l00058">edge.H:58</a></div></div>
+<div class="ttc" id="a10725_html_a2e0318a3a140a9ee64174b45fbfd45f0"><div class="ttname"><a href="a10725.html#a2e0318a3a140a9ee64174b45fbfd45f0">Foam::linePointRef</a></div><div class="ttdeci">line&lt; point, const point &amp; &gt; linePointRef</div><div class="ttdoc">Line using referred points. </div><div class="ttdef"><b>Definition:</b> <a href="a08762_source.html#l00045">linePointRef.H:45</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a04434_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04434_source.html#l00051">createFields.H:51</a></div></div>
+<div class="ttc" id="a01329_html"><div class="ttname"><a href="a01329.html">Foam::line</a></div><div class="ttdoc">A line primitive. </div><div class="ttdef"><b>Definition:</b> <a href="a08759_source.html#l00056">line.H:56</a></div></div>
+<div class="ttc" id="a00612_html_aa2b6e905a6dbfa5a860c842efbcf4d9e"><div class="ttname"><a href="a00612.html#aa2b6e905a6dbfa5a860c842efbcf4d9e">Foam::edge::commonVertex</a></div><div class="ttdeci">label commonVertex(const edge &amp;a) const </div><div class="ttdoc">Return common vertex. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00121">edgeI.H:121</a></div></div>
+<div class="ttc" id="a00612_html_a126cb0362ae2e7935520fb27343bad31"><div class="ttname"><a href="a00612.html#a126cb0362ae2e7935520fb27343bad31">Foam::edge::flip</a></div><div class="ttdeci">void flip()</div><div class="ttdoc">Flip the edge in-place. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00139">edgeI.H:139</a></div></div>
+<div class="ttc" id="a00612_html_a52fe3f7a94e7d5c1deafc1de4656aed3"><div class="ttname"><a href="a00612.html#a52fe3f7a94e7d5c1deafc1de4656aed3">Foam::edge::reverseEdge</a></div><div class="ttdeci">edge reverseEdge() const </div><div class="ttdoc">Return reverse edge. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00145">edgeI.H:145</a></div></div>
+<div class="ttc" id="a00612_html_a9c85e25fb010469f9d04cd70d9250419"><div class="ttname"><a href="a00612.html#a9c85e25fb010469f9d04cd70d9250419">Foam::edge::vec</a></div><div class="ttdeci">vector vec(const pointField &amp;) const </div><div class="ttdoc">Return the vector (end - start) </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00157">edgeI.H:157</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a00612_html_a96b607a9a9baa575783b4af443ef613f"><div class="ttname"><a href="a00612.html#a96b607a9a9baa575783b4af443ef613f">Foam::edge::start</a></div><div class="ttdeci">label start() const </div><div class="ttdoc">Return start vertex label. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00081">edgeI.H:81</a></div></div>
+<div class="ttc" id="a00612_html_a5c505b19063f93e22536f3d2bac9ae29"><div class="ttname"><a href="a00612.html#a5c505b19063f93e22536f3d2bac9ae29">Foam::edge::compare</a></div><div class="ttdeci">static int compare(const edge &amp;, const edge &amp;)</div><div class="ttdoc">Compare edges. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00036">edgeI.H:36</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00612_html_ae686335a8e426b97037d6845043b7151"><div class="ttname"><a href="a00612.html#ae686335a8e426b97037d6845043b7151">Foam::edge::centre</a></div><div class="ttdeci">point centre(const pointField &amp;) const </div><div class="ttdoc">Return centre (centroid) </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00151">edgeI.H:151</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_962442b8f989d5529fab5e0f0e4ffb74.html">fields</a></li><li class="navelem"><a class="el" href="dir_99558e6cce2e782cc8c86fe4c767e1e1.html">GeometricFields</a></li><li class="navelem"><a class="el" href="dir_fb544a263ee5c7dab45167a96ac3aea6.html">pointFields</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_962442b8f989d5529fab5e0f0e4ffb74.html">fields</a></li><li class="navelem"><a class="el" href="dir_7d364942a13d3ce50f6681364b448a98.html">Fields</a></li><li class="navelem"><a class="el" href="dir_85895b1330cd43ea2abb27d8de109280.html">transformField</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">pointFieldsFwd.H</div>  </div>
+<div class="title">transformField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07994.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,60 +119,133 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InClass</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::pointFields</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    pointFields.C</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef pointFieldsFwd_H</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define pointFieldsFwd_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07902.html">fieldTypes.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07995.html">transformField.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07947.html">FieldM.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08822.html">diagTensor.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * global functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a10725.html#a8cd4e9d8c939681af73d13cc80f95766">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a00755.html">vectorField</a>&amp; rtf,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02051.html">quaternion</a>&amp; q,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a>&amp; tf</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a02561.html">tensor</a> t = q.<a class="code" href="a02051.html#ae10a9e572a265c8a6b4e03646751082e">R</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a07947.html#aecc129b26db150755c0a02c2ea9a8968">TFOR_ALL_F_OP_FUNC_S_F</a>(<a class="code" href="a02787.html">vector</a>, rtf, =, <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>, <a class="code" href="a02561.html">tensor</a>, t, <a class="code" href="a02787.html">vector</a>, tf)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">class </span>pointMesh;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span>pointPatchField;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>PatchField, <span class="keyword">class </span>GeoMesh&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span>GeometricField;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">typedef</span> GeometricField&lt;scalar, pointPatchField, pointMesh&gt; <a class="code" href="a10675.html#a7a921ce3162fe282b7f716d9ee5df88a">pointScalarField</a>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">typedef</span> GeometricField&lt;vector, pointPatchField, pointMesh&gt; <a class="code" href="a10675.html#a5c5d4354e7b190ad15ccae868489b543">pointVectorField</a>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">typedef</span> GeometricField&lt;sphericalTensor, pointPatchField, pointMesh&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="a10675.html#a223b74f51295c331291e923c64e59ea2">pointSphericalTensorField</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">typedef</span> GeometricField&lt;symmTensor, pointPatchField, pointMesh&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a10675.html#a30619614bb4afd3576181247e164a0ae">pointSymmTensorField</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">typedef</span> GeometricField&lt;tensor, pointPatchField, pointMesh&gt; <a class="code" href="a10675.html#acaf056d2bab61e4816227a18d464d877">pointTensorField</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::vectorField&gt;</a> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a10725.html#a75beb046b76b32de2dc4a21b9ad4c496">   45</a></span>&#160;(</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02051.html">quaternion</a>&amp; q,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a>&amp; tf</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a02618.html">tmp&lt;vectorField &gt;</a> tranf(<span class="keyword">new</span> <a class="code" href="a04313.html#a26449ea948f1206dbb29e1bc6e5c7c64">vectorField</a>(tf.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()));</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(tranf(), q, tf);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> tranf;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::vectorField&gt;</a> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a10725.html#abeea20a23025b195c9a649d399269f40">   57</a></span>&#160;(</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02051.html">quaternion</a>&amp; q,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02618.html">tmp&lt;vectorField&gt;</a>&amp; ttf</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a02618.html">tmp&lt;vectorField &gt;</a> tranf = <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">reuseTmp&lt;vector, vector&gt;::New</a>(ttf);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(tranf(), q, ttf());</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="a03115.html#a3a533f9231a5668b9d8f301a79d57b73">reuseTmp&lt;vector, vector&gt;::clear</a>(ttf);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> tranf;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a30619614bb4afd3576181247e164a0ae"><div class="ttname"><a href="a10675.html#a30619614bb4afd3576181247e164a0ae">Foam::pointSymmTensorField</a></div><div class="ttdeci">GeometricField&lt; symmTensor, pointPatchField, pointMesh &gt; pointSymmTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00054">pointFields.H:54</a></div></div>
-<div class="ttc" id="a10675_html_a7a921ce3162fe282b7f716d9ee5df88a"><div class="ttname"><a href="a10675.html#a7a921ce3162fe282b7f716d9ee5df88a">Foam::pointScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, pointPatchField, pointMesh &gt; pointScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00049">pointFields.H:49</a></div></div>
-<div class="ttc" id="a10675_html_acaf056d2bab61e4816227a18d464d877"><div class="ttname"><a href="a10675.html#acaf056d2bab61e4816227a18d464d877">Foam::pointTensorField</a></div><div class="ttdeci">GeometricField&lt; tensor, pointPatchField, pointMesh &gt; pointTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00055">pointFields.H:55</a></div></div>
-<div class="ttc" id="a10675_html_a5c5d4354e7b190ad15ccae868489b543"><div class="ttname"><a href="a10675.html#a5c5d4354e7b190ad15ccae868489b543">Foam::pointVectorField</a></div><div class="ttdeci">GeometricField&lt; vector, pointPatchField, pointMesh &gt; pointVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00050">pointFields.H:50</a></div></div>
-<div class="ttc" id="a07902_html"><div class="ttname"><a href="a07902.html">fieldTypes.H</a></div><div class="ttdoc">Include the header files for all the primitive types that Fields are instantiated for...</div></div>
-<div class="ttc" id="a10675_html_a223b74f51295c331291e923c64e59ea2"><div class="ttname"><a href="a10675.html#a223b74f51295c331291e923c64e59ea2">Foam::pointSphericalTensorField</a></div><div class="ttdeci">GeometricField&lt; sphericalTensor, pointPatchField, pointMesh &gt; pointSphericalTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a07993_source.html#l00052">pointFields.H:52</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a10725.html#acec6371e424477b49e780312678de07f">   70</a></span>&#160;(</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a00755.html">vectorField</a>&amp; rtf,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02273.html">septernion</a>&amp; tr,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a>&amp; tf</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="a02787.html">vector</a> <a class="code" href="a04435.html#abb80dfe0d55ec4a3a97b2dc1353d66dc">T</a> = tr.<a class="code" href="a02273.html#a9843788d6d82317212ae7c974d4995de">t</a>();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Check if any rotation</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(tr.<a class="code" href="a02273.html#acc889c2c33fc6bfc923aa687bd4336b2">r</a>().<a class="code" href="a02051.html#ae10a9e572a265c8a6b4e03646751082e">R</a>() - <a class="code" href="a10725.html#a7db00de24ac08e377162e877c6b19c25">I</a>) &gt; SMALL)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(rtf, tr.<a class="code" href="a02273.html#acc889c2c33fc6bfc923aa687bd4336b2">r</a>(), <a class="code" href="a04317.html#a23001f0ed905228992dc24ffca86c259">tf</a>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(T) &gt; VSMALL)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            rtf += <a class="code" href="a04435.html#abb80dfe0d55ec4a3a97b2dc1353d66dc">T</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(T) &gt; VSMALL)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <a class="code" href="a07947.html#a76541da47f8336b4ecc42698dd198ab5">TFOR_ALL_F_OP_S_OP_F</a>(<a class="code" href="a02787.html">vector</a>, rtf, =, <a class="code" href="a02787.html">vector</a>, T, +, <a class="code" href="a02787.html">vector</a>, tf);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            rtf = <a class="code" href="a04317.html#a23001f0ed905228992dc24ffca86c259">tf</a>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::vectorField&gt;</a> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a10725.html#adb8eab43bf12296f732472a1260867fb">  103</a></span>&#160;(</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02273.html">septernion</a>&amp; tr,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a>&amp; tf</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;{</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="a02618.html">tmp&lt;vectorField &gt;</a> tranf(<span class="keyword">new</span> <a class="code" href="a04313.html#a26449ea948f1206dbb29e1bc6e5c7c64">vectorField</a>(tf.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()));</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(tranf(), tr, tf);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> tranf;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::vectorField&gt;</a> <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a10725.html#a9ce0bc588bd43f925854a4c44557bbff">  115</a></span>&#160;(</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02273.html">septernion</a>&amp; tr,</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02618.html">tmp&lt;vectorField&gt;</a>&amp; ttf</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;{</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="a02618.html">tmp&lt;vectorField &gt;</a> tranf = <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">reuseTmp&lt;vector, vector&gt;::New</a>(ttf);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(tranf(), tr, ttf());</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="a03115.html#a3a533f9231a5668b9d8f301a79d57b73">reuseTmp&lt;vector, vector&gt;::clear</a>(ttf);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">return</span> tranf;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02051_html"><div class="ttname"><a href="a02051.html">Foam::quaternion</a></div><div class="ttdoc">Quaternion class used to perform rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08912_source.html#l00060">quaternion.H:60</a></div></div>
+<div class="ttc" id="a10725_html_a7db00de24ac08e377162e877c6b19c25"><div class="ttname"><a href="a10725.html#a7db00de24ac08e377162e877c6b19c25">Foam::I</a></div><div class="ttdeci">static const sphericalTensor I(1)</div></div>
+<div class="ttc" id="a02273_html"><div class="ttname"><a href="a02273.html">Foam::septernion</a></div><div class="ttdoc">Septernion class used to perform translations and rotations in 3D space. </div><div class="ttdef"><b>Definition:</b> <a href="a08946_source.html#l00064">septernion.H:64</a></div></div>
+<div class="ttc" id="a04313_html_a26449ea948f1206dbb29e1bc6e5c7c64"><div class="ttname"><a href="a04313.html#a26449ea948f1206dbb29e1bc6e5c7c64">vectorField</a></div><div class="ttdeci">volVectorField vectorField(fieldObject, mesh)</div></div>
+<div class="ttc" id="a07995_html"><div class="ttname"><a href="a07995.html">transformField.H</a></div><div class="ttdoc">Spatial transformation functions for primitive fields. </div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a07947_html_aecc129b26db150755c0a02c2ea9a8968"><div class="ttname"><a href="a07947.html#aecc129b26db150755c0a02c2ea9a8968">TFOR_ALL_F_OP_FUNC_S_F</a></div><div class="ttdeci">#define TFOR_ALL_F_OP_FUNC_S_F(typeF1, f1, OP, FUNC, typeS, s, typeF2, f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07947_source.html#l00210">FieldM.H:210</a></div></div>
+<div class="ttc" id="a04317_html_a23001f0ed905228992dc24ffca86c259"><div class="ttname"><a href="a04317.html#a23001f0ed905228992dc24ffca86c259">tf</a></div><div class="ttdeci">const tensorField &amp; tf</div><div class="ttdef"><b>Definition:</b> <a href="a04317_source.html#l00036">getPatchFieldTensor.H:36</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a02273_html_acc889c2c33fc6bfc923aa687bd4336b2"><div class="ttname"><a href="a02273.html#acc889c2c33fc6bfc923aa687bd4336b2">Foam::septernion::r</a></div><div class="ttdeci">const quaternion &amp; r() const </div><div class="ttdef"><b>Definition:</b> <a href="a08947_source.html#l00058">septernionI.H:58</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02273_html_a9843788d6d82317212ae7c974d4995de"><div class="ttname"><a href="a02273.html#a9843788d6d82317212ae7c974d4995de">Foam::septernion::t</a></div><div class="ttdeci">const vector &amp; t() const </div><div class="ttdef"><b>Definition:</b> <a href="a08947_source.html#l00052">septernionI.H:52</a></div></div>
+<div class="ttc" id="a02051_html_ae10a9e572a265c8a6b4e03646751082e"><div class="ttname"><a href="a02051.html#ae10a9e572a265c8a6b4e03646751082e">Foam::quaternion::R</a></div><div class="ttdeci">tensor R() const </div><div class="ttdoc">The rotation tensor corresponding the quaternion. </div><div class="ttdef"><b>Definition:</b> <a href="a08913_source.html#l00235">quaternionI.H:235</a></div></div>
+<div class="ttc" id="a02561_html"><div class="ttname"><a href="a02561.html">Foam::Tensor&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a03115_html_a3a533f9231a5668b9d8f301a79d57b73"><div class="ttname"><a href="a03115.html#a3a533f9231a5668b9d8f301a79d57b73">clear</a></div><div class="ttdeci">UEqn clear()</div></div>
+<div class="ttc" id="a07947_html_a76541da47f8336b4ecc42698dd198ab5"><div class="ttname"><a href="a07947.html#a76541da47f8336b4ecc42698dd198ab5">TFOR_ALL_F_OP_S_OP_F</a></div><div class="ttdeci">#define TFOR_ALL_F_OP_S_OP_F(typeF1, f1, OP1, typeS, s, OP2, typeF2, f2)    </div><div class="ttdef"><b>Definition:</b> <a href="a07947_source.html#l00278">FieldM.H:278</a></div></div>
+<div class="ttc" id="a08822_html"><div class="ttname"><a href="a08822.html">diagTensor.H</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a04435_html_abb80dfe0d55ec4a3a97b2dc1353d66dc"><div class="ttname"><a href="a04435.html#abb80dfe0d55ec4a3a97b2dc1353d66dc">T</a></div><div class="ttdeci">const volScalarField &amp; T</div><div class="ttdef"><b>Definition:</b> <a href="a04435_source.html#l00025">createFields.H:25</a></div></div>
+<div class="ttc" id="a10725_html_a919915170941701c1223291531ad010c"><div class="ttname"><a href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div><div class="ttdeci">dimensionSet transform(const dimensionSet &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a07878_source.html#l00465">dimensionSet.C:465</a></div></div>
+<div class="ttc" id="a07947_html"><div class="ttname"><a href="a07947.html">FieldM.H</a></div><div class="ttdoc">High performance macro functions for Field<Type> algebra. These expand using either array element acc...</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

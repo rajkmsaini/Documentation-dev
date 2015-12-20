@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_5d57e3901430bcc99a7ddac11a899224.html">fvMatrices</a></li><li class="navelem"><a class="el" href="dir_21e8caa1e273a2fd1ca8d8e5e2ca4486.html">solvers</a></li><li class="navelem"><a class="el" href="dir_87813a55ec739ef0a6011feca433f374.html">MULES</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_211d73fd6015a334f4cd90c9fb88c421.html">gradSchemes</a></li><li class="navelem"><a class="el" href="dir_a9b56d32af131ce544d3e9340bd38699.html">LeastSquaresGrad</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">IMULES.H</div>  </div>
+<div class="title">LeastSquaresVectors.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05742.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,87 +119,125 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Global</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    IMULES</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    IMULES: Multidimensional universal limiter for implicit solution.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    Solve a convective-only transport equation using an explicit universal</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    multi-dimensional limiter applied to an implicit formulation requiring</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    iteration to guarantee boundedness.  The number of iterations required</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    to obtain boundedness increases with the Courant number of the simulation.</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    It may be more efficient to use CMULES.</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    IMULES.C</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    IMULESTemplates.C</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05744.html">LeastSquaresVectors.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Stencil&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a01289.html#a61f1e2023f87e5bac4adf885ce1f7f72">Foam::fv::LeastSquaresVectors&lt;Stencil&gt;::LeastSquaresVectors</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a01289.html#a61f1e2023f87e5bac4adf885ce1f7f72">   32</a></span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a01467.html">MeshObject&lt;fvMesh, Foam::MoveableMeshObject, LeastSquaresVectors&gt;</a>(<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>),</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    vectors_(mesh.<a class="code" href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">nCells</a>())</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    calcLeastSquaresVectors();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#ifndef IMULES_H</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define IMULES_H</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05745.html">MULES.H</a>&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Stencil&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a01289.html#aac47ed174a5c3750295cc7d84ed52f55">   46</a></span>&#160;<a class="code" href="a01289.html#aac47ed174a5c3750295cc7d84ed52f55">Foam::fv::LeastSquaresVectors&lt;Stencil&gt;::~LeastSquaresVectors</a>()</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">namespace </span>MULES</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> RhoType, <span class="keyword">class</span> SpType, <span class="keyword">class</span> SuType&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10733.html#af3ebc5af31512182ee43a56e994f4aaf">implicitSolve</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;(</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> RhoType&amp; <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; gamma,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; phiCorr,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> SpType&amp; <a class="code" href="a10709.html#acb372005d973de14c63c97ba57a82d99">Sp</a>,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> SuType&amp; <a class="code" href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">Su</a>,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> scalar psiMax,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> scalar psiMin</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10733.html#af3ebc5af31512182ee43a56e994f4aaf">implicitSolve</a></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;(</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; gamma,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; phiCorr,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> scalar psiMax,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> scalar psiMin</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;} <span class="comment">// End namespace MULES</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Stencil&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01289.html">Foam::fv::LeastSquaresVectors&lt;Stencil&gt;::calcLeastSquaresVectors</a>()</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;LeastSquaresVectors::calcLeastSquaresVectors() :&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Calculating least square gradient vectors&quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh = this-&gt;mesh_;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00697.html">extendedCentredCellToCellStencil</a>&amp; stencil = this-&gt;stencil();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    stencil.<a class="code" href="a00697.html#a10dc06ebbf1e2e3a6eca327491184e73">collectData</a>(mesh.<a class="code" href="a00876.html#add65fc7bb62260f0f5144592e78ccdba">C</a>(), vectors_);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// Create the base form of the dd-tensor</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// including components for the &quot;empty&quot; directions</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a02535.html">symmTensor</a> dd0(<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>((<a class="code" href="a02787.html">Vector&lt;label&gt;::one</a> - mesh.<a class="code" href="a01916.html#aa81cc7eb673aa92f482daaa8685202ee">geometricD</a>())/2));</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a> (vectors_, i)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a01364.html">List&lt;vector&gt;</a>&amp; lsvi = vectors_[i];</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a02535.html">symmTensor</a> dd(dd0);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// The current cell is 0 in the stencil</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">// Calculate the deltas and sum the weighted dd</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> j=1; j&lt;lsvi.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(); j++)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            lsvi[j] = lsvi[j] - lsvi[0];</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            scalar magSqrLsvi = <a class="code" href="a10725.html#ae6fff2c6981e6d9618aa5038e69def6e">magSqr</a>(lsvi[j]);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            dd += <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(lsvi[j])/magSqrLsvi;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            lsvi[j] /= magSqrLsvi;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        }</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a05743.html">IMULESTemplates.C</a>&quot;</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// Invert dd</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        dd = <a class="code" href="a10725.html#ac51979edadae5b8ade119dd30b88e381">inv</a>(dd);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// Remove the components corresponding to the empty directions</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        dd -= dd0;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05743_html"><div class="ttname"><a href="a05743.html">IMULESTemplates.C</a></div></div>
-<div class="ttc" id="a10675_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10709_html_ac92e296062b7b025a96b82351c1d9b89"><div class="ttname"><a href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">Foam::fvc::Su</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; Su(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;su, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00044">fvcSup.C:44</a></div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a10709_html_acb372005d973de14c63c97ba57a82d99"><div class="ttname"><a href="a10709.html#acb372005d973de14c63c97ba57a82d99">Foam::fvc::Sp</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; Sp(const volScalarField &amp;sp, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00067">fvcSup.C:67</a></div></div>
-<div class="ttc" id="a05745_html"><div class="ttname"><a href="a05745.html">MULES.H</a></div><div class="ttdoc">MULES: Multidimensional universal limiter for explicit solution. </div></div>
-<div class="ttc" id="a03181_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03181_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
-<div class="ttc" id="a10733_html_af3ebc5af31512182ee43a56e994f4aaf"><div class="ttname"><a href="a10733.html#af3ebc5af31512182ee43a56e994f4aaf">Foam::MULES::implicitSolve</a></div><div class="ttdeci">void implicitSolve(const RhoType &amp;rho, volScalarField &amp;gamma, const surfaceScalarField &amp;phi, surfaceScalarField &amp;phiCorr, const SpType &amp;Sp, const SuType &amp;Su, const scalar psiMax, const scalar psiMin)</div><div class="ttdef"><b>Definition:</b> <a href="a05743_source.html#l00057">IMULESTemplates.C:57</a></div></div>
-<div class="ttc" id="a10675_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00052">volFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// Finalize the gradient weighting vectors</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        lsvi[0] = vector::zero;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> j=1; j&lt;lsvi.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(); j++)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            lsvi[j] = dd &amp; lsvi[j];</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            lsvi[0] -= lsvi[j];</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;LeastSquaresVectors::calcLeastSquaresVectors() :&quot;</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Finished calculating least square gradient vectors&quot;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Stencil&gt;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="a01289.html#a049fe0a86e2c86b4c0bb5fe02583bea4">  111</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01289.html#a049fe0a86e2c86b4c0bb5fe02583bea4">Foam::fv::LeastSquaresVectors&lt;Stencil&gt;::movePoints</a>()</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    calcLeastSquaresVectors();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01967_html_ae79b5e96cf8d9a4e6b3993e6f2709374"><div class="ttname"><a href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">Foam::primitiveMesh::nCells</a></div><div class="ttdeci">label nCells() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00094">primitiveMeshI.H:94</a></div></div>
+<div class="ttc" id="a01916_html_aa81cc7eb673aa92f482daaa8685202ee"><div class="ttname"><a href="a01916.html#aa81cc7eb673aa92f482daaa8685202ee">Foam::polyMesh::geometricD</a></div><div class="ttdeci">const Vector&lt; label &gt; &amp; geometricD() const </div><div class="ttdoc">Return the vector of geometric directions in mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00784">polyMesh.C:784</a></div></div>
+<div class="ttc" id="a10725_html_ae6fff2c6981e6d9618aa5038e69def6e"><div class="ttname"><a href="a10725.html#ae6fff2c6981e6d9618aa5038e69def6e">Foam::magSqr</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; magSqr(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a10725_html_ac51979edadae5b8ade119dd30b88e381"><div class="ttname"><a href="a10725.html#ac51979edadae5b8ade119dd30b88e381">Foam::inv</a></div><div class="ttdeci">dimensionedSphericalTensor inv(const dimensionedSphericalTensor &amp;dt)</div><div class="ttdef"><b>Definition:</b> <a href="a07868_source.html#l00071">dimensionedSphericalTensor.C:71</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a01289_html_a61f1e2023f87e5bac4adf885ce1f7f72"><div class="ttname"><a href="a01289.html#a61f1e2023f87e5bac4adf885ce1f7f72">Foam::fv::LeastSquaresVectors::LeastSquaresVectors</a></div><div class="ttdeci">LeastSquaresVectors(const fvMesh &amp;)</div><div class="ttdoc">Construct given an fvMesh and the minimum determinant criterion. </div><div class="ttdef"><b>Definition:</b> <a href="a05742_source.html#l00032">LeastSquaresVectors.C:32</a></div></div>
+<div class="ttc" id="a01289_html_aac47ed174a5c3750295cc7d84ed52f55"><div class="ttname"><a href="a01289.html#aac47ed174a5c3750295cc7d84ed52f55">Foam::fv::LeastSquaresVectors::~LeastSquaresVectors</a></div><div class="ttdeci">virtual ~LeastSquaresVectors()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05742_source.html#l00046">LeastSquaresVectors.C:46</a></div></div>
+<div class="ttc" id="a01289_html_a049fe0a86e2c86b4c0bb5fe02583bea4"><div class="ttname"><a href="a01289.html#a049fe0a86e2c86b4c0bb5fe02583bea4">Foam::fv::LeastSquaresVectors::movePoints</a></div><div class="ttdeci">virtual bool movePoints()</div><div class="ttdoc">Update the least square vectors when the mesh moves. </div><div class="ttdef"><b>Definition:</b> <a href="a05742_source.html#l00111">LeastSquaresVectors.C:111</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a02535_html"><div class="ttname"><a href="a02535.html">Foam::SymmTensor</a></div><div class="ttdoc">Templated 3D symmetric tensor derived from VectorSpace adding construction from 6 components...</div><div class="ttdef"><b>Definition:</b> <a href="a08999_source.html#l00053">SymmTensor.H:53</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a01467_html"><div class="ttname"><a href="a01467.html">Foam::MeshObject</a></div><div class="ttdoc">Templated abstract base-class for optional mesh objects used to automate their allocation to the mesh...</div><div class="ttdef"><b>Definition:</b> <a href="a08479_source.html#l00081">MeshObject.H:81</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector</a></div><div class="ttdoc">Templated 3D Vector derived from VectorSpace adding construction from 3 components, element access using x(), y() and z() member functions and the inner-product (dot-product) and cross product operators. </div><div class="ttdef"><b>Definition:</b> <a href="a09042_source.html#l00057">Vector.H:57</a></div></div>
+<div class="ttc" id="a00876_html_add65fc7bb62260f0f5144592e78ccdba"><div class="ttname"><a href="a00876.html#add65fc7bb62260f0f5144592e78ccdba">Foam::fvMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C() const </div><div class="ttdoc">Return cell centres as volVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05872_source.html#l00369">fvMeshGeometry.C:369</a></div></div>
+<div class="ttc" id="a00697_html_a10dc06ebbf1e2e3a6eca327491184e73"><div class="ttname"><a href="a00697.html#a10dc06ebbf1e2e3a6eca327491184e73">Foam::extendedCentredCellToCellStencil::collectData</a></div><div class="ttdeci">void collectData(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;fld, List&lt; List&lt; Type &gt; &gt; &amp;stencilFld) const </div><div class="ttdoc">Use map to get the data into stencil order. </div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00103">extendedCentredCellToCellStencil.H:103</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
+<div class="ttc" id="a00697_html"><div class="ttname"><a href="a00697.html">Foam::extendedCentredCellToCellStencil</a></div><div class="ttdef"><b>Definition:</b> <a href="a05806_source.html#l00050">extendedCentredCellToCellStencil.H:50</a></div></div>
+<div class="ttc" id="a05744_html"><div class="ttname"><a href="a05744.html">LeastSquaresVectors.H</a></div></div>
+<div class="ttc" id="a01289_html"><div class="ttname"><a href="a01289.html">Foam::fv::LeastSquaresVectors</a></div><div class="ttdoc">Least-squares gradient scheme vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a05744_source.html#l00058">LeastSquaresVectors.H:58</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

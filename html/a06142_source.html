@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_8ab94aa558c9b87721da8bbf3fb9229e.html">motionDiffusivity</a></li><li class="navelem"><a class="el" href="dir_9479d565b7e39d7e2d261626ab267bcb.html">inverseDistance</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_db0a2226cb14096abcebce6a1c584024.html">weighted</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">inverseDistanceDiffusivity.C</div>  </div>
+<div class="title">weighted.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06142.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,121 +121,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06143.html">inverseDistanceDiffusivity.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07177.html">patchWave.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07522.html">HashSet.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06089.html">surfaceInterpolate.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05151.html">zeroGradientFvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(inverseDistanceDiffusivity, 0);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        motionDiffusivity,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        inverseDistanceDiffusivity,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        Istream</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    );</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;Foam::inverseDistanceDiffusivity::inverseDistanceDiffusivity</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a01159.html#ad63de78532d2fdd34ba0c2e785358440">   51</a></span>&#160;(</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; mdData</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a02728.html">uniformDiffusivity</a>(mesh, mdData),</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    patchNames_(mdData)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a>();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a01159.html#aaa8429e8a747765108bf6f3704df2816">   65</a></span>&#160;<a class="code" href="a01159.html#aaa8429e8a747765108bf6f3704df2816">Foam::inverseDistanceDiffusivity::~inverseDistanceDiffusivity</a>()</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::scalarField&gt;</a> Foam::inverseDistanceDiffusivity::y()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="a00974.html">labelHashSet</a> patchSet(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<a class="code" href="a00149.html">boundaryMesh</a>().patchSet(patchNames_));</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span> (patchSet.size())</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a02608.html">tmp&lt;scalarField&gt;</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        (</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">new</span> <a class="code" href="a10675.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<a class="code" href="a01806.html">patchWave</a>(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(), patchSet, <span class="keyword">false</span>).<a class="code" href="a10675.html#a0bcfc66141be6a71979dc53e6008198e">distance</a>())</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        );</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> tmp&lt;scalarField&gt;(<span class="keyword">new</span> <a class="code" href="a10675.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().nCells(), 1.0));</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="a01159.html#a3ae44b28050c3aa494c1d8e18cf618c1">   89</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01159.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::inverseDistanceDiffusivity::correct</a>()</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="a00913.html">volScalarField</a> y_</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    (</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        (</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="stringliteral">&quot;y&quot;</span>,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        ),</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(),</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    );</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    y_.<a class="code" href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">internalField</a>() = <a class="code" href="a06933.html#afa8b67a0d5607da908ad92ed485e19e8">y</a>();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    y_.<a class="code" href="a00913.html#acaf6878ef900e593c4b20812f1b567d6">correctBoundaryConditions</a>();</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    faceDiffusivity_ = 1.0/<a class="code" href="a10709.html#addbc18784300dd0955a9bf79f8e2c43b">fvc::interpolate</a>(y_);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02728_html"><div class="ttname"><a href="a02728.html">Foam::uniformDiffusivity</a></div><div class="ttdoc">Uniform uniform finite volume mesh motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06159_source.html#l00049">uniformDiffusivity.H:49</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a06933_html_afa8b67a0d5607da908ad92ed485e19e8"><div class="ttname"><a href="a06933.html#afa8b67a0d5607da908ad92ed485e19e8">y</a></div><div class="ttdeci">scalar y</div><div class="ttdef"><b>Definition:</b> <a href="a06933_source.html#l00014">LISASMDCalcMethod1.H:14</a></div></div>
-<div class="ttc" id="a06143_html"><div class="ttname"><a href="a06143.html">inverseDistanceDiffusivity.H</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02940_html_a8f2ec7df0ad2ec79360a5d964f55de87"><div class="ttname"><a href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div><div class="ttdeci">Info&lt;&lt; &quot;Predicted p max-min : &quot;&lt;&lt; max(p).value()&lt;&lt; &quot; &quot;&lt;&lt; min(p).value()&lt;&lt; endl;rho==max(psi *p+alphal *rhol0+((alphav *psiv+alphal *psil)-psi)*pSat, rhoMin);#1&quot;/home/dm2/henry/OpenFOAM/OpenFOAM-dev/applications/solvers/multiphase/cavitatingFoam/alphavPsi.H&quot;1{alphav=max(min((rho-rholSat)/(rhovSat-rholSat), scalar(1)), scalar(0));alphal=1.0-alphav;Info&lt;&lt; &quot;max-min alphav: &quot;&lt;&lt; max(alphav).value()&lt;&lt; &quot; &quot;&lt;&lt; min(alphav).value()&lt;&lt; endl;psiModel-&gt; correct()</div><div class="ttdef"><b>Definition:</b> <a href="a02940_source.html#l00074">pEqn.H:74</a></div></div>
-<div class="ttc" id="a00913_html_a9536140d36d69bbac40496f6b817aa0a"><div class="ttname"><a href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">Foam::GeometricField::internalField</a></div><div class="ttdeci">InternalField &amp; internalField()</div><div class="ttdoc">Return internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00688">GeometricField.C:688</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a10675_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10675.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07912_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
-<div class="ttc" id="a01159_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a01159.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::inverseDistanceDiffusivity::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Correct the motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06142_source.html#l00089">inverseDistanceDiffusivity.C:89</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01806_html"><div class="ttname"><a href="a01806.html">Foam::patchWave</a></div><div class="ttdoc">Takes a set of patches to start MeshWave from. After construction holds distance at cells and distanc...</div><div class="ttdef"><b>Definition:</b> <a href="a07177_source.html#l00056">patchWave.H:56</a></div></div>
-<div class="ttc" id="a07177_html"><div class="ttname"><a href="a07177.html">patchWave.H</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a00149_html"><div class="ttname"><a href="a00149.html">Foam::boundaryMesh</a></div><div class="ttdoc">Addressing for all faces on surface of mesh. Can either be read from polyMesh or from triSurface...</div><div class="ttdef"><b>Definition:</b> <a href="a04723_source.html#l00059">boundaryMesh.H:59</a></div></div>
-<div class="ttc" id="a06089_html"><div class="ttname"><a href="a06089.html">surfaceInterpolate.H</a></div><div class="ttdoc">Surface Interpolation. </div></div>
-<div class="ttc" id="a10675_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00047">dimensionSets.H:47</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a05151_html"><div class="ttname"><a href="a05151.html">zeroGradientFvPatchFields.H</a></div></div>
-<div class="ttc" id="a00913_html_acaf6878ef900e593c4b20812f1b567d6"><div class="ttname"><a href="a00913.html#acaf6878ef900e593c4b20812f1b567d6">Foam::GeometricField::correctBoundaryConditions</a></div><div class="ttdeci">void correctBoundaryConditions()</div><div class="ttdoc">Correct boundary field. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00851">GeometricField.C:851</a></div></div>
-<div class="ttc" id="a00974_html"><div class="ttname"><a href="a00974.html">Foam::HashSet&lt; label, Hash&lt; label &gt; &gt;</a></div></div>
-<div class="ttc" id="a03875_html_a2f677c654c2b7f157710d334624b8800"><div class="ttname"><a href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a></div><div class="ttdeci">word timeName</div><div class="ttdef"><b>Definition:</b> <a href="a03875_source.html#l00003">getTimeIndex.H:3</a></div></div>
-<div class="ttc" id="a07522_html"><div class="ttname"><a href="a07522.html">HashSet.H</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10709_html_addbc18784300dd0955a9bf79f8e2c43b"><div class="ttname"><a href="a10709.html#addbc18784300dd0955a9bf79f8e2c43b">Foam::fvc::interpolate</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; interpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf, const surfaceScalarField &amp;faceFlux, Istream &amp;schemeData)</div><div class="ttdef"><b>Definition:</b> <a href="a06088_source.html#l00110">surfaceInterpolate.C:110</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a01159_html_aaa8429e8a747765108bf6f3704df2816"><div class="ttname"><a href="a01159.html#aaa8429e8a747765108bf6f3704df2816">Foam::inverseDistanceDiffusivity::~inverseDistanceDiffusivity</a></div><div class="ttdeci">virtual ~inverseDistanceDiffusivity()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06142_source.html#l00065">inverseDistanceDiffusivity.C:65</a></div></div>
-<div class="ttc" id="a10675_html_a0bcfc66141be6a71979dc53e6008198e"><div class="ttname"><a href="a10675.html#a0bcfc66141be6a71979dc53e6008198e">Foam::distance</a></div><div class="ttdeci">scalar distance(const vector &amp;p1, const vector &amp;p2)</div><div class="ttdef"><b>Definition:</b> <a href="a08133_source.html#l00012">curveTools.C:12</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06143.html">weighted.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#ae43f0c9fe19549bffca294ffc98e10c9">makeSurfaceInterpolationScheme</a>(weighted)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a06143_html"><div class="ttname"><a href="a06143.html">weighted.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10725_html_ae43f0c9fe19549bffca294ffc98e10c9"><div class="ttname"><a href="a10725.html#ae43f0c9fe19549bffca294ffc98e10c9">Foam::makeSurfaceInterpolationScheme</a></div><div class="ttdeci">makeSurfaceInterpolationScheme(cellCoBlended)</div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_71d8be77d4afdc69b08e3361ccc21108.html">quadraticLinearFit</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_5067335aa3a34104ac41befc6ecfb362.html">CentredFitScheme</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">quadraticLinearFitPolynomial.H</div>  </div>
+<div class="title">CentredFitData.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06071.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,98 +119,130 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::quadraticLinearFitPolynomial</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Quadratic/linear polynomial for interpolation fitting:</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">        quadratic normal to the face,</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">        linear in the plane of the face for consistency with 2nd-order Gauss.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    Can be used with the CentredFit scheme to create a quadratic surface</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    interpolation scheme</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef quadraticLinearFitPolynomial_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define quadraticLinearFitPolynomial_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08993.html">vector.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">                           Class quadraticLinearFitPolynomial Declaration</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a02037.html">   50</a></span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">class </span><a class="code" href="a02037.html">quadraticLinearFitPolynomial</a></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a02037.html#add43db75eb7f3015d19091b4033bf185">   56</a></span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">static</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02037.html#add43db75eb7f3015d19091b4033bf185">nTerms</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> dim)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            (</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                dim == 1 ? 3 :</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                dim == 2 ? 5 :</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                dim == 3 ? 7 : 0</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            );</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a02037.html#a42ccda6d304817a2e6b423f797eee8b0">   67</a></span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a02037.html#a42ccda6d304817a2e6b423f797eee8b0">addCoeffs</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            scalar* coeffs,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; d,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keyword">const</span> scalar weight,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> dim</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        )</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> curIdx = 0;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            coeffs[curIdx++] = weight;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            coeffs[curIdx++] = weight*d.<a class="code" href="a02776.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            coeffs[curIdx++] = weight*<a class="code" href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(d.<a class="code" href="a02776.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>());</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keywordflow">if</span> (dim &gt;= 2)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02776.html#a77c00b469d89c23bd35d2eb236140f70">y</a>();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02776.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>()*d.<a class="code" href="a02776.html#a77c00b469d89c23bd35d2eb236140f70">y</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">if</span> (dim == 3)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02776.html#ac72a74f7dde9500927f63515c3f0a2f3">z</a>();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                coeffs[curIdx++] = weight*d.<a class="code" href="a02776.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>()*d.<a class="code" href="a02776.html#ac72a74f7dde9500927f63515c3f0a2f3">z</a>();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02037_html_add43db75eb7f3015d19091b4033bf185"><div class="ttname"><a href="a02037.html#add43db75eb7f3015d19091b4033bf185">Foam::quadraticLinearFitPolynomial::nTerms</a></div><div class="ttdeci">static label nTerms(const direction dim)</div><div class="ttdef"><b>Definition:</b> <a href="a06071_source.html#l00056">quadraticLinearFitPolynomial.H:56</a></div></div>
-<div class="ttc" id="a02037_html_a42ccda6d304817a2e6b423f797eee8b0"><div class="ttname"><a href="a02037.html#a42ccda6d304817a2e6b423f797eee8b0">Foam::quadraticLinearFitPolynomial::addCoeffs</a></div><div class="ttdeci">static void addCoeffs(scalar *coeffs, const vector &amp;d, const scalar weight, const direction dim)</div><div class="ttdef"><b>Definition:</b> <a href="a06071_source.html#l00067">quadraticLinearFitPolynomial.H:67</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02776_html_a77c00b469d89c23bd35d2eb236140f70"><div class="ttname"><a href="a02776.html#a77c00b469d89c23bd35d2eb236140f70">Foam::Vector::y</a></div><div class="ttdeci">const Cmpt &amp; y() const </div><div class="ttdef"><b>Definition:</b> <a href="a08994_source.html#l00071">VectorI.H:71</a></div></div>
-<div class="ttc" id="a02776_html_aeb7dc4a97968c543f58f9c7082e55757"><div class="ttname"><a href="a02776.html#aeb7dc4a97968c543f58f9c7082e55757">Foam::Vector::x</a></div><div class="ttdeci">const Cmpt &amp; x() const </div><div class="ttdef"><b>Definition:</b> <a href="a08994_source.html#l00065">VectorI.H:65</a></div></div>
-<div class="ttc" id="a02776_html_ac72a74f7dde9500927f63515c3f0a2f3"><div class="ttname"><a href="a02776.html#ac72a74f7dde9500927f63515c3f0a2f3">Foam::Vector::z</a></div><div class="ttdeci">const Cmpt &amp; z() const </div><div class="ttdef"><b>Definition:</b> <a href="a08994_source.html#l00077">VectorI.H:77</a></div></div>
-<div class="ttc" id="a10675_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07819_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
-<div class="ttc" id="a02037_html"><div class="ttname"><a href="a02037.html">Foam::quadraticLinearFitPolynomial</a></div><div class="ttdoc">Quadratic/linear polynomial for interpolation fitting: quadratic normal to the face, linear in the plane of the face for consistency with 2nd-order Gauss. </div><div class="ttdef"><b>Definition:</b> <a href="a06071_source.html#l00050">quadraticLinearFitPolynomial.H:50</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a08993_html"><div class="ttname"><a href="a08993.html">vector.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06072.html">CentredFitData.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05609.html">volFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08431.html">SVD.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08677.html">syncTools.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05825.html">extendedCentredCellToFaceStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Polynomial&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a00257.html#a1b17e352fd95535726ddfb6e8bf0fdd5">Foam::CentredFitData&lt;Polynomial&gt;::CentredFitData</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="a00257.html#a1b17e352fd95535726ddfb6e8bf0fdd5">   37</a></span>&#160;(</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> extendedCentredCellToFaceStencil&amp; stencil,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> scalar linearLimitFactor,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> scalar centralWeight</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a00813.html">FitData</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    &lt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        CentredFitData&lt;Polynomial&gt;,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        extendedCentredCellToFaceStencil,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a01928.html">Polynomial</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    &gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>, stencil, <span class="keyword">true</span>, linearLimitFactor, centralWeight</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    ),</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    coeffs_(mesh.nFaces())</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Contructing CentredFitData&lt;Polynomial&gt;&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    calcFit();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;CentredFitData&lt;Polynomial&gt;::CentredFitData() :&quot;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Finished constructing polynomialFit data&quot;</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Polynomial&gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00257.html">Foam::CentredFitData&lt;Polynomial&gt;::calcFit</a>()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh = this-&gt;<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Get the cell/face centres in stencil order.</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Centred face stencils no good for triangles or tets.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Need bigger stencils</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="a01364.html">List&lt;List&lt;point&gt;</a> &gt; stencilPoints(mesh.<a class="code" href="a01967.html#a9be088de373a98524a153de7da0e92e8">nFaces</a>());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    this-&gt;stencil().collectData(mesh.<a class="code" href="a00876.html#add65fc7bb62260f0f5144592e78ccdba">C</a>(), stencilPoints);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// find the fit coefficients for every face in the mesh</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; w = mesh.surfaceInterpolation::weights();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> facei = 0; facei &lt; mesh.<a class="code" href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">nInternalFaces</a>(); facei++)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a00813.html">FitData</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        &lt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            CentredFitData&lt;Polynomial&gt;,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            extendedCentredCellToFaceStencil,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <a class="code" href="a01928.html">Polynomial</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        &gt;::calcFit(coeffs_[facei], stencilPoints[facei], w[facei], facei);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">const</span> surfaceScalarField::GeometricBoundaryField&amp; bw = w.<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(bw, <a class="code" href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#aed0dde711681772685ae119621cee1d3">fvsPatchScalarField</a>&amp; pw = bw[<a class="code" href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">if</span> (pw.coupled())</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> facei = pw.patch().start();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pw, i)</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                FitData</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                &lt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    CentredFitData&lt;Polynomial&gt;,</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    extendedCentredCellToFaceStencil,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                    Polynomial</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                &gt;::calcFit(coeffs_[facei], stencilPoints[facei], pw[i], facei);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                facei++;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a01928_html"><div class="ttname"><a href="a01928.html">Foam::Polynomial</a></div><div class="ttdoc">Polynomial templated on size (order): </div><div class="ttdef"><b>Definition:</b> <a href="a08852_source.html#l00063">Polynomial.H:63</a></div></div>
+<div class="ttc" id="a04316_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04316_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a05609_html"><div class="ttname"><a href="a05609.html">volFields.H</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt;</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a10725_html_aed0dde711681772685ae119621cee1d3"><div class="ttname"><a href="a10725.html#aed0dde711681772685ae119621cee1d3">Foam::fvsPatchScalarField</a></div><div class="ttdeci">fvsPatchField&lt; scalar &gt; fvsPatchScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05600_source.html#l00043">fvsPatchFieldsFwd.H:43</a></div></div>
+<div class="ttc" id="a00257_html_a1b17e352fd95535726ddfb6e8bf0fdd5"><div class="ttname"><a href="a00257.html#a1b17e352fd95535726ddfb6e8bf0fdd5">Foam::CentredFitData::CentredFitData</a></div><div class="ttdeci">CentredFitData(const fvMesh &amp;mesh, const extendedCentredCellToFaceStencil &amp;stencil, const scalar linearLimitFactor, const scalar centralWeight)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a06071_source.html#l00037">CentredFitData.C:37</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a05825_html"><div class="ttname"><a href="a05825.html">extendedCentredCellToFaceStencil.H</a></div></div>
+<div class="ttc" id="a08431_html"><div class="ttname"><a href="a08431.html">SVD.H</a></div></div>
+<div class="ttc" id="a06072_html"><div class="ttname"><a href="a06072.html">CentredFitData.H</a></div></div>
+<div class="ttc" id="a08677_html"><div class="ttname"><a href="a08677.html">syncTools.H</a></div></div>
+<div class="ttc" id="a00876_html_add65fc7bb62260f0f5144592e78ccdba"><div class="ttname"><a href="a00876.html#add65fc7bb62260f0f5144592e78ccdba">Foam::fvMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C() const </div><div class="ttdoc">Return cell centres as volVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05872_source.html#l00369">fvMeshGeometry.C:369</a></div></div>
+<div class="ttc" id="a00921_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00686">GeometricField.C:686</a></div></div>
+<div class="ttc" id="a00813_html"><div class="ttname"><a href="a00813.html">Foam::FitData</a></div><div class="ttdoc">Data for the upwinded and centred polynomial fit interpolation schemes. The linearCorrection_ determi...</div><div class="ttdef"><b>Definition:</b> <a href="a06085_source.html#l00054">FitData.H:54</a></div></div>
+<div class="ttc" id="a00257_html"><div class="ttname"><a href="a00257.html">Foam::CentredFitData</a></div><div class="ttdoc">Data for the quadratic fit correction interpolation scheme. </div><div class="ttdef"><b>Definition:</b> <a href="a06072_source.html#l00051">CentredFitData.H:51</a></div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a01967_html_aa1eec60bd258a70018b8ffda0dced7bb"><div class="ttname"><a href="a01967.html#aa1eec60bd258a70018b8ffda0dced7bb">Foam::primitiveMesh::nInternalFaces</a></div><div class="ttdeci">label nInternalFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00082">primitiveMeshI.H:82</a></div></div>
+<div class="ttc" id="a01967_html_a9be088de373a98524a153de7da0e92e8"><div class="ttname"><a href="a01967.html#a9be088de373a98524a153de7da0e92e8">Foam::primitiveMesh::nFaces</a></div><div class="ttdeci">label nFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00088">primitiveMeshI.H:88</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

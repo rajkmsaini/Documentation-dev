@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ff51fe012a37fcf6e2c3724d940b7d0e.html">Pstream</a></li><li class="navelem"><a class="el" href="dir_f35db020dd38cae7d6409f3bc98df172.html">mpi</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_5fa51d5799d140e0f60107297bff2985.html">utilities</a></li><li class="navelem"><a class="el" href="dir_eba23c4c47ff1bb432978f1e9372441e.html">Q</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">PstreamGlobals.C</div>  </div>
+<div class="title">QFunctionObject.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09372.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,76 +119,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09373.html">PstreamGlobals.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// Outstanding non-blocking operations.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span>DynamicList&lt;MPI_Request&gt; <a class="code" href="a10744.html#aefcac622ad12808e3925c433896cae3d">PstreamGlobals::outstandingRequests_</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">//int PstreamGlobals::nRequests_ = 0;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// Free&#39;d non-blocking operations.</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment"></span><span class="comment">//DynamicList&lt;label&gt; PstreamGlobals::freedRequests_;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// Max outstanding message tag operations.</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"></span><span class="keywordtype">int</span> PstreamGlobals::nTags_ = 0;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// Free&#39;d message tags</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment"></span>DynamicList&lt;int&gt; <a class="code" href="a10744.html#a4d2e53db42bf23f6c63e6b1369570712">PstreamGlobals::freedTags_</a>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// Allocated communicators.</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"></span>DynamicList&lt;MPI_Comm&gt; <a class="code" href="a10744.html#a8bbc4afc0be3ae9174b77e99feeea54a">PstreamGlobals::MPICommunicators_</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;DynamicList&lt;MPI_Group&gt; <a class="code" href="a10744.html#a631efd0af43901bff9fc49a048a15338">PstreamGlobals::MPIGroups_</a>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10744.html#a4230dc822174a738fad11fe164c871fd">PstreamGlobals::checkCommunicator</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a10744.html#a4230dc822174a738fad11fe164c871fd">   68</a></span>&#160;(</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> comm,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> otherProcNo</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;)</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    (</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        comm &lt; 0</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;     || comm &gt;= PstreamGlobals::MPICommunicators_.size()</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    )</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        (</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="stringliteral">&quot;PstreamGlobals::checkCommunicator(const label, const label)&quot;</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;otherProcNo:&quot;</span> &lt;&lt; otherProcNo &lt;&lt; <span class="stringliteral">&quot; : illegal communicator &quot;</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            &lt;&lt; comm &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Communicator should be within range 0..&quot;</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            &lt;&lt; PstreamGlobals::MPICommunicators_.size()-1 &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10744_html_a4230dc822174a738fad11fe164c871fd"><div class="ttname"><a href="a10744.html#a4230dc822174a738fad11fe164c871fd">Foam::PstreamGlobals::checkCommunicator</a></div><div class="ttdeci">void checkCommunicator(const label, const label procNo)</div><div class="ttdef"><b>Definition:</b> <a href="a09372_source.html#l00068">PstreamGlobals.C:68</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a10744_html_aefcac622ad12808e3925c433896cae3d"><div class="ttname"><a href="a10744.html#aefcac622ad12808e3925c433896cae3d">Foam::PstreamGlobals::outstandingRequests_</a></div><div class="ttdeci">DynamicList&lt; MPI_Request &gt; outstandingRequests_</div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10744_html_a4d2e53db42bf23f6c63e6b1369570712"><div class="ttname"><a href="a10744.html#a4d2e53db42bf23f6c63e6b1369570712">Foam::PstreamGlobals::freedTags_</a></div><div class="ttdeci">DynamicList&lt; int &gt; freedTags_</div></div>
-<div class="ttc" id="a10744_html_a631efd0af43901bff9fc49a048a15338"><div class="ttname"><a href="a10744.html#a631efd0af43901bff9fc49a048a15338">Foam::PstreamGlobals::MPIGroups_</a></div><div class="ttdeci">DynamicList&lt; MPI_Group &gt; MPIGroups_</div></div>
-<div class="ttc" id="a09373_html"><div class="ttname"><a href="a09373.html">PstreamGlobals.H</a></div></div>
-<div class="ttc" id="a10744_html_a8bbc4afc0be3ae9174b77e99feeea54a"><div class="ttname"><a href="a10744.html#a8bbc4afc0be3ae9174b77e99feeea54a">Foam::PstreamGlobals::MPICommunicators_</a></div><div class="ttdeci">DynamicList&lt; MPI_Comm &gt; MPICommunicators_</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::QFunctionObject</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    FunctionObject wrapper around Q to allow it to be created</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    via the functions entry within controlDict.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    QFunctionObject.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef QFunctionObject_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define QFunctionObject_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09370.html">Q.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07741.html">OutputFilterFunctionObject.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a10725.html#a63db2f24b4f49d3a98c902f5c86bd65e">   46</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a01752.html">OutputFilterFunctionObject&lt;Q&gt;</a> <a class="code" href="a10725.html#a63db2f24b4f49d3a98c902f5c86bd65e">QFunctionObject</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a07741_html"><div class="ttname"><a href="a07741.html">OutputFilterFunctionObject.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a09370_html"><div class="ttname"><a href="a09370.html">Q.H</a></div></div>
+<div class="ttc" id="a10725_html_a63db2f24b4f49d3a98c902f5c86bd65e"><div class="ttname"><a href="a10725.html#a63db2f24b4f49d3a98c902f5c86bd65e">Foam::QFunctionObject</a></div><div class="ttdeci">OutputFilterFunctionObject&lt; Q &gt; QFunctionObject</div><div class="ttdoc">FunctionObject wrapper around Q to allow it to be created via the functions entry within controlDict...</div><div class="ttdef"><b>Definition:</b> <a href="a09372_source.html#l00046">QFunctionObject.H:46</a></div></div>
+<div class="ttc" id="a01752_html"><div class="ttname"><a href="a01752.html">Foam::OutputFilterFunctionObject</a></div><div class="ttdoc">A functionObject wrapper around OutputFilter to allow them to be created via the functions entry with...</div><div class="ttdef"><b>Definition:</b> <a href="a07741_source.html#l00058">OutputFilterFunctionObject.H:58</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_3e50f45338116b169052b428016851aa.html">primitives</a></li><li class="navelem"><a class="el" href="dir_6ef5fbba1c02603637a533e2f686aa62.html">Vector</a></li><li class="navelem"><a class="el" href="dir_6222066c6900111c7783e46ac78461f5.html">lists</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_3e50f45338116b169052b428016851aa.html">primitives</a></li><li class="navelem"><a class="el" href="dir_ce1ee507886310df0e74ee2e624fbc88.html">strings</a></li><li class="navelem"><a class="el" href="dir_37e5616194788bea54b108232e896e64.html">word</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">vectorList.H</div>  </div>
+<div class="title">wordIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08987.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,47 +119,102 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::vectorUList</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A UList of vectors.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Foam::vectorList</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    A List of vectors.</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08985.html">word.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07775.html">IOstreams.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a02869.html#a41e3fa12b6dd3bf7728988f3a9b6fe89">   31</a></span>&#160;<a class="code" href="a02869.html#a69756ab4403999300e64ad46f7f65638">Foam::word::word</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a02455.html">string</a>()</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    is &gt;&gt; *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef vectorList_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define vectorList_H</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08993.html">vector.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07587.html">List.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a10675.html#a7daac7c22f468f7b71433bdb8aeda675">   48</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a02720.html">UList&lt;vector&gt;</a> <a class="code" href="a10675.html#a7daac7c22f468f7b71433bdb8aeda675">vectorUList</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a10675.html#a71a8a9ecd1d9f82f943b2479f9ab8910">   50</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a01355.html">List&lt;vector&gt;</a> <a class="code" href="a10675.html#a71a8a9ecd1d9f82f943b2479f9ab8910">vectorList</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a7daac7c22f468f7b71433bdb8aeda675"><div class="ttname"><a href="a10675.html#a7daac7c22f468f7b71433bdb8aeda675">Foam::vectorUList</a></div><div class="ttdeci">UList&lt; vector &gt; vectorUList</div><div class="ttdoc">A UList of vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a08987_source.html#l00048">vectorList.H:48</a></div></div>
-<div class="ttc" id="a07587_html"><div class="ttname"><a href="a07587.html">List.H</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a71a8a9ecd1d9f82f943b2479f9ab8910"><div class="ttname"><a href="a10675.html#a71a8a9ecd1d9f82f943b2479f9ab8910">Foam::vectorList</a></div><div class="ttdeci">List&lt; vector &gt; vectorList</div><div class="ttdoc">A List of vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a08987_source.html#l00050">vectorList.H:50</a></div></div>
-<div class="ttc" id="a02720_html"><div class="ttname"><a href="a02720.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00060">HashTable.H:60</a></div></div>
-<div class="ttc" id="a08993_html"><div class="ttname"><a href="a08993.html">vector.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a10725.html#a36124a3b4514a9af7a8ec2aa15be8e90">   39</a></span>&#160;<a class="code" href="a01199.html">Foam::Istream</a>&amp; <a class="code" href="a10725.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a>(<a class="code" href="a01199.html">Istream</a>&amp; is, <a class="code" href="a02869.html">word</a>&amp; w)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a02619.html">token</a> t(is);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span> (!t.<a class="code" href="a02619.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        is.<a class="code" href="a01185.html#a638b33dd25b3cd8ea7e846f04fd6a6a3">setBad</a>();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">return</span> is;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (t.<a class="code" href="a02619.html#aff8351bf74c7880f1403c24dec1f82cd">isWord</a>())</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        w = t.<a class="code" href="a02619.html#aac98185f2d0784f92f271b8fea4e71ad">wordToken</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t.<a class="code" href="a02619.html#a3ea0b05483601e9acd735f48ccf7ed80">isString</a>())</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="comment">// try a bit harder and convert string to word</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        w = t.<a class="code" href="a02619.html#af4afc65304c066f9e19b49fdd9ad4792">stringToken</a>();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        string::stripInvalid&lt;word&gt;(w);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">// flag empty strings and bad chars as an error</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">if</span> (w.empty() || w.size() != t.<a class="code" href="a02619.html#af4afc65304c066f9e19b49fdd9ad4792">stringToken</a>().size())</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            is.<a class="code" href="a01185.html#a638b33dd25b3cd8ea7e846f04fd6a6a3">setBad</a>();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <a class="code" href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a>(is)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;wrong token type - expected word, found &quot;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <span class="stringliteral">&quot;non-word characters &quot;</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                &lt;&lt; t.<a class="code" href="a02619.html#a149cd2aba34f4fae37e055aae625c957">info</a>()</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordflow">return</span> is;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        is.<a class="code" href="a01185.html#a638b33dd25b3cd8ea7e846f04fd6a6a3">setBad</a>();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a>(is)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;wrong token type - expected word, found &quot;</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            &lt;&lt; t.<a class="code" href="a02619.html#a149cd2aba34f4fae37e055aae625c957">info</a>()</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> is;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Check state of IOstream</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    is.<a class="code" href="a01185.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;Istream&amp; operator&gt;&gt;(Istream&amp;, word&amp;)&quot;</span>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> is;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="a10725.html#a5030467a99a03f6884983a910bd33cdf">   89</a></span>&#160;<a class="code" href="a01736.html">Foam::Ostream</a>&amp; <a class="code" href="a10725.html#ae86a76a63deefbe1a4490c873ad8e1b2">Foam::operator&lt;&lt;</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os, <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; w)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    os.<a class="code" href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a>(w);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    os.<a class="code" href="a01185.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;Ostream&amp; operator&lt;&lt;(Ostream&amp;, const word&amp;)&quot;</span>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02619_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a02619.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::token::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00188">tokenI.H:188</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02619_html"><div class="ttname"><a href="a02619.html">Foam::token</a></div><div class="ttdoc">A token holds items read from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00067">token.H:67</a></div></div>
+<div class="ttc" id="a02619_html_a3ea0b05483601e9acd735f48ccf7ed80"><div class="ttname"><a href="a02619.html#a3ea0b05483601e9acd735f48ccf7ed80">Foam::token::isString</a></div><div class="ttdeci">bool isString() const </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00244">tokenI.H:244</a></div></div>
+<div class="ttc" id="a07775_html"><div class="ttname"><a href="a07775.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
+<div class="ttc" id="a07724_html_ace9d7789841cd28051f24d4eea0688f9"><div class="ttname"><a href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a></div><div class="ttdeci">#define FatalIOErrorInFunction(ios)</div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00331">error.H:331</a></div></div>
+<div class="ttc" id="a10725_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
+<div class="ttc" id="a02619_html_af4afc65304c066f9e19b49fdd9ad4792"><div class="ttname"><a href="a02619.html#af4afc65304c066f9e19b49fdd9ad4792">Foam::token::stringToken</a></div><div class="ttdeci">const string &amp; stringToken() const </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00249">tokenI.H:249</a></div></div>
+<div class="ttc" id="a02455_html"><div class="ttname"><a href="a02455.html">Foam::string</a></div><div class="ttdoc">A class for handling character strings derived from std::string. </div><div class="ttdef"><b>Definition:</b> <a href="a08977_source.html#l00074">string.H:74</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a01185_html_a638b33dd25b3cd8ea7e846f04fd6a6a3"><div class="ttname"><a href="a01185.html#a638b33dd25b3cd8ea7e846f04fd6a6a3">Foam::IOstream::setBad</a></div><div class="ttdeci">void setBad()</div><div class="ttdoc">Set stream to be bad. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00487">IOstream.H:487</a></div></div>
+<div class="ttc" id="a01736_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
+<div class="ttc" id="a02619_html_aac98185f2d0784f92f271b8fea4e71ad"><div class="ttname"><a href="a02619.html#aac98185f2d0784f92f271b8fea4e71ad">Foam::token::wordToken</a></div><div class="ttdeci">const word &amp; wordToken() const </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00226">tokenI.H:226</a></div></div>
+<div class="ttc" id="a10725_html_a44f398e0525f8d7f48cead029868d845"><div class="ttname"><a href="a10725.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a></div><div class="ttdeci">Istream &amp; operator&gt;&gt;(Istream &amp;, edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04954_source.html#l00141">edgeMeshIO.C:141</a></div></div>
+<div class="ttc" id="a08985_html"><div class="ttname"><a href="a08985.html">word.H</a></div></div>
+<div class="ttc" id="a02619_html_a149cd2aba34f4fae37e055aae625c957"><div class="ttname"><a href="a02619.html#a149cd2aba34f4fae37e055aae625c957">Foam::token::info</a></div><div class="ttdeci">InfoProxy&lt; token &gt; info() const </div><div class="ttdoc">Return info proxy. </div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00372">token.H:372</a></div></div>
+<div class="ttc" id="a02619_html_aff8351bf74c7880f1403c24dec1f82cd"><div class="ttname"><a href="a02619.html#aff8351bf74c7880f1403c24dec1f82cd">Foam::token::isWord</a></div><div class="ttdeci">bool isWord() const </div><div class="ttdef"><b>Definition:</b> <a href="a07826_source.html#l00221">tokenI.H:221</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a02869_html_a69756ab4403999300e64ad46f7f65638"><div class="ttname"><a href="a02869.html#a69756ab4403999300e64ad46f7f65638">Foam::word::word</a></div><div class="ttdeci">word()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a08986_source.html#l00061">wordI.H:61</a></div></div>
+<div class="ttc" id="a10725_html_ae86a76a63deefbe1a4490c873ad8e1b2"><div class="ttname"><a href="a10725.html#ae86a76a63deefbe1a4490c873ad8e1b2">Foam::operator&lt;&lt;</a></div><div class="ttdeci">Ostream &amp; operator&lt;&lt;(Ostream &amp;, const edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04954_source.html#l00130">edgeMeshIO.C:130</a></div></div>
+<div class="ttc" id="a01185_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01185.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07779_source.html#l00092">IOstream.C:92</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

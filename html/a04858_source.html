@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_1dcc9f8d039401a5088c21c8f851d182.html">polyTopoChange</a></li><li class="navelem"><a class="el" href="dir_312178702b93695831f6550a8adac170.html">polyTopoChange</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_1dcc9f8d039401a5088c21c8f851d182.html">polyTopoChange</a></li><li class="navelem"><a class="el" href="dir_584d9b59e7ac00254d073f95161c4be3.html">attachPolyTopoChanger</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">removeCells.H</div>  </div>
+<div class="title">attachPolyTopoChanger.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04858.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,127 +119,140 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::removeCells</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Given list of cells to remove insert all the topology changes.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    Works in two passes:</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    - get faces that will become boundary faces</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    - given these faces and the patches they have to go into make the</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">      changes.</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    removeCells.C</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifndef removeCells_H</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define removeCells_H</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08835.html">labelList.H</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07813.html">typeInfo.H</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04859.html">attachPolyTopoChanger.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04885.html">polyTopoChange.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;Foam::attachPolyTopoChanger::attachPolyTopoChanger</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00082.html#a140ecb89f67ba6a2e34214c98a7291c1">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01179.html">IOobject</a>&amp; io,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a01916.html">polyMesh</a>&amp; mesh</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a01938.html">polyTopoChanger</a>(io, mesh)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;Foam::attachPolyTopoChanger::attachPolyTopoChanger</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00082.html#aa99c21af88db200fe4511152abb3471b">   43</a></span>&#160;(</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a01916.html">polyMesh</a>&amp; mesh</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a01938.html">polyTopoChanger</a>(mesh)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// Forward declaration of classes</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span>polyMesh;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span>polyTopoChange;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span>mapPolyMesh;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">                           Class removeCells Declaration</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a02144.html">   59</a></span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">class </span><a class="code" href="a02144.html">removeCells</a></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//- Reference to mesh</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; mesh_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Whether or not to synchronize parallel case.</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">bool</span> syncPar_;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">//- Attach mesh</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a00082.html#a655f9a7493e609affecc9d220fb2a843">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00082.html#a655f9a7493e609affecc9d220fb2a843">Foam::attachPolyTopoChanger::attach</a>(<span class="keyword">const</span> <span class="keywordtype">bool</span> removeEmptyPatches)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;void attachPolyTopoChanger::attach(): &quot;</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Attaching mesh&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// Save current file instance</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a> oldInst = <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#a8a91e85dc9825a7ae05720d4e7b48f2a">facesInstance</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Execute all polyMeshModifiers</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a01938.html#ab42e5233705f618d6994589102b1103c">changeMesh</a>(<span class="keyword">false</span>);  <span class="comment">// no inflation</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a> <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a> = <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#aeda8ddd9e2f395926055a900108e6692">oldPoints</a>();</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//- Decrease count of elements of f</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> uncount</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        (</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; <a class="code" href="a03883.html#a888be93833ac7a23170555c69c690288">f</a>,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <a class="code" href="a01355.html">labelList</a>&amp; nUsage</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        );</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a02144.html#a158ce850ab8020701357505f0581a302">ClassName</a>(<span class="stringliteral">&quot;removeCells&quot;</span>);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//- Construct from mesh. syncPar: do parallel synchronization.</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a02144.html#a809438fc5de47e053ed361a5e01aaf83">removeCells</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>, <span class="keyword">const</span> <span class="keywordtype">bool</span> syncPar = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">// Topology changes</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#a3693c648bea2e99054cbbb75d4bf4e4d">movePoints</a>(p);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Clearing mesh.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (removeEmptyPatches)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">// Re-do the boundary patches, removing the ones with zero size</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01910.html">polyBoundaryMesh</a>&amp; oldPatches = <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="a01364.html">List&lt;polyPatch*&gt;</a> newPatches(oldPatches.<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>());</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nNewPatches = 0;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(oldPatches, patchI)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">if</span> (oldPatches[patchI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>())</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                newPatches[nNewPatches] = oldPatches[patchI].<a class="code" href="a01179.html#a4709e9cad52d9b499879bbcb101b6453">clone</a></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                (</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                    <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>(),</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                    nNewPatches,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                    oldPatches[patchI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>(),</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                    oldPatches[patchI].start()</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                ).ptr();</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="comment">//- Get labels of exposed faces.</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="comment">//  These are</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="comment">//  - internal faces that become boundary faces</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="comment">//  - coupled faces that become uncoupled (since one of the sides</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="comment">//    gets deleted)</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <a class="code" href="a01355.html">labelList</a> <a class="code" href="a02144.html#a9ea4361fa1840908fb3312415cec8ff1">getExposedFaces</a>(<span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; cellsToRemove) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="comment">//- Play commands into polyTopoChange to remove cells.</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="comment">//  patchIDs is for every element in facesToExpose (see above) the</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <span class="comment">//  patch it has to go into. This cannot be a coupled patch!</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="keywordtype">void</span> <a class="code" href="a02144.html#a90dfb3748798e10bc8e79a836ef766f4">setRefinement</a></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            (</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; cellsToRemove,</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; facesToExpose,</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01355.html">labelList</a>&amp; patchIDs,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                <a class="code" href="a01926.html">polyTopoChange</a>&amp;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                nNewPatches++;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                    <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Removing zero-sized patch &quot;</span> &lt;&lt; patchI</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                        &lt;&lt; <span class="stringliteral">&quot; named &quot;</span> &lt;&lt; oldPatches[patchI].<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        newPatches.setSize(nNewPatches);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#acc2134c36adb97b988d5efc383a7f9f0">removeBoundary</a>();</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#aa313cf2af77c173041552ecd8f4a8c69">addPatches</a>(newPatches);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a02144.html#ad57565956fd4064299f4bd3c4eebb1d4">  115</a></span>&#160;            <span class="comment">//- Force recalculation of locally stored data on topological change</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keywordtype">void</span> <a class="code" href="a02144.html#ad57565956fd4064299f4bd3c4eebb1d4">updateMesh</a>(<span class="keyword">const</span> <a class="code" href="a01422.html">mapPolyMesh</a>&amp;)</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            {}</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;};</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">// Reset the file instance to overwrite the original mesh</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01916.html#add9813891a074bebd77384af1717b0bf">setInstance</a>(oldInst);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;void attachPolyTopoChanger::attach(): &quot;</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Finished attaching mesh&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">mesh_</a>.<a class="code" href="a01967.html#ac739af358952a81ae509ef75becbecf5">checkMesh</a>();</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02144_html_a9ea4361fa1840908fb3312415cec8ff1"><div class="ttname"><a href="a02144.html#a9ea4361fa1840908fb3312415cec8ff1">Foam::removeCells::getExposedFaces</a></div><div class="ttdeci">labelList getExposedFaces(const labelList &amp;cellsToRemove) const </div><div class="ttdoc">Get labels of exposed faces. </div><div class="ttdef"><b>Definition:</b> <a href="a04857_source.html#l00073">removeCells.C:73</a></div></div>
-<div class="ttc" id="a08835_html"><div class="ttname"><a href="a08835.html">labelList.H</a></div></div>
-<div class="ttc" id="a02144_html_ad57565956fd4064299f4bd3c4eebb1d4"><div class="ttname"><a href="a02144.html#ad57565956fd4064299f4bd3c4eebb1d4">Foam::removeCells::updateMesh</a></div><div class="ttdeci">void updateMesh(const mapPolyMesh &amp;)</div><div class="ttdoc">Force recalculation of locally stored data on topological change. </div><div class="ttdef"><b>Definition:</b> <a href="a04858_source.html#l00115">removeCells.H:115</a></div></div>
-<div class="ttc" id="a01422_html"><div class="ttname"><a href="a01422.html">Foam::mapPolyMesh</a></div><div class="ttdoc">Class containing mesh-to-mesh mapping information after a change in polyMesh topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08568_source.html#l00158">mapPolyMesh.H:158</a></div></div>
-<div class="ttc" id="a02144_html"><div class="ttname"><a href="a02144.html">Foam::removeCells</a></div><div class="ttdoc">Given list of cells to remove insert all the topology changes. </div><div class="ttdef"><b>Definition:</b> <a href="a04858_source.html#l00059">removeCells.H:59</a></div></div>
-<div class="ttc" id="a02144_html_a90dfb3748798e10bc8e79a836ef766f4"><div class="ttname"><a href="a02144.html#a90dfb3748798e10bc8e79a836ef766f4">Foam::removeCells::setRefinement</a></div><div class="ttdeci">void setRefinement(const labelList &amp;cellsToRemove, const labelList &amp;facesToExpose, const labelList &amp;patchIDs, polyTopoChange &amp;) const </div><div class="ttdoc">Play commands into polyTopoChange to remove cells. </div><div class="ttdef"><b>Definition:</b> <a href="a04857_source.html#l00179">removeCells.C:179</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a07813_html"><div class="ttname"><a href="a07813.html">typeInfo.H</a></div></div>
-<div class="ttc" id="a02144_html_a158ce850ab8020701357505f0581a302"><div class="ttname"><a href="a02144.html#a158ce850ab8020701357505f0581a302">Foam::removeCells::ClassName</a></div><div class="ttdeci">ClassName(&quot;removeCells&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a01926_html"><div class="ttname"><a href="a01926.html">Foam::polyTopoChange</a></div><div class="ttdoc">Direct mesh changes based on v1.3 polyTopoChange syntax. </div><div class="ttdef"><b>Definition:</b> <a href="a04846_source.html#l00097">polyTopoChange.H:97</a></div></div>
-<div class="ttc" id="a03883_html_a888be93833ac7a23170555c69c690288"><div class="ttname"><a href="a03883.html#a888be93833ac7a23170555c69c690288">f</a></div><div class="ttdeci">labelList f(nPoints)</div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a02144_html_a809438fc5de47e053ed361a5e01aaf83"><div class="ttname"><a href="a02144.html#a809438fc5de47e053ed361a5e01aaf83">Foam::removeCells::removeCells</a></div><div class="ttdeci">removeCells(const polyMesh &amp;mesh, const bool syncPar=true)</div><div class="ttdoc">Construct from mesh. syncPar: do parallel synchronization. </div><div class="ttdef"><b>Definition:</b> <a href="a04857_source.html#l00060">removeCells.C:60</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a04885_html"><div class="ttname"><a href="a04885.html">polyTopoChange.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a01910_html"><div class="ttname"><a href="a01910.html">Foam::polyBoundaryMesh</a></div><div class="ttdoc">Foam::polyBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08626_source.html#l00060">polyBoundaryMesh.H:60</a></div></div>
+<div class="ttc" id="a04859_html"><div class="ttname"><a href="a04859.html">attachPolyTopoChanger.H</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a01916_html_add9813891a074bebd77384af1717b0bf"><div class="ttname"><a href="a01916.html#add9813891a074bebd77384af1717b0bf">Foam::polyMesh::setInstance</a></div><div class="ttdeci">void setInstance(const fileName &amp;)</div><div class="ttdoc">Set the instance for mesh files. </div><div class="ttdef"><b>Definition:</b> <a href="a08638_source.html#l00032">polyMeshIO.C:32</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a02031_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">Foam::PtrList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the PtrList. </div><div class="ttdef"><b>Definition:</b> <a href="a07656_source.html#l00032">PtrListI.H:32</a></div></div>
+<div class="ttc" id="a01916_html_acc2134c36adb97b988d5efc383a7f9f0"><div class="ttname"><a href="a01916.html#acc2134c36adb97b988d5efc383a7f9f0">Foam::polyMesh::removeBoundary</a></div><div class="ttdeci">void removeBoundary()</div><div class="ttdoc">Remove boundary patches. </div><div class="ttdef"><b>Definition:</b> <a href="a08635_source.html#l00036">polyMeshClear.C:36</a></div></div>
+<div class="ttc" id="a01938_html"><div class="ttname"><a href="a01938.html">Foam::polyTopoChanger</a></div><div class="ttdoc">List of mesh modifiers defining the mesh dynamics. </div><div class="ttdef"><b>Definition:</b> <a href="a04911_source.html#l00056">polyTopoChanger.H:56</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a01967_html_ac739af358952a81ae509ef75becbecf5"><div class="ttname"><a href="a01967.html#ac739af358952a81ae509ef75becbecf5">Foam::primitiveMesh::checkMesh</a></div><div class="ttdeci">virtual bool checkMesh(const bool report=false) const </div><div class="ttdoc">Check mesh for correctness. Returns false for no error. </div><div class="ttdef"><b>Definition:</b> <a href="a08722_source.html#l01953">primitiveMeshCheck.C:1953</a></div></div>
+<div class="ttc" id="a04434_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04434_source.html#l00051">createFields.H:51</a></div></div>
+<div class="ttc" id="a01938_html_a7abe4c83ac7875263dd151473943ee5e"><div class="ttname"><a href="a01938.html#a7abe4c83ac7875263dd151473943ee5e">Foam::polyTopoChanger::mesh_</a></div><div class="ttdeci">polyMesh &amp; mesh_</div><div class="ttdoc">Reference to mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a04911_source.html#l00077">polyTopoChanger.H:77</a></div></div>
+<div class="ttc" id="a01916_html_a8a91e85dc9825a7ae05720d4e7b48f2a"><div class="ttname"><a href="a01916.html#a8a91e85dc9825a7ae05720d4e7b48f2a">Foam::polyMesh::facesInstance</a></div><div class="ttdeci">const fileName &amp; facesInstance() const </div><div class="ttdoc">Return the current instance directory for faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00778">polyMesh.C:778</a></div></div>
+<div class="ttc" id="a00082_html_a655f9a7493e609affecc9d220fb2a843"><div class="ttname"><a href="a00082.html#a655f9a7493e609affecc9d220fb2a843">Foam::attachPolyTopoChanger::attach</a></div><div class="ttdeci">void attach(const bool removeEmptyPatches=true)</div><div class="ttdoc">Attach mesh. By default filter out empty patches. </div><div class="ttdef"><b>Definition:</b> <a href="a04858_source.html#l00054">attachPolyTopoChanger.C:54</a></div></div>
+<div class="ttc" id="a01916_html_aeda8ddd9e2f395926055a900108e6692"><div class="ttname"><a href="a01916.html#aeda8ddd9e2f395926055a900108e6692">Foam::polyMesh::oldPoints</a></div><div class="ttdeci">virtual const pointField &amp; oldPoints() const </div><div class="ttdoc">Return old points for mesh motion. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01029">polyMesh.C:1029</a></div></div>
+<div class="ttc" id="a01179_html_a4709e9cad52d9b499879bbcb101b6453"><div class="ttname"><a href="a01179.html#a4709e9cad52d9b499879bbcb101b6453">Foam::IOobject::clone</a></div><div class="ttdeci">Foam::autoPtr&lt; IOobject &gt; clone() const </div><div class="ttdoc">Clone. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00239">IOobject.H:239</a></div></div>
+<div class="ttc" id="a01938_html_ab42e5233705f618d6994589102b1103c"><div class="ttname"><a href="a01938.html#ab42e5233705f618d6994589102b1103c">Foam::polyTopoChanger::changeMesh</a></div><div class="ttdeci">autoPtr&lt; mapPolyMesh &gt; changeMesh(const bool inflate, const bool syncParallel=true, const bool orderCells=false, const bool orderPoints=false)</div><div class="ttdef"><b>Definition:</b> <a href="a04910_source.html#l00259">polyTopoChanger.C:259</a></div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a01916_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00421">polyMesh.H:421</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a01916_html_aa313cf2af77c173041552ecd8f4a8c69"><div class="ttname"><a href="a01916.html#aa313cf2af77c173041552ecd8f4a8c69">Foam::polyMesh::addPatches</a></div><div class="ttdeci">void addPatches(const List&lt; polyPatch * &gt; &amp;, const bool validBoundary=true)</div><div class="ttdoc">Add boundary patches. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00878">polyMesh.C:878</a></div></div>
+<div class="ttc" id="a01916_html_a3693c648bea2e99054cbbb75d4bf4e4d"><div class="ttname"><a href="a01916.html#a3693c648bea2e99054cbbb75d4bf4e4d">Foam::polyMesh::movePoints</a></div><div class="ttdeci">virtual tmp&lt; scalarField &gt; movePoints(const pointField &amp;)</div><div class="ttdoc">Move points, returns volumes swept by faces in motion. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01048">polyMesh.C:1048</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

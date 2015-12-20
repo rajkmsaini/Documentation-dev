@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_0edaa91cbfb55b9d84a014d50382efcb.html">DSMC</a></li><li class="navelem"><a class="el" href="dir_d20ce37f40ae4228b7a50453b523c7b7.html">parcels</a></li><li class="navelem"><a class="el" href="dir_9b06a279594d8fc36c0da5a247738f32.html">derived</a></li><li class="navelem"><a class="el" href="dir_beaa7a13059321881390a42ab6d28970.html">dsmcParcel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_6061a3ee916a9160a3a185551ff9959f.html">coalCombustion</a></li><li class="navelem"><a class="el" href="dir_d955aeb57bdb7586aebf93bbce8278dd.html">coalCloud</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">makeDSMCParcelBinaryCollisionModels.C</div>  </div>
+<div class="title">coalCloud.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06358.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,43 +119,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06357.html">dsmcParcel.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06353.html">DSMCCloud.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06371.html">NoBinaryCollision.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06373.html">VariableHardSphere.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06369.html">LarsenBorgnakkeVariableHardSphere.H</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::coalCloud</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Cloud class to introduce coal parcels</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a10675.html#a116189204e61970298be6841a413573e">   36</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00577.html">DSMCCloud&lt;dsmcParcel&gt;</a> <a class="code" href="a10675.html#a116189204e61970298be6841a413573e">CloudType</a>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10675.html#aba788070b76ecfff3b02dbbe947dfa7f">makeBinaryCollisionModel</a>(<a class="code" href="a00577.html">DSMCCloud&lt;dsmcParcel&gt;</a>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Add instances of collision model to the table</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a10675.html#ad5cea2194e792e56f61e5aa247735fe1">makeBinaryCollisionModelType</a>(<a class="code" href="a01579.html">NoBinaryCollision</a>, CloudType);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a10675.html#ad5cea2194e792e56f61e5aa247735fe1">makeBinaryCollisionModelType</a>(<a class="code" href="a02772.html">VariableHardSphere</a>, CloudType);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a10675.html#ad5cea2194e792e56f61e5aa247735fe1">makeBinaryCollisionModelType</a>(<a class="code" href="a01264.html">LarsenBorgnakkeVariableHardSphere</a>, CloudType);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_aba788070b76ecfff3b02dbbe947dfa7f"><div class="ttname"><a href="a10675.html#aba788070b76ecfff3b02dbbe947dfa7f">Foam::makeBinaryCollisionModel</a></div><div class="ttdeci">makeBinaryCollisionModel(DSMCCloud&lt; dsmcParcel &gt;)</div></div>
-<div class="ttc" id="a10675_html_ad5cea2194e792e56f61e5aa247735fe1"><div class="ttname"><a href="a10675.html#ad5cea2194e792e56f61e5aa247735fe1">Foam::makeBinaryCollisionModelType</a></div><div class="ttdeci">makeBinaryCollisionModelType(NoBinaryCollision, CloudType)</div></div>
-<div class="ttc" id="a01264_html"><div class="ttname"><a href="a01264.html">Foam::LarsenBorgnakkeVariableHardSphere</a></div><div class="ttdoc">Variable Hard Sphere BinaryCollision Model with Larsen Borgnakke internal energy redistribution. Based on the INELRS subroutine in Bird&#39;s DSMC0R.FOR. </div><div class="ttdef"><b>Definition:</b> <a href="a06369_source.html#l00046">LarsenBorgnakkeVariableHardSphere.H:46</a></div></div>
-<div class="ttc" id="a01579_html"><div class="ttname"><a href="a01579.html">Foam::NoBinaryCollision</a></div><div class="ttdoc">No collison BinaryCollision Model. </div><div class="ttdef"><b>Definition:</b> <a href="a06371_source.html#l00045">NoBinaryCollision.H:45</a></div></div>
-<div class="ttc" id="a10675_html_a116189204e61970298be6841a413573e"><div class="ttname"><a href="a10675.html#a116189204e61970298be6841a413573e">Foam::CloudType</a></div><div class="ttdeci">DSMCCloud&lt; dsmcParcel &gt; CloudType</div><div class="ttdef"><b>Definition:</b> <a href="a06358_source.html#l00036">makeDSMCParcelBinaryCollisionModels.C:36</a></div></div>
-<div class="ttc" id="a06369_html"><div class="ttname"><a href="a06369.html">LarsenBorgnakkeVariableHardSphere.H</a></div></div>
-<div class="ttc" id="a06357_html"><div class="ttname"><a href="a06357.html">dsmcParcel.H</a></div></div>
-<div class="ttc" id="a06353_html"><div class="ttname"><a href="a06353.html">DSMCCloud.H</a></div></div>
-<div class="ttc" id="a06373_html"><div class="ttname"><a href="a06373.html">VariableHardSphere.H</a></div></div>
-<div class="ttc" id="a06371_html"><div class="ttname"><a href="a06371.html">NoBinaryCollision.H</a></div></div>
-<div class="ttc" id="a00577_html"><div class="ttname"><a href="a00577.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06353_source.html#l00068">DSMCCloud.H:68</a></div></div>
-<div class="ttc" id="a02772_html"><div class="ttname"><a href="a02772.html">Foam::VariableHardSphere</a></div><div class="ttdoc">Variable Hard Sphere BinaryCollision Model. </div><div class="ttdef"><b>Definition:</b> <a href="a06373_source.html#l00045">VariableHardSphere.H:45</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef coalCloud_H</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define coalCloud_H</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06336.html">Cloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06462.html">KinematicCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06474.html">ThermoCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06468.html">ReactingCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06471.html">ReactingMultiphaseCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06362.html">coalParcel.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">typedef</span> ReactingMultiphaseCloud</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    &lt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        ReactingCloud</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        &lt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            ThermoCloud</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                KinematicCloud</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                &lt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                    Cloud</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                    &lt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                        <a class="code" href="a10725.html#a8715e8442c2f1a0a55545f77e3a748b1">coalParcel</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                    &gt;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                &gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a10725.html#a79258de7ac9e19cf99b085a241a183e5">   60</a></span>&#160;        &gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    &gt; <a class="code" href="a10725.html#a79258de7ac9e19cf99b085a241a183e5">coalCloud</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a06462_html"><div class="ttname"><a href="a06462.html">KinematicCloud.H</a></div></div>
+<div class="ttc" id="a06362_html"><div class="ttname"><a href="a06362.html">coalParcel.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10725_html_a79258de7ac9e19cf99b085a241a183e5"><div class="ttname"><a href="a10725.html#a79258de7ac9e19cf99b085a241a183e5">Foam::coalCloud</a></div><div class="ttdeci">ReactingMultiphaseCloud&lt; ReactingCloud&lt; ThermoCloud&lt; KinematicCloud&lt; Cloud&lt; coalParcel &gt; &gt; &gt; &gt; &gt; coalCloud</div><div class="ttdef"><b>Definition:</b> <a href="a06358_source.html#l00060">coalCloud.H:60</a></div></div>
+<div class="ttc" id="a06474_html"><div class="ttname"><a href="a06474.html">ThermoCloud.H</a></div></div>
+<div class="ttc" id="a10725_html_a8715e8442c2f1a0a55545f77e3a748b1"><div class="ttname"><a href="a10725.html#a8715e8442c2f1a0a55545f77e3a748b1">Foam::coalParcel</a></div><div class="ttdeci">ReactingMultiphaseParcel&lt; ReactingParcel&lt; ThermoParcel&lt; KinematicParcel&lt; particle &gt; &gt; &gt; &gt; coalParcel</div><div class="ttdef"><b>Definition:</b> <a href="a06362_source.html#l00060">coalParcel.H:60</a></div></div>
+<div class="ttc" id="a06471_html"><div class="ttname"><a href="a06471.html">ReactingMultiphaseCloud.H</a></div></div>
+<div class="ttc" id="a06336_html"><div class="ttname"><a href="a06336.html">Cloud.H</a></div></div>
+<div class="ttc" id="a06468_html"><div class="ttname"><a href="a06468.html">ReactingCloud.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

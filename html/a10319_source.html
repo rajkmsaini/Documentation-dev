@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_05d20c15c5fbf8a8f07c4f897848dece.html">thermophysicalFunctions</a></li><li class="navelem"><a class="el" href="dir_042bba17194f700e77926cbd029d4127.html">NSRDSfunctions</a></li><li class="navelem"><a class="el" href="dir_26aae711356aba2517c617e59a6912d1.html">NSRDSfunc1</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_5c4bf53b114f4c9237cd4ef0431fc9bd.html">specie</a></li><li class="navelem"><a class="el" href="dir_8e22d7bb5211f38d4629fa6608cf6410.html">reaction</a></li><li class="navelem"><a class="el" href="dir_8e13188b11d4c55bfed76418f20cd2bc.html">reactions</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">NSRDSfunc1.C</div>  </div>
+<div class="title">makeReactions.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10319.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,70 +121,106 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10320.html">NSRDSfunc1.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10287.html">reactionTypes.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10318.html">makeReaction.H</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(NSRDSfunc1, 0);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(thermophysicalFunction, NSRDSfunc1, Istream);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(thermophysicalFunction, NSRDSfunc1, dictionary);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10289.html">ArrheniusReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10301.html">infiniteReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10305.html">LandauTellerReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10311.html">thirdBodyArrheniusReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10291.html">ChemicallyActivatedReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10303.html">JanevReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10309.html">powerSeriesReactionRate.H</a>&quot;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a01653.html#ae8d5839da14cafbdfb77d15f596406e9">Foam::NSRDSfunc1::NSRDSfunc1</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a01653.html#ae8d5839da14cafbdfb77d15f596406e9">   41</a></span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> scalar a,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> scalar b,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> scalar c,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> scalar d,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> scalar e</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    a_(a),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    b_(b),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    c_(c),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    d_(d),</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    e_(e)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a01653.html#a426718a336fc058b814aa17c883f7f74">   57</a></span>&#160;<a class="code" href="a01653.html#ae8d5839da14cafbdfb77d15f596406e9">Foam::NSRDSfunc1::NSRDSfunc1</a>(<a class="code" href="a01191.html">Istream</a>&amp; is)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    a_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is)),</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    b_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is)),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    c_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is)),</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    d_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is)),</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    e_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is))</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a01653.html#a412ce8fbc9aeb0ac57c3af8878d89ca8">   67</a></span>&#160;<a class="code" href="a01653.html#ae8d5839da14cafbdfb77d15f596406e9">Foam::NSRDSfunc1::NSRDSfunc1</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    a_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;a&quot;</span>))),</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    b_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;b&quot;</span>))),</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    c_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;c&quot;</span>))),</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    d_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;d&quot;</span>))),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    e_(<a class="code" href="a10675.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;e&quot;</span>)))</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a828d57f6d9b9806c086a3f840a147115"><div class="ttname"><a href="a10675.html#a828d57f6d9b9806c086a3f840a147115">Foam::readScalar</a></div><div class="ttdeci">bool readScalar(const char *buf, doubleScalar &amp;s)</div><div class="ttdoc">Read whole of buf as a scalar. Return true if succesful. </div><div class="ttdef"><b>Definition:</b> <a href="a08880_source.html#l00063">doubleScalar.H:63</a></div></div>
-<div class="ttc" id="a10320_html"><div class="ttname"><a href="a10320.html">NSRDSfunc1.H</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a08879_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08879_source.html#l00038">doubleScalar.C:38</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01653_html_ae8d5839da14cafbdfb77d15f596406e9"><div class="ttname"><a href="a01653.html#ae8d5839da14cafbdfb77d15f596406e9">Foam::NSRDSfunc1::NSRDSfunc1</a></div><div class="ttdeci">NSRDSfunc1(const scalar a, const scalar b, const scalar c, const scalar d, const scalar e)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a10319_source.html#l00041">NSRDSfunc1.C:41</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a03837_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10299.html">FallOffReactionRate.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10293.html">LindemannFallOffFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10295.html">SRIFallOffFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10297.html">TroeFallOffFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">   46</a></span>&#160;<span class="preprocessor">#define makeReactions(Thermo, Reaction)                                        \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">    defineTemplateTypeNameAndDebug(Reaction, 0);                               \</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">    defineTemplateRunTimeSelectionTable(Reaction, Istream);                    \</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">    defineTemplateRunTimeSelectionTable(Reaction, dictionary);                 \</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">    makeIRNReactions(Thermo, ArrheniusReactionRate)                            \</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    makeIRNReactions(Thermo, infiniteReactionRate)                             \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">    makeIRNReactions(Thermo, LandauTellerReactionRate)                         \</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">    makeIRNReactions(Thermo, thirdBodyArrheniusReactionRate)                   \</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">    makeIRReactions(Thermo, JanevReactionRate)                                 \</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">    makeIRReactions(Thermo, powerSeriesReactionRate)                           \</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    makePressureDependentReactions                                             \</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">    (                                                                          \</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">       Thermo,                                                                 \</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">       ArrheniusReactionRate,                                                  \</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">       LindemannFallOffFunction                                                \</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    )                                                                          \</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">    makePressureDependentReactions                                             \</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">    (                                                                          \</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">       Thermo,                                                                 \</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">       ArrheniusReactionRate,                                                  \</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">       TroeFallOffFunction                                                     \</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">    )                                                                          \</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">                                                                               \</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">    makePressureDependentReactions                                             \</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">    (                                                                          \</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">       Thermo,                                                                 \</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">       ArrheniusReactionRate,                                                  \</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">       SRIFallOffFunction                                                      \</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">    )</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// sensible enthalpy based reactions</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a10725.html#a00fa617ab53176c48100e6521b9c7538">   87</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(<a class="code" href="a00394.html">constGasHThermoPhysics</a>, <a class="code" href="a02094.html">constGasHReaction</a>)</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="a10725.html#a989ef83a192f8d88eafee100f4d917f6">   88</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(gasHThermoPhysics, <a class="code" href="a02094.html">gasHReaction</a>)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    (</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        constIncompressibleGasHThermoPhysics,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a02094.html">constIncompressibleGasHReaction</a></div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="a10725.html#a8331a47e4dbd3d92b8f2cd1c64da080f">   93</a></span>&#160;    )</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="a10725.html#ae9da8cfa2d1a3eca36ea113edc76d292">   94</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(incompressibleGasHThermoPhysics, <a class="code" href="a02094.html">incompressibleGasHReaction</a>)</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="a10725.html#aba1b6c356a7325822aa17ed1cf05acd7">   95</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(icoPoly8HThermoPhysics, <a class="code" href="a02094.html">icoPoly8HReaction</a>)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="a10725.html#ac52ad23f6cf9531ae7484c602e98b29a">   97</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(constGasEThermoPhysics, <a class="code" href="a02094.html">constGasEReaction</a>)</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="a10725.html#a74b3eeeaae02b54c7ba0640e195bf72d">   98</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(gasEThermoPhysics, <a class="code" href="a02094.html">gasEReaction</a>)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    (</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        constIncompressibleGasEThermoPhysics,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <a class="code" href="a02094.html">constIncompressibleGasEReaction</a></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a10725.html#a9b68bfe6e61b8792942cffc853a6507b">  103</a></span>&#160;    )</div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="a10725.html#a84c886e403485caa68786d98113c8d1a">  104</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(incompressibleGasEThermoPhysics, <a class="code" href="a02094.html">incompressibleGasEReaction</a>)</div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="a10725.html#ac7efc2fb51c384036bd0857af5186772">  105</a></span>&#160;    <a class="code" href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a>(icoPoly8EThermoPhysics, <a class="code" href="a02094.html">icoPoly8EReaction</a>)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10309_html"><div class="ttname"><a href="a10309.html">powerSeriesReactionRate.H</a></div></div>
+<div class="ttc" id="a10295_html"><div class="ttname"><a href="a10295.html">SRIFallOffFunction.H</a></div></div>
+<div class="ttc" id="a10305_html"><div class="ttname"><a href="a10305.html">LandauTellerReactionRate.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10311_html"><div class="ttname"><a href="a10311.html">thirdBodyArrheniusReactionRate.H</a></div></div>
+<div class="ttc" id="a10289_html"><div class="ttname"><a href="a10289.html">ArrheniusReactionRate.H</a></div></div>
+<div class="ttc" id="a10297_html"><div class="ttname"><a href="a10297.html">TroeFallOffFunction.H</a></div></div>
+<div class="ttc" id="a10293_html"><div class="ttname"><a href="a10293.html">LindemannFallOffFunction.H</a></div></div>
+<div class="ttc" id="a10319_html_a54324c0cdd3a1a4ea963202ba5080fdd"><div class="ttname"><a href="a10319.html#a54324c0cdd3a1a4ea963202ba5080fdd">makeReactions</a></div><div class="ttdeci">#define makeReactions(Thermo, Reaction)                                                                            </div><div class="ttdef"><b>Definition:</b> <a href="a10319_source.html#l00046">makeReactions.C:46</a></div></div>
+<div class="ttc" id="a10291_html"><div class="ttname"><a href="a10291.html">ChemicallyActivatedReactionRate.H</a></div></div>
+<div class="ttc" id="a10303_html"><div class="ttname"><a href="a10303.html">JanevReactionRate.H</a></div></div>
+<div class="ttc" id="a10301_html"><div class="ttname"><a href="a10301.html">infiniteReactionRate.H</a></div></div>
+<div class="ttc" id="a00394_html"><div class="ttname"><a href="a00394.html">Foam::constTransport</a></div><div class="ttdoc">Constant properties Transport package. Templated into a given thermodynamics package (needed for ther...</div><div class="ttdef"><b>Definition:</b> <a href="a10359_source.html#l00047">constTransport.H:47</a></div></div>
+<div class="ttc" id="a10318_html"><div class="ttname"><a href="a10318.html">makeReaction.H</a></div><div class="ttdoc">Macros for instantiating reactions on given thermo packages. </div></div>
+<div class="ttc" id="a10299_html"><div class="ttname"><a href="a10299.html">FallOffReactionRate.H</a></div></div>
+<div class="ttc" id="a10287_html"><div class="ttname"><a href="a10287.html">reactionTypes.H</a></div><div class="ttdoc">Type definitions for reactions. </div></div>
+<div class="ttc" id="a02094_html"><div class="ttname"><a href="a02094.html">Foam::Reaction</a></div><div class="ttdoc">Simple extension of ReactionThermo to handle reaction kinetics in addition to the equilibrium thermod...</div><div class="ttdef"><b>Definition:</b> <a href="a10323_source.html#l00053">Reaction.H:53</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_efb3ad8e9cbb3414a44ef268cb98c0b2.html">field</a></li><li class="navelem"><a class="el" href="dir_ef4eaa5194a1078fc897f7644a8991b3.html">fieldAverage</a></li><li class="navelem"><a class="el" href="dir_4b6bd6a1a2e8ee85b417f89c1d3ea346.html">fieldAverageItem</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_72b2b5518d1565784443265ec6729f79.html">parallel</a></li><li class="navelem"><a class="el" href="dir_521ea32879fff4cdc7c502a515533bf9.html">reconstruct</a></li><li class="navelem"><a class="el" href="dir_8ecde0336c8113967f1acbb6f1b64eef.html">reconstruct</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fieldAverageItem.C</div>  </div>
+<div class="title">fvFieldReconstructor.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09120.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,110 +121,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09121.html">fieldAverageItem.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09121.html">fvFieldReconstructor.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> word <a class="code" href="a00752.html#a72ef0ade53689cf8da56abbc9ec70667">fieldAverageItem::EXT_MEAN</a> = <span class="stringliteral">&quot;Mean&quot;</span>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> word <a class="code" href="a00752.html#ae5e2727deab647b84a52291292cc2374">fieldAverageItem::EXT_PRIME2MEAN</a> = <span class="stringliteral">&quot;Prime2Mean&quot;</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a01558.html">Foam::NamedEnum</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    &lt;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a00752.html#a05c4f986be15ca9b62dd2c5cb317c57c">Foam::fieldAverageItem::baseType</a>,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        2</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a01558.html#a7350da3a0edd92cd11e6c479c9967dc8">   40</a></span>&#160;    &gt;::names[] =</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="stringliteral">&quot;iteration&quot;</span>,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="stringliteral">&quot;time&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    };</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">const</span> <a class="code" href="a01558.html">Foam::NamedEnum&lt;Foam::fieldAverageItem::baseType, 2&gt;</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    Foam::fieldAverageItem::baseTypeNames_;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a00752.html#acc6ca88a706a3cf35b84faf8a1f7fc41">   54</a></span>&#160;<a class="code" href="a00752.html#acc6ca88a706a3cf35b84faf8a1f7fc41">Foam::fieldAverageItem::fieldAverageItem</a>()</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    active_(false),</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    fieldName_(<span class="stringliteral">&quot;unknown&quot;</span>),</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    mean_(0),</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    meanFieldName_(<span class="stringliteral">&quot;unknown&quot;</span>),</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    prime2Mean_(0),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    prime2MeanFieldName_(<span class="stringliteral">&quot;unknown&quot;</span>),</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    base_(ITER),</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    window_(-1.0),</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    windowName_(<span class="stringliteral">&quot;&quot;</span>)</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00752.html#ab49bfdd9f8e96d3264f09eb7c45c3a21">   68</a></span>&#160;<a class="code" href="a00752.html#acc6ca88a706a3cf35b84faf8a1f7fc41">Foam::fieldAverageItem::fieldAverageItem</a>(<span class="keyword">const</span> <a class="code" href="a00752.html">fieldAverageItem</a>&amp; faItem)</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    active_(faItem.active_),</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    fieldName_(faItem.fieldName_),</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    mean_(faItem.mean_),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    meanFieldName_(faItem.meanFieldName_),</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    prime2Mean_(faItem.prime2Mean_),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    prime2MeanFieldName_(faItem.prime2MeanFieldName_),</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    base_(faItem.base_),</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    window_(faItem.window_),</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    windowName_(faItem.windowName_)</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{}</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a00752.html#a90d20e47ef7833c8e1ae7c39638aa593">   84</a></span>&#160;<a class="code" href="a00752.html#a90d20e47ef7833c8e1ae7c39638aa593">Foam::fieldAverageItem::~fieldAverageItem</a>()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{}</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a00752.html#af6e5c9c7077440ca2bc1c014915aa82a">   90</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00752.html#af6e5c9c7077440ca2bc1c014915aa82a">Foam::fieldAverageItem::operator=</a>(<span class="keyword">const</span> <a class="code" href="a00752.html">fieldAverageItem</a>&amp; rhs)</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Check for assignment to self</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">this</span> == &amp;rhs)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        (</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="stringliteral">&quot;Foam::fieldAverageItem::operator=(const Foam::fieldAverageItem&amp;)&quot;</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Attempted assignment to self&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// Set updated values</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    active_ = rhs.active_;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    fieldName_ = rhs.fieldName_;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    mean_ = rhs.mean_;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    meanFieldName_ = rhs.meanFieldName_;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    prime2Mean_ = rhs.prime2Mean_;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    prime2MeanFieldName_ = rhs.prime2MeanFieldName_;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    base_ = rhs.base_;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    window_ = rhs.window_;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    windowName_ = rhs.windowName_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00752_html_a90d20e47ef7833c8e1ae7c39638aa593"><div class="ttname"><a href="a00752.html#a90d20e47ef7833c8e1ae7c39638aa593">Foam::fieldAverageItem::~fieldAverageItem</a></div><div class="ttdeci">~fieldAverageItem()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09120_source.html#l00084">fieldAverageItem.C:84</a></div></div>
-<div class="ttc" id="a09121_html"><div class="ttname"><a href="a09121.html">fieldAverageItem.H</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a00752_html_a05c4f986be15ca9b62dd2c5cb317c57c"><div class="ttname"><a href="a00752.html#a05c4f986be15ca9b62dd2c5cb317c57c">Foam::fieldAverageItem::baseType</a></div><div class="ttdeci">baseType</div><div class="ttdoc">Enumeration defining the averaging base type. </div><div class="ttdef"><b>Definition:</b> <a href="a09121_source.html#l00089">fieldAverageItem.H:89</a></div></div>
-<div class="ttc" id="a00752_html_af6e5c9c7077440ca2bc1c014915aa82a"><div class="ttname"><a href="a00752.html#af6e5c9c7077440ca2bc1c014915aa82a">Foam::fieldAverageItem::operator=</a></div><div class="ttdeci">void operator=(const fieldAverageItem &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a09120_source.html#l00090">fieldAverageItem.C:90</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a00752_html_ae5e2727deab647b84a52291292cc2374"><div class="ttname"><a href="a00752.html#ae5e2727deab647b84a52291292cc2374">Foam::fieldAverageItem::EXT_PRIME2MEAN</a></div><div class="ttdeci">static const word EXT_PRIME2MEAN</div><div class="ttdoc">Prime-squared average. </div><div class="ttdef"><b>Definition:</b> <a href="a09121_source.html#l00086">fieldAverageItem.H:86</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a01558_html"><div class="ttname"><a href="a01558.html">Foam::NamedEnum</a></div><div class="ttdoc">Initialise the NamedEnum HashTable from the static list of names. </div><div class="ttdef"><b>Definition:</b> <a href="a07626_source.html#l00052">NamedEnum.H:52</a></div></div>
-<div class="ttc" id="a00752_html_a72ef0ade53689cf8da56abbc9ec70667"><div class="ttname"><a href="a00752.html#a72ef0ade53689cf8da56abbc9ec70667">Foam::fieldAverageItem::EXT_MEAN</a></div><div class="ttdeci">static const word EXT_MEAN</div><div class="ttdoc">Mean average. </div><div class="ttdef"><b>Definition:</b> <a href="a09121_source.html#l00083">fieldAverageItem.H:83</a></div></div>
-<div class="ttc" id="a00752_html"><div class="ttname"><a href="a00752.html">Foam::fieldAverageItem</a></div><div class="ttdoc">Helper class to describe what form of averaging to apply. A set will be applied to each base field in...</div><div class="ttdef"><b>Definition:</b> <a href="a09121_source.html#l00074">fieldAverageItem.H:74</a></div></div>
-<div class="ttc" id="a00752_html_acc6ca88a706a3cf35b84faf8a1f7fc41"><div class="ttname"><a href="a00752.html#acc6ca88a706a3cf35b84faf8a1f7fc41">Foam::fieldAverageItem::fieldAverageItem</a></div><div class="ttdeci">fieldAverageItem()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a09120_source.html#l00054">fieldAverageItem.C:54</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;Foam::fvFieldReconstructor::fvFieldReconstructor</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a00874.html#ade35d7248ec8faa8abad04eefbc4261d">   31</a></span>&#160;(</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;fvMesh&gt;</a>&amp; procMeshes,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; faceProcAddressing,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; cellProcAddressing,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;labelIOList&gt;</a>&amp; boundaryProcAddressing</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    mesh_(mesh),</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    procMeshes_(procMeshes),</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    faceProcAddressing_(faceProcAddressing),</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    cellProcAddressing_(cellProcAddressing),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    boundaryProcAddressing_(boundaryProcAddressing),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    nReconstructed_(0)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(procMeshes_, procI)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; procMesh = procMeshes_[procI];</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            faceProcAddressing[procI].size() != procMesh.<a class="code" href="a01967.html#a9be088de373a98524a153de7da0e92e8">nFaces</a>()</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;         || cellProcAddressing[procI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>() != procMesh.<a class="code" href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">nCells</a>()</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;         || boundaryProcAddressing[procI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>() != procMesh.<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>().<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>()</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        )</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Size of maps does not correspond to size of mesh&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; for processor &quot;</span> &lt;&lt; procI &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;faceProcAddressing : &quot;</span> &lt;&lt; faceProcAddressing[procI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>()</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; nFaces : &quot;</span> &lt;&lt; procMesh.<a class="code" href="a01967.html#a9be088de373a98524a153de7da0e92e8">nFaces</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;cellProcAddressing : &quot;</span> &lt;&lt; cellProcAddressing[procI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>()</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; nCell : &quot;</span> &lt;&lt; procMesh.<a class="code" href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">nCells</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;boundaryProcAddressing : &quot;</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                &lt;&lt; boundaryProcAddressing[procI].<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>()</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; nFaces : &quot;</span> &lt;&lt; procMesh.<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>().<a class="code" href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">size</a>()</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01967_html_ae79b5e96cf8d9a4e6b3993e6f2709374"><div class="ttname"><a href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">Foam::primitiveMesh::nCells</a></div><div class="ttdeci">label nCells() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00094">primitiveMeshI.H:94</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a09121_html"><div class="ttname"><a href="a09121.html">fvFieldReconstructor.H</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02031_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02031.html#a723361dc2020160f5492e8fe2d09fa44">Foam::PtrList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the PtrList. </div><div class="ttdef"><b>Definition:</b> <a href="a07656_source.html#l00032">PtrListI.H:32</a></div></div>
+<div class="ttc" id="a00876_html_a971347d65410875e38ea654dfd193a19"><div class="ttname"><a href="a00876.html#a971347d65410875e38ea654dfd193a19">Foam::fvMesh::boundary</a></div><div class="ttdeci">const fvBoundaryMesh &amp; boundary() const </div><div class="ttdoc">Return reference to boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05870_source.html#l00550">fvMesh.C:550</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a01967_html_a9be088de373a98524a153de7da0e92e8"><div class="ttname"><a href="a01967.html#a9be088de373a98524a153de7da0e92e8">Foam::primitiveMesh::nFaces</a></div><div class="ttdeci">label nFaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00088">primitiveMeshI.H:88</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

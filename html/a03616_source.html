@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_9a8884475cf7812a7a55716c3274f065.html">twoPhaseEulerFoam</a></li><li class="navelem"><a class="el" href="dir_cfe205aac25c0433b15142b141b5f211.html">twoPhaseSystem</a></li><li class="navelem"><a class="el" href="dir_3e8be733bb068cb60ed08284b20e7288.html">BlendedInterfacialModel</a></li><li class="navelem"><a class="el" href="dir_aebb62d5a146922005635c093adbc6e4.html">blendingMethods</a></li><li class="navelem"><a class="el" href="dir_5845015829e5066ef688d2baee2b52eb.html">blendingMethod</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_39c6fb13b73366fdd8d1a563194c0342.html">wallDependentModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">blendingMethod.C</div>  </div>
+<div class="title">wallDependentModel.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03616.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,39 +121,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;blendingMethod.H&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(blendingMethod, 0);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10675.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(blendingMethod, dictionary);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;wallDependentModel.H&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05947.html">wallDist.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;Foam::wallDependentModel::wallDependentModel(<span class="keyword">const</span> fvMesh&amp; <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    mesh_(mesh)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{}</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a00141.html#af1b1094fa2a867b01c841ea956905237">Foam::blendingMethod::blendingMethod</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;(</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a02831.html#afc9fbc8fc5a704065f9e392563be0f0f">Foam::wallDependentModel::~wallDependentModel</a>()</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="a00141.html#abf63a6ef76e444442518963896048ef8">Foam::blendingMethod::~blendingMethod</a>()</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">const</span> <a class="code" href="a00921.html">Foam::volScalarField</a>&amp; <a class="code" href="a02831.html#a7d3dada39d35eeffceccf373b54f55f9">Foam::wallDependentModel::yWall</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01467.html#ab61cc2091ec1fd7e08e8948e84235a05">wallDist::New</a>(mesh_).<a class="code" href="a02832.html#a2b8dc3c099888950a490bc1930ef7f4d">y</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00141_html_af1b1094fa2a867b01c841ea956905237"><div class="ttname"><a href="a00141.html#af1b1094fa2a867b01c841ea956905237">Foam::blendingMethod::blendingMethod</a></div><div class="ttdeci">blendingMethod(const dictionary &amp;dict)</div><div class="ttdoc">Construct from a dictionary. </div></div>
-<div class="ttc" id="a00141_html_abf63a6ef76e444442518963896048ef8"><div class="ttname"><a href="a00141.html#abf63a6ef76e444442518963896048ef8">Foam::blendingMethod::~blendingMethod</a></div><div class="ttdeci">virtual ~blendingMethod()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a10675_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10675.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">const</span> <a class="code" href="a00921.html">Foam::volVectorField</a>&amp; <a class="code" href="a02831.html#a4b49acee5772782f0e71f8908f968ede">Foam::wallDependentModel::nWall</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01467.html#ab61cc2091ec1fd7e08e8948e84235a05">wallDist::New</a>(mesh_).<a class="code" href="a02832.html#af1573c848b779f71ba617dfee725fde8">n</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a05947_html"><div class="ttname"><a href="a05947.html">wallDist.H</a></div></div>
+<div class="ttc" id="a02832_html_af1573c848b779f71ba617dfee725fde8"><div class="ttname"><a href="a02832.html#af1573c848b779f71ba617dfee725fde8">Foam::wallDist::n</a></div><div class="ttdeci">const volVectorField &amp; n() const </div><div class="ttdoc">Return reference to cached normal-to-wall field. </div><div class="ttdef"><b>Definition:</b> <a href="a05946_source.html#l00168">wallDist.C:168</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a02832_html_a2b8dc3c099888950a490bc1930ef7f4d"><div class="ttname"><a href="a02832.html#a2b8dc3c099888950a490bc1930ef7f4d">Foam::wallDist::y</a></div><div class="ttdeci">const volScalarField &amp; y() const </div><div class="ttdoc">Return reference to cached distance-to-wall field. </div><div class="ttdef"><b>Definition:</b> <a href="a05947_source.html#l00142">wallDist.H:142</a></div></div>
+<div class="ttc" id="a02831_html_a7d3dada39d35eeffceccf373b54f55f9"><div class="ttname"><a href="a02831.html#a7d3dada39d35eeffceccf373b54f55f9">Foam::wallDependentModel::yWall</a></div><div class="ttdeci">const volScalarField &amp; yWall() const </div></div>
+<div class="ttc" id="a01467_html_ab61cc2091ec1fd7e08e8948e84235a05"><div class="ttname"><a href="a01467.html#ab61cc2091ec1fd7e08e8948e84235a05">Foam::MeshObject&lt; fvMesh, UpdateableMeshObject, wallDist &gt;::New</a></div><div class="ttdeci">static const wallDist &amp; New(const fvMesh &amp;mesh)</div></div>
+<div class="ttc" id="a02831_html_a4b49acee5772782f0e71f8908f968ede"><div class="ttname"><a href="a02831.html#a4b49acee5772782f0e71f8908f968ede">Foam::wallDependentModel::nWall</a></div><div class="ttdeci">const volVectorField &amp; nWall() const </div></div>
+<div class="ttc" id="a02831_html_afc9fbc8fc5a704065f9e392563be0f0f"><div class="ttname"><a href="a02831.html#afc9fbc8fc5a704065f9e392563be0f0f">Foam::wallDependentModel::~wallDependentModel</a></div><div class="ttdeci">virtual ~wallDependentModel()</div><div class="ttdoc">Destructor. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

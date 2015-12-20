@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_ec5b63092fb55ef516ddf05b3841c89d.html">Time</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_466e4f5b4cc1582939ab4ceba36098d8.html">IOstreams</a></li><li class="navelem"><a class="el" href="dir_05a8697d464c96d3323cd908b61b5361.html">Sstreams</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">TimeState.C</div>  </div>
+<div class="title">ISstreamI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07810.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,95 +121,101 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07811.html">TimeState.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a02603.html#a04e22bccea4cf98f985e99156f49ee11">   31</a></span>&#160;<a class="code" href="a02603.html#a04e22bccea4cf98f985e99156f49ee11">Foam::TimeState::TimeState</a>()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a00526.html">dimensionedScalar</a>(<a class="code" href="a02596.html">Time</a>::<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(0), <a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>, 0),</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    timeIndex_(0),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    deltaT_(0),</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    deltaTSave_(0),</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    deltaT0_(0),</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    deltaTchanged_(false),</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    outputTimeIndex_(0),</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    primaryOutputTime_(false),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    secondaryOutputTimeIndex_(0),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    secondaryOutputTime_(false),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    outputTime_(false)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a02603.html#adcc44793fe7830f117552a90b5151baf">   49</a></span>&#160;<a class="code" href="a02603.html#adcc44793fe7830f117552a90b5151baf">Foam::TimeState::~TimeState</a>()</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07809.html">ISstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">inline</span> <a class="code" href="a01198.html#a9264a6652e5e6851d015ea06f55a90b7">Foam::ISstream::ISstream</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a01198.html#a9264a6652e5e6851d015ea06f55a90b7">   31</a></span>&#160;(</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    istream&amp; is,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; name,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a01185.html#a5dba97390318f1a7b5d35a18f38e1a97">streamFormat</a> format,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a02797.html">versionNumber</a> version,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a01185.html#aae1d1588038b444591f723c61c9aacad">compressionType</a> compression</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a01199.html">Istream</a>(format, version, compression),</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    name_(name),</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    is_(is)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span> (is_.good())</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        setOpened();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        setGood();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        setState(is_.rdstate());</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a02603.html#a53b169b496268aa38cca7ce6ad8ff063">   55</a></span>&#160;Foam::scalar <a class="code" href="a02603.html#a53b169b496268aa38cca7ce6ad8ff063">Foam::TimeState::userTimeToTime</a>(<span class="keyword">const</span> scalar theta)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> theta;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a02603.html#ae43a289a023adc2d9e82b717dc87a620">   61</a></span>&#160;Foam::scalar <a class="code" href="a02603.html#ae43a289a023adc2d9e82b717dc87a620">Foam::TimeState::timeToUserTime</a>(<span class="keyword">const</span> scalar t)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> t;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a01198.html#a220617e016d0f94cdc18c09879020f5c">   57</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a01198.html">Foam::ISstream</a>&amp; <a class="code" href="a01198.html#a220617e016d0f94cdc18c09879020f5c">Foam::ISstream::get</a>(<span class="keywordtype">char</span>&amp; <a class="code" href="a10741.html#a8d66fa4b7d96f0523ff86522f1d01c6f">c</a>)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    is_.get(c);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a01185.html#a6dc7caf4da073fce8946c51af8d81dee">setState</a>(is_.rdstate());</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span>)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a01185.html#a69058d47aca6f6f656aa54937a897129">lineNumber_</a>++;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a02603.html#a7681c8ca0a16f9e5c6e24374e1b55733">   67</a></span>&#160;Foam::scalar <a class="code" href="a02603.html#a7681c8ca0a16f9e5c6e24374e1b55733">Foam::TimeState::timeOutputValue</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> timeToUserTime(value());</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="a02603.html#afddcdeb3f90d772e6710d657a2a6e600">   73</a></span>&#160;<a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a> <a class="code" href="a02603.html#afddcdeb3f90d772e6710d657a2a6e600">Foam::TimeState::timeIndex</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> timeIndex_;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a02603.html#ab8414d012e25a94a0a5efdcfe14167e8">   79</a></span>&#160;<a class="code" href="a00526.html">Foam::dimensionedScalar</a> <a class="code" href="a02603.html#ab8414d012e25a94a0a5efdcfe14167e8">Foam::TimeState::deltaT</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;deltaT&quot;</span>, <a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>, deltaT_);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="a02603.html#af07a4a56e18b2c655eb25a0c3e96fc01">   85</a></span>&#160;<a class="code" href="a00526.html">Foam::dimensionedScalar</a> <a class="code" href="a02603.html#af07a4a56e18b2c655eb25a0c3e96fc01">Foam::TimeState::deltaT0</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;deltaT0&quot;</span>, <a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>, deltaT0_);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="a02603.html#a4c739173bf75a87e1b6535c2431f1229">   91</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02603.html#a4c739173bf75a87e1b6535c2431f1229">Foam::TimeState::outputTime</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> outputTime_;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a02603_html_a04e22bccea4cf98f985e99156f49ee11"><div class="ttname"><a href="a02603.html#a04e22bccea4cf98f985e99156f49ee11">Foam::TimeState::TimeState</a></div><div class="ttdeci">TimeState()</div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00031">TimeState.C:31</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02603_html_af07a4a56e18b2c655eb25a0c3e96fc01"><div class="ttname"><a href="a02603.html#af07a4a56e18b2c655eb25a0c3e96fc01">Foam::TimeState::deltaT0</a></div><div class="ttdeci">dimensionedScalar deltaT0() const </div><div class="ttdoc">Return old time step. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00085">TimeState.C:85</a></div></div>
-<div class="ttc" id="a02603_html_a7681c8ca0a16f9e5c6e24374e1b55733"><div class="ttname"><a href="a02603.html#a7681c8ca0a16f9e5c6e24374e1b55733">Foam::TimeState::timeOutputValue</a></div><div class="ttdeci">scalar timeOutputValue() const </div><div class="ttdoc">Return current time value. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00067">TimeState.C:67</a></div></div>
-<div class="ttc" id="a02603_html_a53b169b496268aa38cca7ce6ad8ff063"><div class="ttname"><a href="a02603.html#a53b169b496268aa38cca7ce6ad8ff063">Foam::TimeState::userTimeToTime</a></div><div class="ttdeci">virtual scalar userTimeToTime(const scalar theta) const </div><div class="ttdoc">Convert the user-time (e.g. CA deg) to real-time (s). </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00055">TimeState.C:55</a></div></div>
-<div class="ttc" id="a02596_html"><div class="ttname"><a href="a02596.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07804_source.html#l00068">Time.H:68</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02603_html_ae43a289a023adc2d9e82b717dc87a620"><div class="ttname"><a href="a02603.html#ae43a289a023adc2d9e82b717dc87a620">Foam::TimeState::timeToUserTime</a></div><div class="ttdeci">virtual scalar timeToUserTime(const scalar t) const </div><div class="ttdoc">Convert the real-time (s) into user-time (e.g. CA deg) </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00061">TimeState.C:61</a></div></div>
-<div class="ttc" id="a07811_html"><div class="ttname"><a href="a07811.html">TimeState.H</a></div></div>
-<div class="ttc" id="a02603_html_afddcdeb3f90d772e6710d657a2a6e600"><div class="ttname"><a href="a02603.html#afddcdeb3f90d772e6710d657a2a6e600">Foam::TimeState::timeIndex</a></div><div class="ttdeci">label timeIndex() const </div><div class="ttdoc">Return current time index. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00073">TimeState.C:73</a></div></div>
-<div class="ttc" id="a10675_html_a351a623596279a79515ef2cf69e1c277"><div class="ttname"><a href="a10675.html#a351a623596279a79515ef2cf69e1c277">Foam::dimTime</a></div><div class="ttdeci">const dimensionSet dimTime(0, 0, 1, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00051">dimensionSets.H:51</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a02603_html_a4c739173bf75a87e1b6535c2431f1229"><div class="ttname"><a href="a02603.html#a4c739173bf75a87e1b6535c2431f1229">Foam::TimeState::outputTime</a></div><div class="ttdeci">bool outputTime() const </div><div class="ttdoc">Return true if this is an output time (primary or secondary) </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00091">TimeState.C:91</a></div></div>
-<div class="ttc" id="a03875_html_a2f677c654c2b7f157710d334624b8800"><div class="ttname"><a href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a></div><div class="ttdeci">word timeName</div><div class="ttdef"><b>Definition:</b> <a href="a03875_source.html#l00003">getTimeIndex.H:3</a></div></div>
-<div class="ttc" id="a02603_html_ab8414d012e25a94a0a5efdcfe14167e8"><div class="ttname"><a href="a02603.html#ab8414d012e25a94a0a5efdcfe14167e8">Foam::TimeState::deltaT</a></div><div class="ttdeci">dimensionedScalar deltaT() const </div><div class="ttdoc">Return time step. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00079">TimeState.C:79</a></div></div>
-<div class="ttc" id="a02603_html_adcc44793fe7830f117552a90b5151baf"><div class="ttname"><a href="a02603.html#adcc44793fe7830f117552a90b5151baf">Foam::TimeState::~TimeState</a></div><div class="ttdeci">virtual ~TimeState()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00049">TimeState.C:49</a></div></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="a01198.html#a9040fa1d479d71edf3a826f4691c35c4">   71</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="a01198.html#a9040fa1d479d71edf3a826f4691c35c4">Foam::ISstream::peek</a>()</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> is_.peek();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a01198.html#a94b82bd8f7d8cdaa83c9c70b7c919f78">   77</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a01198.html">Foam::ISstream</a>&amp; <a class="code" href="a01198.html#a94b82bd8f7d8cdaa83c9c70b7c919f78">Foam::ISstream::getLine</a>(<span class="keywordtype">string</span>&amp; <a class="code" href="a04277.html#a6d6b99210a64ad23792eb7a3b0411c42">s</a>)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;{</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    getline(is_, s);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    setState(is_.rdstate());</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    lineNumber_++;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a01198.html#aa685529cedb07a4b339c5a87c84b597a">   87</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a01198.html">Foam::ISstream</a>&amp; <a class="code" href="a01198.html#aa685529cedb07a4b339c5a87c84b597a">Foam::ISstream::putback</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>&amp; <a class="code" href="a10741.html#a8d66fa4b7d96f0523ff86522f1d01c6f">c</a>)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span>)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        lineNumber_--;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">if</span> (!is_.putback(c))</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        setBad();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    setState(is_.rdstate());</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02797_html"><div class="ttname"><a href="a02797.html">Foam::IOstream::versionNumber</a></div><div class="ttdoc">Version number type. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00096">IOstream.H:96</a></div></div>
+<div class="ttc" id="a01185_html_a5dba97390318f1a7b5d35a18f38e1a97"><div class="ttname"><a href="a01185.html#a5dba97390318f1a7b5d35a18f38e1a97">Foam::IOstream::streamFormat</a></div><div class="ttdeci">streamFormat</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00086">IOstream.H:86</a></div></div>
+<div class="ttc" id="a01185_html_a69058d47aca6f6f656aa54937a897129"><div class="ttname"><a href="a01185.html#a69058d47aca6f6f656aa54937a897129">Foam::IOstream::lineNumber_</a></div><div class="ttdeci">label lineNumber_</div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00231">IOstream.H:231</a></div></div>
+<div class="ttc" id="a07809_html"><div class="ttname"><a href="a07809.html">ISstream.H</a></div></div>
+<div class="ttc" id="a01198_html_a94b82bd8f7d8cdaa83c9c70b7c919f78"><div class="ttname"><a href="a01198.html#a94b82bd8f7d8cdaa83c9c70b7c919f78">Foam::ISstream::getLine</a></div><div class="ttdeci">ISstream &amp; getLine(string &amp;)</div><div class="ttdoc">Raw, low-level getline into a string function. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00077">ISstreamI.H:77</a></div></div>
+<div class="ttc" id="a01198_html_a9264a6652e5e6851d015ea06f55a90b7"><div class="ttname"><a href="a01198.html#a9264a6652e5e6851d015ea06f55a90b7">Foam::ISstream::ISstream</a></div><div class="ttdeci">ISstream(istream &amp;is, const string &amp;name, streamFormat format=ASCII, versionNumber version=currentVersion, compressionType compression=UNCOMPRESSED)</div><div class="ttdoc">Construct as wrapper around istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00031">ISstreamI.H:31</a></div></div>
+<div class="ttc" id="a01198_html_a220617e016d0f94cdc18c09879020f5c"><div class="ttname"><a href="a01198.html#a220617e016d0f94cdc18c09879020f5c">Foam::ISstream::get</a></div><div class="ttdeci">ISstream &amp; get(char &amp;)</div><div class="ttdoc">Raw, low-level get character function. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00057">ISstreamI.H:57</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a01198_html_aa685529cedb07a4b339c5a87c84b597a"><div class="ttname"><a href="a01198.html#aa685529cedb07a4b339c5a87c84b597a">Foam::ISstream::putback</a></div><div class="ttdeci">ISstream &amp; putback(const char &amp;)</div><div class="ttdoc">Raw, low-level putback character function. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00087">ISstreamI.H:87</a></div></div>
+<div class="ttc" id="a01185_html_aae1d1588038b444591f723c61c9aacad"><div class="ttname"><a href="a01185.html#aae1d1588038b444591f723c61c9aacad">Foam::IOstream::compressionType</a></div><div class="ttdeci">compressionType</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00193">IOstream.H:193</a></div></div>
+<div class="ttc" id="a10741_html_a8d66fa4b7d96f0523ff86522f1d01c6f"><div class="ttname"><a href="a10741.html#a8d66fa4b7d96f0523ff86522f1d01c6f">Foam::constant::universal::c</a></div><div class="ttdeci">const dimensionedScalar c</div><div class="ttdoc">Speed of light in a vacuum. </div></div>
+<div class="ttc" id="a01185_html_a6dc7caf4da073fce8946c51af8d81dee"><div class="ttname"><a href="a01185.html#a6dc7caf4da073fce8946c51af8d81dee">Foam::IOstream::setState</a></div><div class="ttdeci">void setState(ios_base::iostate state)</div><div class="ttdoc">Set stream state. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00251">IOstream.H:251</a></div></div>
+<div class="ttc" id="a01198_html"><div class="ttname"><a href="a01198.html">Foam::ISstream</a></div><div class="ttdoc">Generic input stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07809_source.html#l00051">ISstream.H:51</a></div></div>
+<div class="ttc" id="a04277_html_a6d6b99210a64ad23792eb7a3b0411c42"><div class="ttname"><a href="a04277.html#a6d6b99210a64ad23792eb7a3b0411c42">s</a></div><div class="ttdeci">gmvFile&lt;&lt; &quot;tracers &quot;&lt;&lt; particles.size()&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().x()&lt;&lt; &quot; &quot;;}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().y()&lt;&lt; &quot; &quot;;}gmvFile&lt;&lt; nl;forAllConstIter(Cloud&lt; passiveParticle &gt;, particles, iter){gmvFile&lt;&lt; iter().position().z()&lt;&lt; &quot; &quot;;}gmvFile&lt;&lt; nl;forAll(lagrangianScalarNames, i){word name=lagrangianScalarNames[i];IOField&lt; scalar &gt; s(IOobject(                                       name,                                       runTime.timeName(),                                       cloud::prefix,                                       mesh,                                       IOobject::MUST_READ,                                       IOobject::NO_WRITE                       ))</div></div>
+<div class="ttc" id="a01198_html_a9040fa1d479d71edf3a826f4691c35c4"><div class="ttname"><a href="a01198.html#a9040fa1d479d71edf3a826f4691c35c4">Foam::ISstream::peek</a></div><div class="ttdeci">int peek()</div><div class="ttdoc">Raw, low-level peek function. </div><div class="ttdef"><b>Definition:</b> <a href="a07810_source.html#l00071">ISstreamI.H:71</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

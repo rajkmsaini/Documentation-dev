@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b63c002b7559990bd414058641eb48ad.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_ea136f50b6e20864351f7e37b8cbec5c.html">tools</a></li><li class="navelem"><a class="el" href="dir_d14dd855fa82fec2867d1bc28ac0c467.html">labelPair</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9415e59289a6feeb24164dafa70a594f.html">transportModels</a></li><li class="navelem"><a class="el" href="dir_ba81af78f54c1241449acf985c81e6d8.html">incompressible</a></li><li class="navelem"><a class="el" href="dir_ab0c16dcb69e23583eb871cac9c48300.html">singlePhaseTransportModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">labelPairLookup.H</div>  </div>
+<div class="title">singlePhaseTransportModel.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10408.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,47 +119,95 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::labelPairLookup</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A HashTable for two labels to another label.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Used for e.g. for face1, face2 to shared edge.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">Note</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    The hash table is based on a FixedList and not edge, since an edge</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    hashes commutatively!</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef labelPairLookup_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define labelPairLookup_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07579.html">FixedList.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07524.html">HashTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">typedef</span> HashTable</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    &lt;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;       <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;       FixedList&lt;label, 2&gt;,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;       FixedList&lt;label, 2&gt;::Hash&lt;&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a10675.html#a7fdb5f233d4df72ec5193d23ac9f0f22">   52</a></span>&#160;    &gt; <a class="code" href="a10675.html#a7fdb5f233d4df72ec5193d23ac9f0f22">labelPairLookup</a>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10409.html">singlePhaseTransportModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;viscosityModel.H&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05609.html">volFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;Foam::singlePhaseTransportModel::singlePhaseTransportModel</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a02321.html#a701cc4ca04bdd95c63d93fd7c59a9e42">   34</a></span>&#160;(</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">volVectorField</a>&amp; U,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; phi</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a01172.html">IOdictionary</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a01179.html">IOobject</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        (</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="stringliteral">&quot;transportProperties&quot;</span>,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            U.<a class="code" href="a01179.html#ab5a56b597db315d880e81c09a4341244">time</a>().<a class="code" href="a02609.html#a5aa65a27a46ca75d80f0821d80606c04">constant</a>(),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            U.<a class="code" href="a01179.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>(),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            IOobject::MUST_READ_IF_MODIFIED,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            IOobject::NO_WRITE</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        )</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    ),</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    viscosityModelPtr_(<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">viscosityModel::New</a>(<span class="stringliteral">&quot;nu&quot;</span>, *<span class="keyword">this</span>, U, phi))</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a02321.html#a116062d0d64d5db14086614b2d018a2f">   56</a></span>&#160;<a class="code" href="a02321.html#a116062d0d64d5db14086614b2d018a2f">Foam::singlePhaseTransportModel::~singlePhaseTransportModel</a>()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{}</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a7fdb5f233d4df72ec5193d23ac9f0f22"><div class="ttname"><a href="a10675.html#a7fdb5f233d4df72ec5193d23ac9f0f22">Foam::labelPairLookup</a></div><div class="ttdeci">HashTable&lt; label, FixedList&lt; label, 2 &gt;, FixedList&lt; label, 2 &gt;::Hash&lt;&gt; &gt; labelPairLookup</div><div class="ttdoc">A HashTable for two labels to another label. Used for e.g. for face1, face2 to shared edge...</div><div class="ttdef"><b>Definition:</b> <a href="a10408_source.html#l00052">labelPairLookup.H:52</a></div></div>
-<div class="ttc" id="a07579_html"><div class="ttname"><a href="a07579.html">FixedList.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a07524_html"><div class="ttname"><a href="a07524.html">HashTable.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02321.html#a3701d26448b3fdfa3e4b7bb69e2fbba9">   63</a></span>&#160;<a class="code" href="a02321.html#a3701d26448b3fdfa3e4b7bb69e2fbba9">Foam::singlePhaseTransportModel::nu</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> viscosityModelPtr_-&gt;nu();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::scalarField&gt;</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a02321.html#a4aff9c7b69ab71666f6c67fe8b59d543">   70</a></span>&#160;<a class="code" href="a02321.html#a3701d26448b3fdfa3e4b7bb69e2fbba9">Foam::singlePhaseTransportModel::nu</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> viscosityModelPtr_-&gt;nu(patchi);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a02321.html#a3ae44b28050c3aa494c1d8e18cf618c1">   76</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02321.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::singlePhaseTransportModel::correct</a>()</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    viscosityModelPtr_-&gt;correct();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="a02321.html#af816873151ddb0126e98bb2f914d8ed5">   82</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02321.html#af816873151ddb0126e98bb2f914d8ed5">Foam::singlePhaseTransportModel::read</a>()</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a02145.html#af816873151ddb0126e98bb2f914d8ed5">regIOobject::read</a>())</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> viscosityModelPtr_-&gt;read(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10409_html"><div class="ttname"><a href="a10409.html">singlePhaseTransportModel.H</a></div></div>
+<div class="ttc" id="a02609_html_a5aa65a27a46ca75d80f0821d80606c04"><div class="ttname"><a href="a02609.html#a5aa65a27a46ca75d80f0821d80606c04">Foam::TimePaths::constant</a></div><div class="ttdeci">const word &amp; constant() const </div><div class="ttdoc">Return constant name. </div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00124">TimePaths.H:124</a></div></div>
+<div class="ttc" id="a04316_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04316_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
+<div class="ttc" id="a02145_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a02145.html#af816873151ddb0126e98bb2f914d8ed5">Foam::regIOobject::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read object. </div><div class="ttdef"><b>Definition:</b> <a href="a07837_source.html#l00171">regIOobjectRead.C:171</a></div></div>
+<div class="ttc" id="a02321_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a02321.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::singlePhaseTransportModel::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Correct the laminar viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10408_source.html#l00076">singlePhaseTransportModel.C:76</a></div></div>
+<div class="ttc" id="a01179_html_adf469b34fcd0250cef43ac4ce3f153ab"><div class="ttname"><a href="a01179.html#adf469b34fcd0250cef43ac4ce3f153ab">Foam::IOobject::db</a></div><div class="ttdeci">const objectRegistry &amp; db() const </div><div class="ttdoc">Return the local objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07744_source.html#l00218">IOobject.C:218</a></div></div>
+<div class="ttc" id="a05609_html"><div class="ttname"><a href="a05609.html">volFields.H</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a02321_html_a3701d26448b3fdfa3e4b7bb69e2fbba9"><div class="ttname"><a href="a02321.html#a3701d26448b3fdfa3e4b7bb69e2fbba9">Foam::singlePhaseTransportModel::nu</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; nu() const </div><div class="ttdoc">Return the laminar viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10408_source.html#l00063">singlePhaseTransportModel.C:63</a></div></div>
+<div class="ttc" id="a02321_html_a116062d0d64d5db14086614b2d018a2f"><div class="ttname"><a href="a02321.html#a116062d0d64d5db14086614b2d018a2f">Foam::singlePhaseTransportModel::~singlePhaseTransportModel</a></div><div class="ttdeci">virtual ~singlePhaseTransportModel()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a10408_source.html#l00056">singlePhaseTransportModel.C:56</a></div></div>
+<div class="ttc" id="a02321_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a02321.html#af816873151ddb0126e98bb2f914d8ed5">Foam::singlePhaseTransportModel::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read transportProperties dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a10408_source.html#l00082">singlePhaseTransportModel.C:82</a></div></div>
+<div class="ttc" id="a01179_html_ab5a56b597db315d880e81c09a4341244"><div class="ttname"><a href="a01179.html#ab5a56b597db315d880e81c09a4341244">Foam::IOobject::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return time. </div><div class="ttdef"><b>Definition:</b> <a href="a07744_source.html#l00224">IOobject.C:224</a></div></div>
+<div class="ttc" id="a01172_html"><div class="ttname"><a href="a01172.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07757_source.html#l00053">IOdictionary.H:53</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

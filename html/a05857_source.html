@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_b630ab9569e31ffb9b2cc4747c3085db.html">fvPatches</a></li><li class="navelem"><a class="el" href="dir_b6c7056b4a691a5d4a6a253b324932ba.html">derived</a></li><li class="navelem"><a class="el" href="dir_bdcc1ee5e865d4ecc62973baf469c587.html">mapped</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_7c12a81ee82d3aaa033ce73b51dae3b7.html">faceToCell</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">mappedWallFvPatch.H</div>  </div>
+<div class="title">extendedCentredFaceToCellStencil.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05857.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,76 +119,71 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::mappedWallFvPatch</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Foam::mappedWallFvPatch</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    mappedWallFvPatch.C</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef mappedWallFvPatch_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define mappedWallFvPatch_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05865.html">wallFvPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07235.html">mappedWallPolyPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                     Class mappedWallFvPatch Declaration</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a01418.html">   49</a></span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a01418.html">mappedWallFvPatch</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02821.html">wallFvPatch</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a01418.html#a5753f25dadd1fbbfa2c8ae328d3a9175">TypeName</a>(mappedWallPolyPatch::typeName_());</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05858.html">extendedCentredFaceToCellStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08613.html">mapDistribute.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05865.html">faceToCellStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;Foam::extendedCentredFaceToCellStencil::extendedCentredFaceToCellStencil</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00699.html#a1563b2cb70c594784beac6de3cd928d2">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00737.html">faceToCellStencil</a>&amp; stencil</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a00702.html">extendedFaceToCellStencil</a>(stencil.<a class="code" href="a00737.html#aa51573bc757d5d5bb058db0464886447">mesh</a>()),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    stencil_(stencil)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Calculate distribute map (also renumbers elements in stencil)</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a01364.html">List&lt;Map&lt;label&gt;</a> &gt; compactMap(Pstream::nProcs());</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    mapPtr_.reset</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    (</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">new</span> <a class="code" href="a01402.html">mapDistribute</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        (</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            stencil.<a class="code" href="a00737.html#a7cc876f8ae62af6790496d9e6b9515d1">globalNumbering</a>(),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            stencil_,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            compactMap</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        )</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    );</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// Per face which elements of the stencil to keep.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a00699.html#a043cdfc194924194e381a986c229569e">   57</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00699.html#a043cdfc194924194e381a986c229569e">Foam::extendedCentredFaceToCellStencil::compact</a>()</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a01364.html">boolList</a> isInStencil(<a class="code" href="a00699.html#ac2f38d8ae12ea9c1897269e957494bd7">map</a>().constructSize(), <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="a01418.html#a59bc355144be1832d12011a921eccfc5">   64</a></span>&#160;        <a class="code" href="a01418.html#a59bc355144be1832d12011a921eccfc5">mappedWallFvPatch</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp; <a class="code" href="a00877.html#a205fadce5134baf710e41c91caf55b98">patch</a>,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00862.html">fvBoundaryMesh</a>&amp; bm</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        )</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        :</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <a class="code" href="a02821.html">wallFvPatch</a>(patch, bm)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        {}</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stencil_, faceI)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; stencilCells = stencil_[faceI];</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stencilCells, i)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            isInStencil[stencilCells[i]] = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    mapPtr_().compact(isInStencil, <a class="code" href="a02762.html#ae5b8fe6652f6320aa6c7f5c44b6f01b7">Pstream::msgType</a>());</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01922_html"><div class="ttname"><a href="a01922.html">Foam::polyPatch</a></div><div class="ttdoc">A patch is a list of labels that address the faces in the global face list. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00066">polyPatch.H:66</a></div></div>
-<div class="ttc" id="a00862_html"><div class="ttname"><a href="a00862.html">Foam::fvBoundaryMesh</a></div><div class="ttdoc">Foam::fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05814_source.html#l00052">fvBoundaryMesh.H:52</a></div></div>
-<div class="ttc" id="a01418_html_a59bc355144be1832d12011a921eccfc5"><div class="ttname"><a href="a01418.html#a59bc355144be1832d12011a921eccfc5">Foam::mappedWallFvPatch::mappedWallFvPatch</a></div><div class="ttdeci">mappedWallFvPatch(const polyPatch &amp;patch, const fvBoundaryMesh &amp;bm)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a05857_source.html#l00064">mappedWallFvPatch.H:64</a></div></div>
-<div class="ttc" id="a02821_html"><div class="ttname"><a href="a02821.html">Foam::wallFvPatch</a></div><div class="ttdoc">Foam::wallFvPatch. </div><div class="ttdef"><b>Definition:</b> <a href="a05865_source.html#l00049">wallFvPatch.H:49</a></div></div>
-<div class="ttc" id="a00877_html_a205fadce5134baf710e41c91caf55b98"><div class="ttname"><a href="a00877.html#a205fadce5134baf710e41c91caf55b98">Foam::fvPatch::patch</a></div><div class="ttdeci">const polyPatch &amp; patch() const </div><div class="ttdoc">Return the polyPatch. </div><div class="ttdef"><b>Definition:</b> <a href="a05867_source.html#l00143">fvPatch.H:143</a></div></div>
-<div class="ttc" id="a01418_html"><div class="ttname"><a href="a01418.html">Foam::mappedWallFvPatch</a></div><div class="ttdoc">Foam::mappedWallFvPatch. </div><div class="ttdef"><b>Definition:</b> <a href="a05857_source.html#l00049">mappedWallFvPatch.H:49</a></div></div>
-<div class="ttc" id="a05865_html"><div class="ttname"><a href="a05865.html">wallFvPatch.H</a></div></div>
-<div class="ttc" id="a01418_html_a5753f25dadd1fbbfa2c8ae328d3a9175"><div class="ttname"><a href="a01418.html#a5753f25dadd1fbbfa2c8ae328d3a9175">Foam::mappedWallFvPatch::TypeName</a></div><div class="ttdeci">TypeName(mappedWallPolyPatch::typeName_())</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a07235_html"><div class="ttname"><a href="a07235.html">mappedWallPolyPatch.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01402_html"><div class="ttname"><a href="a01402.html">Foam::mapDistribute</a></div><div class="ttdoc">Class containing processor-to-processor mapping information. </div><div class="ttdef"><b>Definition:</b> <a href="a08613_source.html#l00152">mapDistribute.H:152</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a05858_html"><div class="ttname"><a href="a05858.html">extendedCentredFaceToCellStencil.H</a></div></div>
+<div class="ttc" id="a02762_html_ae5b8fe6652f6320aa6c7f5c44b6f01b7"><div class="ttname"><a href="a02762.html#ae5b8fe6652f6320aa6c7f5c44b6f01b7">Foam::UPstream::msgType</a></div><div class="ttdeci">static int &amp; msgType()</div><div class="ttdoc">Message tag of standard messages. </div><div class="ttdef"><b>Definition:</b> <a href="a07806_source.html#l00451">UPstream.H:451</a></div></div>
+<div class="ttc" id="a08613_html"><div class="ttname"><a href="a08613.html">mapDistribute.H</a></div></div>
+<div class="ttc" id="a00737_html_a7cc876f8ae62af6790496d9e6b9515d1"><div class="ttname"><a href="a00737.html#a7cc876f8ae62af6790496d9e6b9515d1">Foam::faceToCellStencil::globalNumbering</a></div><div class="ttdeci">const globalIndex &amp; globalNumbering() const </div><div class="ttdoc">Global numbering for faces. </div><div class="ttdef"><b>Definition:</b> <a href="a05865_source.html#l00081">faceToCellStencil.H:81</a></div></div>
+<div class="ttc" id="a00699_html_ac2f38d8ae12ea9c1897269e957494bd7"><div class="ttname"><a href="a00699.html#ac2f38d8ae12ea9c1897269e957494bd7">Foam::extendedCentredFaceToCellStencil::map</a></div><div class="ttdeci">const mapDistribute &amp; map() const </div><div class="ttdoc">Return reference to the parallel distribution map. </div><div class="ttdef"><b>Definition:</b> <a href="a05858_source.html#l00085">extendedCentredFaceToCellStencil.H:85</a></div></div>
+<div class="ttc" id="a00737_html"><div class="ttname"><a href="a00737.html">Foam::faceToCellStencil</a></div><div class="ttdoc">baseclass for extended cell centred addressing. Contains per cell a list of neighbouring faces in glo...</div><div class="ttdef"><b>Definition:</b> <a href="a05865_source.html#l00054">faceToCellStencil.H:54</a></div></div>
+<div class="ttc" id="a05865_html"><div class="ttname"><a href="a05865.html">faceToCellStencil.H</a></div></div>
+<div class="ttc" id="a00699_html_a043cdfc194924194e381a986c229569e"><div class="ttname"><a href="a00699.html#a043cdfc194924194e381a986c229569e">Foam::extendedCentredFaceToCellStencil::compact</a></div><div class="ttdeci">void compact()</div><div class="ttdoc">After removing elements from the stencil adapt the schedule (map). </div><div class="ttdef"><b>Definition:</b> <a href="a05857_source.html#l00057">extendedCentredFaceToCellStencil.C:57</a></div></div>
+<div class="ttc" id="a00737_html_aa51573bc757d5d5bb058db0464886447"><div class="ttname"><a href="a00737.html#aa51573bc757d5d5bb058db0464886447">Foam::faceToCellStencil::mesh</a></div><div class="ttdeci">const polyMesh &amp; mesh() const </div><div class="ttdef"><b>Definition:</b> <a href="a05865_source.html#l00075">faceToCellStencil.H:75</a></div></div>
+<div class="ttc" id="a00702_html"><div class="ttname"><a href="a00702.html">Foam::extendedFaceToCellStencil</a></div><div class="ttdoc">Note: transformations on coupled patches not supported. Problem is the positions of cells reachable t...</div><div class="ttdef"><b>Definition:</b> <a href="a05860_source.html#l00054">extendedFaceToCellStencil.H:54</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

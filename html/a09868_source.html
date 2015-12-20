@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2778d089ec5c4f66810b11f753867003.html">thermophysicalModels</a></li><li class="navelem"><a class="el" href="dir_2ce177fbd1ffaf13b6b16622658e1c6b.html">barotropicCompressibilityModel</a></li><li class="navelem"><a class="el" href="dir_b4526b22dae03841b4449ae7d0d808d4.html">Wallis</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a88fe22feb23ce5f078a04a1df67721.html">surfMesh</a></li><li class="navelem"><a class="el" href="dir_3ad8f5f9808d8196d04eb1769c1a10a8.html">surfaceFormats</a></li><li class="navelem"><a class="el" href="dir_eeac2b85fcaa021005c601eccd2d10ba.html">tri</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Wallis.C</div>  </div>
+<div class="title">TRIsurfaceFormat.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09868.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,111 +119,143 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09869.html">Wallis.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">namespace </span>compressibilityModels</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="a10681.html#a82bbfabfe8d5f653dacbcf5c3386498e">defineTypeNameAndDebug</a>(Wallis, 0);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="a10681.html#a1c42ff52eb691e76fd90e2606c2765c2">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        (</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            barotropicCompressibilityModel,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            Wallis,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            dictionary</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        );</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::fileFormats::TRIsurfaceFormat</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Provide a means of reading/writing .tri format.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">Note</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    For efficiency, the zones are sorted before creating the faces.</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    The class is thus derived from MeshedSurface.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    TRIsurfaceFormat.C</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef TRIsurfaceFormat_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define TRIsurfaceFormat_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09870.html">TRIsurfaceFormatCore.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09808.html">MeshedSurface.H</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09819.html">MeshedSurfaceProxy.H</a>&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09910.html">UnsortedMeshedSurface.H</a>&quot;</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a02824.html#af1b81fe1cf8d4929a9b05cab13b1caab">Foam::compressibilityModels::Wallis::Wallis</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a02824.html#af1b81fe1cf8d4929a9b05cab13b1caab">   48</a></span>&#160;(</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; compressibilityProperties,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; gamma,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; psiName</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a00097.html">barotropicCompressibilityModel</a>(compressibilityProperties, gamma, psiName),</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    psiv_</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    (</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="stringliteral">&quot;psiv&quot;</span>,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a10675.html#a1ab87356f99b63baf49a97bdf96180ee">dimCompressibility</a>,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        compressibilityProperties_.lookup(<span class="stringliteral">&quot;psiv&quot;</span>)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    ),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    psil_</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    (</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="stringliteral">&quot;psil&quot;</span>,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a10675.html#a1ab87356f99b63baf49a97bdf96180ee">dimCompressibility</a>,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        compressibilityProperties_.lookup(<span class="stringliteral">&quot;psil&quot;</span>)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    ),</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    rhovSat_</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="stringliteral">&quot;rhovSat&quot;</span>,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <a class="code" href="a10675.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        compressibilityProperties_.lookup(<span class="stringliteral">&quot;rhovSat&quot;</span>)</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    ),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    rholSat_</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    (</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="stringliteral">&quot;rholSat&quot;</span>,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a10675.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        compressibilityProperties_.lookup(<span class="stringliteral">&quot;rholSat&quot;</span>)</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    )</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a>();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">namespace </span>fileFormats</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">                      Class TRIsurfaceFormat Declaration</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a02680.html">   58</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">class </span><a class="code" href="a02680.html">TRIsurfaceFormat</a></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01463.html">MeshedSurface</a>&lt;Face&gt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> writeShell</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        (</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <a class="code" href="a01736.html">Ostream</a>&amp;,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp;,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">const</span> Face&amp;,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> zoneI</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        );</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a02680.html">TRIsurfaceFormat</a>(<span class="keyword">const</span> <a class="code" href="a02680.html">TRIsurfaceFormat&lt;Face&gt;</a>&amp;);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02680.html">TRIsurfaceFormat&lt;Face&gt;</a>&amp;);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a02824.html#a3ae44b28050c3aa494c1d8e18cf618c1">   86</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02824.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::compressibilityModels::Wallis::correct</a>()</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a00097.html#ad71754752089f6346979e436e5c9b183">psi_</a> =</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        (<a class="code" href="a00097.html#a377d4512f89e38cd069829a4ce9ea6e9">gamma_</a>*rhovSat_ + (scalar(1) - <a class="code" href="a00097.html#a377d4512f89e38cd069829a4ce9ea6e9">gamma_</a>)*rholSat_)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;       *(<a class="code" href="a00097.html#a377d4512f89e38cd069829a4ce9ea6e9">gamma_</a>*psiv_/rhovSat_ + (scalar(1) - <a class="code" href="a00097.html#a377d4512f89e38cd069829a4ce9ea6e9">gamma_</a>)*psil_/rholSat_);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02824.html#a3a64ab9d5be1c13ec93e1d26e24cdaed">Foam::compressibilityModels::Wallis::read</a></div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="a02824.html#a3a64ab9d5be1c13ec93e1d26e24cdaed">   95</a></span>&#160;(</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; compressibilityProperties</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="a00097.html#aea56119aa194d3f49cd00384086b580d">barotropicCompressibilityModel::read</a>(compressibilityProperties);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    compressibilityProperties_.lookup(<span class="stringliteral">&quot;psiv&quot;</span>) &gt;&gt; psiv_;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    compressibilityProperties_.lookup(<span class="stringliteral">&quot;psil&quot;</span>) &gt;&gt; psil_;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    compressibilityProperties_.lookup(<span class="stringliteral">&quot;rhovSat&quot;</span>) &gt;&gt; rhovSat_;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    compressibilityProperties_.lookup(<span class="stringliteral">&quot;rholSat&quot;</span>) &gt;&gt; rholSat_;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Construct from file name</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a02680.html">TRIsurfaceFormat</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp;);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Selectors</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a02680.html#a8dc64188c74e635f2200458253577e10">   90</a></span>&#160;        <span class="comment">//- Read file and return surface</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">static</span> <a class="code" href="a00086.html">autoPtr&lt;MeshedSurface&lt;Face&gt;</a> &gt; <a class="code" href="a02680.html#a8dc64188c74e635f2200458253577e10">New</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;MeshedSurface&lt;Face&gt;</a> &gt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            (</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                <span class="keyword">new</span> <a class="code" href="a02680.html">TRIsurfaceFormat&lt;Face&gt;</a>(<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            );</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="a02680.html#adb51900510ab2b130a933d3bce2d9371">  100</a></span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02680.html#adb51900510ab2b130a933d3bce2d9371">~TRIsurfaceFormat</a>()</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">//- Write surface mesh components by proxy</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a02680.html#a2a1e1394d9dd8932b738248c123a267f">write</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp;, <span class="keyword">const</span> <a class="code" href="a01465.html">MeshedSurfaceProxy&lt;Face&gt;</a>&amp;);</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10681_html_a1c42ff52eb691e76fd90e2606c2765c2"><div class="ttname"><a href="a10681.html#a1c42ff52eb691e76fd90e2606c2765c2">Foam::compressibilityModels::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(barotropicCompressibilityModel, Chung, dictionary)</div></div>
-<div class="ttc" id="a02940_html_a8f2ec7df0ad2ec79360a5d964f55de87"><div class="ttname"><a href="a02940.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div><div class="ttdeci">Info&lt;&lt; &quot;Predicted p max-min : &quot;&lt;&lt; max(p).value()&lt;&lt; &quot; &quot;&lt;&lt; min(p).value()&lt;&lt; endl;rho==max(psi *p+alphal *rhol0+((alphav *psiv+alphal *psil)-psi)*pSat, rhoMin);#1&quot;/home/dm2/henry/OpenFOAM/OpenFOAM-dev/applications/solvers/multiphase/cavitatingFoam/alphavPsi.H&quot;1{alphav=max(min((rho-rholSat)/(rhovSat-rholSat), scalar(1)), scalar(0));alphal=1.0-alphav;Info&lt;&lt; &quot;max-min alphav: &quot;&lt;&lt; max(alphav).value()&lt;&lt; &quot; &quot;&lt;&lt; min(alphav).value()&lt;&lt; endl;psiModel-&gt; correct()</div><div class="ttdef"><b>Definition:</b> <a href="a02940_source.html#l00074">pEqn.H:74</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_adcb0103ec5c28a01ca3d8fffc9847651"><div class="ttname"><a href="a10675.html#adcb0103ec5c28a01ca3d8fffc9847651">Foam::dimDensity</a></div><div class="ttdeci">const dimensionSet dimDensity</div></div>
-<div class="ttc" id="a00097_html_aea56119aa194d3f49cd00384086b580d"><div class="ttname"><a href="a00097.html#aea56119aa194d3f49cd00384086b580d">Foam::barotropicCompressibilityModel::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;compressibilityProperties)=0</div><div class="ttdoc">Read compressibilityProperties dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09863_source.html#l00067">barotropicCompressibilityModel.C:67</a></div></div>
-<div class="ttc" id="a00097_html_a377d4512f89e38cd069829a4ce9ea6e9"><div class="ttname"><a href="a00097.html#a377d4512f89e38cd069829a4ce9ea6e9">Foam::barotropicCompressibilityModel::gamma_</a></div><div class="ttdeci">const volScalarField &amp; gamma_</div><div class="ttdef"><b>Definition:</b> <a href="a09864_source.html#l00071">barotropicCompressibilityModel.H:71</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00097_html_ad71754752089f6346979e436e5c9b183"><div class="ttname"><a href="a00097.html#ad71754752089f6346979e436e5c9b183">Foam::barotropicCompressibilityModel::psi_</a></div><div class="ttdeci">volScalarField psi_</div><div class="ttdef"><b>Definition:</b> <a href="a09864_source.html#l00070">barotropicCompressibilityModel.H:70</a></div></div>
-<div class="ttc" id="a09869_html"><div class="ttname"><a href="a09869.html">Wallis.H</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a10681_html_a82bbfabfe8d5f653dacbcf5c3386498e"><div class="ttname"><a href="a10681.html#a82bbfabfe8d5f653dacbcf5c3386498e">Foam::compressibilityModels::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(Chung, 0)</div></div>
-<div class="ttc" id="a02824_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a02824.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::compressibilityModels::Wallis::correct</a></div><div class="ttdeci">void correct()</div><div class="ttdoc">Correct the Wallis compressibility. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00086">Wallis.C:86</a></div></div>
-<div class="ttc" id="a02824_html_a3a64ab9d5be1c13ec93e1d26e24cdaed"><div class="ttname"><a href="a02824.html#a3a64ab9d5be1c13ec93e1d26e24cdaed">Foam::compressibilityModels::Wallis::read</a></div><div class="ttdeci">bool read(const dictionary &amp;compressibilityProperties)</div><div class="ttdoc">Read transportProperties dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00095">Wallis.C:95</a></div></div>
-<div class="ttc" id="a02824_html_af1b81fe1cf8d4929a9b05cab13b1caab"><div class="ttname"><a href="a02824.html#af1b81fe1cf8d4929a9b05cab13b1caab">Foam::compressibilityModels::Wallis::Wallis</a></div><div class="ttdeci">Wallis(const dictionary &amp;compressibilityProperties, const volScalarField &amp;gamma, const word &amp;psiName=&quot;psi&quot;)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00048">Wallis.C:48</a></div></div>
-<div class="ttc" id="a10675_html_a1ab87356f99b63baf49a97bdf96180ee"><div class="ttname"><a href="a10675.html#a1ab87356f99b63baf49a97bdf96180ee">Foam::dimCompressibility</a></div><div class="ttdeci">const dimensionSet dimCompressibility</div></div>
-<div class="ttc" id="a00097_html"><div class="ttname"><a href="a00097.html">Foam::barotropicCompressibilityModel</a></div><div class="ttdoc">Abstract class for barotropic compressibility models. </div><div class="ttdef"><b>Definition:</b> <a href="a09864_source.html#l00061">barotropicCompressibilityModel.H:61</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="comment">//- Write UnsortedMeshedSurface,</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">//  by default the output is not sorted by zones</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a02680.html#a2a1e1394d9dd8932b738248c123a267f">write</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp;, <span class="keyword">const</span> <a class="code" href="a02757.html">UnsortedMeshedSurface&lt;Face&gt;</a>&amp;);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//- Read from file</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a02680.html#a464ebd67acbdff0014d4dae69e3ec4be">read</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp;);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="a02680.html#a5cf9d1a8c08e045a6bbcab04a3ec2d79">  117</a></span>&#160;        <span class="comment">//- Write object</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02680.html#a2a1e1394d9dd8932b738248c123a267f">write</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <a class="code" href="a02680.html#a2a1e1394d9dd8932b738248c123a267f">write</a>(name, <a class="code" href="a01465.html">MeshedSurfaceProxy&lt;Face&gt;</a>(*<span class="keyword">this</span>));</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;};</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// End namespace fileFormats</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a09867.html">TRIsurfaceFormat.C</a>&quot;</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02680_html_adb51900510ab2b130a933d3bce2d9371"><div class="ttname"><a href="a02680.html#adb51900510ab2b130a933d3bce2d9371">Foam::fileFormats::TRIsurfaceFormat::~TRIsurfaceFormat</a></div><div class="ttdeci">virtual ~TRIsurfaceFormat()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00100">TRIsurfaceFormat.H:100</a></div></div>
+<div class="ttc" id="a02680_html"><div class="ttname"><a href="a02680.html">Foam::fileFormats::TRIsurfaceFormat</a></div><div class="ttdoc">Provide a means of reading/writing .tri format. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00058">TRIsurfaceFormat.H:58</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a09867_html"><div class="ttname"><a href="a09867.html">TRIsurfaceFormat.C</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a09870_html"><div class="ttname"><a href="a09870.html">TRIsurfaceFormatCore.H</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a02680_html_a8dc64188c74e635f2200458253577e10"><div class="ttname"><a href="a02680.html#a8dc64188c74e635f2200458253577e10">Foam::fileFormats::TRIsurfaceFormat::New</a></div><div class="ttdeci">static autoPtr&lt; MeshedSurface&lt; Face &gt; &gt; New(const fileName &amp;name)</div><div class="ttdoc">Read file and return surface. </div><div class="ttdef"><b>Definition:</b> <a href="a09868_source.html#l00090">TRIsurfaceFormat.H:90</a></div></div>
+<div class="ttc" id="a01463_html"><div class="ttname"><a href="a01463.html">Foam::MeshedSurface</a></div><div class="ttdoc">A surface geometry mesh with zone information, not to be confused with the similarly named surfaceMes...</div><div class="ttdef"><b>Definition:</b> <a href="a09808_source.html#l00072">MeshedSurface.H:72</a></div></div>
+<div class="ttc" id="a02680_html_a2a1e1394d9dd8932b738248c123a267f"><div class="ttname"><a href="a02680.html#a2a1e1394d9dd8932b738248c123a267f">Foam::fileFormats::TRIsurfaceFormat::write</a></div><div class="ttdeci">static void write(const fileName &amp;, const MeshedSurfaceProxy&lt; Face &gt; &amp;)</div><div class="ttdoc">Write surface mesh components by proxy. </div><div class="ttdef"><b>Definition:</b> <a href="a09867_source.html#l00130">TRIsurfaceFormat.C:130</a></div></div>
+<div class="ttc" id="a09808_html"><div class="ttname"><a href="a09808.html">MeshedSurface.H</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a02680_html_a464ebd67acbdff0014d4dae69e3ec4be"><div class="ttname"><a href="a02680.html#a464ebd67acbdff0014d4dae69e3ec4be">Foam::fileFormats::TRIsurfaceFormat::read</a></div><div class="ttdeci">virtual bool read(const fileName &amp;)</div><div class="ttdoc">Read from file. </div><div class="ttdef"><b>Definition:</b> <a href="a09867_source.html#l00075">TRIsurfaceFormat.C:75</a></div></div>
+<div class="ttc" id="a02757_html"><div class="ttname"><a href="a02757.html">Foam::UnsortedMeshedSurface</a></div><div class="ttdoc">A surface geometry mesh, in which the surface zone information is conveyed by the &#39;zoneId&#39; associated...</div><div class="ttdef"><b>Definition:</b> <a href="a09808_source.html#l00074">MeshedSurface.H:74</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a09819_html"><div class="ttname"><a href="a09819.html">MeshedSurfaceProxy.H</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
+<div class="ttc" id="a01465_html"><div class="ttname"><a href="a01465.html">Foam::MeshedSurfaceProxy</a></div><div class="ttdoc">A proxy for writing MeshedSurface, UnsortedMeshedSurface and surfMesh to various file formats...</div><div class="ttdef"><b>Definition:</b> <a href="a09808_source.html#l00073">MeshedSurface.H:73</a></div></div>
+<div class="ttc" id="a09910_html"><div class="ttname"><a href="a09910.html">UnsortedMeshedSurface.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

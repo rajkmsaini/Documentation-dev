@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_606ba9250f9107f82f779cbd3e87c3a5.html">surfaceFields</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_807b34448f78de7c3bc4530ef499b703.html">fvsPatchFields</a></li><li class="navelem"><a class="el" href="dir_d3657b0b23136d928b995b4c42c4ccd9.html">constraint</a></li><li class="navelem"><a class="el" href="dir_aab87f9b9206032315b3d7957ab585c0.html">cyclicAMI</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">surfaceFieldsFwd.H</div>  </div>
+<div class="title">cyclicAMIFvsPatchField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05550.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,61 +119,135 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InClass</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::surfaceFields</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    surfaceFields.C</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef surfaceFieldsFwd_H</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define surfaceFieldsFwd_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07902.html">fieldTypes.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05551.html">cyclicAMIFvsPatchField.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::cyclicAMIFvsPatchField</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">   32</a></span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, surfaceMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a00419.html">coupledFvsPatchField&lt;Type&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    cyclicAMIPatch_(refCast&lt;const cyclicAMIFvPatch&gt;(p))</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{}</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">class </span>surfaceMesh;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span>fvsPatchField;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>PatchField, <span class="keyword">class </span>GeoMesh&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">   52</a></span>&#160;<span class="keyword">class </span><a class="code" href="a00913.html">GeometricField</a>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;scalar, fvsPatchField, surfaceMesh&gt;</a> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a10675.html#a03ee7dc90e4ee1d0a19b4fa780bb694b">   55</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;vector, fvsPatchField, surfaceMesh&gt;</a> <a class="code" href="a10675.html#a03ee7dc90e4ee1d0a19b4fa780bb694b">surfaceVectorField</a>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;sphericalTensor, fvsPatchField, surfaceMesh&gt;</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a10675.html#a97a48655bdc4b8d99d01fe193a824815">   57</a></span>&#160;    <a class="code" href="a10675.html#a97a48655bdc4b8d99d01fe193a824815">surfaceSphericalTensorField</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;symmTensor, fvsPatchField, surfaceMesh&gt;</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a10675.html#ae822e09d35b2019f22afff863a148c27">   59</a></span>&#160;    <a class="code" href="a10675.html#ae822e09d35b2019f22afff863a148c27">surfaceSymmTensorField</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a10675.html#a8cb0e2db1faac741b298f985b9f47ac6">   60</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;tensor, fvsPatchField, surfaceMesh&gt;</a> <a class="code" href="a10675.html#a8cb0e2db1faac741b298f985b9f47ac6">surfaceTensorField</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::cyclicAMIFvsPatchField</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a00467.html#a22a4d7621466f85909288b6ea9b00d34">   44</a></span>&#160;(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00467.html">cyclicAMIFvsPatchField&lt;Type&gt;</a>&amp; ptf,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, surfaceMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp; mapper</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a00419.html">coupledFvsPatchField&lt;Type&gt;</a>(ptf, <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF, mapper),</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    cyclicAMIPatch_(refCast&lt;const cyclicAMIFvPatch&gt;(p))</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (!isA&lt;cyclicAMIFvPatch&gt;(this-&gt;patch()))</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Field type does not correspond to patch type for patch &quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            &lt;&lt; this-&gt;patch().index() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Field type: &quot;</span> &lt;&lt; typeName &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Patch type: &quot;</span> &lt;&lt; this-&gt;patch().type()</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a8cb0e2db1faac741b298f985b9f47ac6"><div class="ttname"><a href="a10675.html#a8cb0e2db1faac741b298f985b9f47ac6">Foam::surfaceTensorField</a></div><div class="ttdeci">GeometricField&lt; tensor, fvsPatchField, surfaceMesh &gt; surfaceTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00060">surfaceFieldsFwd.H:60</a></div></div>
-<div class="ttc" id="a10675_html_a03ee7dc90e4ee1d0a19b4fa780bb694b"><div class="ttname"><a href="a10675.html#a03ee7dc90e4ee1d0a19b4fa780bb694b">Foam::surfaceVectorField</a></div><div class="ttdeci">GeometricField&lt; vector, fvsPatchField, surfaceMesh &gt; surfaceVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00055">surfaceFieldsFwd.H:55</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a07902_html"><div class="ttname"><a href="a07902.html">fieldTypes.H</a></div><div class="ttdoc">Include the header files for all the primitive types that Fields are instantiated for...</div></div>
-<div class="ttc" id="a10675_html_ae822e09d35b2019f22afff863a148c27"><div class="ttname"><a href="a10675.html#ae822e09d35b2019f22afff863a148c27">Foam::surfaceSymmTensorField</a></div><div class="ttdeci">GeometricField&lt; symmTensor, fvsPatchField, surfaceMesh &gt; surfaceSymmTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00059">surfaceFieldsFwd.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a97a48655bdc4b8d99d01fe193a824815"><div class="ttname"><a href="a10675.html#a97a48655bdc4b8d99d01fe193a824815">Foam::surfaceSphericalTensorField</a></div><div class="ttdeci">GeometricField&lt; sphericalTensor, fvsPatchField, surfaceMesh &gt; surfaceSphericalTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00057">surfaceFieldsFwd.H:57</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<a class="code" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::cyclicAMIFvsPatchField</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00467.html#a4d01eda2e3c5a95d5557fdddf723991f">   68</a></span>&#160;(</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, surfaceMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a00419.html">coupledFvsPatchField&lt;Type&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF, <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>),</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    cyclicAMIPatch_(refCast&lt;const cyclicAMIFvPatch&gt;(p))</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (!isA&lt;cyclicAMIFvPatch&gt;(p))</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        (</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            dict</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;patch &quot;</span> &lt;&lt; this-&gt;patch().index() &lt;&lt; <span class="stringliteral">&quot; not cyclicAMI type. &quot;</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Patch type = &quot;</span> &lt;&lt; p.type()</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<a class="code" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::cyclicAMIFvsPatchField</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="a00467.html#a01d86ce0f7746d8014b8fa04616491bd">   91</a></span>&#160;(</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00467.html">cyclicAMIFvsPatchField&lt;Type&gt;</a>&amp; ptf</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;:</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="a00419.html">coupledFvsPatchField&lt;Type&gt;</a>(ptf),</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    cyclicAMIPatch_(ptf.cyclicAMIPatch_)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;{}</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<a class="code" href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::cyclicAMIFvsPatchField</a></div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="a00467.html#ae591b1febc0a908f53042960d08306a1">  102</a></span>&#160;(</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00467.html">cyclicAMIFvsPatchField&lt;Type&gt;</a>&amp; ptf,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;Type, surfaceMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;:</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a00419.html">coupledFvsPatchField&lt;Type&gt;</a>(ptf, iF),</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    cyclicAMIPatch_(ptf.cyclicAMIPatch_)</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{}</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a00467.html#acfe51ad7322334dcaa65f0cbdfe3b3c5">  115</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00467.html#acfe51ad7322334dcaa65f0cbdfe3b3c5">Foam::cyclicAMIFvsPatchField&lt;Type&gt;::coupled</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    (</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        Pstream::parRun()</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;     || (</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            this-&gt;cyclicAMIPatch_.size()</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;         &amp;&amp; this-&gt;cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().size()</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        )</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    )</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00467_html_a04b44b60dd136e272c3b0fbc107ebaa3"><div class="ttname"><a href="a00467.html#a04b44b60dd136e272c3b0fbc107ebaa3">Foam::cyclicAMIFvsPatchField::cyclicAMIFvsPatchField</a></div><div class="ttdeci">cyclicAMIFvsPatchField(const fvPatch &amp;, const DimensionedField&lt; Type, surfaceMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00032">cyclicAMIFvsPatchField.C:32</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a00467_html"><div class="ttname"><a href="a00467.html">Foam::cyclicAMIFvsPatchField</a></div><div class="ttdoc">Foam::cyclicAMIFvsPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a05551_source.html#l00050">cyclicAMIFvsPatchField.H:50</a></div></div>
+<div class="ttc" id="a07724_html_ace9d7789841cd28051f24d4eea0688f9"><div class="ttname"><a href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a></div><div class="ttdeci">#define FatalIOErrorInFunction(ios)</div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00331">error.H:331</a></div></div>
+<div class="ttc" id="a10725_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a00467_html_acfe51ad7322334dcaa65f0cbdfe3b3c5"><div class="ttname"><a href="a00467.html#acfe51ad7322334dcaa65f0cbdfe3b3c5">Foam::cyclicAMIFvsPatchField::coupled</a></div><div class="ttdeci">virtual bool coupled() const </div><div class="ttdoc">Return true if running parallel. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00115">cyclicAMIFvsPatchField.C:115</a></div></div>
+<div class="ttc" id="a04434_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04434_source.html#l00051">createFields.H:51</a></div></div>
+<div class="ttc" id="a05551_html"><div class="ttname"><a href="a05551.html">cyclicAMIFvsPatchField.H</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
+<div class="ttc" id="a00419_html"><div class="ttname"><a href="a00419.html">Foam::coupledFvsPatchField</a></div><div class="ttdoc">Foam::coupledFvsPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a05526_source.html#l00050">coupledFvsPatchField.H:50</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

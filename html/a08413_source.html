@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_162c770ecfd5d3d84e768ef2f1993e65.html">Identifiers</a></li><li class="navelem"><a class="el" href="dir_b25f3b96b2d3b555146fd9e7423c56f6.html">patch</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_bc5ac06cc00a3fec2cee09a221225a3b.html">smoothSolver</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">coupleGroupIdentifier.H</div>  </div>
+<div class="title">smoothSolver.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08413.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,127 +120,119 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::coupleGroupIdentifier</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::smoothSolver</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Encapsulates using patchGroups to specify coupled patch</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    coupleGroupIdentifierI.H</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    coupleGroupIdentifier.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    coupleGroupIdentifierIO.C</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Iterative solver for symmetric and asymetric matrices which uses a</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    run-time selected smoother e.g. GaussSeidel to converge the solution to</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    the required tolerance.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    To improve efficiency, the residual is evaluated after every nSweeps</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    smoothing iterations.</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef coupleGroupIdentifier_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define coupleGroupIdentifier_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    smoothSolver.C</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08933.html">word.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08831.html">label.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifndef smoothSolver_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define smoothSolver_H</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08286.html">lduMatrix.H</a>&quot;</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// Forward declaration of classes</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span>dictionary;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span>polyMesh;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">class </span>polyPatch;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span>Ostream;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// Forward declaration of friend functions and operators</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">class </span>coupleGroupIdentifier;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;Ostream&amp; <a class="code" href="a10675.html#ae86a76a63deefbe1a4490c873ad8e1b2">operator&lt;&lt;</a>(Ostream&amp;, <span class="keyword">const</span> coupleGroupIdentifier&amp;);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">                         Class coupleGroupIdentifier Declaration</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a00417.html">   62</a></span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">class </span><a class="code" href="a00417.html">coupleGroupIdentifier</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Name of patchGroup</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="a02856.html">word</a> name_;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">                           Class smoothSolver Declaration</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a02358.html">   53</a></span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a02358.html">smoothSolver</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02378.html">lduMatrix::solver</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Protected data</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a02358.html#a54e9dd7b56174a84369d82138063f79a">   62</a></span>&#160;        <span class="comment">//- Number of sweeps before the evaluation of residual</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02358.html#a54e9dd7b56174a84369d82138063f79a">nSweeps_</a>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//- Read the control parameters from the controlDict_</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02358.html#aa431c382ed4170712dab339fbfd87f5b">readControls</a>();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a02358.html#a650b90082a872c8884bb175d0ae0bce7">TypeName</a>(<span class="stringliteral">&quot;smoothSolver&quot;</span>);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//- Find other patch in specified mesh. Returns index of patch or -1.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> findOtherPatchID(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp;, <span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">//- Construct null</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="a00417.html#afec6b6e26bc7693b19361236e6aa0eee">coupleGroupIdentifier</a>();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a00417.html#afec6b6e26bc7693b19361236e6aa0eee">coupleGroupIdentifier</a>(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; patchGroupName);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Construct from matrix components and solver controls</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="a02358.html#a11de35c14cf8773f1fbe00a25b8d81b5">smoothSolver</a></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        (</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a02378.html#a074540ca22ec16e716d95b4be8dd6f97">fieldName</a>,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01282.html">lduMatrix</a>&amp; <a class="code" href="a02378.html#a6c69a7b7081aed05771c6da44c39d654">matrix</a>,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; <a class="code" href="a02378.html#a9ef43df451b9271f3df59c4acdb5ed35">interfaceBouCoeffs</a>,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; <a class="code" href="a02378.html#a2cf70db201a068874f3dfbbdb7808b33">interfaceIntCoeffs</a>,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02764.html">lduInterfaceFieldPtrsList</a>&amp; <a class="code" href="a02378.html#a154f979eccaf538c3609f8c895b97ada">interfaces</a>,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; solverControls</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        );</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Construct from dictionary</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a00417.html#afec6b6e26bc7693b19361236e6aa0eee">coupleGroupIdentifier</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp;);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Name of patchGroup</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a00417.html#a6d60057c26042eaf7fa1b3b6fb07b582">name</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//- Is a valid patchGroup</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a00417.html#a8d985300b138b6c5556ab17ed4df3b38">valid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Find other patch in same region. Returns index of patch or -1.</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> findOtherPatchID(<span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Find other patch and region. Returns index of patch and sets</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">//  otherRegion to name of region. Fatal error if patch not found</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> findOtherPatchID(<span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp;, <a class="code" href="a02856.html">word</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="a02358.html#ab7d0465afa6ab6659a4f7c4a2c17e59a">   88</a></span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02358.html#ab7d0465afa6ab6659a4f7c4a2c17e59a">~smoothSolver</a>()</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {}</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">//- Solve the matrix with this solver</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02380.html">solverPerformance</a> <a class="code" href="a02358.html#a67060ce780f6992862e39b0d82c37aa0">solve</a></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        (</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <a class="code" href="a00755.html">scalarField</a>&amp; <a class="code" href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a>,</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; source,</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt=0</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">//- Write the data as a dictionary</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00417.html#a0941061ad5a26be83b4107d05750ace6">write</a>(<a class="code" href="a01725.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">// IOstream Operators</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keyword">friend</span> <a class="code" href="a01725.html">Ostream</a>&amp; <a class="code" href="a00417.html#a288cd6ed10c4df2cece27db89ea02fbe">operator&lt;&lt;</a>(<a class="code" href="a01725.html">Ostream</a>&amp;, <span class="keyword">const</span> <a class="code" href="a00417.html">coupleGroupIdentifier</a>&amp;);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;};</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08414.html">coupleGroupIdentifierI.H</a>&quot;</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01922_html"><div class="ttname"><a href="a01922.html">Foam::polyPatch</a></div><div class="ttdoc">A patch is a list of labels that address the faces in the global face list. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00066">polyPatch.H:66</a></div></div>
-<div class="ttc" id="a00417_html_a8d985300b138b6c5556ab17ed4df3b38"><div class="ttname"><a href="a00417.html#a8d985300b138b6c5556ab17ed4df3b38">Foam::coupleGroupIdentifier::valid</a></div><div class="ttdeci">bool valid() const </div><div class="ttdoc">Is a valid patchGroup. </div><div class="ttdef"><b>Definition:</b> <a href="a08414_source.html#l00036">coupleGroupIdentifierI.H:36</a></div></div>
-<div class="ttc" id="a00417_html_a6d60057c26042eaf7fa1b3b6fb07b582"><div class="ttname"><a href="a00417.html#a6d60057c26042eaf7fa1b3b6fb07b582">Foam::coupleGroupIdentifier::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Name of patchGroup. </div><div class="ttdef"><b>Definition:</b> <a href="a08414_source.html#l00030">coupleGroupIdentifierI.H:30</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a08414_html"><div class="ttname"><a href="a08414.html">coupleGroupIdentifierI.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00417_html_afec6b6e26bc7693b19361236e6aa0eee"><div class="ttname"><a href="a00417.html#afec6b6e26bc7693b19361236e6aa0eee">Foam::coupleGroupIdentifier::coupleGroupIdentifier</a></div><div class="ttdeci">coupleGroupIdentifier()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a08412_source.html#l00145">coupleGroupIdentifier.C:145</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00417_html_a288cd6ed10c4df2cece27db89ea02fbe"><div class="ttname"><a href="a00417.html#a288cd6ed10c4df2cece27db89ea02fbe">Foam::coupleGroupIdentifier::operator&lt;&lt;</a></div><div class="ttdeci">friend Ostream &amp; operator&lt;&lt;(Ostream &amp;, const coupleGroupIdentifier &amp;)</div></div>
-<div class="ttc" id="a00417_html"><div class="ttname"><a href="a00417.html">Foam::coupleGroupIdentifier</a></div><div class="ttdoc">Encapsulates using patchGroups to specify coupled patch. </div><div class="ttdef"><b>Definition:</b> <a href="a08413_source.html#l00062">coupleGroupIdentifier.H:62</a></div></div>
-<div class="ttc" id="a08933_html"><div class="ttname"><a href="a08933.html">word.H</a></div></div>
-<div class="ttc" id="a08831_html"><div class="ttname"><a href="a08831.html">label.H</a></div></div>
-<div class="ttc" id="a00417_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a00417.html#a0941061ad5a26be83b4107d05750ace6">Foam::coupleGroupIdentifier::write</a></div><div class="ttdeci">void write(Ostream &amp;) const </div><div class="ttdoc">Write the data as a dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a08412_source.html#l00241">coupleGroupIdentifier.C:241</a></div></div>
-<div class="ttc" id="a10675_html_ae86a76a63deefbe1a4490c873ad8e1b2"><div class="ttname"><a href="a10675.html#ae86a76a63deefbe1a4490c873ad8e1b2">Foam::operator&lt;&lt;</a></div><div class="ttdeci">Ostream &amp; operator&lt;&lt;(Ostream &amp;, const edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04915_source.html#l00133">edgeMeshIO.C:133</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02380_html"><div class="ttname"><a href="a02380.html">Foam::SolverPerformance</a></div><div class="ttdoc">SolverPerformance is the class returned by the LduMatrix solver containing performance statistics...</div><div class="ttdef"><b>Definition:</b> <a href="a08304_source.html#l00049">SolverPerformance.H:49</a></div></div>
+<div class="ttc" id="a02358_html_a54e9dd7b56174a84369d82138063f79a"><div class="ttname"><a href="a02358.html#a54e9dd7b56174a84369d82138063f79a">Foam::smoothSolver::nSweeps_</a></div><div class="ttdeci">label nSweeps_</div><div class="ttdoc">Number of sweeps before the evaluation of residual. </div><div class="ttdef"><b>Definition:</b> <a href="a08413_source.html#l00062">smoothSolver.H:62</a></div></div>
+<div class="ttc" id="a10725_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10725.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08824_source.html#l00043">direction.H:43</a></div></div>
+<div class="ttc" id="a02378_html_a6c69a7b7081aed05771c6da44c39d654"><div class="ttname"><a href="a02378.html#a6c69a7b7081aed05771c6da44c39d654">Foam::lduMatrix::solver::matrix</a></div><div class="ttdeci">const lduMatrix &amp; matrix() const </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00221">lduMatrix.H:221</a></div></div>
+<div class="ttc" id="a00762_html"><div class="ttname"><a href="a00762.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07908_source.html#l00051">FieldField.H:51</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02764_html"><div class="ttname"><a href="a02764.html">Foam::UPtrList&lt; const lduInterfaceField &gt;</a></div></div>
+<div class="ttc" id="a02358_html_a11de35c14cf8773f1fbe00a25b8d81b5"><div class="ttname"><a href="a02358.html#a11de35c14cf8773f1fbe00a25b8d81b5">Foam::smoothSolver::smoothSolver</a></div><div class="ttdeci">smoothSolver(const word &amp;fieldName, const lduMatrix &amp;matrix, const FieldField&lt; Field, scalar &gt; &amp;interfaceBouCoeffs, const FieldField&lt; Field, scalar &gt; &amp;interfaceIntCoeffs, const lduInterfaceFieldPtrsList &amp;interfaces, const dictionary &amp;solverControls)</div><div class="ttdoc">Construct from matrix components and solver controls. </div><div class="ttdef"><b>Definition:</b> <a href="a08411_source.html#l00045">smoothSolver.C:45</a></div></div>
+<div class="ttc" id="a01282_html"><div class="ttname"><a href="a01282.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00077">lduMatrix.H:77</a></div></div>
+<div class="ttc" id="a02378_html_a074540ca22ec16e716d95b4be8dd6f97"><div class="ttname"><a href="a02378.html#a074540ca22ec16e716d95b4be8dd6f97">Foam::lduMatrix::solver::fieldName</a></div><div class="ttdeci">const word &amp; fieldName() const </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00216">lduMatrix.H:216</a></div></div>
+<div class="ttc" id="a02358_html_aa431c382ed4170712dab339fbfd87f5b"><div class="ttname"><a href="a02358.html#aa431c382ed4170712dab339fbfd87f5b">Foam::smoothSolver::readControls</a></div><div class="ttdeci">virtual void readControls()</div><div class="ttdoc">Read the control parameters from the controlDict_. </div><div class="ttdef"><b>Definition:</b> <a href="a08411_source.html#l00070">smoothSolver.C:70</a></div></div>
+<div class="ttc" id="a08286_html"><div class="ttname"><a href="a08286.html">lduMatrix.H</a></div></div>
+<div class="ttc" id="a02358_html_ab7d0465afa6ab6659a4f7c4a2c17e59a"><div class="ttname"><a href="a02358.html#ab7d0465afa6ab6659a4f7c4a2c17e59a">Foam::smoothSolver::~smoothSolver</a></div><div class="ttdeci">virtual ~smoothSolver()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08413_source.html#l00088">smoothSolver.H:88</a></div></div>
+<div class="ttc" id="a02378_html_a154f979eccaf538c3609f8c895b97ada"><div class="ttname"><a href="a02378.html#a154f979eccaf538c3609f8c895b97ada">Foam::lduMatrix::solver::interfaces</a></div><div class="ttdeci">const lduInterfaceFieldPtrsList &amp; interfaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00236">lduMatrix.H:236</a></div></div>
+<div class="ttc" id="a02358_html"><div class="ttname"><a href="a02358.html">Foam::smoothSolver</a></div><div class="ttdoc">Iterative solver for symmetric and asymetric matrices which uses a run-time selected smoother e...</div><div class="ttdef"><b>Definition:</b> <a href="a08413_source.html#l00053">smoothSolver.H:53</a></div></div>
+<div class="ttc" id="a02378_html"><div class="ttname"><a href="a02378.html">Foam::lduMatrix::solver</a></div><div class="ttdoc">Abstract base-class for lduMatrix solvers. </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00091">lduMatrix.H:91</a></div></div>
+<div class="ttc" id="a02358_html_a67060ce780f6992862e39b0d82c37aa0"><div class="ttname"><a href="a02358.html#a67060ce780f6992862e39b0d82c37aa0">Foam::smoothSolver::solve</a></div><div class="ttdeci">virtual solverPerformance solve(scalarField &amp;psi, const scalarField &amp;source, const direction cmpt=0) const </div><div class="ttdoc">Solve the matrix with this solver. </div><div class="ttdef"><b>Definition:</b> <a href="a08411_source.html#l00078">smoothSolver.C:78</a></div></div>
+<div class="ttc" id="a02358_html_a650b90082a872c8884bb175d0ae0bce7"><div class="ttname"><a href="a02358.html#a650b90082a872c8884bb175d0ae0bce7">Foam::smoothSolver::TypeName</a></div><div class="ttdeci">TypeName(&quot;smoothSolver&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a02378_html_a2cf70db201a068874f3dfbbdb7808b33"><div class="ttname"><a href="a02378.html#a2cf70db201a068874f3dfbbdb7808b33">Foam::lduMatrix::solver::interfaceIntCoeffs</a></div><div class="ttdeci">const FieldField&lt; Field, scalar &gt; &amp; interfaceIntCoeffs() const </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00231">lduMatrix.H:231</a></div></div>
+<div class="ttc" id="a04435_html_aba679271c41582099c8ccf4827fdf217"><div class="ttname"><a href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a></div><div class="ttdeci">const volScalarField &amp; psi</div><div class="ttdef"><b>Definition:</b> <a href="a04435_source.html#l00024">createFields.H:24</a></div></div>
+<div class="ttc" id="a02378_html_a9ef43df451b9271f3df59c4acdb5ed35"><div class="ttname"><a href="a02378.html#a9ef43df451b9271f3df59c4acdb5ed35">Foam::lduMatrix::solver::interfaceBouCoeffs</a></div><div class="ttdeci">const FieldField&lt; Field, scalar &gt; &amp; interfaceBouCoeffs() const </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00226">lduMatrix.H:226</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

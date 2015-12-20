@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e8edcdfe104a2a1ceea328e2145ca73e.html">foamCalcFunctions</a></li><li class="navelem"><a class="el" href="dir_bfcb018a42f8a829ae9e479a66188d55.html">field</a></li><li class="navelem"><a class="el" href="dir_bae163c868176cad6783a0178d58c7e0.html">magGrad</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_72b2b5518d1565784443265ec6729f79.html">parallel</a></li><li class="navelem"><a class="el" href="dir_e048e8eb4dfe5719d368ebac837fe95a.html">decompose</a></li><li class="navelem"><a class="el" href="dir_e3b70d1802e286fd48b60eaae8da0038.html">decompositionMethods</a></li><li class="navelem"><a class="el" href="dir_7ffa20d0afea54e9798dd03bd5f9f8bc.html">manualDecomp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">writeMagGradField.C</div>  </div>
+<div class="title">manualDecomp.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09100.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,57 +119,124 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01382.html#a5f2b39e6cf7683c3580671a1c6400858">Foam::calcTypes::magGrad::writeMagGradField</a></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="a01382.html#a5f2b39e6cf7683c3580671a1c6400858">   28</a></span>&#160;(</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01170.html">IOobject</a>&amp; header,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span>&amp; processed</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> fieldType;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Decomposition given a cell-to-processor association in a file</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09101.html">manualDecomp.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07769.html">IFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08886.html">labelIOList.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span> (header.<a class="code" href="a01170.html#a88c20567fd22659923753b6b3e3966c3">headerClassName</a>() == fieldType::typeName)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Reading &quot;</span> &lt;&lt; header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        fieldType field(header, mesh);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Calculating magGrad&quot;</span> &lt;&lt; header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a00913.html">volScalarField</a> magGradField</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        (</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            (</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="stringliteral">&quot;magGrad&quot;</span> + header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>(),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                mesh.<a class="code" href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                IOobject::NO_READ</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            ),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a>(<a class="code" href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">fvc::grad</a>(field))</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        );</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        magGradField.<a class="code" href="a02134.html#a6e5faa425b059eeb55cd904755791076">write</a>();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        processed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="ttc" id="a01170_html_a88c20567fd22659923753b6b3e3966c3"><div class="ttname"><a href="a01170.html#a88c20567fd22659923753b6b3e3966c3">Foam::IOobject::headerClassName</a></div><div class="ttdeci">const word &amp; headerClassName() const </div><div class="ttdoc">Return name of the class name read from header. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00266">IOobject.H:266</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00868_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00243">fvMesh.H:243</a></div></div>
-<div class="ttc" id="a02134_html_a6e5faa425b059eeb55cd904755791076"><div class="ttname"><a href="a02134.html#a6e5faa425b059eeb55cd904755791076">Foam::regIOobject::write</a></div><div class="ttdeci">virtual bool write() const </div><div class="ttdoc">Write using setting from DB. </div><div class="ttdef"><b>Definition:</b> <a href="a07787_source.html#l00126">regIOobjectWrite.C:126</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01382_html_a5f2b39e6cf7683c3580671a1c6400858"><div class="ttname"><a href="a01382.html#a5f2b39e6cf7683c3580671a1c6400858">Foam::calcTypes::magGrad::writeMagGradField</a></div><div class="ttdeci">void writeMagGradField(const IOobject &amp;header, const fvMesh &amp;mesh, bool &amp;processed)</div><div class="ttdoc">Write magGrad fields. </div><div class="ttdef"><b>Definition:</b> <a href="a09100_source.html#l00028">writeMagGradField.C:28</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10709_html_a7c00ec90ecc15ed3005255e42c52827a"><div class="ttname"><a href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">Foam::fvc::grad</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; typename outerProduct&lt; vector, Type &gt;::type, fvPatchField, volMesh &gt;&gt; grad(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05630_source.html#l00052">fvcGrad.C:52</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(manualDecomp, 0);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        decompositionMethod,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        manualDecomp,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        dictionary</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a01396.html#a28929a436e9cf15f96190d1e1f869a40">   51</a></span>&#160;Foam::manualDecomp::manualDecomp(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; decompositionDict)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a00506.html">decompositionMethod</a>(decompositionDict),</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    decompDataFile_</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    (</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        decompositionDict.subDict(<a class="code" href="a02869.html">word</a>(decompositionDict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;method&quot;</span>))</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      + <span class="stringliteral">&quot;Coeffs&quot;</span>).<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;dataFile&quot;</span>)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    )</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="a01364.html">Foam::labelList</a> <a class="code" href="a01396.html#a3b76f43edbd1cb9f49f534c3c8f8bede">Foam::manualDecomp::decompose</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a01396.html#a3b76f43edbd1cb9f49f534c3c8f8bede">   65</a></span>&#160;(</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; points,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; pointWeights</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a01175.html">labelIOList</a> finalDecomp</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    (</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a01179.html">IOobject</a></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        (</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            decompDataFile_,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            mesh.<a class="code" href="a01916.html#a8a91e85dc9825a7ae05720d4e7b48f2a">facesInstance</a>(),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891">IOobject::MUST_READ</a>,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <a class="code" href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51ac056877fb8338d366322c3cf2ed2f616">IOobject::AUTO_WRITE</a>,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            false</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        )</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    );</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// check if the final decomposition is OK</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (finalDecomp.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() != points.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Size of decomposition list does not correspond &quot;</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;to the number of points.  Size: &quot;</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            &lt;&lt; finalDecomp.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() &lt;&lt; <span class="stringliteral">&quot; Number of points: &quot;</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            &lt;&lt; points.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;.\n&quot;</span> &lt;&lt; <span class="stringliteral">&quot;Manual decomposition data read from file &quot;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            &lt;&lt; decompDataFile_ &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(finalDecomp) &lt; 0 || <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(finalDecomp) &gt; nProcessors_ - 1)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;According to the decomposition, cells assigned to &quot;</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;impossible processor numbers.  Min processor = &quot;</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(finalDecomp) &lt;&lt; <span class="stringliteral">&quot; Max processor = &quot;</span> &lt;&lt; <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(finalDecomp)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;.\n&quot;</span> &lt;&lt; <span class="stringliteral">&quot;Manual decomposition data read from file &quot;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            &lt;&lt; decompDataFile_ &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> finalDecomp;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a09101_html"><div class="ttname"><a href="a09101.html">manualDecomp.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01179_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891"><div class="ttname"><a href="a01179.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a9e7b8f2e0979fecd1bbc84564f3d3891">Foam::IOobject::MUST_READ</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00108">IOobject.H:108</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a00506_html"><div class="ttname"><a href="a00506.html">Foam::decompositionMethod</a></div><div class="ttdoc">Abstract base class for decomposition. </div><div class="ttdef"><b>Definition:</b> <a href="a09093_source.html#l00048">decompositionMethod.H:48</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07769_html"><div class="ttname"><a href="a07769.html">IFstream.H</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a01175_html"><div class="ttname"><a href="a01175.html">Foam::IOList&lt; label &gt;</a></div></div>
+<div class="ttc" id="a08886_html"><div class="ttname"><a href="a08886.html">labelIOList.H</a></div></div>
+<div class="ttc" id="a01916_html_a8a91e85dc9825a7ae05720d4e7b48f2a"><div class="ttname"><a href="a01916.html#a8a91e85dc9825a7ae05720d4e7b48f2a">Foam::polyMesh::facesInstance</a></div><div class="ttdeci">const fileName &amp; facesInstance() const </div><div class="ttdoc">Return the current instance directory for faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00778">polyMesh.C:778</a></div></div>
+<div class="ttc" id="a01396_html_a3b76f43edbd1cb9f49f534c3c8f8bede"><div class="ttname"><a href="a01396.html#a3b76f43edbd1cb9f49f534c3c8f8bede">Foam::manualDecomp::decompose</a></div><div class="ttdeci">virtual labelList decompose(const polyMesh &amp;mesh, const pointField &amp;cc, const scalarField &amp;cWeights)</div><div class="ttdoc">Return for every coordinate the wanted processor number. Use the. </div><div class="ttdef"><b>Definition:</b> <a href="a09100_source.html#l00065">manualDecomp.C:65</a></div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a03876_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a01179_html_ade8fe914e1b32f96447fe9b2f8bbfc51ac056877fb8338d366322c3cf2ed2f616"><div class="ttname"><a href="a01179.html#ade8fe914e1b32f96447fe9b2f8bbfc51ac056877fb8338d366322c3cf2ed2f616">Foam::IOobject::AUTO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00117">IOobject.H:117</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

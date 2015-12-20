@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ae30ad0bef50cf391b24c614251bb9fd.html">meshTools</a></li><li class="navelem"><a class="el" href="dir_4db89e9604e175d3a6a20d4af9df6191.html">regionCoupled</a></li><li class="navelem"><a class="el" href="dir_d180a87df80979ed1e06a45bcf5487ea.html">patches</a></li><li class="navelem"><a class="el" href="dir_2aa8c72318ffd1435af27e57327585cc.html">regionCoupledLduInterface</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ae30ad0bef50cf391b24c614251bb9fd.html">meshTools</a></li><li class="navelem"><a class="el" href="dir_daefbc79e43b4c6de930591d46791fc2.html">indexedOctree</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">regionCoupledLduInterface.H</div>  </div>
+<div class="title">treeDataTriSurface.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07271.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,100 +119,77 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::regionCoupledLduInterface</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    An abstract base class for region coupled interfaces</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    regionCoupledLduInterface.C</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef regionCoupledLduInterface_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define regionCoupledLduInterface_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07912.html">primitiveFieldsFwd.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07126.html">AMIPatchToPatchInterpolation.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08579.html">polyMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07272.html">treeDataTriSurface.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07502.html">triSurfaceTools.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02807.html">Foam::volumeType</a> <a class="code" href="a02672.html#a37185ffdd0de883e9eaf912696b69d6f">Foam::treeDataPrimitivePatch&lt;Foam::triSurface&gt;::getVolumeType</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a02672.html#a7549f90820d20388bb1bb9cb0ec669cb">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01054.html">indexedOctree</a>&lt;<a class="code" href="a02672.html">treeDataPrimitivePatch&lt;triSurface&gt;</a> &gt;&amp; oc,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">point</a>&amp; sample</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Find nearest face to sample</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a01884.html">pointIndexHit</a> info = oc.findNearest(sample, <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(GREAT));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (info.<a class="code" href="a01884.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>() == -1)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Could not find &quot;</span> &lt;&lt; sample &lt;&lt; <span class="stringliteral">&quot; in octree.&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                  Class regionCoupledLduInterface Declaration</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a02112.html">   51</a></span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span><a class="code" href="a02112.html">regionCoupledLduInterface</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a02112.html#a975989af676b5fd311adb0b81da232c1">TypeName</a>(<span class="stringliteral">&quot;regionCoupledLduInterface&quot;</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02112.html#a75008f63d90f3d4ca1fe521b634fdd2b">   63</a></span>&#160;        <span class="comment">//- Construct null</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a02112.html#a75008f63d90f3d4ca1fe521b634fdd2b">regionCoupledLduInterface</a>()</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        {}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02112.html#a3a02238b871e3eaa52ea4e591cd79083">~regionCoupledLduInterface</a>();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">// Access</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">//- Return neighbour</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02112.html#a3c9e89f296b0623989f9b5918f4f99d8">neighbPatchID</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// Get actual intersection point on face</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = info.<a class="code" href="a01884.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a02689.html#a0e01ae8050b9d9315d8ee222471bcabe">triSurfaceTools::sideType</a> t = triSurfaceTools::surfaceSide</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    (</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        patch_,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        sample,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        faceI</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    );</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">if</span> (t == triSurfaceTools::UNKNOWN)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> volumeType::UNKNOWN;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == triSurfaceTools::INSIDE)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> volumeType::INSIDE;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == triSurfaceTools::OUTSIDE)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> volumeType::OUTSIDE;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;problem&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> volumeType::UNKNOWN;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="comment">//- Is it owner?</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a02112.html#a3582563f80d5d14098b6b6462edd17a2">owner</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="comment">//- Return neighb regionCoupledLduInterface</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a02112.html">regionCoupledLduInterface</a>&amp; <a class="code" href="a02112.html#afa82074f9fd3696f3e8fc68f8270c3ec">neighbPatch</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="comment">//- Return AMI</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">//virtual const AMIPatchToPatchInterpolation&amp; AMI() const = 0;</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="comment">//- Return nbrMesh</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a02112.html#a6c0de599847b4a5bcb0606b48ebc8f0c">nbrMesh</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08579_html"><div class="ttname"><a href="a08579.html">polyMesh.H</a></div></div>
-<div class="ttc" id="a07126_html"><div class="ttname"><a href="a07126.html">AMIPatchToPatchInterpolation.H</a></div></div>
-<div class="ttc" id="a07912_html"><div class="ttname"><a href="a07912.html">primitiveFieldsFwd.H</a></div><div class="ttdoc">Forward declarations of the specialisations of Field<T> for scalar, vector and tensor. </div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02112_html_a6c0de599847b4a5bcb0606b48ebc8f0c"><div class="ttname"><a href="a02112.html#a6c0de599847b4a5bcb0606b48ebc8f0c">Foam::regionCoupledLduInterface::nbrMesh</a></div><div class="ttdeci">virtual const polyMesh &amp; nbrMesh() const  =0</div><div class="ttdoc">Return AMI. </div></div>
-<div class="ttc" id="a02112_html_afa82074f9fd3696f3e8fc68f8270c3ec"><div class="ttname"><a href="a02112.html#afa82074f9fd3696f3e8fc68f8270c3ec">Foam::regionCoupledLduInterface::neighbPatch</a></div><div class="ttdeci">virtual const regionCoupledLduInterface &amp; neighbPatch() const  =0</div><div class="ttdoc">Return neighb regionCoupledLduInterface. </div></div>
-<div class="ttc" id="a02112_html"><div class="ttname"><a href="a02112.html">Foam::regionCoupledLduInterface</a></div><div class="ttdoc">An abstract base class for region coupled interfaces. </div><div class="ttdef"><b>Definition:</b> <a href="a07271_source.html#l00051">regionCoupledLduInterface.H:51</a></div></div>
-<div class="ttc" id="a02112_html_a3582563f80d5d14098b6b6462edd17a2"><div class="ttname"><a href="a02112.html#a3582563f80d5d14098b6b6462edd17a2">Foam::regionCoupledLduInterface::owner</a></div><div class="ttdeci">virtual bool owner() const  =0</div><div class="ttdoc">Is it owner? </div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a02112_html_a975989af676b5fd311adb0b81da232c1"><div class="ttname"><a href="a02112.html#a975989af676b5fd311adb0b81da232c1">Foam::regionCoupledLduInterface::TypeName</a></div><div class="ttdeci">TypeName(&quot;regionCoupledLduInterface&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a02112_html_a3a02238b871e3eaa52ea4e591cd79083"><div class="ttname"><a href="a02112.html#a3a02238b871e3eaa52ea4e591cd79083">Foam::regionCoupledLduInterface::~regionCoupledLduInterface</a></div><div class="ttdeci">virtual ~regionCoupledLduInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07270_source.html#l00036">regionCoupledLduInterface.C:36</a></div></div>
-<div class="ttc" id="a02112_html_a75008f63d90f3d4ca1fe521b634fdd2b"><div class="ttname"><a href="a02112.html#a75008f63d90f3d4ca1fe521b634fdd2b">Foam::regionCoupledLduInterface::regionCoupledLduInterface</a></div><div class="ttdeci">regionCoupledLduInterface()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a07271_source.html#l00063">regionCoupledLduInterface.H:63</a></div></div>
-<div class="ttc" id="a02112_html_a3c9e89f296b0623989f9b5918f4f99d8"><div class="ttname"><a href="a02112.html#a3c9e89f296b0623989f9b5918f4f99d8">Foam::regionCoupledLduInterface::neighbPatchID</a></div><div class="ttdeci">virtual label neighbPatchID() const  =0</div><div class="ttdoc">Return neighbour. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02807_html"><div class="ttname"><a href="a02807.html">Foam::volumeType</a></div><div class="ttdef"><b>Definition:</b> <a href="a07549_source.html#l00054">volumeType.H:54</a></div></div>
+<div class="ttc" id="a10725_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10725.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00131">errorManip.H:131</a></div></div>
+<div class="ttc" id="a01884_html"><div class="ttname"><a href="a01884.html">Foam::PointIndexHit</a></div><div class="ttdoc">This class describes the interaction of (usually) a face and a point. It carries the info of a succes...</div><div class="ttdef"><b>Definition:</b> <a href="a08768_source.html#l00053">PointIndexHit.H:53</a></div></div>
+<div class="ttc" id="a02672_html_a37185ffdd0de883e9eaf912696b69d6f"><div class="ttname"><a href="a02672.html#a37185ffdd0de883e9eaf912696b69d6f">Foam::treeDataPrimitivePatch::getVolumeType</a></div><div class="ttdeci">volumeType getVolumeType(const indexedOctree&lt; treeDataPrimitivePatch&lt; PatchType &gt; &gt; &amp;, const point &amp;) const </div><div class="ttdoc">Get type (inside,outside,mixed,unknown) of point w.r.t. surface. </div><div class="ttdef"><b>Definition:</b> <a href="a07268_source.html#l00153">treeDataPrimitivePatch.C:153</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a07272_html"><div class="ttname"><a href="a07272.html">treeDataTriSurface.H</a></div></div>
+<div class="ttc" id="a01884_html_a7d1e8acadb27bd2b4e61457d47b71b6f"><div class="ttname"><a href="a01884.html#a7d1e8acadb27bd2b4e61457d47b71b6f">Foam::PointIndexHit::index</a></div><div class="ttdeci">label index() const </div><div class="ttdoc">Return index. </div><div class="ttdef"><b>Definition:</b> <a href="a08768_source.html#l00111">PointIndexHit.H:111</a></div></div>
+<div class="ttc" id="a07502_html"><div class="ttname"><a href="a07502.html">triSurfaceTools.H</a></div></div>
+<div class="ttc" id="a01054_html"><div class="ttname"><a href="a01054.html">Foam::indexedOctree</a></div><div class="ttdoc">Non-pointer based hierarchical recursive searching. </div><div class="ttdef"><b>Definition:</b> <a href="a07263_source.html#l00047">treeDataEdge.H:47</a></div></div>
+<div class="ttc" id="a02689_html_a0e01ae8050b9d9315d8ee222471bcabe"><div class="ttname"><a href="a02689.html#a0e01ae8050b9d9315d8ee222471bcabe">Foam::triSurfaceTools::sideType</a></div><div class="ttdeci">sideType</div><div class="ttdoc">On which side of surface. </div><div class="ttdef"><b>Definition:</b> <a href="a07502_source.html#l00436">triSurfaceTools.H:436</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
+<div class="ttc" id="a02672_html"><div class="ttname"><a href="a02672.html">Foam::treeDataPrimitivePatch</a></div><div class="ttdoc">Encapsulation of data needed to search on PrimitivePatches. </div><div class="ttdef"><b>Definition:</b> <a href="a07269_source.html#l00061">treeDataPrimitivePatch.H:61</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

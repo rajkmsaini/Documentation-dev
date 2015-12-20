@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_072f0e2674ae04115e1196cfcbf8d2aa.html">interPhaseChangeFoam</a></li><li class="navelem"><a class="el" href="dir_428d76558bf17b61b63e4dbf2a2e5401.html">phaseChangeTwoPhaseMixtures</a></li><li class="navelem"><a class="el" href="dir_b3a69e1e896de06609f27ea2da8836cf.html">SchnerrSauer</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_6cbc35a456677982ef0a79ee58fc4be3.html">interFoam</a></li><li class="navelem"><a class="el" href="dir_011fa2c206d871c34274e95e94b6d3f0.html">interMixingFoam</a></li><li class="navelem"><a class="el" href="dir_739f0f82caf86bc6717e811a1995f7e5.html">incompressibleThreePhaseMixture</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">SchnerrSauer.C</div>  </div>
+<div class="title">incompressibleThreePhaseMixture.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03310.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,190 +121,259 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03311.html">SchnerrSauer.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08112.html">mathematicalConstants.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>phaseChangeTwoPhaseMixtures</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03311.html">incompressibleThreePhaseMixture.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05668.html">fvc.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//- Calculate and return the laminar viscosity</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> Foam::incompressibleThreePhaseMixture::calcNu()</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(SchnerrSauer, 0);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        phaseChangeTwoPhaseMixture,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        SchnerrSauer,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        components</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    );</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    nuModel1_-&gt;correct();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    nuModel2_-&gt;correct();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    nuModel3_-&gt;correct();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Average kinematic viscosity calculated from dynamic viscosity</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    nu_ = <a class="code" href="a01046.html#a2c3c920f447a8999a7bcc1dbbf40f07b">mu</a>()/(alpha1_*rho1_ + alpha2_*rho2_ + alpha3_*rho3_);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a02234.html#aed7c4124faa22e6d47bef117c6250423">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::SchnerrSauer</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;(</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a12d29e8f107156f681575a7bbbcf30ed">volVectorField</a>&amp; <a class="code" href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    phaseChangeTwoPhaseMixture(typeName, U, phi),</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    n_(phaseChangeTwoPhaseMixtureCoeffs_.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;n&quot;</span>)),</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    dNuc_(phaseChangeTwoPhaseMixtureCoeffs_.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;dNuc&quot;</span>)),</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    Cc_(phaseChangeTwoPhaseMixtureCoeffs_.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;Cc&quot;</span>)),</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    Cv_(phaseChangeTwoPhaseMixtureCoeffs_.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;Cv&quot;</span>)),</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    p0_(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>().dimensions(), 0.0)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="a01825.html#a7e204aa62fa1c1f527e8f1c62dc62061">correct</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::rRb</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;(</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; limitedAlpha1</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">pow</a></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    (</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        ((4*<a class="code" href="a10687.html#a731b8788a4c01586c35266c7ca4fed04">constant::mathematical::pi</a>*n_)/3)</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;       *limitedAlpha1/(1.0 + alphaNuc() - limitedAlpha1),</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        1.0/3.0</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    );</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<a class="code" href="a00526.html">Foam::dimensionedScalar</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::alphaNuc()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a> Vnuc = n_*<a class="code" href="a10687.html#a731b8788a4c01586c35266c7ca4fed04">constant::mathematical::pi</a>*<a class="code" href="a10675.html#a2e8f5d970ee4fb466536c3c46bae91fe">pow3</a>(dNuc_)/6;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> Vnuc/(1 + Vnuc);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::pCoeff</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;(</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; p</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> limitedAlpha1(<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(alpha1_, scalar(0)), scalar(1)));</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    (</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        limitedAlpha1*<a class="code" href="a02941.html#afa544c227ef35756c30d930109636746">rho1</a>() + (scalar(1) - limitedAlpha1)*<a class="code" href="a02941.html#a2d51a71532ef998d68124773484e966c">rho2</a>()</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    );</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        (3*<a class="code" href="a02941.html#afa544c227ef35756c30d930109636746">rho1</a>()*<a class="code" href="a02941.html#a2d51a71532ef998d68124773484e966c">rho2</a>())*<a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(2/(3*<a class="code" href="a02941.html#afa544c227ef35756c30d930109636746">rho1</a>()))</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;       *rRb(limitedAlpha1)/(<a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>*<a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(p - <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>()) + 0.01*<a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>()));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a01046.html#a378aa6754d864015e73517dce2a61921">Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;(</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a12d29e8f107156f681575a7bbbcf30ed">volVectorField</a>&amp; <a class="code" href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; <a class="code" href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    IOdictionary</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    (</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        IOobject</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        (</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="stringliteral">&quot;transportProperties&quot;</span>,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            U.time().constant(),</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            U.db(),</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            IOobject::MUST_READ_IF_MODIFIED,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            IOobject::NO_WRITE</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        )</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    ),</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    phase1Name_(<a class="code" href="a10725.html#a0db843a5d9291aef04734d582a0ec2ee">wordList</a>(<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;phases&quot;</span>))[0]),</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    phase2Name_(<a class="code" href="a10725.html#a0db843a5d9291aef04734d582a0ec2ee">wordList</a>(<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;phases&quot;</span>))[1]),</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    phase3Name_(<a class="code" href="a10725.html#a0db843a5d9291aef04734d582a0ec2ee">wordList</a>(<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;phases&quot;</span>))[2]),</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    alpha1_</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    (</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        IOobject</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        (</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            IOobject::groupName(<span class="stringliteral">&quot;alpha&quot;</span>, phase1Name_),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            U.time().<a class="code" href="a03914.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(),</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            IOobject::MUST_READ,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            IOobject::AUTO_WRITE</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        ),</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    ),</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    alpha2_</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    (</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        IOobject</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        (</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            IOobject::groupName(<span class="stringliteral">&quot;alpha&quot;</span>, phase2Name_),</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            U.time().<a class="code" href="a03914.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(),</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            IOobject::MUST_READ,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            IOobject::AUTO_WRITE</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        ),</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    ),</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    alpha3_</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    (</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        IOobject</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        (</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            IOobject::groupName(<span class="stringliteral">&quot;alpha&quot;</span>, phase3Name_),</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            U.time().<a class="code" href="a03914.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(),</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            IOobject::MUST_READ,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            IOobject::AUTO_WRITE</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        ),</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>()</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    ),</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    U_(U),</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    phi_(phi),</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<a class="code" href="a01748.html">Foam::Pair&lt;Foam::tmp&lt;Foam::volScalarField&gt;</a> &gt;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="a02234.html#af11ac61691062921d2c8b67e60e8af5b">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotAlphal</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; p = alpha1_.<a class="code" href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>().<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&gt;(<span class="stringliteral">&quot;p&quot;</span>);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> pCoeff(this-&gt;pCoeff(p));</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> limitedAlpha1(<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(alpha1_, scalar(0)), scalar(1)));</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> Pair&lt;tmp&lt;volScalarField&gt; &gt;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    (</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        Cc_*limitedAlpha1*pCoeff*<a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(p - <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>(), p0_),</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        Cv_*(1.0 + alphaNuc() - limitedAlpha1)*pCoeff*<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(p - <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>(), p0_)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    );</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<a class="code" href="a01748.html">Foam::Pair&lt;Foam::tmp&lt;Foam::volScalarField&gt;</a> &gt;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<a class="code" href="a02234.html#a62703b358efd512826c48c1b9c16d4de">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotP</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; p = alpha1_.<a class="code" href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">db</a>().<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&gt;(<span class="stringliteral">&quot;p&quot;</span>);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> pCoeff(this-&gt;pCoeff(p));</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> limitedAlpha1(<a class="code" href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(alpha1_, scalar(0)), scalar(1)));</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a> apCoeff(limitedAlpha1*pCoeff);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> Pair&lt;tmp&lt;volScalarField&gt; &gt;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    (</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        Cc_*(1.0 - limitedAlpha1)*<a class="code" href="a10675.html#a09a190b59f3d01b258bca0fa964a6212">pos</a>(p - <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>())*apCoeff,</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        (-Cv_)*(1.0 + alphaNuc() - limitedAlpha1)*<a class="code" href="a10675.html#aad5b44612e484eb87fcea79a3d19ee04">neg</a>(p - <a class="code" href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a>())*apCoeff</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    );</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02234.html#aa40b482ba81fd8de31bdba348c184074">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::correct</a>()</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;{}</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02234.html#abcf7aafd601a940195284bc91610bb08">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::read</a>()</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;{</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01825.html#a2eeeaebe7e52f5d842385ce0b177150d">phaseChangeTwoPhaseMixture::read</a>())</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    {</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        phaseChangeTwoPhaseMixtureCoeffs_ = subDict(<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;Coeffs&quot;</span>);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        phaseChangeTwoPhaseMixtureCoeffs_.lookup(<span class="stringliteral">&quot;n&quot;</span>) &gt;&gt; n_;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        phaseChangeTwoPhaseMixtureCoeffs_.lookup(<span class="stringliteral">&quot;dNuc&quot;</span>) &gt;&gt; dNuc_;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        phaseChangeTwoPhaseMixtureCoeffs_.lookup(<span class="stringliteral">&quot;Cc&quot;</span>) &gt;&gt; Cc_;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        phaseChangeTwoPhaseMixtureCoeffs_.lookup(<span class="stringliteral">&quot;Cv&quot;</span>) &gt;&gt; Cv_;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    }</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;}</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02234_html_aa40b482ba81fd8de31bdba348c184074"><div class="ttname"><a href="a02234.html#aa40b482ba81fd8de31bdba348c184074">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Correct the SchnerrSauer phaseChange model. </div></div>
-<div class="ttc" id="a10675_html_a8616bd62eebf2342a80222fecb1bda71"><div class="ttname"><a href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a></div><div class="ttdeci">dimensionedScalar sqrt(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00142">dimensionedScalar.C:142</a></div></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a04444_html_a139afea6b03dce774d3cf7a02bc16242"><div class="ttname"><a href="a04444.html#a139afea6b03dce774d3cf7a02bc16242">pSat</a></div><div class="ttdeci">const dimensionedScalar &amp; pSat</div><div class="ttdef"><b>Definition:</b> <a href="a04444_source.html#l00041">createFields.H:41</a></div></div>
-<div class="ttc" id="a01748_html"><div class="ttname"><a href="a01748.html">Foam::Pair</a></div><div class="ttdoc">An ordered pair of two objects of type <T> with first() and second() elements. </div><div class="ttdef"><b>Definition:</b> <a href="a08764_source.html#l00049">contiguous.H:49</a></div></div>
-<div class="ttc" id="a02234_html_aed7c4124faa22e6d47bef117c6250423"><div class="ttname"><a href="a02234.html#aed7c4124faa22e6d47bef117c6250423">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::SchnerrSauer</a></div><div class="ttdeci">SchnerrSauer(const volVectorField &amp;U, const surfaceScalarField &amp;phi)</div><div class="ttdoc">Construct from components. </div></div>
-<div class="ttc" id="a10675_html_a12d29e8f107156f681575a7bbbcf30ed"><div class="ttname"><a href="a10675.html#a12d29e8f107156f681575a7bbbcf30ed">Foam::volVectorField</a></div><div class="ttdeci">GeometricField&lt; vector, fvPatchField, volMesh &gt; volVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00055">volFieldsFwd.H:55</a></div></div>
-<div class="ttc" id="a10675_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a08112_html"><div class="ttname"><a href="a08112.html">mathematicalConstants.H</a></div></div>
-<div class="ttc" id="a01825_html_a7e204aa62fa1c1f527e8f1c62dc62061"><div class="ttname"><a href="a01825.html#a7e204aa62fa1c1f527e8f1c62dc62061">Foam::phaseChangeTwoPhaseMixture::correct</a></div><div class="ttdeci">virtual void correct()=0</div><div class="ttdoc">Correct the phaseChange model. </div></div>
-<div class="ttc" id="a01825_html_a2eeeaebe7e52f5d842385ce0b177150d"><div class="ttname"><a href="a01825.html#a2eeeaebe7e52f5d842385ce0b177150d">Foam::phaseChangeTwoPhaseMixture::read</a></div><div class="ttdeci">virtual bool read()=0</div><div class="ttdoc">Read the transportProperties dictionary and update. </div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a10675_html_a2e8f5d970ee4fb466536c3c46bae91fe"><div class="ttname"><a href="a10675.html#a2e8f5d970ee4fb466536c3c46bae91fe">Foam::pow3</a></div><div class="ttdeci">dimensionedScalar pow3(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00087">dimensionedScalar.C:87</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned</a></div><div class="ttdoc">Generic dimensioned Type class. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a02234_html_abcf7aafd601a940195284bc91610bb08"><div class="ttname"><a href="a02234.html#abcf7aafd601a940195284bc91610bb08">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read the transportProperties dictionary and update. </div></div>
-<div class="ttc" id="a10675_html_a7500c8e9d27a442adc75e287de074c7c"><div class="ttname"><a href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">Foam::pow</a></div><div class="ttdeci">dimensionedScalar pow(const dimensionedScalar &amp;ds, const dimensionedScalar &amp;expt)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00073">dimensionedScalar.C:73</a></div></div>
-<div class="ttc" id="a02941_html_afa544c227ef35756c30d930109636746"><div class="ttname"><a href="a02941.html#afa544c227ef35756c30d930109636746">rho1</a></div><div class="ttdeci">rho1</div><div class="ttdef"><b>Definition:</b> <a href="a02941_source.html#l00124">pEqn.H:124</a></div></div>
-<div class="ttc" id="a01678_html_affcae20935bdf1726ec1f822228a2330"><div class="ttname"><a href="a01678.html#affcae20935bdf1726ec1f822228a2330">Foam::objectRegistry::lookupObject</a></div><div class="ttdeci">const Type &amp; lookupObject(const word &amp;name) const </div><div class="ttdoc">Lookup and return the object of the given Type. </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00165">objectRegistryTemplates.C:165</a></div></div>
-<div class="ttc" id="a02941_html_a2d51a71532ef998d68124773484e966c"><div class="ttname"><a href="a02941.html#a2d51a71532ef998d68124773484e966c">rho2</a></div><div class="ttdeci">rho2</div><div class="ttdef"><b>Definition:</b> <a href="a02941_source.html#l00125">pEqn.H:125</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a02234_html_a62703b358efd512826c48c1b9c16d4de"><div class="ttname"><a href="a02234.html#a62703b358efd512826c48c1b9c16d4de">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotP</a></div><div class="ttdeci">virtual Pair&lt; tmp&lt; volScalarField &gt; &gt; mDotP() const </div><div class="ttdoc">Return the mass condensation and vaporisation rates as coefficients. </div></div>
-<div class="ttc" id="a03181_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03181_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
-<div class="ttc" id="a10675_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10675.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_a09a190b59f3d01b258bca0fa964a6212"><div class="ttname"><a href="a10675.html#a09a190b59f3d01b258bca0fa964a6212">Foam::pos</a></div><div class="ttdeci">dimensionedScalar pos(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00190">dimensionedScalar.C:190</a></div></div>
-<div class="ttc" id="a10687_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10687.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
-<div class="ttc" id="a03311_html"><div class="ttname"><a href="a03311.html">SchnerrSauer.H</a></div></div>
-<div class="ttc" id="a10675_html_aad5b44612e484eb87fcea79a3d19ee04"><div class="ttname"><a href="a10675.html#aad5b44612e484eb87fcea79a3d19ee04">Foam::neg</a></div><div class="ttdeci">dimensionedScalar neg(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00201">dimensionedScalar.C:201</a></div></div>
-<div class="ttc" id="a10675_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00052">volFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a01170_html_adf469b34fcd0250cef43ac4ce3f153ab"><div class="ttname"><a href="a01170.html#adf469b34fcd0250cef43ac4ce3f153ab">Foam::IOobject::db</a></div><div class="ttdeci">const objectRegistry &amp; db() const </div><div class="ttdoc">Return the local objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07693_source.html#l00245">IOobject.C:245</a></div></div>
-<div class="ttc" id="a03837_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a02906_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02906_source.html#l00082">pEqn.H:82</a></div></div>
-<div class="ttc" id="a02234_html_af11ac61691062921d2c8b67e60e8af5b"><div class="ttname"><a href="a02234.html#af11ac61691062921d2c8b67e60e8af5b">Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotAlphal</a></div><div class="ttdeci">virtual Pair&lt; tmp&lt; volScalarField &gt; &gt; mDotAlphal() const </div><div class="ttdoc">Return the mass condensation and vaporisation rates as a. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    nu_</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    (</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        IOobject</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        (</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <span class="stringliteral">&quot;nu&quot;</span>,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            U.time().<a class="code" href="a03914.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            U.db()</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        ),</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        U.<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(),</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="a10725.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;nu&quot;</span>, dimensionSet(0, 2, -1, 0, 0), 0),</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        calculatedFvPatchScalarField::typeName</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    ),</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    nuModel1_</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    (</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        viscosityModel::<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">New</a></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        (</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <span class="stringliteral">&quot;nu1&quot;</span>,</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            subDict(phase1Name_),</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            U,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            phi</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        )</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    ),</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    nuModel2_</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    (</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        viscosityModel::<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">New</a></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        (</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <span class="stringliteral">&quot;nu2&quot;</span>,</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            subDict(phase2Name_),</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            U,</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            phi</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        )</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    ),</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    nuModel3_</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    (</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        viscosityModel::<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">New</a></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        (</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="stringliteral">&quot;nu3&quot;</span>,</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            subDict(phase3Name_),</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            U,</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            phi</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        )</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    ),</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    rho1_(<span class="stringliteral">&quot;rho&quot;</span>, <a class="code" href="a10725.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>, nuModel1_-&gt;viscosityProperties()),</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    rho2_(<span class="stringliteral">&quot;rho&quot;</span>, <a class="code" href="a10725.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>, nuModel2_-&gt;viscosityProperties()),</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    rho3_(<span class="stringliteral">&quot;rho&quot;</span>, <a class="code" href="a10725.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>, nuModel3_-&gt;viscosityProperties())</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;{</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    alpha3_ == 1.0 - alpha1_ - alpha2_;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    calcNu();</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<a class="code" href="a01046.html#a2c3c920f447a8999a7bcc1dbbf40f07b">Foam::incompressibleThreePhaseMixture::mu</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">return</span> tmp&lt;volScalarField&gt;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    (</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        (</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="stringliteral">&quot;mu&quot;</span>,</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            alpha1_*rho1_*nuModel1_-&gt;nu()</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;          + alpha2_*rho2_*nuModel2_-&gt;nu()</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;          + alpha3_*rho3_*nuModel3_-&gt;nu()</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        )</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    );</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;}</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::surfaceScalarField&gt;</a></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<a class="code" href="a01046.html#a9494afd59e69718b8e8967c1ee678fd5">Foam::incompressibleThreePhaseMixture::muf</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha1f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha1_));</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha2f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha2_));</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha3f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha3_));</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">return</span> tmp&lt;surfaceScalarField&gt;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    (</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        (</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <span class="stringliteral">&quot;mu&quot;</span>,</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            alpha1f*rho1_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel1_-&gt;nu())</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;          + alpha2f*rho2_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel2_-&gt;nu())</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;          + alpha3f*rho3_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel3_-&gt;nu())</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        )</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    );</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;}</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::surfaceScalarField&gt;</a></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<a class="code" href="a01046.html#a429c6ab1e7336ec8801f7943e58c2b74">Foam::incompressibleThreePhaseMixture::nuf</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha1f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha1_));</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha2f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha2_));</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> alpha3f(<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(alpha3_));</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordflow">return</span> tmp&lt;surfaceScalarField&gt;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    (</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        (</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            <span class="stringliteral">&quot;nu&quot;</span>,</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            (</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                alpha1f*rho1_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel1_-&gt;nu())</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;              + alpha2f*rho2_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel2_-&gt;nu())</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;              + alpha3f*rho3_*<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(nuModel3_-&gt;nu())</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            )/(alpha1f*rho1_ + alpha2f*rho2_ + alpha3f*rho3_)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        )</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    );</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;}</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01046.html#af816873151ddb0126e98bb2f914d8ed5">Foam::incompressibleThreePhaseMixture::read</a>()</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;{</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a02665.html#a662f37411f405f8a8c278141c5eb6b85">transportModel::read</a>())</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    {</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        (</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            nuModel1_().<a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;         &amp;&amp; nuModel2_().<a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;         &amp;&amp; nuModel3_().<a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        )</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        {</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            nuModel1_-&gt;viscosityProperties().lookup(<span class="stringliteral">&quot;rho&quot;</span>) &gt;&gt; rho1_;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            nuModel2_-&gt;viscosityProperties().lookup(<span class="stringliteral">&quot;rho&quot;</span>) &gt;&gt; rho2_;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            nuModel3_-&gt;viscosityProperties().lookup(<span class="stringliteral">&quot;rho&quot;</span>) &gt;&gt; rho3_;</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        }</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        {</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        }</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    }</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    }</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;}</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10759_html_a768cc91e806b7278729a11134de57ecf"><div class="ttname"><a href="a10759.html#a768cc91e806b7278729a11134de57ecf">Foam::fvc::interpolate</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; interpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;tvf, const surfaceScalarField &amp;faceFlux, Istream &amp;schemeData)</div><div class="ttdoc">Interpolate field onto faces using scheme given by Istream. </div></div>
+<div class="ttc" id="a10725_html_adcb0103ec5c28a01ca3d8fffc9847651"><div class="ttname"><a href="a10725.html#adcb0103ec5c28a01ca3d8fffc9847651">Foam::dimDensity</a></div><div class="ttdeci">const dimensionSet dimDensity</div></div>
+<div class="ttc" id="a10725_html_a0db843a5d9291aef04734d582a0ec2ee"><div class="ttname"><a href="a10725.html#a0db843a5d9291aef04734d582a0ec2ee">Foam::wordList</a></div><div class="ttdeci">List&lt; word &gt; wordList</div><div class="ttdoc">A List of words. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00054">fileName.H:54</a></div></div>
+<div class="ttc" id="a02665_html_a662f37411f405f8a8c278141c5eb6b85"><div class="ttname"><a href="a02665.html#a662f37411f405f8a8c278141c5eb6b85">Foam::transportModel::read</a></div><div class="ttdeci">virtual bool read()=0</div><div class="ttdoc">Read transportProperties dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a10410_source.html#l00050">transportModel.C:50</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a10725_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10725.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a10725_html_a12d29e8f107156f681575a7bbbcf30ed"><div class="ttname"><a href="a10725.html#a12d29e8f107156f681575a7bbbcf30ed">Foam::volVectorField</a></div><div class="ttdeci">GeometricField&lt; vector, fvPatchField, volMesh &gt; volVectorField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00055">volFieldsFwd.H:55</a></div></div>
+<div class="ttc" id="a01046_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a01046.html#af816873151ddb0126e98bb2f914d8ed5">Foam::incompressibleThreePhaseMixture::read</a></div><div class="ttdeci">bool read()</div><div class="ttdoc">Read base transportProperties dictionary. </div></div>
+<div class="ttc" id="a03914_html_a2f677c654c2b7f157710d334624b8800"><div class="ttname"><a href="a03914.html#a2f677c654c2b7f157710d334624b8800">timeName</a></div><div class="ttdeci">word timeName</div><div class="ttdef"><b>Definition:</b> <a href="a03914_source.html#l00003">getTimeIndex.H:3</a></div></div>
+<div class="ttc" id="a10725_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a01046_html_a9494afd59e69718b8e8967c1ee678fd5"><div class="ttname"><a href="a01046.html#a9494afd59e69718b8e8967c1ee678fd5">Foam::incompressibleThreePhaseMixture::muf</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; muf() const </div><div class="ttdoc">Return the face-interpolated dynamic laminar viscosity. </div></div>
+<div class="ttc" id="a02919_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02919_source.html#l00082">pEqn.H:82</a></div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a03195_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
+<div class="ttc" id="a03311_html"><div class="ttname"><a href="a03311.html">incompressibleThreePhaseMixture.H</a></div></div>
+<div class="ttc" id="a01046_html_a429c6ab1e7336ec8801f7943e58c2b74"><div class="ttname"><a href="a01046.html#a429c6ab1e7336ec8801f7943e58c2b74">Foam::incompressibleThreePhaseMixture::nuf</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; nuf() const </div><div class="ttdoc">Return the face-interpolated dynamic laminar viscosity. </div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a03876_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
+<div class="ttc" id="a05668_html"><div class="ttname"><a href="a05668.html">fvc.H</a></div></div>
+<div class="ttc" id="a01046_html_a2c3c920f447a8999a7bcc1dbbf40f07b"><div class="ttname"><a href="a01046.html#a2c3c920f447a8999a7bcc1dbbf40f07b">Foam::incompressibleThreePhaseMixture::mu</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; mu() const </div><div class="ttdoc">Return the dynamic laminar viscosity. </div></div>
+<div class="ttc" id="a10725_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10725.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07867_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
+<div class="ttc" id="a01046_html_a378aa6754d864015e73517dce2a61921"><div class="ttname"><a href="a01046.html#a378aa6754d864015e73517dce2a61921">Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture</a></div><div class="ttdeci">incompressibleThreePhaseMixture(const volVectorField &amp;U, const surfaceScalarField &amp;phi)</div><div class="ttdoc">Construct from components. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

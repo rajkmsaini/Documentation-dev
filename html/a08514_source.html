@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_44915d476cda87f9c46b97924fb23879.html">pointMesh</a></li><li class="navelem"><a class="el" href="dir_0b50d648241520de5cf03d68a603ea6e.html">pointPatches</a></li><li class="navelem"><a class="el" href="dir_e167ef4ffdb4a3e074def457cb9fd663.html">constraint</a></li><li class="navelem"><a class="el" href="dir_53a4ae35aed5de23c63b69ad433f2bf5.html">cyclic</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_aa2423979fb45fc41c393a5db370ab21.html">meshes</a></li><li class="navelem"><a class="el" href="dir_b8e2732bc99f8fb2a379dad81aa6030e.html">meshShapes</a></li><li class="navelem"><a class="el" href="dir_4bba408616a9d927d44d484b2a21665f.html">cellShape</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">cyclicPointPatch.C</div>  </div>
+<div class="title">cellShapeEqual.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08514.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,106 +119,168 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08515.html">cyclicPointPatch.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08500.html">pointBoundaryMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08502.html">pointMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08473.html">edgeList.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(cyclicPointPatch, 0);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        facePointPatch,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        cyclicPointPatch,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        polyPatch</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    );</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::initGeometry(PstreamBuffers&amp;)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Equality operator for cellShape class</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08513.html">cellShape.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a10725.html#a2b83c17b60558de2eb2ed3d0af0e9bbc">   33</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a10725.html#a28a45d2e3cca6152b024de57575abbf1">Foam::operator==</a>(<span class="keyword">const</span> <a class="code" href="a00230.html">cellShape</a>&amp; a, <span class="keyword">const</span> <a class="code" href="a00230.html">cellShape</a>&amp; <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// Basic rule: we assume that the sequence of labels in each list</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// will be circular in the same order (but not necessarily in the</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// same direction). The limitation of this method is that with 3D</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// topologies I cannot guarantee that a congruent but not</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// identical cellShape (i.e. one sharing the same points but in a</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// different order) will necessarily be matched.</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; labsA = a;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; labsB = <a class="code" href="a10738.html#a00faad9a19c0dc0bcae765415926e925">b</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// Trivial reject: faces are different size</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> sizeA = labsA.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> sizeB = labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">if</span> (sizeA != sizeB)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::calcGeometry(PstreamBuffers&amp;)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// First we look for the occurrence of the first label in A, in B</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::initMovePoints(PstreamBuffers&amp;, <span class="keyword">const</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp;)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::movePoints(PstreamBuffers&amp;, <span class="keyword">const</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp;)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::initUpdateMesh(PstreamBuffers&amp; pBufs)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a00724.html#aba14098b759b2f349996ba9d0c33544c">facePointPatch::initUpdateMesh</a>(pBufs);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    cyclicPointPatch::initGeometry(pBufs);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">void</span> Foam::cyclicPointPatch::updateMesh(PstreamBuffers&amp; pBufs)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a00724.html#a06139aa7a91eeed82560f0c3d03d1845">facePointPatch::updateMesh</a>(pBufs);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    cyclicPointPatch::calcGeometry(pBufs);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;Foam::cyclicPointPatch::cyclicPointPatch</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="a00476.html#a7748e9b4fc3bd041bc9d433c17ff5f74">   82</a></span>&#160;(</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01922.html">polyPatch</a>&amp; patch,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01857.html">pointBoundaryMesh</a>&amp; bm</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;:</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a00410.html">coupledFacePointPatch</a>(patch, bm),</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    cyclicPolyPatch_(refCast&lt;const cyclicPolyPatch&gt;(patch))</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="a00476.html#a1561def130ccd008bd388f0f07d9cf28">   94</a></span>&#160;<a class="code" href="a00476.html#a1561def130ccd008bd388f0f07d9cf28">Foam::cyclicPointPatch::~cyclicPointPatch</a>()</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{}</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="a00476.html#a8b34ee459db74542dfb22597d8c21016">  100</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a01355.html">Foam::edgeList</a>&amp; <a class="code" href="a00476.html#a8b34ee459db74542dfb22597d8c21016">Foam::cyclicPointPatch::transformPairs</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> cyclicPolyPatch_.coupledPoints();</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a5997a67f2e85a15c0e13a1724273aa5f"><div class="ttname"><a href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">Foam::pointField</a></div><div class="ttdeci">vectorField pointField</div><div class="ttdoc">pointField is a vectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a08724_source.html#l00042">pointFieldFwd.H:42</a></div></div>
-<div class="ttc" id="a00410_html"><div class="ttname"><a href="a00410.html">Foam::coupledFacePointPatch</a></div><div class="ttdoc">coupled patch for post-processing. Used as the base class for processor and cyclic pointPatches ...</div><div class="ttdef"><b>Definition:</b> <a href="a08533_source.html#l00053">coupledFacePointPatch.H:53</a></div></div>
-<div class="ttc" id="a01922_html"><div class="ttname"><a href="a01922.html">Foam::polyPatch</a></div><div class="ttdoc">A patch is a list of labels that address the faces in the global face list. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00066">polyPatch.H:66</a></div></div>
-<div class="ttc" id="a08500_html"><div class="ttname"><a href="a08500.html">pointBoundaryMesh.H</a></div></div>
-<div class="ttc" id="a00476_html_a8b34ee459db74542dfb22597d8c21016"><div class="ttname"><a href="a00476.html#a8b34ee459db74542dfb22597d8c21016">Foam::cyclicPointPatch::transformPairs</a></div><div class="ttdeci">virtual const edgeList &amp; transformPairs() const </div><div class="ttdoc">Return the set of pairs of points that require transformation. </div><div class="ttdef"><b>Definition:</b> <a href="a08514_source.html#l00100">cyclicPointPatch.C:100</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; edge &gt;</a></div></div>
-<div class="ttc" id="a00476_html_a1561def130ccd008bd388f0f07d9cf28"><div class="ttname"><a href="a00476.html#a1561def130ccd008bd388f0f07d9cf28">Foam::cyclicPointPatch::~cyclicPointPatch</a></div><div class="ttdeci">virtual ~cyclicPointPatch()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08514_source.html#l00094">cyclicPointPatch.C:94</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a08502_html"><div class="ttname"><a href="a08502.html">pointMesh.H</a></div></div>
-<div class="ttc" id="a08473_html"><div class="ttname"><a href="a08473.html">edgeList.H</a></div></div>
-<div class="ttc" id="a00724_html_a06139aa7a91eeed82560f0c3d03d1845"><div class="ttname"><a href="a00724.html#a06139aa7a91eeed82560f0c3d03d1845">Foam::facePointPatch::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(PstreamBuffers &amp;)</div><div class="ttdoc">Update of the patch topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08536_source.html#l00075">facePointPatch.C:75</a></div></div>
-<div class="ttc" id="a00724_html_aba14098b759b2f349996ba9d0c33544c"><div class="ttname"><a href="a00724.html#aba14098b759b2f349996ba9d0c33544c">Foam::facePointPatch::initUpdateMesh</a></div><div class="ttdeci">virtual void initUpdateMesh(PstreamBuffers &amp;)</div><div class="ttdoc">Initialise the update of the patch topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08536_source.html#l00069">facePointPatch.C:69</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01857_html"><div class="ttname"><a href="a01857.html">Foam::pointBoundaryMesh</a></div><div class="ttdoc">Foam::pointBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08500_source.html#l00052">pointBoundaryMesh.H:52</a></div></div>
-<div class="ttc" id="a08515_html"><div class="ttname"><a href="a08515.html">cyclicPointPatch.H</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> Bptr = -1;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> firstA = labsA[0];</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(labsB, i)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">if</span> (labsB[i] == firstA)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            Bptr = i;                <span class="comment">// Denotes &#39;found match&#39; at element &#39;i&#39;</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// If no match was found, exit false</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (Bptr &lt; 0)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// Now we must look for the direction, if any</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> secondA = labsA[1];</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> dir = 0;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Check whether at top of list</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    Bptr++;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (Bptr == labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        Bptr = 0;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Test whether upward label matches second A label</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span> (labsB[Bptr] == secondA)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">// Yes - direction is &#39;up&#39;</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        dir = 1;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// No - so look downwards, checking whether at bottom of list</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        Bptr -= 2;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (Bptr &lt; 0)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="comment">// Case (1) Bptr=-1</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keywordflow">if</span> (Bptr == -1)</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                Bptr = labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() - 1;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="comment">// Case (2) Bptr = -2</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                Bptr = labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() - 2;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">// Test whether downward label matches second A label</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span> (labsB[Bptr] == secondA)</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="comment">// Yes - direction is &#39;down&#39;</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            dir = -1;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// Check whether a match was made at all, and exit false if not</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">if</span> (dir == 0)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// Decrement size by 2 to account for first searches</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    sizeA -= 2;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="comment">// We now have both direction of search and next element</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">// to search, so we can continue search until no more points.</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> Aptr = 1;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">if</span> (dir &gt; 0)</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keywordflow">while</span> (sizeA--)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            Aptr++;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">if</span> (Aptr &gt;= labsA.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                Aptr = 0;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            Bptr++;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            <span class="keywordflow">if</span> (Bptr &gt;= labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                Bptr = 0;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            }</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <span class="keywordflow">if</span> (labsA[Aptr] != labsB[Bptr])</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            {</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    }</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    {</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keywordflow">while</span> (sizeA--)</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            Aptr++;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            <span class="keywordflow">if</span> (Aptr &gt;= labsA.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                Aptr = 0;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            Bptr--;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            <span class="keywordflow">if</span> (Bptr &lt; 0)</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            {</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                Bptr = labsB.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() - 1;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            <span class="keywordflow">if</span> (labsA[Aptr] != labsB[Bptr])</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            }</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        }</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="comment">// They must be equal</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00230_html"><div class="ttname"><a href="a00230.html">Foam::cellShape</a></div><div class="ttdoc">An analytical geometric cellShape. </div><div class="ttdef"><b>Definition:</b> <a href="a08513_source.html#l00069">cellShape.H:69</a></div></div>
+<div class="ttc" id="a10738_html_a00faad9a19c0dc0bcae765415926e925"><div class="ttname"><a href="a10738.html#a00faad9a19c0dc0bcae765415926e925">Foam::constant::physicoChemical::b</a></div><div class="ttdeci">const dimensionedScalar b</div><div class="ttdoc">Wien displacement law constant: default SI units: [m.K]. </div><div class="ttdef"><b>Definition:</b> <a href="a04437_source.html#l00028">createFields.H:28</a></div></div>
+<div class="ttc" id="a10725_html_a28a45d2e3cca6152b024de57575abbf1"><div class="ttname"><a href="a10725.html#a28a45d2e3cca6152b024de57575abbf1">Foam::operator==</a></div><div class="ttdeci">tmp&lt; fvMatrix&lt; Type &gt; &gt; operator==(const fvMatrix&lt; Type &gt; &amp;, const fvMatrix&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a08513_html"><div class="ttname"><a href="a08513.html">cellShape.H</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

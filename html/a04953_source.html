@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2052808828190f934b76e979ee65af8a.html">engine</a></li><li class="navelem"><a class="el" href="dir_305f17eabaf66d4cabd371aee2d1fdcb.html">ignition</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_547d95b1f800fe300ab8f22eec4ab7b0.html">edgeMesh</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">ignitionSiteIO.C</div>  </div>
+<div class="title">edgeMeshI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04953.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,94 +121,75 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04952.html">ignitionSite.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04943.html">engineTime.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a01026.html#afe0641515a690132844d4e1e54f77b40">Foam::ignitionSite::ignitionSite</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a01026.html#afe0641515a690132844d4e1e54f77b40">   32</a></span>&#160;(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; is,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02596.html">Time</a>&amp; db,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    db_(db),</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    mesh_(mesh),</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    ignitionSiteDict_(is),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    location_(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;location&quot;</span>)),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    diameter_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;diameter&quot;</span>))),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    time_</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    (</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        db_.userTimeToTime</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        (</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;start&quot;</span>))</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        )</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    ),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    duration_</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    (</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        db_.userTimeToTime</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        (</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;duration&quot;</span>))</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        )</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    ),</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    strength_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;strength&quot;</span>))),</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    timeIndex_(db_.timeIndex())</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Check state of Istream</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    is.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;ignitionSite::ignitionSite(Istream&amp;)&quot;</span>);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    findIgnitionCells(mesh_);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="a00617.html#a82c6f820510c1feaba7e30f8a7333e3a">   28</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00617.html#a518ee690177f4d77ce882cfd362b58b7">Foam::edgeMesh::edgeMesh</a>(<span class="keyword">const</span> <a class="code" href="a00617.html">edgeMesh</a>&amp; em)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;:</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    fileFormats::edgeMeshFormatsCore(),</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    points_(em.points_),</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    edges_(em.edges_),</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    pointEdgesPtr_(NULL)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00617.html#a084ae534298576408f063a6b3b820959">   39</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a00755.html">Foam::pointField</a>&amp; <a class="code" href="a00617.html#a084ae534298576408f063a6b3b820959">Foam::edgeMesh::points</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> points_;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a00617.html#aae82d34fe433288eb6b1f9dea53675c8">   45</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a01364.html">Foam::edgeList</a>&amp; <a class="code" href="a00617.html#aae82d34fe433288eb6b1f9dea53675c8">Foam::edgeMesh::edges</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> edges_;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a00617.html#a9372e15b6f50db75f39f33f24d4887a4">   51</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a01364.html">Foam::labelListList</a>&amp; <a class="code" href="a00617.html#a9372e15b6f50db75f39f33f24d4887a4">Foam::edgeMesh::pointEdges</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">if</span> (pointEdgesPtr_.empty())</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        calcPointEdges();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> pointEdgesPtr_();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a00617.html#ac5ca3d69f463a15f39cb9f640b9e1049">   61</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00755.html">Foam::pointField</a>&amp; <a class="code" href="a00617.html#ac5ca3d69f463a15f39cb9f640b9e1049">Foam::edgeMesh::storedPoints</a>()</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> points_;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<a class="code" href="a01026.html#afe0641515a690132844d4e1e54f77b40">Foam::ignitionSite::ignitionSite</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a01026.html#a4bc89f61ad0f139b00f669db48da5f19">   68</a></span>&#160;(</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; is,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00633.html">engineTime</a>&amp; edb,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;:</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    db_(edb),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    mesh_(mesh),</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    ignitionSiteDict_(is),</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    location_(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;location&quot;</span>)),</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    diameter_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;diameter&quot;</span>))),</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    time_</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    (</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        db_.userTimeToTime</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        (</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            edb.<a class="code" href="a00633.html#ac7943b6a54b545f1e1afec88532307d4">degToTime</a>(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;start&quot;</span>)))</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        )</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    ),</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    duration_</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    (</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        db_.userTimeToTime</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        (</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            edb.<a class="code" href="a00633.html#ac7943b6a54b545f1e1afec88532307d4">degToTime</a>(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;duration&quot;</span>)))</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        )</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    ),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    strength_(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(ignitionSiteDict_.lookup(<span class="stringliteral">&quot;strength&quot;</span>))),</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    timeIndex_(db_.timeIndex())</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Check state of Istream</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    is.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;ignitionSite::ignitionSite(Istream&amp;)&quot;</span>);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    findIgnitionCells(mesh_);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a01177_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01177.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07728_source.html#l00092">IOstream.C:92</a></div></div>
-<div class="ttc" id="a04943_html"><div class="ttname"><a href="a04943.html">engineTime.H</a></div></div>
-<div class="ttc" id="a02596_html"><div class="ttname"><a href="a02596.html">Foam::Time</a></div><div class="ttdoc">Class to control time during OpenFOAM simulations that is also the top-level objectRegistry. </div><div class="ttdef"><b>Definition:</b> <a href="a07804_source.html#l00068">Time.H:68</a></div></div>
-<div class="ttc" id="a00633_html"><div class="ttname"><a href="a00633.html">Foam::engineTime</a></div><div class="ttdoc">Manage time in terms of engine RPM and crank-angle. </div><div class="ttdef"><b>Definition:</b> <a href="a04943_source.html#l00068">engineTime.H:68</a></div></div>
-<div class="ttc" id="a04952_html"><div class="ttname"><a href="a04952.html">ignitionSite.H</a></div></div>
-<div class="ttc" id="a08879_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08879_source.html#l00038">doubleScalar.C:38</a></div></div>
-<div class="ttc" id="a00633_html_ac7943b6a54b545f1e1afec88532307d4"><div class="ttname"><a href="a00633.html#ac7943b6a54b545f1e1afec88532307d4">Foam::engineTime::degToTime</a></div><div class="ttdeci">scalar degToTime(const scalar theta) const </div><div class="ttdoc">Convert degrees to seconds (for given engine speed in RPM) </div><div class="ttdef"><b>Definition:</b> <a href="a04942_source.html#l00126">engineTime.C:126</a></div></div>
-<div class="ttc" id="a01026_html_afe0641515a690132844d4e1e54f77b40"><div class="ttname"><a href="a01026.html#afe0641515a690132844d4e1e54f77b40">Foam::ignitionSite::ignitionSite</a></div><div class="ttdeci">ignitionSite(Istream &amp;, const Time &amp;, const fvMesh &amp;)</div><div class="ttdoc">Construct from Istream and database. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00032">ignitionSiteIO.C:32</a></div></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a00617.html#a72897b4989a9e7be60966582975e0970">   67</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a01364.html">Foam::edgeList</a>&amp; <a class="code" href="a00617.html#a72897b4989a9e7be60966582975e0970">Foam::edgeMesh::storedEdges</a>()</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> edges_;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="a00617.html#a06f14a9c887b026893ecff774660aa0f">   75</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00617.html#a06f14a9c887b026893ecff774660aa0f">Foam::edgeMesh::operator=</a>(<span class="keyword">const</span> <a class="code" href="a00617.html">edgeMesh</a>&amp; rhs)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    points_ = rhs.points_;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    edges_ = rhs.edges_;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    pointEdgesPtr_.<a class="code" href="a01364.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00617_html_aae82d34fe433288eb6b1f9dea53675c8"><div class="ttname"><a href="a00617.html#aae82d34fe433288eb6b1f9dea53675c8">Foam::edgeMesh::edges</a></div><div class="ttdeci">const edgeList &amp; edges() const </div><div class="ttdoc">Return edges. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00045">edgeMeshI.H:45</a></div></div>
+<div class="ttc" id="a00617_html_a06f14a9c887b026893ecff774660aa0f"><div class="ttname"><a href="a00617.html#a06f14a9c887b026893ecff774660aa0f">Foam::edgeMesh::operator=</a></div><div class="ttdeci">void operator=(const edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00075">edgeMeshI.H:75</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; edge &gt;</a></div></div>
+<div class="ttc" id="a01364_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a01364.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::List::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the list, i.e. set size to zero. </div><div class="ttdef"><b>Definition:</b> <a href="a07637_source.html#l00379">List.C:379</a></div></div>
+<div class="ttc" id="a00617_html"><div class="ttname"><a href="a00617.html">Foam::edgeMesh</a></div><div class="ttdoc">Points connected by edges. </div><div class="ttdef"><b>Definition:</b> <a href="a04932_source.html#l00069">edgeMesh.H:69</a></div></div>
+<div class="ttc" id="a00617_html_a72897b4989a9e7be60966582975e0970"><div class="ttname"><a href="a00617.html#a72897b4989a9e7be60966582975e0970">Foam::edgeMesh::storedEdges</a></div><div class="ttdeci">edgeList &amp; storedEdges()</div><div class="ttdoc">Non-const access to the edges. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00067">edgeMeshI.H:67</a></div></div>
+<div class="ttc" id="a00617_html_a084ae534298576408f063a6b3b820959"><div class="ttname"><a href="a00617.html#a084ae534298576408f063a6b3b820959">Foam::edgeMesh::points</a></div><div class="ttdeci">const pointField &amp; points() const </div><div class="ttdoc">Return points. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00039">edgeMeshI.H:39</a></div></div>
+<div class="ttc" id="a00617_html_a9372e15b6f50db75f39f33f24d4887a4"><div class="ttname"><a href="a00617.html#a9372e15b6f50db75f39f33f24d4887a4">Foam::edgeMesh::pointEdges</a></div><div class="ttdeci">const labelListList &amp; pointEdges() const </div><div class="ttdoc">Return edges. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00051">edgeMeshI.H:51</a></div></div>
+<div class="ttc" id="a00617_html_ac5ca3d69f463a15f39cb9f640b9e1049"><div class="ttname"><a href="a00617.html#ac5ca3d69f463a15f39cb9f640b9e1049">Foam::edgeMesh::storedPoints</a></div><div class="ttdeci">pointField &amp; storedPoints()</div><div class="ttdoc">Non-const access to global points. </div><div class="ttdef"><b>Definition:</b> <a href="a04953_source.html#l00061">edgeMeshI.H:61</a></div></div>
+<div class="ttc" id="a00617_html_a518ee690177f4d77ce882cfd362b58b7"><div class="ttname"><a href="a00617.html#a518ee690177f4d77ce882cfd362b58b7">Foam::edgeMesh::edgeMesh</a></div><div class="ttdeci">edgeMesh()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a04931_source.html#l00123">edgeMesh.C:123</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

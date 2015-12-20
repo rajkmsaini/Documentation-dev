@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_ad1279e85697e0f0972e5fabfcfcce34.html">LduMatrix</a></li><li class="navelem"><a class="el" href="dir_5ec68055571869848388d37c5cf0a9c9.html">LduMatrix</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_e764f87aebd421bcba631b254777cd25.html">interpolations</a></li><li class="navelem"><a class="el" href="dir_cb8fa07fd9be2ed302d73f31d0bb935b.html">interpolationWeights</a></li><li class="navelem"><a class="el" href="dir_48c40396fab34b639ef7f610ff7b1944.html">linearInterpolationWeights</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">LduMatrixSmoother.C</div>  </div>
+<div class="title">linearInterpolationWeights.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08243.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,117 +119,116 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08234.html">LduMatrix.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> DType, <span class="keyword">class</span> LUType&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00084.html">Foam::autoPtr&lt;typename Foam::LduMatrix&lt;Type, DType, LUType&gt;::smoother</a>&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02344.html#af8f5001d95d7c1d471c4d24eedefced2">Foam::LduMatrix&lt;Type, DType, LUType&gt;::smoother::New</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a02344.html#af8f5001d95d7c1d471c4d24eedefced2">   33</a></span>&#160;(</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01275.html">LduMatrix&lt;Type, DType, LUType&gt;</a>&amp; matrix,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; smootherDict</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a02856.html">word</a> smootherName = smootherDict.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;smoother&quot;</span>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::linearInterpolationWeights</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    linearInterpolationWeights.C</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef linearInterpolationWeights_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define linearInterpolationWeights_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08240.html">interpolationWeights.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (matrix.<a class="code" href="a01275.html#a4c78e98ff53f5609f0607ec22be37157">symmetric</a>())</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keyword">typename</span> symMatrixConstructorTable::iterator constructorIter =</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            symMatrixConstructorTablePtr_-&gt;find(smootherName);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">if</span> (constructorIter == symMatrixConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                <span class="stringliteral">&quot;LduMatrix&lt;Type, DType, LUType&gt;::smoother::New&quot;</span>, smootherDict</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            )   &lt;&lt; <span class="stringliteral">&quot;Unknown symmetric matrix smoother &quot;</span> &lt;&lt; smootherName</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Valid symmetric matrix smoothers are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                &lt;&lt; symMatrixConstructorTablePtr_-&gt;toc()</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;typename LduMatrix&lt;Type, DType, LUType&gt;::smoother</a>&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        (</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            constructorIter()</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            (</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                fieldName,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                matrix</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            )</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        );</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (matrix.<a class="code" href="a01275.html#aa9d1039c9d27fbd5467eadc204a33c21">asymmetric</a>())</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">typename</span> asymMatrixConstructorTable::iterator constructorIter =</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            asymMatrixConstructorTablePtr_-&gt;find(smootherName);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                  Class linearInterpolationWeights Declaration</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a01339.html">   47</a></span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span><a class="code" href="a01339.html">linearInterpolationWeights</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01161.html">interpolationWeights</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//- Cached index in samples from previous invocation</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> index_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Get weights of i and i+1 to calculate integration from t to</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//  samples_[i+1]</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a01759.html">Pair&lt;scalar&gt;</a> integrationWeights</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">const</span> scalar t</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">if</span> (constructorIter == asymMatrixConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            (</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                <span class="stringliteral">&quot;LduMatrix&lt;Type, DType, LUType&gt;::smoother::New&quot;</span>, smootherDict</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            )   &lt;&lt; <span class="stringliteral">&quot;Unknown asymmetric matrix smoother &quot;</span> &lt;&lt; smootherName</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Valid asymmetric matrix smoothers are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                &lt;&lt; asymMatrixConstructorTablePtr_-&gt;toc()</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="a01339.html#ab0fc4a9eb6b967007278346598d07480">TypeName</a>(<span class="stringliteral">&quot;linear&quot;</span>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a01339.html#a9dfad266db8b1835ffbfa9112507e697">linearInterpolationWeights</a></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        (</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; <a class="code" href="a04424.html#a14d38e99c2caf50fd9f0aa0d5ef88e3b">samples</a></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        );</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;typename LduMatrix&lt;Type, DType, LUType&gt;::smoother</a>&gt;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        (</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            constructorIter()</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            (</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                fieldName,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                matrix</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            )</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        );</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        (</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="stringliteral">&quot;LduMatrix&lt;Type, DType, LUType&gt;::smoother::New&quot;</span>, smootherDict</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;cannot solve incomplete matrix, no off-diagonal coefficients&quot;</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;typename LduMatrix&lt;Type, DType, LUType&gt;::smoother</a>&gt;(NULL);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> DType, <span class="keyword">class</span> LUType&gt;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<a class="code" href="a02344.html#a26c8e31b54c9c2e46eb36241579909db">Foam::LduMatrix&lt;Type, DType, LUType&gt;::smoother::smoother</a></div>
-<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="a02344.html#a26c8e31b54c9c2e46eb36241579909db">  110</a></span>&#160;(</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01275.html">LduMatrix&lt;Type, DType, LUType&gt;</a>&amp; matrix</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;:</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    fieldName_(fieldName),</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    matrix_(matrix)</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{}</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a01339.html#a5716f64ea84973620115f778e75d1972">   84</a></span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01339.html#a5716f64ea84973620115f778e75d1972">~linearInterpolationWeights</a>()</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">//- Calculate weights and indices to calculate t from samples.</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//  Returns true if indices changed.</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a01339.html#ad4c9889c82bf9e0a77bca1814e7d8cbf">valueWeights</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        (</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keyword">const</span> scalar t,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <a class="code" href="a01364.html">labelList</a>&amp; indices,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <a class="code" href="a00755.html">scalarField</a>&amp; weights</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">//- Calculate weights and indices to calculate integrand of t1..t2</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">//  from samples. Returns true if indices changed.</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> integrationWeights</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        (</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">const</span> scalar t1,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> scalar t2,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a01364.html">labelList</a>&amp; indices,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <a class="code" href="a00755.html">scalarField</a>&amp; weights</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a10675_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
-<div class="ttc" id="a07673_html_af60657ab907624ce6ce9a2bb0f29c1ec"><div class="ttname"><a href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div><div class="ttdeci">#define FatalIOErrorIn(functionName, ios)                                                                        </div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00325">error.H:325</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a08234_html"><div class="ttname"><a href="a08234.html">LduMatrix.H</a></div></div>
-<div class="ttc" id="a02344_html_af8f5001d95d7c1d471c4d24eedefced2"><div class="ttname"><a href="a02344.html#af8f5001d95d7c1d471c4d24eedefced2">Foam::LduMatrix::smoother::New</a></div><div class="ttdeci">static autoPtr&lt; smoother &gt; New(const word &amp;fieldName, const LduMatrix&lt; Type, DType, LUType &gt; &amp;matrix, const dictionary &amp;smootherDict)</div><div class="ttdoc">Return a new smoother. </div><div class="ttdef"><b>Definition:</b> <a href="a08243_source.html#l00033">LduMatrixSmoother.C:33</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a01275_html_aa9d1039c9d27fbd5467eadc204a33c21"><div class="ttname"><a href="a01275.html#aa9d1039c9d27fbd5467eadc204a33c21">Foam::LduMatrix::asymmetric</a></div><div class="ttdeci">bool asymmetric() const </div><div class="ttdef"><b>Definition:</b> <a href="a08234_source.html#l00583">LduMatrix.H:583</a></div></div>
-<div class="ttc" id="a01275_html"><div class="ttname"><a href="a01275.html">Foam::LduMatrix</a></div><div class="ttdoc">LduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08234_source.html#l00069">LduMatrix.H:69</a></div></div>
-<div class="ttc" id="a02344_html_a26c8e31b54c9c2e46eb36241579909db"><div class="ttname"><a href="a02344.html#a26c8e31b54c9c2e46eb36241579909db">Foam::LduMatrix::smoother::smoother</a></div><div class="ttdeci">smoother(const word &amp;fieldName, const LduMatrix&lt; Type, DType, LUType &gt; &amp;matrix)</div><div class="ttdef"><b>Definition:</b> <a href="a08243_source.html#l00110">LduMatrixSmoother.C:110</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a01275_html_a4c78e98ff53f5609f0607ec22be37157"><div class="ttname"><a href="a01275.html#a4c78e98ff53f5609f0607ec22be37157">Foam::LduMatrix::symmetric</a></div><div class="ttdeci">bool symmetric() const </div><div class="ttdef"><b>Definition:</b> <a href="a08234_source.html#l00578">LduMatrix.H:578</a></div></div>
+<div class="ttc" id="a01339_html"><div class="ttname"><a href="a01339.html">Foam::linearInterpolationWeights</a></div><div class="ttdef"><b>Definition:</b> <a href="a08243_source.html#l00047">linearInterpolationWeights.H:47</a></div></div>
+<div class="ttc" id="a01339_html_a9dfad266db8b1835ffbfa9112507e697"><div class="ttname"><a href="a01339.html#a9dfad266db8b1835ffbfa9112507e697">Foam::linearInterpolationWeights::linearInterpolationWeights</a></div><div class="ttdeci">linearInterpolationWeights(const scalarField &amp;samples)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a08242_source.html#l00076">linearInterpolationWeights.C:76</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01339_html_ab0fc4a9eb6b967007278346598d07480"><div class="ttname"><a href="a01339.html#ab0fc4a9eb6b967007278346598d07480">Foam::linearInterpolationWeights::TypeName</a></div><div class="ttdeci">TypeName(&quot;linear&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a01339_html_a5716f64ea84973620115f778e75d1972"><div class="ttname"><a href="a01339.html#a5716f64ea84973620115f778e75d1972">Foam::linearInterpolationWeights::~linearInterpolationWeights</a></div><div class="ttdeci">virtual ~linearInterpolationWeights()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08243_source.html#l00084">linearInterpolationWeights.H:84</a></div></div>
+<div class="ttc" id="a01759_html"><div class="ttname"><a href="a01759.html">Foam::Pair</a></div><div class="ttdoc">An ordered pair of two objects of type <T> with first() and second() elements. </div><div class="ttdef"><b>Definition:</b> <a href="a08816_source.html#l00049">contiguous.H:49</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a04424_html_a14d38e99c2caf50fd9f0aa0d5ef88e3b"><div class="ttname"><a href="a04424.html#a14d38e99c2caf50fd9f0aa0d5ef88e3b">samples</a></div><div class="ttdeci">scalarField samples(nIntervals, 0)</div></div>
+<div class="ttc" id="a08240_html"><div class="ttname"><a href="a08240.html">interpolationWeights.H</a></div></div>
+<div class="ttc" id="a01161_html"><div class="ttname"><a href="a01161.html">Foam::interpolationWeights</a></div><div class="ttdoc">Abstract base class for interpolating in 1D. </div><div class="ttdef"><b>Definition:</b> <a href="a08240_source.html#l00055">interpolationWeights.H:55</a></div></div>
+<div class="ttc" id="a01339_html_ad4c9889c82bf9e0a77bca1814e7d8cbf"><div class="ttname"><a href="a01339.html#ad4c9889c82bf9e0a77bca1814e7d8cbf">Foam::linearInterpolationWeights::valueWeights</a></div><div class="ttdeci">virtual bool valueWeights(const scalar t, labelList &amp;indices, scalarField &amp;weights) const </div><div class="ttdoc">Calculate weights and indices to calculate t from samples. </div><div class="ttdef"><b>Definition:</b> <a href="a08242_source.html#l00088">linearInterpolationWeights.C:88</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

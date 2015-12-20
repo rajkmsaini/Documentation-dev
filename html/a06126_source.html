@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_a38e3b643eae30d7add43af99171ff5d.html">fvMotionSolvers</a></li><li class="navelem"><a class="el" href="dir_7b20f18e0d7766bc859203c857d7b1a8.html">fvMotionSolverCore</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_71d8be77d4afdc69b08e3361ccc21108.html">quadraticLinearFit</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvMotionSolverCoreTemplates.C</div>  </div>
+<div class="title">quadraticLinearFit.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06126.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,59 +121,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06125.html">fvMotionSolverCore.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08012.html">fixedValuePointPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06132.html">cellMotionFvPatchFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06073.html">CentredFitScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06127.html">quadraticLinearFitPolynomial.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05842.html">centredCFCCellToFaceStencilObject.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a01355.html">Foam::wordList</a> <a class="code" href="a00875.html#a186f296126b4dbbe0ed6493277b95063">Foam::fvMotionSolverCore::cellMotionBoundaryTypes</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00875.html#a865df08dc3cc4baca8402afa7e7bcc9e">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="a00913.html">GeometricField&lt;Type, pointPatchField, pointMesh&gt;</a>::</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    GeometricBoundaryField&amp; pmUbf</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a01355.html">wordList</a> cmUbf = pmUbf.types();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// Remove global patches from the end of the list</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    cmUbf.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(fvMesh_.boundary().size());</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(cmUbf, <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a10675.html#a7f38c7df863d37f5357047d27dab7711">isA</a>&lt;<a class="code" href="a00833.html">fixedValuePointPatchField&lt;Type&gt;</a> &gt;(pmUbf[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>]))</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            cmUbf[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>] = <a class="code" href="a00219.html">cellMotionFvPatchField&lt;Type&gt;::typeName</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <a class="code" href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Patch:&quot;</span> &lt;&lt; fvMesh_.boundary()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>].patch().<a class="code" href="a01724.html#ab27acd1d200f0d245337451aa2f31517">name</a>()</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; pointType:&quot;</span> &lt;&lt; pmUbf.types()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>]</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; cellType:&quot;</span> &lt;&lt; cmUbf[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>] &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> cmUbf;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04277_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04277_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
-<div class="ttc" id="a10675_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10675.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00053">IOstreams.H:53</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a08012_html"><div class="ttname"><a href="a08012.html">fixedValuePointPatchFields.H</a></div></div>
-<div class="ttc" id="a06132_html"><div class="ttname"><a href="a06132.html">cellMotionFvPatchFields.H</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; word &gt;</a></div></div>
-<div class="ttc" id="a01355_html_aedb985ffeaf1bdbfeccc2a8730405703"><div class="ttname"><a href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">Foam::List::setSize</a></div><div class="ttdeci">void setSize(const label)</div><div class="ttdoc">Reset size of List. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00318">List.C:318</a></div></div>
-<div class="ttc" id="a06125_html"><div class="ttname"><a href="a06125.html">fvMotionSolverCore.H</a></div></div>
-<div class="ttc" id="a10675_html_a7f38c7df863d37f5357047d27dab7711"><div class="ttname"><a href="a10675.html#a7f38c7df863d37f5357047d27dab7711">Foam::isA</a></div><div class="ttdeci">bool isA(const Type &amp;t)</div><div class="ttdoc">Check if a dynamic_cast to typeid is possible. </div><div class="ttdef"><b>Definition:</b> <a href="a07813_source.html#l00134">typeInfo.H:134</a></div></div>
-<div class="ttc" id="a01724_html_ab27acd1d200f0d245337451aa2f31517"><div class="ttname"><a href="a01724.html#ab27acd1d200f0d245337451aa2f31517">Foam::OSstream::name</a></div><div class="ttdeci">virtual const fileName &amp; name() const </div><div class="ttdoc">Return the name of the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07761_source.html#l00088">OSstream.H:88</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a00875_html_a186f296126b4dbbe0ed6493277b95063"><div class="ttname"><a href="a00875.html#a186f296126b4dbbe0ed6493277b95063">Foam::fvMotionSolverCore::cellMotionBoundaryTypes</a></div><div class="ttdeci">wordList cellMotionBoundaryTypes(const typename GeometricField&lt; Type, pointPatchField, pointMesh &gt;::GeometricBoundaryField &amp;pmUbf) const </div><div class="ttdoc">Create the corresponding patch types for cellMotion from those. </div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00833_html"><div class="ttname"><a href="a00833.html">Foam::fixedValuePointPatchField</a></div><div class="ttdoc">A FixedValue boundary condition for pointField. </div><div class="ttdef"><b>Definition:</b> <a href="a08010_source.html#l00049">fixedValuePointPatchField.H:49</a></div></div>
-<div class="ttc" id="a00219_html"><div class="ttname"><a href="a00219.html">Foam::cellMotionFvPatchField</a></div><div class="ttdoc">Foam::cellMotionFvPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a06130_source.html#l00050">cellMotionFvPatchField.H:50</a></div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">defineTemplateTypeNameAndDebug</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    (</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        CentredFitData&lt;quadraticLinearFitPolynomial&gt;,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        0</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    );</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">makeCentredFitSurfaceInterpolationScheme</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        quadraticLinearFit,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        quadraticLinearFitPolynomial,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        centredCFCCellToFaceStencilObject</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    );</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_adda8d2f21637cf437577b8bfeda5a259"><div class="ttname"><a href="a10725.html#adda8d2f21637cf437577b8bfeda5a259">Foam::defineTemplateTypeNameAndDebug</a></div><div class="ttdeci">defineTemplateTypeNameAndDebug(IOPtrList&lt; ensightPart &gt;, 0)</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06073_html"><div class="ttname"><a href="a06073.html">CentredFitScheme.H</a></div></div>
+<div class="ttc" id="a06127_html"><div class="ttname"><a href="a06127.html">quadraticLinearFitPolynomial.H</a></div></div>
+<div class="ttc" id="a05842_html"><div class="ttname"><a href="a05842.html">centredCFCCellToFaceStencilObject.H</a></div></div>
+<div class="ttc" id="a10725_html_a5c99a18ad2ae76b7747f4ce5001a3d09"><div class="ttname"><a href="a10725.html#a5c99a18ad2ae76b7747f4ce5001a3d09">Foam::makeCentredFitSurfaceInterpolationScheme</a></div><div class="ttdeci">makeCentredFitSurfaceInterpolationScheme(biLinearFit, biLinearFitPolynomial, centredCFCCellToFaceStencilObject)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

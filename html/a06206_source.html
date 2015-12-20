@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_e004c8aef6ad3730b0be09e2a7704e0f.html">interRegionOption</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_8ab94aa558c9b87721da8bbf3fb9229e.html">motionDiffusivity</a></li><li class="navelem"><a class="el" href="dir_ccfb0ac24b15cc3e9063e7401f463558.html">manipulators</a></li><li class="navelem"><a class="el" href="dir_091d6caa1ca43e3b1c7c8c84021f32da.html">exponential</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">interRegionOptionIO.C</div>  </div>
+<div class="title">exponentialDiffusivity.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06206.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,29 +121,77 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06204.html">interRegionOption.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06207.html">exponentialDiffusivity.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a01155.html#a6ce0c64db98eb6144d363dbfc86104eb">   30</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01155.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::interRegionOption::read</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01704.html#a6ce0c64db98eb6144d363dbfc86104eb">option::read</a>(dict))</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01704_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a01704.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::option::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read source dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06197_source.html#l00053">fvOptionIO.C:53</a></div></div>
-<div class="ttc" id="a01155_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a01155.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::interRegionOption::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06206_source.html#l00030">interRegionOptionIO.C:30</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a06204_html"><div class="ttname"><a href="a06204.html">interRegionOption.H</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(exponentialDiffusivity, 0);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    (</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        motionDiffusivity,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        exponentialDiffusivity,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        Istream</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    );</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;Foam::exponentialDiffusivity::exponentialDiffusivity</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00692.html#a4278b42c0594218e0bcead3790c29daf">   48</a></span>&#160;(</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a01199.html">Istream</a>&amp; mdData</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a01527.html">motionDiffusivity</a>(mesh),</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    alpha_(<a class="code" href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(mdData)),</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    basicDiffusivityPtr_(<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">motionDiffusivity::New</a>(mesh, mdData))</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a00692.html#a8c515342a46f73cf576e083270aaf569">   61</a></span>&#160;<a class="code" href="a00692.html#a8c515342a46f73cf576e083270aaf569">Foam::exponentialDiffusivity::~exponentialDiffusivity</a>()</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::surfaceScalarField&gt;</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00692.html#a16190f5583783fc152b13c4d9e263671">   68</a></span>&#160;<a class="code" href="a00692.html#a16190f5583783fc152b13c4d9e263671">Foam::exponentialDiffusivity::operator()</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10725.html#a12bca6c677fcf0977532179c3cb9bb89">exp</a>(-alpha_/basicDiffusivityPtr_-&gt;operator()());</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a00692.html#a3ae44b28050c3aa494c1d8e18cf618c1">   74</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00692.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::exponentialDiffusivity::correct</a>()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    basicDiffusivityPtr_-&gt;correct();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a01527_html"><div class="ttname"><a href="a01527.html">Foam::motionDiffusivity</a></div><div class="ttdoc">Abstract base class for cell-centre mesh motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06211_source.html#l00049">motionDiffusivity.H:49</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00692_html_a3ae44b28050c3aa494c1d8e18cf618c1"><div class="ttname"><a href="a00692.html#a3ae44b28050c3aa494c1d8e18cf618c1">Foam::exponentialDiffusivity::correct</a></div><div class="ttdeci">virtual void correct()</div><div class="ttdoc">Correct the motion diffusivity. </div><div class="ttdef"><b>Definition:</b> <a href="a06206_source.html#l00074">exponentialDiffusivity.C:74</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a10725_html_a12bca6c677fcf0977532179c3cb9bb89"><div class="ttname"><a href="a10725.html#a12bca6c677fcf0977532179c3cb9bb89">Foam::exp</a></div><div class="ttdeci">dimensionedScalar exp(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07865_source.html#l00252">dimensionedScalar.C:252</a></div></div>
+<div class="ttc" id="a00692_html_a16190f5583783fc152b13c4d9e263671"><div class="ttname"><a href="a00692.html#a16190f5583783fc152b13c4d9e263671">Foam::exponentialDiffusivity::operator()</a></div><div class="ttdeci">virtual tmp&lt; surfaceScalarField &gt; operator()() const </div><div class="ttdoc">Return diffusivity field. </div><div class="ttdef"><b>Definition:</b> <a href="a06206_source.html#l00068">exponentialDiffusivity.C:68</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a08931_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08931_source.html#l00038">doubleScalar.C:38</a></div></div>
+<div class="ttc" id="a06207_html"><div class="ttname"><a href="a06207.html">exponentialDiffusivity.H</a></div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a00692_html_a8c515342a46f73cf576e083270aaf569"><div class="ttname"><a href="a00692.html#a8c515342a46f73cf576e083270aaf569">Foam::exponentialDiffusivity::~exponentialDiffusivity</a></div><div class="ttdeci">virtual ~exponentialDiffusivity()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06206_source.html#l00061">exponentialDiffusivity.C:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_e764f87aebd421bcba631b254777cd25.html">interpolations</a></li><li class="navelem"><a class="el" href="dir_cb8fa07fd9be2ed302d73f31d0bb935b.html">interpolationWeights</a></li><li class="navelem"><a class="el" href="dir_73c894a9801cbaa56688b14a06518e12.html">interpolationWeights</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_0fdbe385b7770877731446f8c754e682.html">graph</a></li><li class="navelem"><a class="el" href="dir_4186ef7d082dc05bc2b228141df39fcb.html">writers</a></li><li class="navelem"><a class="el" href="dir_e77a220e027a816d0c464ca487290808.html">gnuplotGraph</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">interpolationWeights.C</div>  </div>
+<div class="title">gnuplotGraph.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08188.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,97 +121,76 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08189.html">interpolationWeights.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(interpolationWeights, 0);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="a10675.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(interpolationWeights, word);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08189.html">gnuplotGraph.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(gnuplotGraph, 0);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> word <a class="code" href="a00935.html#ad1dbbfec2ef8e7e349dde5d0c85cd1cf">gnuplotGraph::ext_</a>(<span class="stringliteral">&quot;gplt&quot;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">typedef</span> graph::writer <a class="code" href="a10725.html#a75c3b24ffda662adff500772be5e9167">graphWriter</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(graphWriter, gnuplotGraph, word);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;interpolationWeights::interpolationWeights</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a01152.html#a9fad83da78bf4b43f82b94595912f29a">   44</a></span>&#160;(</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; samples</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    samples_(samples)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00935.html#ab88e57639fbd935e7ca4d747f4a612c5">   43</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00935.html#ab88e57639fbd935e7ca4d747f4a612c5">Foam::gnuplotGraph::write</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; <a class="code" href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a>, <a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    os  &lt;&lt; <span class="stringliteral">&quot;#set term postscript color&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;set output \&quot;&quot;</span> &lt;&lt; <a class="code" href="a02869.html">word</a>(g.<a class="code" href="a00945.html#a5bfa0e176f59a36f076c1c31e5d60557">title</a>()) &lt;&lt; <span class="stringliteral">&quot;.ps\&quot;&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;set title &quot;</span> &lt;&lt; g.<a class="code" href="a00945.html#a5bfa0e176f59a36f076c1c31e5d60557">title</a>() &lt;&lt; <span class="stringliteral">&quot; 0,0&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <span class="stringliteral">&quot;show title&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;set xlabel &quot;</span> &lt;&lt; g.<a class="code" href="a00945.html#aa8accb3ff6861a0ff3c3c9f5e8f84931">xName</a>() &lt;&lt; <span class="stringliteral">&quot; 0,0&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <span class="stringliteral">&quot;show xlabel&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;set ylabel &quot;</span> &lt;&lt; g.<a class="code" href="a00945.html#afc237e882945abea38e74aaca2a782e4">yName</a>() &lt;&lt; <span class="stringliteral">&quot; 0,0&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <span class="stringliteral">&quot;show ylabel&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;plot&quot;</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">bool</span> firstField = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a00084.html">autoPtr&lt;interpolationWeights&gt;</a> <a class="code" href="a01152.html#a9c16f96eb264349faebd1e04f84fc996">interpolationWeights::New</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a01152.html#a9c16f96eb264349faebd1e04f84fc996">   55</a></span>&#160;(</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; samples</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a07677.html#a2942748e954f64989dcfed6b390cbfa0">InfoIn</a>(<span class="stringliteral">&quot;interpolationWeights::New&quot;</span>)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Selecting interpolationWeights &quot;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            &lt;&lt; type &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00945.html">graph</a>, g, iter)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">if</span> (!firstField)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            os &lt;&lt; <span class="charliteral">&#39;,&#39;</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        firstField = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        os  &lt;&lt; <span class="stringliteral">&quot;&#39;-&#39; title &quot;</span> &lt;&lt; iter()-&gt;<a class="code" href="a01185.html#ab27acd1d200f0d245337451aa2f31517">name</a>() &lt;&lt; <span class="stringliteral">&quot; with lines&quot;</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    os &lt;&lt; <span class="stringliteral">&quot;; pause -1&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    wordConstructorTable::iterator cstrIter =</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        wordConstructorTablePtr_-&gt;find(type);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">if</span> (cstrIter == wordConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        (</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="stringliteral">&quot;interpolationWeights::New(const word&amp;, &quot;</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="stringliteral">&quot;const scalarField&amp;)&quot;</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Unknown interpolationWeights type &quot;</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            &lt;&lt; type</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid interpolationWeights types are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            &lt;&lt; wordConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;interpolationWeights&gt;</a>(cstrIter()(<a class="code" href="a04385.html#a14d38e99c2caf50fd9f0aa0d5ef88e3b">samples</a>));</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a01152.html#a8b93d738936f5c0b760327e58228170a">   90</a></span>&#160;<a class="code" href="a01152.html#a8b93d738936f5c0b760327e58228170a">interpolationWeights::~interpolationWeights</a>()</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a07677_html_a2942748e954f64989dcfed6b390cbfa0"><div class="ttname"><a href="a07677.html#a2942748e954f64989dcfed6b390cbfa0">InfoIn</a></div><div class="ttdeci">#define InfoIn(fn)                                                                                                                      </div><div class="ttdoc">Report a information message using Foam::Info. </div><div class="ttdef"><b>Definition:</b> <a href="a07677_source.html#l00276">messageStream.H:276</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a08189_html"><div class="ttname"><a href="a08189.html">interpolationWeights.H</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a01152_html_a9c16f96eb264349faebd1e04f84fc996"><div class="ttname"><a href="a01152.html#a9c16f96eb264349faebd1e04f84fc996">Foam::interpolationWeights::New</a></div><div class="ttdeci">static autoPtr&lt; interpolationWeights &gt; New(const word &amp;type, const scalarField &amp;samples)</div><div class="ttdoc">Return a reference to the selected interpolationWeights. </div><div class="ttdef"><b>Definition:</b> <a href="a08188_source.html#l00055">interpolationWeights.C:55</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01152_html_a8b93d738936f5c0b760327e58228170a"><div class="ttname"><a href="a01152.html#a8b93d738936f5c0b760327e58228170a">Foam::interpolationWeights::~interpolationWeights</a></div><div class="ttdeci">virtual ~interpolationWeights()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08188_source.html#l00090">interpolationWeights.C:90</a></div></div>
-<div class="ttc" id="a10675_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10675.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a04385_html_a14d38e99c2caf50fd9f0aa0d5ef88e3b"><div class="ttname"><a href="a04385.html#a14d38e99c2caf50fd9f0aa0d5ef88e3b">samples</a></div><div class="ttdeci">scalarField samples(nIntervals, 0)</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00945.html">graph</a>, g, iter)</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <a class="code" href="a02875.html#a736aef741ee7466a4a8244363c11cf92">writeXY</a>(g.<a class="code" href="a00945.html#a8b1a7d34bcd5970526f4e105fc0e2e0b">x</a>(), *iter(), os);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02875_html_a736aef741ee7466a4a8244363c11cf92"><div class="ttname"><a href="a02875.html#a736aef741ee7466a4a8244363c11cf92">Foam::graph::writer::writeXY</a></div><div class="ttdeci">void writeXY(const scalarField &amp;x, const scalarField &amp;y, Ostream &amp;) const </div><div class="ttdef"><b>Definition:</b> <a href="a08186_source.html#l00193">graph.C:193</a></div></div>
+<div class="ttc" id="a00945_html_afc237e882945abea38e74aaca2a782e4"><div class="ttname"><a href="a00945.html#afc237e882945abea38e74aaca2a782e4">Foam::graph::yName</a></div><div class="ttdeci">const string &amp; yName() const </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00159">graph.H:159</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01185_html_ab27acd1d200f0d245337451aa2f31517"><div class="ttname"><a href="a01185.html#ab27acd1d200f0d245337451aa2f31517">Foam::IOstream::name</a></div><div class="ttdeci">virtual const fileName &amp; name() const </div><div class="ttdoc">Return the name of the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00297">IOstream.H:297</a></div></div>
+<div class="ttc" id="a00945_html_a5bfa0e176f59a36f076c1c31e5d60557"><div class="ttname"><a href="a00945.html#a5bfa0e176f59a36f076c1c31e5d60557">Foam::graph::title</a></div><div class="ttdeci">const string &amp; title() const </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00149">graph.H:149</a></div></div>
+<div class="ttc" id="a00945_html_a8b1a7d34bcd5970526f4e105fc0e2e0b"><div class="ttname"><a href="a00945.html#a8b1a7d34bcd5970526f4e105fc0e2e0b">Foam::graph::x</a></div><div class="ttdeci">const scalarField &amp; x() const </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00165">graph.H:165</a></div></div>
+<div class="ttc" id="a03195_html_ae0b3bf70bd591e6682c5eaa2191bafe7"><div class="ttname"><a href="a03195.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a></div><div class="ttdeci">const dimensionedVector &amp; g</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00033">setRegionFluidFields.H:33</a></div></div>
+<div class="ttc" id="a00935_html_ab88e57639fbd935e7ca4d747f4a612c5"><div class="ttname"><a href="a00935.html#ab88e57639fbd935e7ca4d747f4a612c5">Foam::gnuplotGraph::write</a></div><div class="ttdeci">void write(const graph &amp;, Ostream &amp;os) const </div><div class="ttdoc">Write graph in appropriate format. </div><div class="ttdef"><b>Definition:</b> <a href="a08188_source.html#l00043">gnuplotGraph.C:43</a></div></div>
+<div class="ttc" id="a00935_html_ad1dbbfec2ef8e7e349dde5d0c85cd1cf"><div class="ttname"><a href="a00935.html#ad1dbbfec2ef8e7e349dde5d0c85cd1cf">Foam::gnuplotGraph::ext_</a></div><div class="ttdeci">static const word ext_</div><div class="ttdoc">FileName extension for this graph format. </div><div class="ttdef"><b>Definition:</b> <a href="a08189_source.html#l00059">gnuplotGraph.H:59</a></div></div>
+<div class="ttc" id="a08189_html"><div class="ttname"><a href="a08189.html">gnuplotGraph.H</a></div></div>
+<div class="ttc" id="a07669_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00449">UList.H:449</a></div></div>
+<div class="ttc" id="a00945_html_aa8accb3ff6861a0ff3c3c9f5e8f84931"><div class="ttname"><a href="a00945.html#aa8accb3ff6861a0ff3c3c9f5e8f84931">Foam::graph::xName</a></div><div class="ttdeci">const string &amp; xName() const </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00154">graph.H:154</a></div></div>
+<div class="ttc" id="a10725_html_a75c3b24ffda662adff500772be5e9167"><div class="ttname"><a href="a10725.html#a75c3b24ffda662adff500772be5e9167">Foam::graphWriter</a></div><div class="ttdeci">graph::writer graphWriter</div><div class="ttdef"><b>Definition:</b> <a href="a08186_source.html#l00036">graph.C:36</a></div></div>
+<div class="ttc" id="a00945_html"><div class="ttname"><a href="a00945.html">Foam::graph</a></div><div class="ttdoc">Class to create, store and output qgraph files. </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00058">graph.H:58</a></div></div>
+<div class="ttc" id="a10725_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10725.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

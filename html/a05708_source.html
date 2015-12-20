@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_f2a32fae3c7e5034ec75716fe725e251.html">snGradSchemes</a></li><li class="navelem"><a class="el" href="dir_3e9d874e8898315a540c122aab485915.html">correctedSnGrad</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_f4030f3362933683136e1dae328f10c0.html">fvc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">correctedSnGrad.C</div>  </div>
+<div class="title">fvcSurfaceIntegrate.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05708.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,121 +119,92 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05709.html">correctedSnGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;linear.H&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05631.html">fvcGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05674.html">gaussGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00404.html#a7f264c286f9b19b76aa8baa220539de5">   36</a></span>&#160;<a class="code" href="a00404.html#a7f264c286f9b19b76aa8baa220539de5">Foam::fv::correctedSnGrad&lt;Type&gt;::~correctedSnGrad</a>()</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InNamespace</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::fvc</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Surface integrate surfaceField creating a volField.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Surface sum a surfaceField creating a volField.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    fvcSurfaceIntegrate.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef fvcSurfaceIntegrate_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define fvcSurfaceIntegrate_H</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::GeometricField&lt;Type, Foam::fvsPatchField, Foam::surfaceMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="a00404.html#a1d818a559677e63f3aa628f1787133ce">Foam::fv::correctedSnGrad&lt;Type&gt;::fullGradCorrection</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a00404.html#a1d818a559677e63f3aa628f1787133ce">   45</a></span>&#160;(</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a> = this-&gt;<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// construct GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> &gt; tssf =</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        mesh.<a class="code" href="a02470.html#ad38a1a0ee5246bae195e4c425eaa9a38">nonOrthCorrectionVectors</a>()</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      &amp; <a class="code" href="a01324.html">linear&lt;typename outerProduct&lt;vector, Type&gt;::type</a>&gt;(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>).<a class="code" href="a10733.html#a4d62f21551985d814104861e7c1d9b4f">interpolate</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        (</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <a class="code" href="a00935.html">gradScheme&lt;Type&gt;::New</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            (</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                mesh,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                mesh.<a class="code" href="a00882.html#aac32205d4c2ca588cf68157838675e2c">gradScheme</a>(<span class="stringliteral">&quot;grad(&quot;</span> + vf.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="charliteral">&#39;)&#39;</span>)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            )().<a class="code" href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">grad</a>(vf, <span class="stringliteral">&quot;grad(&quot;</span> + vf.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="charliteral">&#39;)&#39;</span>)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        );</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    tssf().rename(<span class="stringliteral">&quot;snGradCorr(&quot;</span> + vf.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="charliteral">&#39;)&#39;</span>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> tssf;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05610.html">volFieldsFwd.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05605.html">surfaceFieldsFwd.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                     Namespace fvc functions Declaration</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">namespace </span>fvc</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="a10759.html#aba5bf4c91953aa61f90bc35f6d487fd6">surfaceIntegrate</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    (</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        Field&lt;Type&gt;&amp;,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;&amp;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    );</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a10759.html#aba5bf4c91953aa61f90bc35f6d487fd6">surfaceIntegrate</a></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    (</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;&amp;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    );</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::GeometricField&lt;Type, Foam::fvsPatchField, Foam::surfaceMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="a00404.html#ad5f4a5d3bc1173cf56b1283cdea2e418">Foam::fv::correctedSnGrad&lt;Type&gt;::correction</a></div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="a00404.html#ad5f4a5d3bc1173cf56b1283cdea2e418">   71</a></span>&#160;(</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a> = this-&gt;<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// construct GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> &gt; tssf</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    (</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        (</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            (</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                <span class="stringliteral">&quot;snGradCorr(&quot;</span>+vf.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>()+<span class="charliteral">&#39;)&#39;</span>,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                vf.<a class="code" href="a01170.html#a927868ca22fb186135659bc0acadd47b">instance</a>(),</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                IOobject::NO_READ,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                IOobject::NO_WRITE</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            ),</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            mesh,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            vf.<a class="code" href="a00527.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>()*mesh.<a class="code" href="a02470.html#a1189a3afa05e8c494cffea22ca3ccef5">nonOrthDeltaCoeffs</a>().<a class="code" href="a00527.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>()</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        )</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    );</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a00913.html">GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a>&amp; ssf = tssf();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt = 0; cmpt &lt; pTraits&lt;Type&gt;::nComponents; cmpt++)</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        ssf.<a class="code" href="a00913.html#a9806b4c63594d0623fd601fc5e647294">replace</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        (</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            cmpt,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <a class="code" href="a00404.html">correctedSnGrad</a>&lt;<span class="keyword">typename</span> <a class="code" href="a02006.html">pTraits&lt;Type&gt;::cmptType</a>&gt;(mesh)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;           .fullGradCorrection(vf.<a class="code" href="a00913.html#a65aef361932c3d395290d8686fc8e484">component</a>(cmpt))</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        );</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> tssf;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a01324_html"><div class="ttname"><a href="a01324.html">Foam::linear</a></div><div class="ttdoc">Central-differencing interpolation scheme class. </div><div class="ttdef"><b>Definition:</b> <a href="a06041_source.html#l00050">linear.H:50</a></div></div>
-<div class="ttc" id="a00882_html_aac32205d4c2ca588cf68157838675e2c"><div class="ttname"><a href="a00882.html#aac32205d4c2ca588cf68157838675e2c">Foam::fvSchemes::gradScheme</a></div><div class="ttdeci">ITstream &amp; gradScheme(const word &amp;name) const </div><div class="ttdef"><b>Definition:</b> <a href="a05667_source.html#l00440">fvSchemes.C:440</a></div></div>
-<div class="ttc" id="a02470_html_ad38a1a0ee5246bae195e4c425eaa9a38"><div class="ttname"><a href="a02470.html#ad38a1a0ee5246bae195e4c425eaa9a38">Foam::surfaceInterpolation::nonOrthCorrectionVectors</a></div><div class="ttdeci">const surfaceVectorField &amp; nonOrthCorrectionVectors() const </div><div class="ttdoc">Return reference to non-orthogonality correction vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a06090_source.html#l00113">surfaceInterpolation.C:113</a></div></div>
-<div class="ttc" id="a00935_html"><div class="ttname"><a href="a00935.html">Foam::fv::gradScheme</a></div><div class="ttdoc">Abstract base class for gradient schemes. </div><div class="ttdef"><b>Definition:</b> <a href="a05677_source.html#l00060">gradScheme.H:60</a></div></div>
-<div class="ttc" id="a00404_html_a1d818a559677e63f3aa628f1787133ce"><div class="ttname"><a href="a00404.html#a1d818a559677e63f3aa628f1787133ce">Foam::fv::correctedSnGrad::fullGradCorrection</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; fullGradCorrection(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;) const </div><div class="ttdoc">Return the explicit correction to the correctedSnGrad. </div><div class="ttdef"><b>Definition:</b> <a href="a05708_source.html#l00045">correctedSnGrad.C:45</a></div></div>
-<div class="ttc" id="a02470_html_a1189a3afa05e8c494cffea22ca3ccef5"><div class="ttname"><a href="a02470.html#a1189a3afa05e8c494cffea22ca3ccef5">Foam::surfaceInterpolation::nonOrthDeltaCoeffs</a></div><div class="ttdeci">const surfaceScalarField &amp; nonOrthDeltaCoeffs() const </div><div class="ttdoc">Return reference to non-orthogonal cell-centre difference. </div><div class="ttdef"><b>Definition:</b> <a href="a06090_source.html#l00101">surfaceInterpolation.C:101</a></div></div>
-<div class="ttc" id="a05709_html"><div class="ttname"><a href="a05709.html">correctedSnGrad.H</a></div></div>
-<div class="ttc" id="a01170_html_a927868ca22fb186135659bc0acadd47b"><div class="ttname"><a href="a01170.html#a927868ca22fb186135659bc0acadd47b">Foam::IOobject::instance</a></div><div class="ttdeci">const fileName &amp; instance() const </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00337">IOobject.H:337</a></div></div>
-<div class="ttc" id="a00404_html_ad5f4a5d3bc1173cf56b1283cdea2e418"><div class="ttname"><a href="a00404.html#ad5f4a5d3bc1173cf56b1283cdea2e418">Foam::fv::correctedSnGrad::correction</a></div><div class="ttdeci">virtual tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; correction(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;) const </div><div class="ttdoc">Return the explicit correction to the correctedSnGrad. </div><div class="ttdef"><b>Definition:</b> <a href="a05708_source.html#l00071">correctedSnGrad.C:71</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a02006_html"><div class="ttname"><a href="a02006.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08858_source.html#l00050">pTraits.H:50</a></div></div>
-<div class="ttc" id="a05674_html"><div class="ttname"><a href="a05674.html">gaussGrad.H</a></div></div>
-<div class="ttc" id="a00913_html_a65aef361932c3d395290d8686fc8e484"><div class="ttname"><a href="a00913.html#a65aef361932c3d395290d8686fc8e484">Foam::GeometricField::component</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; cmptType, PatchField, GeoMesh &gt; &gt; component(const direction) const </div><div class="ttdoc">Return a component of the field. </div></div>
-<div class="ttc" id="a00527_html_a6098093e7de06370342a85cfae8b31f5"><div class="ttname"><a href="a00527.html#a6098093e7de06370342a85cfae8b31f5">Foam::DimensionedField::dimensions</a></div><div class="ttdeci">const dimensionSet &amp; dimensions() const </div><div class="ttdoc">Return dimensions. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00046">DimensionedFieldI.H:46</a></div></div>
-<div class="ttc" id="a05631_html"><div class="ttname"><a href="a05631.html">fvcGrad.H</a></div><div class="ttdoc">Calculate the gradient of the given field. </div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a00913_html_a9806b4c63594d0623fd601fc5e647294"><div class="ttname"><a href="a00913.html#a9806b4c63594d0623fd601fc5e647294">Foam::GeometricField::replace</a></div><div class="ttdeci">void replace(const direction, const GeometricField&lt; cmptType, PatchField, GeoMesh &gt; &amp;)</div></div>
-<div class="ttc" id="a10709_html_a7c00ec90ecc15ed3005255e42c52827a"><div class="ttname"><a href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">Foam::fvc::grad</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; typename outerProduct&lt; vector, Type &gt;::type, fvPatchField, volMesh &gt;&gt; grad(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05630_source.html#l00052">fvcGrad.C:52</a></div></div>
-<div class="ttc" id="a10733_html_a4d62f21551985d814104861e7c1d9b4f"><div class="ttname"><a href="a10733.html#a4d62f21551985d814104861e7c1d9b4f">Foam::MULES::interpolate</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; interpolate(const RhoType &amp;rho)</div><div class="ttdef"><b>Definition:</b> <a href="a05743_source.html#l00040">IMULESTemplates.C:40</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a00404_html_a7f264c286f9b19b76aa8baa220539de5"><div class="ttname"><a href="a00404.html#a7f264c286f9b19b76aa8baa220539de5">Foam::fv::correctedSnGrad::~correctedSnGrad</a></div><div class="ttdeci">virtual ~correctedSnGrad()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05708_source.html#l00036">correctedSnGrad.C:36</a></div></div>
-<div class="ttc" id="a00404_html"><div class="ttname"><a href="a00404.html">Foam::fv::correctedSnGrad</a></div><div class="ttdoc">Simple central-difference snGrad scheme with non-orthogonal correction. </div><div class="ttdef"><b>Definition:</b> <a href="a05709_source.html#l00054">correctedSnGrad.H:54</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a10759.html#aba5bf4c91953aa61f90bc35f6d487fd6">surfaceIntegrate</a></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    (</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">const</span> tmp&lt;GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt; &gt;&amp;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt; <a class="code" href="a10759.html#aa0a1e3c4ec02aa6a37f517c4d5270046">surfaceSum</a></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    (</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">const</span> GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;&amp;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    );</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt; <a class="code" href="a10759.html#aa0a1e3c4ec02aa6a37f517c4d5270046">surfaceSum</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    (</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> tmp&lt;GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt; &gt;&amp;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    );</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a05707.html">fvcSurfaceIntegrate.C</a>&quot;</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a05605_html"><div class="ttname"><a href="a05605.html">surfaceFieldsFwd.H</a></div></div>
+<div class="ttc" id="a10759_html_aba5bf4c91953aa61f90bc35f6d487fd6"><div class="ttname"><a href="a10759.html#aba5bf4c91953aa61f90bc35f6d487fd6">Foam::fvc::surfaceIntegrate</a></div><div class="ttdeci">void surfaceIntegrate(Field&lt; Type &gt; &amp;ivf, const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05707_source.html#l00044">fvcSurfaceIntegrate.C:44</a></div></div>
+<div class="ttc" id="a10759_html_aa0a1e3c4ec02aa6a37f517c4d5270046"><div class="ttname"><a href="a10759.html#aa0a1e3c4ec02aa6a37f517c4d5270046">Foam::fvc::surfaceSum</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; surfaceSum(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05707_source.html#l00138">fvcSurfaceIntegrate.C:138</a></div></div>
+<div class="ttc" id="a05707_html"><div class="ttname"><a href="a05707.html">fvcSurfaceIntegrate.C</a></div></div>
+<div class="ttc" id="a05610_html"><div class="ttname"><a href="a05610.html">volFieldsFwd.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_3b094e1ce2b3f641da0071aec2c4e694.html">limitedSchemes</a></li><li class="navelem"><a class="el" href="dir_4f765f4be874e7c1018013a8d8ff5f6d.html">limitedSurfaceInterpolationScheme</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_c993260712d995df6dda7964041544db.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_a3dc0e4243195fcc544ce440c33a38a4.html">interpolationCellPoint</a></li><li class="navelem"><a class="el" href="dir_606c367ef6971fe105007327370bd030.html">cellPointWeight</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">limitedSurfaceInterpolationScheme.C</div>  </div>
+<div class="title">cellPointWeight.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05961.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,238 +121,300 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05962.html">limitedSurfaceInterpolationScheme.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05113.html">coupledFvPatchField.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05962.html">cellPointWeight.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08640.html">polyMeshTetDecomposition.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00224.html#ac3e1795766a80ec63b157951b4b9a7d4">Foam::cellPointWeight::debug</a>(<a class="code" href="a10744.html#a8f56fbac8396e01fc88f8a299cdaf5df">debug::debugSwitch</a>(<span class="stringliteral">&quot;cellPointWeight&quot;</span>, 0));</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;Foam::scalar <a class="code" href="a00224.html#a5759bfa55205243d036a2d57065b4480">Foam::cellPointWeight::tol</a>(SMALL);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;tmp&lt;limitedSurfaceInterpolationScheme&lt;Type&gt; &gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a01314.html#a4375e15f8b82da9daf54eb57be9407ec">limitedSurfaceInterpolationScheme&lt;Type&gt;::New</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a01314.html#a4375e15f8b82da9daf54eb57be9407ec">   41</a></span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; schemeData</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span> (surfaceInterpolation::debug)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;               <span class="stringliteral">&quot;New(const fvMesh&amp;, Istream&amp;)&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;               <span class="stringliteral">&quot; : constructing limitedSurfaceInterpolationScheme&lt;Type&gt;&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (schemeData.<a class="code" href="a01177.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">eof</a>())</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        (</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::&quot;</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <span class="stringliteral">&quot;New(const fvMesh&amp;, Istream&amp;)&quot;</span>,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            schemeData</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Discretisation scheme not specified&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid schemes are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            &lt;&lt; MeshConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a> schemeName(schemeData);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00224.html#aecec3ccb37ced505c339363e0803800a">Foam::cellPointWeight::findTetrahedron</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00224.html#aecec3ccb37ced505c339363e0803800a">   39</a></span>&#160;(</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; position,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;Foam::cellPointWeight::findTetrahedron&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;position = &quot;</span> &lt;&lt; position &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;cellI = &quot;</span> &lt;&lt; cellI &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a01364.html">List&lt;tetIndices&gt;</a> cellTets = polyMeshTetDecomposition::cellTetIndices</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    (</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        mesh,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        cellI</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    );</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">faceList</a>&amp; <a class="code" href="a03922.html#a2f81f8565e1a8d530c3f1a811faa6614">pFaces</a> = mesh.<a class="code" href="a01916.html#a4434536d50d4c14116249da802a1e2b2">faces</a>();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> scalar cellVolume = mesh.<a class="code" href="a01967.html#a621f5b7ca5ac8ff001bcdbeefaad7f7a">cellVolumes</a>()[cellI];</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(cellTets, tetI)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = cellTets[tetI];</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00715.html">face</a>&amp; <a class="code" href="a03922.html#a888be93833ac7a23170555c69c690288">f</a> = pFaces[tetIs.<a class="code" href="a02567.html#aa7c10231d818b82cefb2bb4ef6d92494">face</a>()];</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Barycentric coordinates of the position</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        scalar <a class="code" href="a10725.html#a0661214f1c72feedb965c88d685f8036">det</a> = tetIs.<a class="code" href="a02567.html#abb6833818ccf906c21e0a434a44c7f8e">tet</a>(mesh).<a class="code" href="a02571.html#af25ab613c3d54bb72f48d06e81ed88cc">barycentric</a>(position, weights_);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">typename</span> MeshConstructorTable::iterator constructorIter =</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        MeshConstructorTablePtr_-&gt;find(schemeName);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (constructorIter == MeshConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        (</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::&quot;</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="stringliteral">&quot;New(const fvMesh&amp;, Istream&amp;)&quot;</span>,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            schemeData</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Unknown discretisation scheme &quot;</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            &lt;&lt; schemeName &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid schemes are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            &lt;&lt; MeshConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> constructorIter()(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>, schemeData);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// Return weighting factors for scheme given by name in dictionary</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<a class="code" href="a02608.html">tmp&lt;limitedSurfaceInterpolationScheme&lt;Type&gt;</a> &gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<a class="code" href="a01314.html#a4375e15f8b82da9daf54eb57be9407ec">limitedSurfaceInterpolationScheme&lt;Type&gt;::New</a></div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="a01314.html#ad0092f79f145c418add03b0d6b595808">   95</a></span>&#160;(</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; faceFlux,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; schemeData</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;)</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;{</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">if</span> (surfaceInterpolation::debug)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::New&quot;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;               <span class="stringliteral">&quot;(const fvMesh&amp;, const surfaceScalarField&amp;, Istream&amp;) : &quot;</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;               <span class="stringliteral">&quot;constructing limitedSurfaceInterpolationScheme&lt;Type&gt;&quot;</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">if</span> (schemeData.<a class="code" href="a01177.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">eof</a>())</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        (</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::New&quot;</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="stringliteral">&quot;(const fvMesh&amp;, const surfaceScalarField&amp;, Istream&amp;)&quot;</span>,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            schemeData</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Discretisation scheme not specified&quot;</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid schemes are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            &lt;&lt; MeshConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a> schemeName(schemeData);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(det/cellVolume) &gt; tol)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">const</span> scalar&amp; u = weights_[0];</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keyword">const</span> scalar&amp; v = weights_[1];</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keyword">const</span> scalar&amp; w = weights_[2];</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            (</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                (u + tol &gt; 0)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;             &amp;&amp; (v + tol &gt; 0)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;             &amp;&amp; (w + tol &gt; 0)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;             &amp;&amp; (u + v + w &lt; 1 + tol)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            )</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                faceVertices_[0] = f[tetIs.<a class="code" href="a02567.html#a68b24952894ad64e271369dc69792c04">faceBasePt</a>()];</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                faceVertices_[1] = f[tetIs.<a class="code" href="a02567.html#a425c9489685f39c1fe6608161f0a876f">facePtA</a>()];</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                faceVertices_[2] = f[tetIs.<a class="code" href="a02567.html#a6ab76182cf2fbace9fafc253e511e936">facePtB</a>()];</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// A suitable point in a tetrahedron was not found, find the</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// nearest.</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    scalar minNearDist = VGREAT;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nearestTetI = -1;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(cellTets, tetI)</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = cellTets[tetI];</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        scalar nearDist = tetIs.<a class="code" href="a02567.html#abb6833818ccf906c21e0a434a44c7f8e">tet</a>(mesh).<a class="code" href="a02571.html#ad2a728428db89fbe441f66a06ebfca16">nearestPoint</a>(position).<a class="code" href="a01882.html#a6fc60097ee4a2ef28aa08c9d11269046">distance</a>();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">if</span> (nearDist &lt; minNearDist)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            minNearDist = nearDist;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            nearestTetI = tetI;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;cellPointWeight::findTetrahedron&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;    Tetrahedron search failed; using closest tet to point &quot;</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            &lt;&lt; position &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;    cell: &quot;</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            &lt;&lt; cellI &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">typename</span> MeshFluxConstructorTable::iterator constructorIter =</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        MeshFluxConstructorTablePtr_-&gt;find(schemeName);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">if</span> (constructorIter == MeshFluxConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        (</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="stringliteral">&quot;limitedSurfaceInterpolationScheme&lt;Type&gt;::New&quot;</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="stringliteral">&quot;(const fvMesh&amp;, const surfaceScalarField&amp;, Istream&amp;)&quot;</span>,</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            schemeData</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Unknown discretisation scheme &quot;</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            &lt;&lt; schemeName &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid schemes are :&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            &lt;&lt; MeshFluxConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">return</span> constructorIter()(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>, faceFlux, schemeData);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="a01314.html#a9f4319b492e2e0e048bb53fc79fecbbd">  149</a></span>&#160;<a class="code" href="a01314.html#a9f4319b492e2e0e048bb53fc79fecbbd">limitedSurfaceInterpolationScheme&lt;Type&gt;::~limitedSurfaceInterpolationScheme</a>()</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;{}</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<a class="code" href="a02608.html">tmp&lt;surfaceScalarField&gt;</a> <a class="code" href="a01314.html#a02a45d728a8f615e48439ea5db46e18a">limitedSurfaceInterpolationScheme&lt;Type&gt;::weights</a></div>
-<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="a01314.html#a02a45d728a8f615e48439ea5db46e18a">  157</a></span>&#160;(</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; phi,</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; CDweights,</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="a02608.html">tmp&lt;surfaceScalarField&gt;</a> tLimiter</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;{</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="comment">// Note that here the weights field is initialised as the limiter</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="comment">// from which the weight is calculated using the limiter value</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="a00913.html">surfaceScalarField</a>&amp; Weights = tLimiter();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; pWeights = Weights.<a class="code" href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">internalField</a>();</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = cellTets[nearestTetI];</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00715.html">face</a>&amp; <a class="code" href="a03922.html#a888be93833ac7a23170555c69c690288">f</a> = pFaces[tetIs.<a class="code" href="a02567.html#aa7c10231d818b82cefb2bb4ef6d92494">face</a>()];</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">// Barycentric coordinates of the position, ignoring if the</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="comment">// determinant is suitable.  If not, the return from barycentric</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">// to weights_ is safe.</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    tetIs.<a class="code" href="a02567.html#abb6833818ccf906c21e0a434a44c7f8e">tet</a>(mesh).<a class="code" href="a02571.html#af25ab613c3d54bb72f48d06e81ed88cc">barycentric</a>(position, weights_);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    faceVertices_[0] = f[tetIs.<a class="code" href="a02567.html#a68b24952894ad64e271369dc69792c04">faceBasePt</a>()];</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    faceVertices_[1] = f[tetIs.<a class="code" href="a02567.html#a425c9489685f39c1fe6608161f0a876f">facePtA</a>()];</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    faceVertices_[2] = f[tetIs.<a class="code" href="a02567.html#a6ab76182cf2fbace9fafc253e511e936">facePtB</a>()];</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00224.html#a58a370be784ce48f88d340ab2ab15ac8">Foam::cellPointWeight::findTriangle</a></div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="a00224.html#a58a370be784ce48f88d340ab2ab15ac8">  141</a></span>&#160;(</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; position,</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;)</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    {</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;\nbool Foam::cellPointWeight::findTriangle&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;position = &quot;</span> &lt;&lt; position &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;faceI = &quot;</span> &lt;&lt; faceI &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="a01364.html">List&lt;tetIndices&gt;</a> faceTets = polyMeshTetDecomposition::faceTetIndices</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    (</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        mesh,</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        faceI,</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        mesh.<a class="code" href="a01916.html#a6d4def83436c9aa4dc68e8e42c5cf268">faceOwner</a>()[faceI]</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    );</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">const</span> scalar faceAreaSqr = <a class="code" href="a10725.html#ae6fff2c6981e6d9618aa5038e69def6e">magSqr</a>(mesh.<a class="code" href="a01967.html#a460495623a8ec621b95f93bbcb3d4773">faceAreas</a>()[faceI]);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00715.html">face</a>&amp; <a class="code" href="a03922.html#a888be93833ac7a23170555c69c690288">f</a> =  mesh.<a class="code" href="a01916.html#a4434536d50d4c14116249da802a1e2b2">faces</a>()[faceI];</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(faceTets, tetI)</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = faceTets[tetI];</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pWeights, <a class="code" href="a00709.html">face</a>)</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        pWeights[<a class="code" href="a00709.html">face</a>] =</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            pWeights[<a class="code" href="a00709.html">face</a>]*CDweights[<a class="code" href="a00709.html">face</a>]</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;          + (1.0 - pWeights[<a class="code" href="a00709.html">face</a>])*<a class="code" href="a10675.html#a09a190b59f3d01b258bca0fa964a6212">pos</a>(faceFlux_[<a class="code" href="a00709.html">face</a>]);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    surfaceScalarField::GeometricBoundaryField&amp; bWeights =</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        Weights.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>();</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <a class="code" href="a01364.html">List&lt;scalar&gt;</a> triWeights(3);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="comment">// Barycentric coordinates of the position</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        scalar <a class="code" href="a10725.html#a0661214f1c72feedb965c88d685f8036">det</a> = tetIs.<a class="code" href="a02567.html#ad07ec7e5f97159ccc9a01f9af7b89716">faceTri</a>(mesh).<a class="code" href="a02675.html#af25ab613c3d54bb72f48d06e81ed88cc">barycentric</a>(position, triWeights);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keywordflow">if</span> (0.25*<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(det)/faceAreaSqr &gt; tol)</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        {</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keyword">const</span> scalar&amp; u = triWeights[0];</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            <span class="keyword">const</span> scalar&amp; v = triWeights[1];</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(bWeights, patchI)</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <a class="code" href="a00749.html">scalarField</a>&amp; pWeights = bWeights[patchI];</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; pCDweights = CDweights.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[patchI];</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; pFaceFlux = faceFlux_.boundaryField()[patchI];</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pWeights, <a class="code" href="a00709.html">face</a>)</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        {</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            pWeights[<a class="code" href="a00709.html">face</a>] =</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;                pWeights[<a class="code" href="a00709.html">face</a>]*pCDweights[<a class="code" href="a00709.html">face</a>]</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;              + (1.0 - pWeights[<a class="code" href="a00709.html">face</a>])*<a class="code" href="a10675.html#a09a190b59f3d01b258bca0fa964a6212">pos</a>(pFaceFlux[<a class="code" href="a00709.html">face</a>]);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        }</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordflow">return</span> tLimiter;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;}</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<a class="code" href="a02608.html">tmp&lt;surfaceScalarField&gt;</a> <a class="code" href="a01314.html#a02a45d728a8f615e48439ea5db46e18a">limitedSurfaceInterpolationScheme&lt;Type&gt;::weights</a></div>
-<div class="line"><a name="l00199"></a><span class="lineno"><a class="line" href="a01314.html#aea0fb80cfd6ee46e42ef28f24bfbcd01">  199</a></span>&#160;(</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; phi</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;{</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordflow">return</span> this-&gt;weights</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    (</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        phi,</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        this-&gt;<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<a class="code" href="a02470.html#a96017a28681b6fc563b59084e7add65e">surfaceInterpolation::weights</a>(),</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        this-&gt;<a class="code" href="a10733.html#ae7bb06bb4b6724eb8a202da04f6e5557">limiter</a>(phi)</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    );</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;}</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            (</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                (u + tol &gt; 0)</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;             &amp;&amp; (v + tol &gt; 0)</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;             &amp;&amp; (u + v &lt; 1 + tol)</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            )</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                <span class="comment">// Weight[0] is for the cell centre.</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;                weights_[0] = 0;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                weights_[1] = triWeights[0];</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;                weights_[2] = triWeights[1];</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                weights_[3] = triWeights[2];</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                faceVertices_[0] = f[tetIs.<a class="code" href="a02567.html#a68b24952894ad64e271369dc69792c04">faceBasePt</a>()];</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                faceVertices_[1] = f[tetIs.<a class="code" href="a02567.html#a425c9489685f39c1fe6608161f0a876f">facePtA</a>()];</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                faceVertices_[2] = f[tetIs.<a class="code" href="a02567.html#a6ab76182cf2fbace9fafc253e511e936">facePtB</a>()];</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;                <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            }</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        }</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    }</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="comment">// A suitable point in a triangle was not found, find the nearest.</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    scalar minNearDist = VGREAT;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nearestTetI = -1;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(faceTets, tetI)</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    {</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = faceTets[tetI];</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvsPatchField, surfaceMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<a class="code" href="a01314.html#a6c43889163f0eea8524a137be65fe15c">limitedSurfaceInterpolationScheme&lt;Type&gt;::flux</a></div>
-<div class="line"><a name="l00214"></a><span class="lineno"><a class="line" href="a01314.html#a6c43889163f0eea8524a137be65fe15c">  214</a></span>&#160;(</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; phi</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;{</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordflow">return</span> faceFlux_*this-&gt;<a class="code" href="a10675.html#aba5fff183ec42758b0944abeabec41ea">interpolate</a>(phi);</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;}</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        scalar nearDist = tetIs.<a class="code" href="a02567.html#ad07ec7e5f97159ccc9a01f9af7b89716">faceTri</a>(mesh).<a class="code" href="a02675.html#ad2a728428db89fbe441f66a06ebfca16">nearestPoint</a>(position).<a class="code" href="a01882.html#a6fc60097ee4a2ef28aa08c9d11269046">distance</a>();</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        <span class="keywordflow">if</span> (nearDist &lt; minNearDist)</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        {</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            minNearDist = nearDist;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            nearestTetI = tetI;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        }</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    }</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10733_html_ae7bb06bb4b6724eb8a202da04f6e5557"><div class="ttname"><a href="a10733.html#ae7bb06bb4b6724eb8a202da04f6e5557">Foam::MULES::limiter</a></div><div class="ttdeci">void limiter(scalarField &amp;allLambda, const RdeltaTType &amp;rDeltaT, const RhoType &amp;rho, const volScalarField &amp;psi, const surfaceScalarField &amp;phiBD, const surfaceScalarField &amp;phiCorr, const SpType &amp;Sp, const SuType &amp;Su, const scalar psiMax, const scalar psiMin)</div><div class="ttdef"><b>Definition:</b> <a href="a05746_source.html#l00159">MULESTemplates.C:159</a></div></div>
-<div class="ttc" id="a05962_html"><div class="ttname"><a href="a05962.html">limitedSurfaceInterpolationScheme.H</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00913_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00699">GeometricField.C:699</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a10675_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a07673_html_af60657ab907624ce6ce9a2bb0f29c1ec"><div class="ttname"><a href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div><div class="ttdeci">#define FatalIOErrorIn(functionName, ios)                                                                        </div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00325">error.H:325</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00913_html_a9536140d36d69bbac40496f6b817aa0a"><div class="ttname"><a href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">Foam::GeometricField::internalField</a></div><div class="ttdeci">InternalField &amp; internalField()</div><div class="ttdoc">Return internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00688">GeometricField.C:688</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01314_html_a02a45d728a8f615e48439ea5db46e18a"><div class="ttname"><a href="a01314.html#a02a45d728a8f615e48439ea5db46e18a">Foam::limitedSurfaceInterpolationScheme::weights</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; weights(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;, const surfaceScalarField &amp;CDweights, tmp&lt; surfaceScalarField &gt; tLimiter) const </div><div class="ttdoc">Return the interpolation weighting factors for the given field,. </div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00157">limitedSurfaceInterpolationScheme.C:157</a></div></div>
-<div class="ttc" id="a01177_html_ac4bcdb9a2c4adf5c3d247a711a7142cc"><div class="ttname"><a href="a01177.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">Foam::IOstream::eof</a></div><div class="ttdeci">bool eof() const </div><div class="ttdoc">Return true if end of input seen. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00339">IOstream.H:339</a></div></div>
-<div class="ttc" id="a00709_html"><div class="ttname"><a href="a00709.html">Foam::face</a></div><div class="ttdoc">A face is a list of labels corresponding to mesh vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a08476_source.html#l00075">face.H:75</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a05113_html"><div class="ttname"><a href="a05113.html">coupledFvPatchField.H</a></div></div>
-<div class="ttc" id="a01314_html_a6c43889163f0eea8524a137be65fe15c"><div class="ttname"><a href="a01314.html#a6c43889163f0eea8524a137be65fe15c">Foam::limitedSurfaceInterpolationScheme::flux</a></div><div class="ttdeci">virtual tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; flux(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;) const </div><div class="ttdoc">Return the interpolation weighting factors. </div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00214">limitedSurfaceInterpolationScheme.C:214</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10675_html_aba5fff183ec42758b0944abeabec41ea"><div class="ttname"><a href="a10675.html#aba5fff183ec42758b0944abeabec41ea">Foam::interpolate</a></div><div class="ttdeci">bool interpolate(const vector &amp;p1, const vector &amp;p2, const vector &amp;o, vector &amp;n, scalar l)</div><div class="ttdef"><b>Definition:</b> <a href="a08133_source.html#l00075">curveTools.C:75</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a09a190b59f3d01b258bca0fa964a6212"><div class="ttname"><a href="a10675.html#a09a190b59f3d01b258bca0fa964a6212">Foam::pos</a></div><div class="ttdeci">dimensionedScalar pos(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00190">dimensionedScalar.C:190</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a02470_html_a96017a28681b6fc563b59084e7add65e"><div class="ttname"><a href="a02470.html#a96017a28681b6fc563b59084e7add65e">Foam::surfaceInterpolation::weights</a></div><div class="ttdeci">const surfaceScalarField &amp; weights() const </div><div class="ttdoc">Return reference to linear difference weighting factors. </div><div class="ttdef"><b>Definition:</b> <a href="a06090_source.html#l00077">surfaceInterpolation.C:77</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a01314_html_a4375e15f8b82da9daf54eb57be9407ec"><div class="ttname"><a href="a01314.html#a4375e15f8b82da9daf54eb57be9407ec">Foam::limitedSurfaceInterpolationScheme::New</a></div><div class="ttdeci">static tmp&lt; limitedSurfaceInterpolationScheme&lt; Type &gt; &gt; New(const fvMesh &amp;mesh, Istream &amp;schemeData)</div><div class="ttdoc">Return new tmp interpolation scheme. </div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00041">limitedSurfaceInterpolationScheme.C:41</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a01314_html_a9f4319b492e2e0e048bb53fc79fecbbd"><div class="ttname"><a href="a01314.html#a9f4319b492e2e0e048bb53fc79fecbbd">Foam::limitedSurfaceInterpolationScheme::~limitedSurfaceInterpolationScheme</a></div><div class="ttdeci">virtual ~limitedSurfaceInterpolationScheme()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00149">limitedSurfaceInterpolationScheme.C:149</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    {</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;cellPointWeight::findTriangle&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;    Triangle search failed; using closest tri to point &quot;</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            &lt;&lt; position &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;    face: &quot;</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            &lt;&lt; faceI &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    }</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02567.html">tetIndices</a>&amp; tetIs = faceTets[nearestTetI];</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="comment">// Barycentric coordinates of the position, ignoring if the</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="comment">// determinant is suitable.  If not, the return from barycentric</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="comment">// to triWeights is safe.</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <a class="code" href="a01364.html">List&lt;scalar&gt;</a> triWeights(3);</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    tetIs.<a class="code" href="a02567.html#ad07ec7e5f97159ccc9a01f9af7b89716">faceTri</a>(mesh).<a class="code" href="a02675.html#af25ab613c3d54bb72f48d06e81ed88cc">barycentric</a>(position, triWeights);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="comment">// Weight[0] is for the cell centre.</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    weights_[0] = 0;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    weights_[1] = triWeights[0];</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    weights_[2] = triWeights[1];</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    weights_[3] = triWeights[2];</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    faceVertices_[0] = f[tetIs.<a class="code" href="a02567.html#a68b24952894ad64e271369dc69792c04">faceBasePt</a>()];</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    faceVertices_[1] = f[tetIs.<a class="code" href="a02567.html#a425c9489685f39c1fe6608161f0a876f">facePtA</a>()];</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    faceVertices_[2] = f[tetIs.<a class="code" href="a02567.html#a6ab76182cf2fbace9fafc253e511e936">facePtB</a>()];</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;}</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<a class="code" href="a00224.html#a464007dc9622706ae009abd3d109a377">Foam::cellPointWeight::cellPointWeight</a></div>
+<div class="line"><a name="l00256"></a><span class="lineno"><a class="line" href="a00224.html#a464007dc9622706ae009abd3d109a377">  256</a></span>&#160;(</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; position,</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;)</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;:</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    cellI_(cellI),</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    weights_(4),</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    faceVertices_(3)</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;{</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keywordflow">if</span> (faceI &lt; 0)</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="comment">// Face data not supplied</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        findTetrahedron(mesh, position, cellI);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    {</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        <span class="comment">// Face data supplied</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        findTriangle(mesh, position, faceI);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    }</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;}</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a01882_html_a6fc60097ee4a2ef28aa08c9d11269046"><div class="ttname"><a href="a01882.html#a6fc60097ee4a2ef28aa08c9d11269046">Foam::PointHit::distance</a></div><div class="ttdeci">scalar distance() const </div><div class="ttdoc">Return distance to hit. </div><div class="ttdef"><b>Definition:</b> <a href="a08766_source.html#l00139">PointHit.H:139</a></div></div>
+<div class="ttc" id="a05962_html"><div class="ttname"><a href="a05962.html">cellPointWeight.H</a></div></div>
+<div class="ttc" id="a00224_html_a58a370be784ce48f88d340ab2ab15ac8"><div class="ttname"><a href="a00224.html#a58a370be784ce48f88d340ab2ab15ac8">Foam::cellPointWeight::findTriangle</a></div><div class="ttdeci">void findTriangle(const polyMesh &amp;mesh, const vector &amp;position, const label faceI)</div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00141">cellPointWeight.C:141</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01967_html_a460495623a8ec621b95f93bbcb3d4773"><div class="ttname"><a href="a01967.html#a460495623a8ec621b95f93bbcb3d4773">Foam::primitiveMesh::faceAreas</a></div><div class="ttdeci">const vectorField &amp; faceAreas() const </div><div class="ttdef"><b>Definition:</b> <a href="a08731_source.html#l00151">primitiveMeshFaceCentresAndAreas.C:151</a></div></div>
+<div class="ttc" id="a02675_html_ad2a728428db89fbe441f66a06ebfca16"><div class="ttname"><a href="a02675.html#ad2a728428db89fbe441f66a06ebfca16">Foam::triangle::nearestPoint</a></div><div class="ttdeci">pointHit nearestPoint(const point &amp;p) const </div><div class="ttdoc">Return nearest point to p on triangle. </div><div class="ttdef"><b>Definition:</b> <a href="a08790_source.html#l00657">triangleI.H:657</a></div></div>
+<div class="ttc" id="a00715_html"><div class="ttname"><a href="a00715.html">Foam::face</a></div><div class="ttdoc">A face is a list of labels corresponding to mesh vertices. </div><div class="ttdef"><b>Definition:</b> <a href="a08528_source.html#l00075">face.H:75</a></div></div>
+<div class="ttc" id="a10725_html_ae6fff2c6981e6d9618aa5038e69def6e"><div class="ttname"><a href="a10725.html#ae6fff2c6981e6d9618aa5038e69def6e">Foam::magSqr</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; magSqr(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a02567_html_a425c9489685f39c1fe6608161f0a876f"><div class="ttname"><a href="a02567.html#a425c9489685f39c1fe6608161f0a876f">Foam::tetIndices::facePtA</a></div><div class="ttdeci">label facePtA() const </div><div class="ttdoc">Return face point A. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00048">tetIndicesI.H:48</a></div></div>
+<div class="ttc" id="a00224_html_a5759bfa55205243d036a2d57065b4480"><div class="ttname"><a href="a00224.html#a5759bfa55205243d036a2d57065b4480">Foam::cellPointWeight::tol</a></div><div class="ttdeci">static scalar tol</div><div class="ttdoc">Tolerance used in calculating barycentric co-ordinates. </div><div class="ttdef"><b>Definition:</b> <a href="a05962_source.html#l00090">cellPointWeight.H:90</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a02567_html_ad07ec7e5f97159ccc9a01f9af7b89716"><div class="ttname"><a href="a02567.html#ad07ec7e5f97159ccc9a01f9af7b89716">Foam::tetIndices::faceTri</a></div><div class="ttdeci">triPointRef faceTri(const polyMesh &amp;mesh) const </div><div class="ttdoc">Return the geometry corresponding to the tri on the. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00109">tetIndicesI.H:109</a></div></div>
+<div class="ttc" id="a10725_html_a0661214f1c72feedb965c88d685f8036"><div class="ttname"><a href="a10725.html#a0661214f1c72feedb965c88d685f8036">Foam::det</a></div><div class="ttdeci">dimensionedScalar det(const dimensionedSphericalTensor &amp;dt)</div><div class="ttdef"><b>Definition:</b> <a href="a07868_source.html#l00060">dimensionedSphericalTensor.C:60</a></div></div>
+<div class="ttc" id="a01916_html_a4434536d50d4c14116249da802a1e2b2"><div class="ttname"><a href="a01916.html#a4434536d50d4c14116249da802a1e2b2">Foam::polyMesh::faces</a></div><div class="ttdeci">virtual const faceList &amp; faces() const </div><div class="ttdoc">Return raw faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01004">polyMesh.C:1004</a></div></div>
+<div class="ttc" id="a03922_html_a888be93833ac7a23170555c69c690288"><div class="ttname"><a href="a03922.html#a888be93833ac7a23170555c69c690288">f</a></div><div class="ttdeci">labelList f(nPoints)</div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02567_html_a6ab76182cf2fbace9fafc253e511e936"><div class="ttname"><a href="a02567.html#a6ab76182cf2fbace9fafc253e511e936">Foam::tetIndices::facePtB</a></div><div class="ttdeci">label facePtB() const </div><div class="ttdoc">Return face point B. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00054">tetIndicesI.H:54</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a00224_html_ac3e1795766a80ec63b157951b4b9a7d4"><div class="ttname"><a href="a00224.html#ac3e1795766a80ec63b157951b4b9a7d4">Foam::cellPointWeight::debug</a></div><div class="ttdeci">static int debug</div><div class="ttdoc">Debug switch. </div><div class="ttdef"><b>Definition:</b> <a href="a05962_source.html#l00086">cellPointWeight.H:86</a></div></div>
+<div class="ttc" id="a02567_html"><div class="ttname"><a href="a02567.html">Foam::tetIndices</a></div><div class="ttdoc">Storage and named access for the indices of a tet which is part of the decomposition of a cell...</div><div class="ttdef"><b>Definition:</b> <a href="a08642_source.html#l00073">tetIndices.H:73</a></div></div>
+<div class="ttc" id="a08640_html"><div class="ttname"><a href="a08640.html">polyMeshTetDecomposition.H</a></div></div>
+<div class="ttc" id="a02571_html_ad2a728428db89fbe441f66a06ebfca16"><div class="ttname"><a href="a02571.html#ad2a728428db89fbe441f66a06ebfca16">Foam::tetrahedron::nearestPoint</a></div><div class="ttdeci">pointHit nearestPoint(const point &amp;p) const </div><div class="ttdoc">Return nearest point to p on tetrahedron. Is p itself. </div><div class="ttdef"><b>Definition:</b> <a href="a08786_source.html#l00362">tetrahedronI.H:362</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02567_html_aa7c10231d818b82cefb2bb4ef6d92494"><div class="ttname"><a href="a02567.html#aa7c10231d818b82cefb2bb4ef6d92494">Foam::tetIndices::face</a></div><div class="ttdeci">label face() const </div><div class="ttdoc">Return the face. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00036">tetIndicesI.H:36</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a01916_html_a6d4def83436c9aa4dc68e8e42c5cf268"><div class="ttname"><a href="a01916.html#a6d4def83436c9aa4dc68e8e42c5cf268">Foam::polyMesh::faceOwner</a></div><div class="ttdeci">virtual const labelList &amp; faceOwner() const </div><div class="ttdoc">Return face owner. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01017">polyMesh.C:1017</a></div></div>
+<div class="ttc" id="a00224_html_a464007dc9622706ae009abd3d109a377"><div class="ttname"><a href="a00224.html#a464007dc9622706ae009abd3d109a377">Foam::cellPointWeight::cellPointWeight</a></div><div class="ttdeci">cellPointWeight(const polyMesh &amp;mesh, const vector &amp;position, const label cellI, const label faceI=-1)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00256">cellPointWeight.C:256</a></div></div>
+<div class="ttc" id="a02675_html_af25ab613c3d54bb72f48d06e81ed88cc"><div class="ttname"><a href="a02675.html#af25ab613c3d54bb72f48d06e81ed88cc">Foam::triangle::barycentric</a></div><div class="ttdeci">scalar barycentric(const point &amp;pt, List&lt; scalar &gt; &amp;bary) const </div><div class="ttdoc">Calculate the barycentric coordinates of the given. </div><div class="ttdef"><b>Definition:</b> <a href="a08790_source.html#l00268">triangleI.H:268</a></div></div>
+<div class="ttc" id="a02567_html_abb6833818ccf906c21e0a434a44c7f8e"><div class="ttname"><a href="a02567.html#abb6833818ccf906c21e0a434a44c7f8e">Foam::tetIndices::tet</a></div><div class="ttdeci">tetPointRef tet(const polyMesh &amp;mesh) const </div><div class="ttdoc">Return the geometry corresponding to this tet from the. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00066">tetIndicesI.H:66</a></div></div>
+<div class="ttc" id="a02567_html_a68b24952894ad64e271369dc69792c04"><div class="ttname"><a href="a02567.html#a68b24952894ad64e271369dc69792c04">Foam::tetIndices::faceBasePt</a></div><div class="ttdeci">label faceBasePt() const </div><div class="ttdoc">Return the face base point. </div><div class="ttdef"><b>Definition:</b> <a href="a08643_source.html#l00042">tetIndicesI.H:42</a></div></div>
+<div class="ttc" id="a03922_html_a2f81f8565e1a8d530c3f1a811faa6614"><div class="ttname"><a href="a03922.html#a2f81f8565e1a8d530c3f1a811faa6614">pFaces</a></div><div class="ttdeci">Info&lt;&lt; &quot;Finished reading KIVA file&quot;&lt;&lt; endl;cellShapeList cellShapes(nPoints);labelList cellZoning(nPoints,-1);const cellModel &amp;hex=*(cellModeller::lookup(&quot;hex&quot;));labelList hexLabels(8);label activeCells=0;labelList pointMap(nPoints);forAll(pointMap, i){pointMap[i]=i;}for(label i=0;i&lt; nPoints;i++){if(f[i] &gt; 0.0){hexLabels[0]=i;hexLabels[1]=i1tab[i];hexLabels[2]=i3tab[i1tab[i]];hexLabels[3]=i3tab[i];hexLabels[4]=i8tab[i];hexLabels[5]=i1tab[i8tab[i]];hexLabels[6]=i3tab[i1tab[i8tab[i]]];hexLabels[7]=i3tab[i8tab[i]];cellShapes[activeCells]=cellShape(hex, hexLabels);edgeList edges=cellShapes[activeCells].edges();forAll(edges, ei){if(edges[ei].mag(points)&lt; SMALL){label start=pointMap[edges[ei].start()];while(start!=pointMap[start]){start=pointMap[start];}label end=pointMap[edges[ei].end()];while(end!=pointMap[end]){end=pointMap[end];}label minLabel=min(start, end);pointMap[start]=pointMap[end]=minLabel;}}cellZoning[activeCells]=idreg[i];activeCells++;}}cellShapes.setSize(activeCells);cellZoning.setSize(activeCells);forAll(cellShapes, celli){cellShape &amp;cs=cellShapes[celli];forAll(cs, i){cs[i]=pointMap[cs[i]];}cs.collapse();}label bcIDs[11]={-1, 0, 2, 4,-1, 5,-1, 6, 7, 8, 9};const label nBCs=12;const word *kivaPatchTypes[nBCs]={&amp;wallPolyPatch::typeName,&amp;wallPolyPatch::typeName,&amp;wallPolyPatch::typeName,&amp;wallPolyPatch::typeName,&amp;symmetryPolyPatch::typeName,&amp;wedgePolyPatch::typeName,&amp;polyPatch::typeName,&amp;polyPatch::typeName,&amp;polyPatch::typeName,&amp;polyPatch::typeName,&amp;symmetryPolyPatch::typeName,&amp;oldCyclicPolyPatch::typeName};enum patchTypeNames{PISTON, VALVE, LINER, CYLINDERHEAD, AXIS, WEDGE, INFLOW, OUTFLOW, PRESIN, PRESOUT, SYMMETRYPLANE, CYCLIC};const char *kivaPatchNames[nBCs]={&quot;piston&quot;,&quot;valve&quot;,&quot;liner&quot;,&quot;cylinderHead&quot;,&quot;axis&quot;,&quot;wedge&quot;,&quot;inflow&quot;,&quot;outflow&quot;,&quot;presin&quot;,&quot;presout&quot;,&quot;symmetryPlane&quot;,&quot;cyclic&quot;};List&lt; SLList&lt; face &gt; &gt; pFaces[nBCs]</div><div class="ttdef"><b>Definition:</b> <a href="a03922_source.html#l00235">readKivaGrid.H:235</a></div></div>
+<div class="ttc" id="a10744_html_a8f56fbac8396e01fc88f8a299cdaf5df"><div class="ttname"><a href="a10744.html#a8f56fbac8396e01fc88f8a299cdaf5df">Foam::debug::debugSwitch</a></div><div class="ttdeci">int debugSwitch(const char *name, const int defaultValue=0)</div><div class="ttdoc">Lookup debug switch or add default value. </div><div class="ttdef"><b>Definition:</b> <a href="a08170_source.html#l00164">debug.C:164</a></div></div>
+<div class="ttc" id="a00224_html_aecec3ccb37ced505c339363e0803800a"><div class="ttname"><a href="a00224.html#aecec3ccb37ced505c339363e0803800a">Foam::cellPointWeight::findTetrahedron</a></div><div class="ttdeci">void findTetrahedron(const polyMesh &amp;mesh, const vector &amp;position, const label cellI)</div><div class="ttdef"><b>Definition:</b> <a href="a05961_source.html#l00039">cellPointWeight.C:39</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a02571_html_af25ab613c3d54bb72f48d06e81ed88cc"><div class="ttname"><a href="a02571.html#af25ab613c3d54bb72f48d06e81ed88cc">Foam::tetrahedron::barycentric</a></div><div class="ttdeci">scalar barycentric(const point &amp;pt, List&lt; scalar &gt; &amp;bary) const </div><div class="ttdoc">Calculate the barycentric coordinates of the given. </div><div class="ttdef"><b>Definition:</b> <a href="a08786_source.html#l00317">tetrahedronI.H:317</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a01967_html_a621f5b7ca5ac8ff001bcdbeefaad7f7a"><div class="ttname"><a href="a01967.html#a621f5b7ca5ac8ff001bcdbeefaad7f7a">Foam::primitiveMesh::cellVolumes</a></div><div class="ttdeci">const scalarField &amp; cellVolumes() const </div><div class="ttdef"><b>Definition:</b> <a href="a08718_source.html#l00171">primitiveMeshCellCentresAndVols.C:171</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

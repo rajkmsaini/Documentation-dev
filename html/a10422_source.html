@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b63c002b7559990bd414058641eb48ad.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_fc98c2e9ee0413e7a39bdbd8e1af4ce3.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_09361cf56c32d5394d8654f03a55f311.html">interfaces</a></li><li class="navelem"><a class="el" href="dir_535d9a4f66516117773465c39a557558.html">SMESH</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_9a8884475cf7812a7a55716c3274f065.html">twoPhaseEulerFoam</a></li><li class="navelem"><a class="el" href="dir_0ef23d3ece64393022aafe54aa180a7c.html">phaseCompressibleTurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_18940e7e4fb44f9ad3a0587e01140041.html">kineticTheoryModels</a></li><li class="navelem"><a class="el" href="dir_3a016090ec0dbe2adbd41e72261da980.html">viscosityModel</a></li><li class="navelem"><a class="el" href="dir_3db9c7ff47afb3ff963c6218accd9f3d.html">viscosityModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">writeSMESH.C</div>  </div>
+<div class="title">viscosityModel.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10422.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,104 +121,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10437.html">triSurface.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;viscosityModel.H&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> triSurface::writeSMESH(<span class="keyword">const</span> <span class="keywordtype">bool</span> writeSorted, Ostream&amp; os)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp; ps = <a class="code" href="a01959.html#a1f42f31bcf706357682dcf097255b544">points</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>kineticTheoryModels</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(viscosityModel, 0);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10725.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(viscosityModel, dictionary);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// Write header</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    os  &lt;&lt; <span class="stringliteral">&quot;# tetgen .smesh file&quot;</span> &lt;&lt; endl</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        &lt;&lt; ps.size() &lt;&lt; <span class="stringliteral">&quot; 3&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;   <span class="comment">// 3 dimensions</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// Write vertex coords</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(ps, pointi)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        os  &lt;&lt; pointi &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            &lt;&lt; ps[pointi].x() &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; ps[pointi].y() &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; ps[pointi].z() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span> (writeSorted)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a> <a class="code" href="a10675.html#aa77215843e964fac259ab06e68d0ee02">faceMap</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;Foam::kineticTheoryModels::viscosityModel::viscosityModel</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;(</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    dict_(dict)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a02802.html#aa3453f72f3e991f44922b1ccffde8c22">Foam::kineticTheoryModels::viscosityModel::~viscosityModel</a>()</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{}</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a10675.html#aee6ec8c286179bbcc562b5418ec2cf5b">surfacePatchList</a> myPatches(calcPatches(faceMap));</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        os  &lt;&lt; <a class="code" href="a01355.html#a723361dc2020160f5492e8fe2d09fa44">size</a>() &lt;&lt; <span class="stringliteral">&quot; 1&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;   <span class="comment">// 1 attribute: region number</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceIndex = 0;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(myPatches, patchI)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <span class="comment">// Print all faces belonging to this patch</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">for</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchFaceI = 0;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                patchFaceI &lt; myPatches[patchI].size();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                patchFaceI++</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            )</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = faceMap[faceIndex++];</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                os  &lt;&lt; <span class="stringliteral">&quot;3 &quot;</span> <span class="comment">// triangles</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                    &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[0] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                    &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[1] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                    &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[2] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                    &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI).region()   <span class="comment">// region number</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        os  &lt;&lt; <span class="charliteral">&#39;0&#39;</span> &lt;&lt; endl      <span class="comment">// holes</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            &lt;&lt; <span class="charliteral">&#39;0&#39;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;     <span class="comment">// regions</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        os  &lt;&lt; <a class="code" href="a01355.html#a723361dc2020160f5492e8fe2d09fa44">size</a>() &lt;&lt; <span class="stringliteral">&quot; 1&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;   <span class="comment">// 1 attribute: region number</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(*<span class="keyword">this</span>, faceI)</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            os  &lt;&lt; <span class="stringliteral">&quot;3 &quot;</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[0] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[1] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI)[2] &lt;&lt; <span class="charliteral">&#39; &#39;</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                &lt;&lt; <a class="code" href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">operator[]</a>(faceI).region()       <span class="comment">// region number</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        os  &lt;&lt; <span class="charliteral">&#39;0&#39;</span> &lt;&lt; endl      <span class="comment">// holes</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            &lt;&lt; <span class="charliteral">&#39;0&#39;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;     <span class="comment">// regions</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a5997a67f2e85a15c0e13a1724273aa5f"><div class="ttname"><a href="a10675.html#a5997a67f2e85a15c0e13a1724273aa5f">Foam::pointField</a></div><div class="ttdeci">vectorField pointField</div><div class="ttdoc">pointField is a vectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a08724_source.html#l00042">pointFieldFwd.H:42</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a10437_html"><div class="ttname"><a href="a10437.html">triSurface.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02720_html_a851e28f7788bbc82f5a4aa9f0efdefe4"><div class="ttname"><a href="a02720.html#a851e28f7788bbc82f5a4aa9f0efdefe4">Foam::UList::operator[]</a></div><div class="ttdeci">T &amp; operator[](const label)</div><div class="ttdoc">Return element of UList. </div><div class="ttdef"><b>Definition:</b> <a href="a07619_source.html#l00163">UListI.H:163</a></div></div>
-<div class="ttc" id="a10675_html_aa77215843e964fac259ab06e68d0ee02"><div class="ttname"><a href="a10675.html#aa77215843e964fac259ab06e68d0ee02">Foam::faceMap</a></div><div class="ttdeci">Pair&lt; int &gt; faceMap(const label facePi, const face &amp;faceP, const label faceNi, const face &amp;faceN)</div><div class="ttdef"><b>Definition:</b> <a href="a07033_source.html#l00090">blockMeshMergeFast.C:90</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a01355_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a01355.html#a723361dc2020160f5492e8fe2d09fa44">Foam::List&lt; labelledTri &gt;::size</a></div><div class="ttdeci">label size() const</div><div class="ttdoc">Return the number of elements in the UList. </div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
-<div class="ttc" id="a01959_html_a1f42f31bcf706357682dcf097255b544"><div class="ttname"><a href="a01959.html#a1f42f31bcf706357682dcf097255b544">Foam::PrimitivePatch&lt; labelledTri,::Foam::List, pointField, point &gt;::points</a></div><div class="ttdeci">const Field&lt; point &gt; &amp; points() const</div><div class="ttdoc">Return reference to global points. </div><div class="ttdef"><b>Definition:</b> <a href="a08690_source.html#l00284">PrimitivePatch.H:284</a></div></div>
-<div class="ttc" id="a10675_html_aee6ec8c286179bbcc562b5418ec2cf5b"><div class="ttname"><a href="a10675.html#aee6ec8c286179bbcc562b5418ec2cf5b">Foam::surfacePatchList</a></div><div class="ttdeci">List&lt; surfacePatch &gt; surfacePatchList</div><div class="ttdef"><b>Definition:</b> <a href="a10435_source.html#l00044">surfacePatchList.H:44</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10725.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02802_html_aa3453f72f3e991f44922b1ccffde8c22"><div class="ttname"><a href="a02802.html#aa3453f72f3e991f44922b1ccffde8c22">Foam::kineticTheoryModels::viscosityModel::~viscosityModel</a></div><div class="ttdeci">virtual ~viscosityModel()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

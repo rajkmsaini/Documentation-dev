@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_b0c2b0d6e5b08bdff054b28f26ba51e7.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_287a8ee951d3c46055211652d30251ed.html">dataConversion</a></li><li class="navelem"><a class="el" href="dir_fb646177685f95a3958e9560007bd602.html">foamToEnsightParts</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_ea396705c8562a6ce4df648befe2c681.html">parallelProcessing</a></li><li class="navelem"><a class="el" href="dir_0c7343aaa074256f7149e2d857cc8f9f.html">decomposePar</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">ensightOutputFunctions.H</div>  </div>
+<div class="title">lagrangianFieldDecomposer.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04228.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,102 +119,178 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Miscellaneous collection of functions and template related to Ensight data</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::lagrangianFieldDecomposer</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    ensightOutputFunctions.C</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Lagrangian field decomposer.</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef ensightOutputFunctions_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define ensightOutputFunctions_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04635.html">ensightFile.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06285.html">Cloud.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08579.html">polyMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07694.html">IOobject.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a59a8aaaffdec4a423541cd4bf4685e38">ensightCaseEntry</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    OFstream&amp; caseFile,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; ensightType,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> word&amp; fieldName,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> fileName&amp; dataMask,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> fileName&amp; local=<a class="code" href="a00774.html#a9fde37ecaebb960b3b4c40f17ec3a1ee">fileName::null</a>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cloudNo=-1,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> timeSet=1</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a7164e3b91ad5544681924f66ad80949a">ensightParticlePositions</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;(</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> polyMesh&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> fileName&amp; dataDir,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> fileName&amp; subDir,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> word&amp; <a class="code" href="a04383.html#ab63504c243f7c2c08b67653dca54567e">cloudName</a>,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">IOstream::streamFormat</a> <a class="code" href="a04240.html#a7ab39052688ef9931c1bb993be7e88d5">format</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">//- Write lagrangian parcels</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a7516af2501bd31e73563104865a8ef35">ensightLagrangianField</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;(</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> IOobject&amp; <a class="code" href="a04272.html#a320cf83612cc3fb001166525cdb9670e">fieldObject</a>,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> fileName&amp; dataDir,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> fileName&amp; subDir,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> word&amp; <a class="code" href="a04383.html#ab63504c243f7c2c08b67653dca54567e">cloudName</a>,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">IOstream::streamFormat</a> <a class="code" href="a04240.html#a7ab39052688ef9931c1bb993be7e88d5">format</a></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    lagrangianFieldDecomposer.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    lagrangianFieldDecomposerDecomposeFields.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef lagrangianFieldDecomposer_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define lagrangianFieldDecomposer_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06336.html">Cloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07753.html">CompactIOField.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06338.html">indexedParticle.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06355.html">passiveParticle.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span>IOobjectList;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">                    Class lagrangianFieldDecomposer Declaration</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a01257.html">   54</a></span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">class </span><a class="code" href="a01257.html">lagrangianFieldDecomposer</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Reference to processor mesh</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; procMesh_;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Lagrangian positions for this processor</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a00281.html">Cloud&lt;passiveParticle&gt;</a> positions_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//- The indices of the particles on this processor</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a01364.html">labelList</a> particleIndices_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a01257.html">lagrangianFieldDecomposer</a>(<span class="keyword">const</span> <a class="code" href="a01257.html">lagrangianFieldDecomposer</a>&amp;);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a01257.html">lagrangianFieldDecomposer</a>&amp;);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">//- Write generalized field components</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a1b546a52a0f1f412a400e3ab6a78ad3d">ensightVolField</a></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;(</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> ensightParts&amp; partsList,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> IOobject&amp; <a class="code" href="a04272.html#a320cf83612cc3fb001166525cdb9670e">fieldObject</a>,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> fvMesh&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> fileName&amp; dataDir,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> fileName&amp; subDir,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">IOstream::streamFormat</a> <a class="code" href="a04240.html#a7ab39052688ef9931c1bb993be7e88d5">format</a></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace Foam</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="a01257.html">lagrangianFieldDecomposer</a></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        (</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; procMesh,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; <a class="code" href="a04233.html#ad459ecda1fae1e0bf411991b117feef7">faceProcAddressing</a>,</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; cellProcAddressing,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a04422.html#ab63504c243f7c2c08b67653dca54567e">cloudName</a>,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00281.html">Cloud&lt;indexedParticle&gt;</a>&amp; lagrangianPositions,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">List</a>&lt;<a class="code" href="a02340.html">SLList&lt;indexedParticle*&gt;</a>*&gt;&amp; cellParticles</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        );</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a04227.html">ensightOutputFunctions.C</a>&quot;</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08579_html"><div class="ttname"><a href="a08579.html">polyMesh.H</a></div></div>
-<div class="ttc" id="a04227_html"><div class="ttname"><a href="a04227.html">ensightOutputFunctions.C</a></div></div>
-<div class="ttc" id="a10675_html_a7164e3b91ad5544681924f66ad80949a"><div class="ttname"><a href="a10675.html#a7164e3b91ad5544681924f66ad80949a">Foam::ensightParticlePositions</a></div><div class="ttdeci">void ensightParticlePositions(const polyMesh &amp;mesh, const fileName &amp;dataDir, const fileName &amp;subDir, const word &amp;cloudName, IOstream::streamFormat format)</div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a04635_html"><div class="ttname"><a href="a04635.html">ensightFile.H</a></div></div>
-<div class="ttc" id="a10675_html_a59a8aaaffdec4a423541cd4bf4685e38"><div class="ttname"><a href="a10675.html#a59a8aaaffdec4a423541cd4bf4685e38">Foam::ensightCaseEntry</a></div><div class="ttdeci">void ensightCaseEntry(OFstream &amp;caseFile, const string &amp;ensightType, const word &amp;fieldName, const fileName &amp;dataMask, const fileName &amp;local=fileName::null, const label cloudNo=-1, const label timeSet=1)</div></div>
-<div class="ttc" id="a10675_html_a7516af2501bd31e73563104865a8ef35"><div class="ttname"><a href="a10675.html#a7516af2501bd31e73563104865a8ef35">Foam::ensightLagrangianField</a></div><div class="ttdeci">void ensightLagrangianField(const IOobject &amp;fieldObject, const fileName &amp;dataDir, const fileName &amp;subDir, const word &amp;cloudName, IOstream::streamFormat format)</div><div class="ttdoc">Write lagrangian parcels. </div></div>
-<div class="ttc" id="a01177_html_a5dba97390318f1a7b5d35a18f38e1a97"><div class="ttname"><a href="a01177.html#a5dba97390318f1a7b5d35a18f38e1a97">Foam::IOstream::streamFormat</a></div><div class="ttdeci">streamFormat</div><div class="ttdoc">Enumeration for the format of data in the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00086">IOstream.H:86</a></div></div>
-<div class="ttc" id="a00774_html_a9fde37ecaebb960b3b4c40f17ec3a1ee"><div class="ttname"><a href="a00774.html#a9fde37ecaebb960b3b4c40f17ec3a1ee">Foam::fileName::null</a></div><div class="ttdeci">static const fileName null</div><div class="ttdoc">An empty fileName. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00097">fileName.H:97</a></div></div>
-<div class="ttc" id="a07694_html"><div class="ttname"><a href="a07694.html">IOobject.H</a></div></div>
-<div class="ttc" id="a04272_html_a320cf83612cc3fb001166525cdb9670e"><div class="ttname"><a href="a04272.html#a320cf83612cc3fb001166525cdb9670e">fieldObject</a></div><div class="ttdeci">IOobject fieldObject(fieldNames[var2field[nVar]], runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::NO_WRITE)</div></div>
-<div class="ttc" id="a04240_html_a7ab39052688ef9931c1bb993be7e88d5"><div class="ttname"><a href="a04240.html#a7ab39052688ef9931c1bb993be7e88d5">format</a></div><div class="ttdeci">word format(conversionProperties.lookup(&quot;format&quot;))</div></div>
-<div class="ttc" id="a10675_html_a1b546a52a0f1f412a400e3ab6a78ad3d"><div class="ttname"><a href="a10675.html#a1b546a52a0f1f412a400e3ab6a78ad3d">Foam::ensightVolField</a></div><div class="ttdeci">void ensightVolField(const ensightParts &amp;partsList, const IOobject &amp;fieldObject, const fvMesh &amp;mesh, const fileName &amp;dataDir, const fileName &amp;subDir, IOstream::streamFormat format)</div><div class="ttdoc">Write generalized field components. </div></div>
-<div class="ttc" id="a06285_html"><div class="ttname"><a href="a06285.html">Cloud.H</a></div></div>
-<div class="ttc" id="a04383_html_ab63504c243f7c2c08b67653dca54567e"><div class="ttname"><a href="a04383.html#ab63504c243f7c2c08b67653dca54567e">cloudName</a></div><div class="ttdeci">const word cloudName(propsDict.lookup(&quot;cloudName&quot;))</div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">// Read the fields and hold on the pointer list</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a01257.html#a28cc273b9e7679be58f9a3000546466f">readFields</a></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        (</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cloudI,</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01180.html">IOobjectList</a>&amp; lagrangianObjects,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <a class="code" href="a02031.html">PtrList</a>&lt;<a class="code" href="a02031.html">PtrList</a>&lt;<a class="code" href="a01174.html">IOField&lt;Type&gt;</a> &gt; &gt;&amp; lagrangianFields</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">//            PtrList&lt;IOField&lt;Type&gt; &gt;&amp; lagrangianFields</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        );</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a01257.html#a99a59a836b0bb268ae2c519b9b80d7db">readFieldFields</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        (</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cloudI,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01180.html">IOobjectList</a>&amp; lagrangianObjects,</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <a class="code" href="a02031.html">PtrList</a></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            &lt;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                <a class="code" href="a02031.html">PtrList</a>&lt;<a class="code" href="a00327.html">CompactIOField</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a>, Type&gt; &gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            &gt;&amp; lagrangianFields</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">//            PtrList&lt;CompactIOField&lt;Field&lt;Type&gt;, Type &gt; &gt;&amp; lagrangianFields</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        );</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="comment">//- Decompose volume field</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <a class="code" href="a02618.html">tmp&lt;IOField&lt;Type&gt;</a> &gt; <a class="code" href="a01257.html#acb4a3873b17763e8f45e80230280c45c">decomposeField</a></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        (</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; cloudName,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01174.html">IOField&lt;Type&gt;</a>&amp; field</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <a class="code" href="a02618.html">tmp&lt;CompactIOField&lt;Field&lt;Type&gt;</a>, Type&gt; &gt; <a class="code" href="a01257.html#a3f484cc8be27ee5994b29b0245ae5726">decomposeFieldField</a></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        (</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; cloudName,</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00327.html">CompactIOField</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a>, Type&gt;&amp; field</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> GeoField&gt;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a01257.html#ad5f109b7f82c1583d5e0426da55117da">decomposeFields</a></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        (</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; cloudName,</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;GeoField&gt;</a>&amp; <a class="code" href="a04436.html#ad101d0d696cde1d4c5c913106cffa360">fields</a></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> GeoField&gt;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a01257.html#a8cae2af8ddfe165b77d9813841288aa6">decomposeFieldFields</a></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        (</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; cloudName,</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;GeoField&gt;</a>&amp; fields</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;};</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a04229.html">lagrangianFieldDecomposerDecomposeFields.C</a>&quot;</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a01180_html"><div class="ttname"><a href="a01180.html">Foam::IOobjectList</a></div><div class="ttdoc">List of IOobjects with searching and retrieving facilities. </div><div class="ttdef"><b>Definition:</b> <a href="a07751_source.html#l00050">IOobjectList.H:50</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a00327_html"><div class="ttname"><a href="a00327.html">Foam::CompactIOField</a></div><div class="ttdoc">A Field of objects of type <T> with automated input and output using a compact storage. Behaves like IOField except when binary output in case it writes a CompactListList. </div><div class="ttdef"><b>Definition:</b> <a href="a07753_source.html#l00050">CompactIOField.H:50</a></div></div>
+<div class="ttc" id="a06355_html"><div class="ttname"><a href="a06355.html">passiveParticle.H</a></div></div>
+<div class="ttc" id="a01257_html_ad5f109b7f82c1583d5e0426da55117da"><div class="ttname"><a href="a01257.html#ad5f109b7f82c1583d5e0426da55117da">Foam::lagrangianFieldDecomposer::decomposeFields</a></div><div class="ttdeci">void decomposeFields(const word &amp;cloudName, const PtrList&lt; GeoField &gt; &amp;fields) const </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a06338_html"><div class="ttname"><a href="a06338.html">indexedParticle.H</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a01257_html_a8cae2af8ddfe165b77d9813841288aa6"><div class="ttname"><a href="a01257.html#a8cae2af8ddfe165b77d9813841288aa6">Foam::lagrangianFieldDecomposer::decomposeFieldFields</a></div><div class="ttdeci">void decomposeFieldFields(const word &amp;cloudName, const PtrList&lt; GeoField &gt; &amp;fields) const </div></div>
+<div class="ttc" id="a04436_html_ad101d0d696cde1d4c5c913106cffa360"><div class="ttname"><a href="a04436.html#ad101d0d696cde1d4c5c913106cffa360">fields</a></div><div class="ttdeci">Info&lt;&lt; &quot;Creating field dpdt\n&quot;&lt;&lt; endl;volScalarField dpdt(IOobject(&quot;dpdt&quot;, runTime.timeName(), mesh), mesh, dimensionedScalar(&quot;dpdt&quot;, p.dimensions()/dimTime, 0));Info&lt;&lt; &quot;Creating field kinetic energy K\n&quot;&lt;&lt; endl;volScalarField K(&quot;K&quot;, 0.5 *magSqr(U));volScalarField p_rgh(IOobject(&quot;p_rgh&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);p_rgh=p-rho *gh;mesh.setFluxRequired(p_rgh.name());multivariateSurfaceInterpolationScheme&lt; scalar &gt;::fieldTable fields</div><div class="ttdef"><b>Definition:</b> <a href="a04436_source.html#l00127">createFields.H:127</a></div></div>
+<div class="ttc" id="a01257_html_a28cc273b9e7679be58f9a3000546466f"><div class="ttname"><a href="a01257.html#a28cc273b9e7679be58f9a3000546466f">Foam::lagrangianFieldDecomposer::readFields</a></div><div class="ttdeci">static void readFields(const label cloudI, const IOobjectList &amp;lagrangianObjects, PtrList&lt; PtrList&lt; IOField&lt; Type &gt; &gt; &gt; &amp;lagrangianFields)</div></div>
+<div class="ttc" id="a01257_html_a99a59a836b0bb268ae2c519b9b80d7db"><div class="ttname"><a href="a01257.html#a99a59a836b0bb268ae2c519b9b80d7db">Foam::lagrangianFieldDecomposer::readFieldFields</a></div><div class="ttdeci">static void readFieldFields(const label cloudI, const IOobjectList &amp;lagrangianObjects, PtrList&lt; PtrList&lt; CompactIOField&lt; Field&lt; Type &gt;, Type &gt; &gt; &gt; &amp;lagrangianFields)</div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00281_html"><div class="ttname"><a href="a00281.html">Foam::Cloud&lt; passiveParticle &gt;</a></div></div>
+<div class="ttc" id="a04229_html"><div class="ttname"><a href="a04229.html">lagrangianFieldDecomposerDecomposeFields.C</a></div></div>
+<div class="ttc" id="a07753_html"><div class="ttname"><a href="a07753.html">CompactIOField.H</a></div></div>
+<div class="ttc" id="a01257_html_acb4a3873b17763e8f45e80230280c45c"><div class="ttname"><a href="a01257.html#acb4a3873b17763e8f45e80230280c45c">Foam::lagrangianFieldDecomposer::decomposeField</a></div><div class="ttdeci">tmp&lt; IOField&lt; Type &gt; &gt; decomposeField(const word &amp;cloudName, const IOField&lt; Type &gt; &amp;field) const </div><div class="ttdoc">Decompose volume field. </div></div>
+<div class="ttc" id="a04233_html_ad459ecda1fae1e0bf411991b117feef7"><div class="ttname"><a href="a04233.html#ad459ecda1fae1e0bf411991b117feef7">faceProcAddressing</a></div><div class="ttdeci">PtrList&lt; labelIOList &gt; &amp; faceProcAddressing</div><div class="ttdef"><b>Definition:</b> <a href="a04233_source.html#l00009">checkFaceAddressingComp.H:9</a></div></div>
+<div class="ttc" id="a06336_html"><div class="ttname"><a href="a06336.html">Cloud.H</a></div></div>
+<div class="ttc" id="a02340_html"><div class="ttname"><a href="a02340.html">Foam::SLList</a></div><div class="ttdoc">Non-intrusive singly-linked list. </div><div class="ttdef"><b>Definition:</b> <a href="a07612_source.html#l00047">SLList.H:47</a></div></div>
+<div class="ttc" id="a01257_html"><div class="ttname"><a href="a01257.html">Foam::lagrangianFieldDecomposer</a></div><div class="ttdoc">Lagrangian field decomposer. </div><div class="ttdef"><b>Definition:</b> <a href="a04228_source.html#l00054">lagrangianFieldDecomposer.H:54</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a01174_html"><div class="ttname"><a href="a01174.html">Foam::IOField</a></div><div class="ttdoc">A primitive field of type <T> with automated input and output. </div><div class="ttdef"><b>Definition:</b> <a href="a07760_source.html#l00050">IOField.H:50</a></div></div>
+<div class="ttc" id="a01257_html_a3f484cc8be27ee5994b29b0245ae5726"><div class="ttname"><a href="a01257.html#a3f484cc8be27ee5994b29b0245ae5726">Foam::lagrangianFieldDecomposer::decomposeFieldField</a></div><div class="ttdeci">tmp&lt; CompactIOField&lt; Field&lt; Type &gt;, Type &gt; &gt; decomposeFieldField(const word &amp;cloudName, const CompactIOField&lt; Field&lt; Type &gt;, Type &gt; &amp;field) const </div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a04422_html_ab63504c243f7c2c08b67653dca54567e"><div class="ttname"><a href="a04422.html#ab63504c243f7c2c08b67653dca54567e">cloudName</a></div><div class="ttdeci">const word cloudName(propsDict.lookup(&quot;cloudName&quot;))</div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

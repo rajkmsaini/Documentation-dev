@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_6b2cdcecd74bbe32713af3749edcc072.html">cellToFace</a></li><li class="navelem"><a class="el" href="dir_1500d247ac89856555640edd20a765ce.html">MeshObjects</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_5d57e3901430bcc99a7ddac11a899224.html">fvMatrices</a></li><li class="navelem"><a class="el" href="dir_21e8caa1e273a2fd1ca8d8e5e2ca4486.html">solvers</a></li><li class="navelem"><a class="el" href="dir_87813a55ec739ef0a6011feca433f374.html">MULES</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">pureUpwindCFCCellToFaceStencilObject.H</div>  </div>
+<div class="title">CMULES.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05793.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,107 +119,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::pureUpwindCFCCellToFaceStencilObject</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef pureUpwindCFCCellToFaceStencilObject_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define pureUpwindCFCCellToFaceStencilObject_H</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05772.html">extendedUpwindCellToFaceStencil.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05779.html">CFCCellToFaceStencil.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08427.html">MeshObject.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">            Class pureUpwindCFCCellToFaceStencilObject Declaration</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a02026.html">   48</a></span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span><a class="code" href="a02026.html">pureUpwindCFCCellToFaceStencilObject</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01457.html">MeshObject</a></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    &lt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        fvMesh,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        TopologicalMeshObject,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        pureUpwindCFCCellToFaceStencilObject</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    &gt;,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00699.html">extendedUpwindCellToFaceStencil</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a02026.html#ab8922ba14a8cd13f2133bfbe1538b620">TypeName</a>(<span class="stringliteral">&quot;pureUpwindCFCCellToFaceStencil&quot;</span>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">//- Construct from uncompacted face stencil</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a02026.html#a57685e7983e08b0af7bd791a5012017b">   67</a></span>&#160;        <span class="keyword">explicit</span> <a class="code" href="a02026.html#a57685e7983e08b0af7bd791a5012017b">pureUpwindCFCCellToFaceStencilObject</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        )</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        :</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <a class="code" href="a01457.html">MeshObject</a></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            &lt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                <a class="code" href="a00868.html">fvMesh</a>,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                <a class="code" href="a10675.html">Foam</a>::<a class="code" href="a02623.html">TopologicalMeshObject</a>,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                <a class="code" href="a02026.html">pureUpwindCFCCellToFaceStencilObject</a></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            &gt;(mesh),</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="a00699.html">extendedUpwindCellToFaceStencil</a>(<a class="code" href="a00259.html">CFCCellToFaceStencil</a>(mesh))</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keywordflow">if</span> (extendedCellToFaceStencil::debug)</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Generated pure upwind stencil &quot;</span> &lt;&lt; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>()</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                <a class="code" href="a00690.html#a806d1632a9bcbd268b64e4bf3b6e3c7d">writeStencilStats</a>(<a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>, <a class="code" href="a00699.html#a4fc7899c7f29f08d5c84e35acf77971d">ownStencil</a>(), <a class="code" href="a00699.html#a36d8d549705942b338adae696e1caaa9">ownMap</a>());</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="a02026.html#a30f296e1fdd32bbe41d65d341bb509df">   89</a></span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02026.html#a30f296e1fdd32bbe41d65d341bb509df">~pureUpwindCFCCellToFaceStencilObject</a>()</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    {}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a05779_html"><div class="ttname"><a href="a05779.html">CFCCellToFaceStencil.H</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a00699_html_a36d8d549705942b338adae696e1caaa9"><div class="ttname"><a href="a00699.html#a36d8d549705942b338adae696e1caaa9">Foam::extendedUpwindCellToFaceStencil::ownMap</a></div><div class="ttdeci">const mapDistribute &amp; ownMap() const </div><div class="ttdoc">Return reference to the parallel distribution map. </div><div class="ttdef"><b>Definition:</b> <a href="a05772_source.html#l00152">extendedUpwindCellToFaceStencil.H:152</a></div></div>
-<div class="ttc" id="a00259_html"><div class="ttname"><a href="a00259.html">Foam::CFCCellToFaceStencil</a></div><div class="ttdoc">Combined corresponding cellToCellStencil of owner and neighbour. </div><div class="ttdef"><b>Definition:</b> <a href="a05779_source.html#l00048">CFCCellToFaceStencil.H:48</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00699_html"><div class="ttname"><a href="a00699.html">Foam::extendedUpwindCellToFaceStencil</a></div><div class="ttdoc">Creates upwind stencil by shifting a centred stencil to upwind and downwind faces and optionally remo...</div><div class="ttdef"><b>Definition:</b> <a href="a05772_source.html#l00059">extendedUpwindCellToFaceStencil.H:59</a></div></div>
-<div class="ttc" id="a02623_html"><div class="ttname"><a href="a02623.html">Foam::TopologicalMeshObject</a></div><div class="ttdef"><b>Definition:</b> <a href="a08427_source.html#l00202">MeshObject.H:202</a></div></div>
-<div class="ttc" id="a02026_html_a57685e7983e08b0af7bd791a5012017b"><div class="ttname"><a href="a02026.html#a57685e7983e08b0af7bd791a5012017b">Foam::pureUpwindCFCCellToFaceStencilObject::pureUpwindCFCCellToFaceStencilObject</a></div><div class="ttdeci">pureUpwindCFCCellToFaceStencilObject(const fvMesh &amp;mesh)</div><div class="ttdoc">Construct from uncompacted face stencil. </div><div class="ttdef"><b>Definition:</b> <a href="a05793_source.html#l00067">pureUpwindCFCCellToFaceStencilObject.H:67</a></div></div>
-<div class="ttc" id="a02026_html"><div class="ttname"><a href="a02026.html">Foam::pureUpwindCFCCellToFaceStencilObject</a></div><div class="ttdef"><b>Definition:</b> <a href="a05793_source.html#l00048">pureUpwindCFCCellToFaceStencilObject.H:48</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a05772_html"><div class="ttname"><a href="a05772.html">extendedUpwindCellToFaceStencil.H</a></div></div>
-<div class="ttc" id="a00699_html_a4fc7899c7f29f08d5c84e35acf77971d"><div class="ttname"><a href="a00699.html#a4fc7899c7f29f08d5c84e35acf77971d">Foam::extendedUpwindCellToFaceStencil::ownStencil</a></div><div class="ttdeci">const labelListList &amp; ownStencil() const </div><div class="ttdoc">Return reference to the stencil. </div><div class="ttdef"><b>Definition:</b> <a href="a05772_source.html#l00164">extendedUpwindCellToFaceStencil.H:164</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a02026_html_ab8922ba14a8cd13f2133bfbe1538b620"><div class="ttname"><a href="a02026.html#ab8922ba14a8cd13f2133bfbe1538b620">Foam::pureUpwindCFCCellToFaceStencilObject::TypeName</a></div><div class="ttdeci">TypeName(&quot;pureUpwindCFCCellToFaceStencil&quot;)</div></div>
-<div class="ttc" id="a00690_html_a806d1632a9bcbd268b64e4bf3b6e3c7d"><div class="ttname"><a href="a00690.html#a806d1632a9bcbd268b64e4bf3b6e3c7d">Foam::extendedCellToFaceStencil::writeStencilStats</a></div><div class="ttdeci">static void writeStencilStats(Ostream &amp;os, const labelListList &amp;stencil, const mapDistribute &amp;map)</div><div class="ttdoc">Write some statistics about stencil. </div><div class="ttdef"><b>Definition:</b> <a href="a05766_source.html#l00042">extendedCellToFaceStencil.C:42</a></div></div>
-<div class="ttc" id="a01457_html"><div class="ttname"><a href="a01457.html">Foam::MeshObject</a></div><div class="ttdoc">Templated abstract base-class for optional mesh objects used to automate their allocation to the mesh...</div><div class="ttdef"><b>Definition:</b> <a href="a08427_source.html#l00081">MeshObject.H:81</a></div></div>
-<div class="ttc" id="a08427_html"><div class="ttname"><a href="a08427.html">MeshObject.H</a></div></div>
-<div class="ttc" id="a02026_html_a30f296e1fdd32bbe41d65d341bb509df"><div class="ttname"><a href="a02026.html#a30f296e1fdd32bbe41d65d341bb509df">Foam::pureUpwindCFCCellToFaceStencilObject::~pureUpwindCFCCellToFaceStencilObject</a></div><div class="ttdeci">virtual ~pureUpwindCFCCellToFaceStencilObject()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05793_source.html#l00089">pureUpwindCFCCellToFaceStencilObject.H:89</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05794.html">CMULES.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10783.html#a6bba2fe466f3b69b267b8e0a3bd4bff1">Foam::MULES::correct</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a10783.html#a10d2d1d6615dc6e296b4bd87a7fe33c2">   31</a></span>&#160;(</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a00921.html">volScalarField</a>&amp; psi,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; phi,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a00921.html">surfaceScalarField</a>&amp; phiPsiCorr,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> scalar psiMax,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> scalar psiMin</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a02953.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a00923.html">geometricOneField</a>(),</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        psi,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        phi,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        phiPsiCorr,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="a02889.html">zeroField</a>(), <a class="code" href="a02889.html">zeroField</a>(),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        psiMax, psiMin</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    );</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00923_html"><div class="ttname"><a href="a00923.html">Foam::geometricOneField</a></div><div class="ttdoc">A class representing the concept of a GeometricField of 1 used to avoid unnecessary manipulations for...</div><div class="ttdef"><b>Definition:</b> <a href="a08031_source.html#l00052">geometricOneField.H:52</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a05794_html"><div class="ttname"><a href="a05794.html">CMULES.H</a></div><div class="ttdoc">CMULES: Multidimensional universal limiter for explicit corrected implicit solution. </div></div>
+<div class="ttc" id="a02889_html"><div class="ttname"><a href="a02889.html">Foam::zeroField</a></div><div class="ttdoc">A class representing the concept of a field of 0 used to avoid unnecessary manipulations for objects ...</div><div class="ttdef"><b>Definition:</b> <a href="a08016_source.html#l00050">zeroField.H:50</a></div></div>
+<div class="ttc" id="a10783_html_a6bba2fe466f3b69b267b8e0a3bd4bff1"><div class="ttname"><a href="a10783.html#a6bba2fe466f3b69b267b8e0a3bd4bff1">Foam::MULES::correct</a></div><div class="ttdeci">void correct(const RdeltaTType &amp;rDeltaT, const RhoType &amp;rho, volScalarField &amp;psi, const surfaceScalarField &amp;phi, const surfaceScalarField &amp;phiCorr, const SpType &amp;Sp, const SuType &amp;Su)</div><div class="ttdef"><b>Definition:</b> <a href="a05795_source.html#l00037">CMULESTemplates.C:37</a></div></div>
+<div class="ttc" id="a02953_html_a8f2ec7df0ad2ec79360a5d964f55de87"><div class="ttname"><a href="a02953.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div><div class="ttdeci">Info&lt;&lt; &quot;Predicted p max-min : &quot;&lt;&lt; max(p).value()&lt;&lt; &quot; &quot;&lt;&lt; min(p).value()&lt;&lt; endl;rho==max(psi *p+alphal *rhol0+((alphav *psiv+alphal *psil)-psi)*pSat, rhoMin);#1&quot;/home/dm2/henry/OpenFOAM/OpenFOAM-dev/applications/solvers/multiphase/cavitatingFoam/alphavPsi.H&quot;1{alphav=max(min((rho-rholSat)/(rhovSat-rholSat), scalar(1)), scalar(0));alphal=1.0-alphav;Info&lt;&lt; &quot;max-min alphav: &quot;&lt;&lt; max(alphav).value()&lt;&lt; &quot; &quot;&lt;&lt; min(alphav).value()&lt;&lt; endl;psiModel-&gt; correct()</div><div class="ttdef"><b>Definition:</b> <a href="a02953_source.html#l00074">pEqn.H:74</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

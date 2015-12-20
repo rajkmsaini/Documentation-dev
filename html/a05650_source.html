@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_f4030f3362933683136e1dae328f10c0.html">fvc</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_91771073560c986101bf22be7764122a.html">ddtSchemes</a></li><li class="navelem"><a class="el" href="dir_d800c8d51f8e7365331d5bb9a47a5956.html">localEulerDdtScheme</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvcSup.C</div>  </div>
+<div class="title">localEulerDdt.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05650.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,120 +121,75 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05652.html">localEulerDdtScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a02869.html">Foam::word</a> <a class="code" href="a01373.html#acae20f99764f137cd2040f7c2951cb8c">Foam::fv::localEulerDdt::rDeltaTName</a>(<span class="stringliteral">&quot;rDeltaT&quot;</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02869.html">Foam::word</a> <a class="code" href="a01373.html#a4327dbb3a3a83df9ffc7e5028b5d750d">Foam::fv::localEulerDdt::rSubDeltaTName</a>(<span class="stringliteral">&quot;rSubDeltaTName&quot;</span>);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>fvc</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a01373.html#aeb62c9a2bb1c81fa31cd8a6cc239feb9">   36</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01373.html#aeb62c9a2bb1c81fa31cd8a6cc239feb9">Foam::fv::localEulerDdt::enabled</a>(<span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh)</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">Su</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">   44</a></span>&#160;(</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; su,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="a02869.html">word</a>(mesh.<a class="code" href="a00890.html#a8520c4c35adf583b2d7cc1187a3cc710">ddtScheme</a>(<span class="stringliteral">&quot;default&quot;</span>))</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;     == <a class="code" href="a01374.html">fv::localEulerDdtScheme&lt;scalar&gt;::typeName</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">const</span> <a class="code" href="a00921.html">Foam::volScalarField</a>&amp; <a class="code" href="a01373.html#ae2d3d323e68e59bff90dea629199a881">Foam::fv::localEulerDdt::localRDeltaT</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a01373.html#ae2d3d323e68e59bff90dea629199a881">   45</a></span>&#160;(</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> su;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">Su</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a10710.html#a36ac0d38039ff36495c377b1d6790ee4">   55</a></span>&#160;(</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02608.html">tmp</a>&lt;<a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;&amp; tsu,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> tsu;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<a class="code" href="a10709.html#acb372005d973de14c63c97ba57a82d99">Sp</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a10709.html#acb372005d973de14c63c97ba57a82d99">   67</a></span>&#160;(</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; sp,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> sp*vf;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<a class="code" href="a10709.html#acb372005d973de14c63c97ba57a82d99">Sp</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="a10709.html#a07f9d072f70ee6a728cc53a5cd8ef7e7">   78</a></span>&#160;(</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a>&amp; tsp,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> tsp*vf;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<a class="code" href="a10709.html#acb372005d973de14c63c97ba57a82d99">Sp</a></div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a10710.html#aa1cf1687a018d73a0a6f9d2cf8634bd0">   90</a></span>&#160;(</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00526.html">dimensionedScalar</a>&amp; sp,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;{</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> sp*vf;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<a class="code" href="a10709.html#ab90ec00e4d3f6f35b5b619f517d624f2">SuSp</a></div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="a10709.html#ab90ec00e4d3f6f35b5b619f517d624f2">  102</a></span>&#160;(</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; sp,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;)</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;{</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> sp*vf;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<a class="code" href="a02608.html">tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> &gt;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="a10709.html#ab90ec00e4d3f6f35b5b619f517d624f2">SuSp</a></div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="a10709.html#ab588e21cd3bb8b4c607d15e4747d6748">  113</a></span>&#160;(</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a>&amp; tsp,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; vf</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;)</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> tsp*vf;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;} <span class="comment">// End namespace fvc</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10709_html_ab90ec00e4d3f6f35b5b619f517d624f2"><div class="ttname"><a href="a10709.html#ab90ec00e4d3f6f35b5b619f517d624f2">Foam::fvc::SuSp</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; SuSp(const volScalarField &amp;sp, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00102">fvcSup.C:102</a></div></div>
-<div class="ttc" id="a10709_html_ac92e296062b7b025a96b82351c1d9b89"><div class="ttname"><a href="a10709.html#ac92e296062b7b025a96b82351c1d9b89">Foam::fvc::Su</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; Su(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;su, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00044">fvcSup.C:44</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10709_html_acb372005d973de14c63c97ba57a82d99"><div class="ttname"><a href="a10709.html#acb372005d973de14c63c97ba57a82d99">Foam::fvc::Sp</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; Sp(const volScalarField &amp;sp, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vf)</div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00067">fvcSup.C:67</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> mesh.objectRegistry::lookupObject&lt;<a class="code" href="a00921.html">volScalarField</a>&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        mesh.<a class="code" href="a00876.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02606.html#a1de32017cd9cd3ea278b5debe9804376">subCycling</a>() ? rSubDeltaTName : rDeltaTName</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    );</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volScalarField&gt;</a> <a class="code" href="a01373.html#a904ea32095c6a60ad45ebe1025b42861">Foam::fv::localEulerDdt::localRSubDeltaT</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a01373.html#a904ea32095c6a60ad45ebe1025b42861">   57</a></span>&#160;(</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nAlphaSubCycles</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;volScalarField&gt;</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    (</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            rSubDeltaTName,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            nAlphaSubCycles</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;           *mesh.objectRegistry::lookupObject&lt;<a class="code" href="a00921.html">volScalarField</a>&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            (</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                rDeltaTName</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            )</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        )</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01373_html_ae2d3d323e68e59bff90dea629199a881"><div class="ttname"><a href="a01373.html#ae2d3d323e68e59bff90dea629199a881">Foam::fv::localEulerDdt::localRDeltaT</a></div><div class="ttdeci">static const volScalarField &amp; localRDeltaT(const fvMesh &amp;mesh)</div><div class="ttdoc">Return the reciprocal of the local time-step. </div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00045">localEulerDdt.C:45</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a01373_html_a4327dbb3a3a83df9ffc7e5028b5d750d"><div class="ttname"><a href="a01373.html#a4327dbb3a3a83df9ffc7e5028b5d750d">Foam::fv::localEulerDdt::rSubDeltaTName</a></div><div class="ttdeci">static word rSubDeltaTName</div><div class="ttdoc">Name of the reciprocal local sub-cycling time-step field. </div><div class="ttdef"><b>Definition:</b> <a href="a05652_source.html#l00072">localEulerDdtScheme.H:72</a></div></div>
+<div class="ttc" id="a01373_html_acae20f99764f137cd2040f7c2951cb8c"><div class="ttname"><a href="a01373.html#acae20f99764f137cd2040f7c2951cb8c">Foam::fv::localEulerDdt::rDeltaTName</a></div><div class="ttdeci">static word rDeltaTName</div><div class="ttdoc">Name of the reciprocal local time-step field. </div><div class="ttdef"><b>Definition:</b> <a href="a05652_source.html#l00069">localEulerDdtScheme.H:69</a></div></div>
+<div class="ttc" id="a02606_html_a1de32017cd9cd3ea278b5debe9804376"><div class="ttname"><a href="a02606.html#a1de32017cd9cd3ea278b5debe9804376">Foam::Time::subCycling</a></div><div class="ttdeci">bool subCycling() const </div><div class="ttdoc">Return true if time currently being sub-cycled, otherwise false. </div><div class="ttdef"><b>Definition:</b> <a href="a07855_source.html#l00453">Time.H:453</a></div></div>
+<div class="ttc" id="a01373_html_aeb62c9a2bb1c81fa31cd8a6cc239feb9"><div class="ttname"><a href="a01373.html#aeb62c9a2bb1c81fa31cd8a6cc239feb9">Foam::fv::localEulerDdt::enabled</a></div><div class="ttdeci">static bool enabled(const fvMesh &amp;mesh)</div><div class="ttdoc">Return true if LTS is enabled. </div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00036">localEulerDdt.C:36</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a05652_html"><div class="ttname"><a href="a05652.html">localEulerDdtScheme.H</a></div></div>
+<div class="ttc" id="a00890_html_a8520c4c35adf583b2d7cc1187a3cc710"><div class="ttname"><a href="a00890.html#a8520c4c35adf583b2d7cc1187a3cc710">Foam::fvSchemes::ddtScheme</a></div><div class="ttdeci">ITstream &amp; ddtScheme(const word &amp;name) const </div><div class="ttdef"><b>Definition:</b> <a href="a05722_source.html#l00360">fvSchemes.C:360</a></div></div>
+<div class="ttc" id="a10725_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a00876_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00876.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00243">fvMesh.H:243</a></div></div>
+<div class="ttc" id="a01373_html_a904ea32095c6a60ad45ebe1025b42861"><div class="ttname"><a href="a01373.html#a904ea32095c6a60ad45ebe1025b42861">Foam::fv::localEulerDdt::localRSubDeltaT</a></div><div class="ttdeci">static tmp&lt; volScalarField &gt; localRSubDeltaT(const fvMesh &amp;mesh, const label nAlphaSubCycles)</div><div class="ttdoc">Calculate and return the reciprocal of the local sub-cycling. </div><div class="ttdef"><b>Definition:</b> <a href="a05650_source.html#l00057">localEulerDdt.C:57</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a01374_html"><div class="ttname"><a href="a01374.html">Foam::fv::localEulerDdtScheme</a></div><div class="ttdoc">Local time-step first-order Euler implicit/explicit ddt. </div><div class="ttdef"><b>Definition:</b> <a href="a05652_source.html#l00105">localEulerDdtScheme.H:105</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

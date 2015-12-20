@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_c5259e3096ae0265e0b8b287024f0a94.html">general</a></li><li class="navelem"><a class="el" href="dir_64d089819bb46d4ae7248726dbfc6926.html">SRF</a></li><li class="navelem"><a class="el" href="dir_d3c6f5247a3bbdb19cd7c66f286a8e07.html">SRFModel</a></li><li class="navelem"><a class="el" href="dir_2c87c7a5aec80509a31048aaf9f6c85b.html">rpm</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_c5259e3096ae0265e0b8b287024f0a94.html">general</a></li><li class="navelem"><a class="el" href="dir_9575698abc4fe4969f62a525fb1da5bf.html">include</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">rpm.H</div>  </div>
+<div class="title">setDeltaT.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05083.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,98 +119,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::SRF::rpm</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Global</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    setDeltaT</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Basic SRF model whereby angular velocity is specified in terms of</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    a (global) axis and revolutions-per-minute [rpm]</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    rpm.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef SRFModelRpm_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define SRFModelRpm_H</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Reset the timestep to maintain a constant maximum courant Number.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Reduction of time-step is immediate, but increase is damped to avoid</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    unstable oscillations.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a05083.html#ae64d60def649600fb9f624abf0393592">   31</a></span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordflow">if</span> (<a class="code" href="a05074.html#ad3a700e1652b37d5382eaeda5cbf3824">adjustTimeStep</a>)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    scalar maxDeltaTFact = <a class="code" href="a05074.html#ad9decffd39ebb2e0a9c0c7169076b13f">maxCo</a>/(<a class="code" href="a05032.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a> + SMALL);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    scalar deltaTFact = <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.2);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05085.html">SRFModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a04425.html#ab73d2eaeb2a312fefef6736b39a8eb81">SRF</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    runTime.setDeltaT</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    (</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        (</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            deltaTFact*runTime.deltaTValue(),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="a05074.html#a7f6739b865c2d5e693900f678f68117a">maxDeltaT</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        )</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    );</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                            Class rpm Declaration</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a02208.html">   51</a></span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span><a class="code" href="a02208.html">rpm</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02403.html">SRFModel</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Revolutions per minute</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        scalar rpm_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a02208.html">rpm</a>(<span class="keyword">const</span> <a class="code" href="a02208.html">rpm</a>&amp;);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02208.html">rpm</a>&amp;);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a02208.html#a379482ab30300b229a9793c945c048c4">TypeName</a>(<span class="stringliteral">&quot;rpm&quot;</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a02208.html">rpm</a>(<span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a02403.html#a09d8544057912cc4521dac7e7ea3fcd3">U</a>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="a02208.html#a22f0b56d9a36b8ac211663e4acc1293b">~rpm</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// I-O</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="comment">//- Read</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordtype">bool</span> <a class="code" href="a02208.html#af816873151ddb0126e98bb2f914d8ed5">read</a>();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;};</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;} <span class="comment">// End namespace SRF</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02208_html_a22f0b56d9a36b8ac211663e4acc1293b"><div class="ttname"><a href="a02208.html#a22f0b56d9a36b8ac211663e4acc1293b">Foam::SRF::rpm::~rpm</a></div><div class="ttdeci">~rpm()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05082_source.html#l00064">rpm.C:64</a></div></div>
-<div class="ttc" id="a02208_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a02208.html#af816873151ddb0126e98bb2f914d8ed5">Foam::SRF::rpm::read</a></div><div class="ttdeci">bool read()</div><div class="ttdoc">Read. </div><div class="ttdef"><b>Definition:</b> <a href="a05082_source.html#l00070">rpm.C:70</a></div></div>
-<div class="ttc" id="a04425_html_ab73d2eaeb2a312fefef6736b39a8eb81"><div class="ttname"><a href="a04425.html#ab73d2eaeb2a312fefef6736b39a8eb81">SRF</a></div><div class="ttdeci">Info&lt;&lt; &quot;Reading field p\n&quot;&lt;&lt; endl;volScalarField p(IOobject(&quot;p&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Reading field Urel\n&quot;&lt;&lt; endl;volVectorField Urel(IOobject(&quot;Urel&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh);Info&lt;&lt; &quot;Reading/calculating face flux field phi\n&quot;&lt;&lt; endl;surfaceScalarField phi(IOobject(&quot;phi&quot;, runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(Urel)&amp;mesh.Sf());label pRefCell=0;scalar pRefValue=0.0;setRefCell(p, pimple.dict(), pRefCell, pRefValue);mesh.setFluxRequired(p.name());Info&lt;&lt; &quot;Creating SRF model\n&quot;&lt;&lt; endl;autoPtr&lt; SRF::SRFModel &gt; SRF(SRF::SRFModel::New(Urel))</div></div>
-<div class="ttc" id="a02403_html"><div class="ttname"><a href="a02403.html">Foam::SRF::SRFModel</a></div><div class="ttdoc">Top level model for single rotating frame. </div><div class="ttdef"><b>Definition:</b> <a href="a05085_source.html#l00062">SRFModel.H:62</a></div></div>
-<div class="ttc" id="a02208_html_a379482ab30300b229a9793c945c048c4"><div class="ttname"><a href="a02208.html#a379482ab30300b229a9793c945c048c4">Foam::SRF::rpm::TypeName</a></div><div class="ttdeci">TypeName(&quot;rpm&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a02403_html_a09d8544057912cc4521dac7e7ea3fcd3"><div class="ttname"><a href="a02403.html#a09d8544057912cc4521dac7e7ea3fcd3">Foam::SRF::SRFModel::U</a></div><div class="ttdeci">tmp&lt; volVectorField &gt; U() const </div><div class="ttdoc">Return velocity of SRF for complete mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05084_source.html#l00186">SRFModel.C:186</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a05085_html"><div class="ttname"><a href="a05085.html">SRFModel.H</a></div></div>
-<div class="ttc" id="a02208_html"><div class="ttname"><a href="a02208.html">Foam::SRF::rpm</a></div><div class="ttdoc">Basic SRF model whereby angular velocity is specified in terms of a (global) axis and revolutions-per...</div><div class="ttdef"><b>Definition:</b> <a href="a05083_source.html#l00051">rpm.H:51</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;deltaT = &quot;</span> &lt;&lt;  runTime.deltaTValue() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05074_html_ad3a700e1652b37d5382eaeda5cbf3824"><div class="ttname"><a href="a05074.html#ad3a700e1652b37d5382eaeda5cbf3824">adjustTimeStep</a></div><div class="ttdeci">bool adjustTimeStep</div><div class="ttdef"><b>Definition:</b> <a href="a05074_source.html#l00029">createTimeControls.H:29</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a05074_html_a7f6739b865c2d5e693900f678f68117a"><div class="ttname"><a href="a05074.html#a7f6739b865c2d5e693900f678f68117a">maxDeltaT</a></div><div class="ttdeci">scalar maxDeltaT</div><div class="ttdef"><b>Definition:</b> <a href="a05074_source.html#l00035">createTimeControls.H:35</a></div></div>
+<div class="ttc" id="a05074_html_ad9decffd39ebb2e0a9c0c7169076b13f"><div class="ttname"><a href="a05074.html#ad9decffd39ebb2e0a9c0c7169076b13f">maxCo</a></div><div class="ttdeci">scalar maxCo</div><div class="ttdef"><b>Definition:</b> <a href="a05074_source.html#l00032">createTimeControls.H:32</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a05032_html_ab7212aaf6d0ec5a5b5cd0b3b6a0c2741"><div class="ttname"><a href="a05032.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a></div><div class="ttdeci">scalar CoNum</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00029">compressibleCourantNo.H:29</a></div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

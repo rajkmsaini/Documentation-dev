@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_c5259e3096ae0265e0b8b287024f0a94.html">general</a></li><li class="navelem"><a class="el" href="dir_9575698abc4fe4969f62a525fb1da5bf.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_ab9cb4592fb2c4cce1bcf4c9207454a5.html">compressible</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">readTimeControls.H</div>  </div>
+<div class="title">compressibleCourantNo.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05032.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,26 +120,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Global</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    readTimeControls</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    CourantNo</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Read the control parameters used by setDeltaT</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="a05032.html#aed3f9b837a567b5ce04f1f23ad13e2a2">   29</a></span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Calculates and outputs the mean and maximum Courant Numbers.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="a05032.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">   29</a></span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a05032.html#a7ee8286e99c558db65fb56168735368c">   30</a></span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a05032.html#a4a999179f30745f2b41ed1ab5591fe08">   32</a></span>&#160;<a class="code" href="a05032.html#aed3f9b837a567b5ce04f1f23ad13e2a2">adjustTimeStep</a> =</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    runTime.controlDict().lookupOrDefault(<span class="stringliteral">&quot;adjustTimeStep&quot;</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a05032.html#a7249a5be96007daaf6a7fea1b25c3adc">   32</a></span>&#160;scalar <a class="code" href="a05032.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a> = 0.0;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;scalar <a class="code" href="a05032.html#a7ee8286e99c558db65fb56168735368c">meanCoNum</a> = 0.0;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a05032.html#abbfba7a2061301dd658470d7811331c8">   35</a></span>&#160;<a class="code" href="a05032.html#a4a999179f30745f2b41ed1ab5591fe08">maxCo</a> =</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    runTime.controlDict().lookupOrDefault&lt;scalar&gt;(<span class="stringliteral">&quot;maxCo&quot;</span>, 1.0);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="a05032.html#abbfba7a2061301dd658470d7811331c8">maxDeltaT</a> =</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    runTime.controlDict().lookupOrDefault&lt;scalar&gt;(<span class="stringliteral">&quot;maxDeltaT&quot;</span>, GREAT);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05032_html_abbfba7a2061301dd658470d7811331c8"><div class="ttname"><a href="a05032.html#abbfba7a2061301dd658470d7811331c8">maxDeltaT</a></div><div class="ttdeci">maxDeltaT</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00035">readTimeControls.H:35</a></div></div>
-<div class="ttc" id="a05032_html_a4a999179f30745f2b41ed1ab5591fe08"><div class="ttname"><a href="a05032.html#a4a999179f30745f2b41ed1ab5591fe08">maxCo</a></div><div class="ttdeci">maxCo</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00032">readTimeControls.H:32</a></div></div>
-<div class="ttc" id="a05032_html_aed3f9b837a567b5ce04f1f23ad13e2a2"><div class="ttname"><a href="a05032.html#aed3f9b837a567b5ce04f1f23ad13e2a2">adjustTimeStep</a></div><div class="ttdeci">adjustTimeStep</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00029">readTimeControls.H:29</a></div></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordflow">if</span> (<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>.nInternalFaces())</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a04311.html#afcd8855c276a98ae9604b35c8fb5b81e">scalarField</a> sumPhi</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="a10759.html#aa0a1e3c4ec02aa6a37f517c4d5270046">fvc::surfaceSum</a>(<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(<a class="code" href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>))().<a class="code" href="a05090.html#a8ebe4b4fc9818c2626b9c98a7ef1a16a">internalField</a>()</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      / <a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>.internalField()</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    );</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    CoNum = 0.5*<a class="code" href="a10725.html#ae8d631fb8e841947408bb711abfb1e67">gMax</a>(sumPhi/<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>.V().field())*runTime.deltaTValue();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    meanCoNum =</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        0.5*(<a class="code" href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">gSum</a>(sumPhi)/<a class="code" href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">gSum</a>(<a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>.V().field()))*runTime.deltaTValue();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Courant Number mean: &quot;</span> &lt;&lt; meanCoNum</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    &lt;&lt; <span class="stringliteral">&quot; max: &quot;</span> &lt;&lt; CoNum &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a04311_html_afcd8855c276a98ae9604b35c8fb5b81e"><div class="ttname"><a href="a04311.html#afcd8855c276a98ae9604b35c8fb5b81e">scalarField</a></div><div class="ttdeci">volScalarField scalarField(fieldObject, mesh)</div></div>
+<div class="ttc" id="a05032_html_a7ee8286e99c558db65fb56168735368c"><div class="ttname"><a href="a05032.html#a7ee8286e99c558db65fb56168735368c">meanCoNum</a></div><div class="ttdeci">scalar meanCoNum</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00030">compressibleCourantNo.H:30</a></div></div>
+<div class="ttc" id="a02978_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02978_source.html#l00096">readInitialConditions.H:96</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a10759_html_aa0a1e3c4ec02aa6a37f517c4d5270046"><div class="ttname"><a href="a10759.html#aa0a1e3c4ec02aa6a37f517c4d5270046">Foam::fvc::surfaceSum</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; surfaceSum(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05707_source.html#l00138">fvcSurfaceIntegrate.C:138</a></div></div>
+<div class="ttc" id="a10725_html_a11b1ebb4c53ad062332767d75ca96328"><div class="ttname"><a href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">Foam::gSum</a></div><div class="ttdeci">Type gSum(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00564">FieldFieldFunctions.C:564</a></div></div>
+<div class="ttc" id="a10725_html_ae8d631fb8e841947408bb711abfb1e67"><div class="ttname"><a href="a10725.html#ae8d631fb8e841947408bb711abfb1e67">Foam::gMax</a></div><div class="ttdeci">Type gMax(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00562">FieldFieldFunctions.C:562</a></div></div>
+<div class="ttc" id="a03195_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
+<div class="ttc" id="a05032_html_ab7212aaf6d0ec5a5b5cd0b3b6a0c2741"><div class="ttname"><a href="a05032.html#ab7212aaf6d0ec5a5b5cd0b3b6a0c2741">CoNum</a></div><div class="ttdeci">scalar CoNum</div><div class="ttdef"><b>Definition:</b> <a href="a05032_source.html#l00029">compressibleCourantNo.H:29</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a05090_html_a8ebe4b4fc9818c2626b9c98a7ef1a16a"><div class="ttname"><a href="a05090.html#a8ebe4b4fc9818c2626b9c98a7ef1a16a">internalField</a></div><div class="ttdeci">conserve internalField()+</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

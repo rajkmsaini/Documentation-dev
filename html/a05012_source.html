@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_cc121c37a2300e902425728df0054672.html">cfdTools</a></li><li class="navelem"><a class="el" href="dir_c5259e3096ae0265e0b8b287024f0a94.html">general</a></li><li class="navelem"><a class="el" href="dir_d24eedb9787c0ff52a4911e62c86e5d9.html">findRefCell</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b05602f37bb521a7142c0a3e200b5f35.html">fileFormats</a></li><li class="navelem"><a class="el" href="dir_276074facfd9ea15c0477839cf5f076d.html">sampledSetWriters</a></li><li class="navelem"><a class="el" href="dir_5395cc82ee9c6e4428ca8420b7726c95.html">raw</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">findRefCell.C</div>  </div>
+<div class="title">rawSetWriter.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05012.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,166 +121,118 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05013.html">findRefCell.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a570c09c24c272131fed0306cf8e33fcd">Foam::setRefCell</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a10675.html#a570c09c24c272131fed0306cf8e33fcd">   31</a></span>&#160;(</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; field,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; fieldRef,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&amp; refCelli,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    scalar&amp; refValue,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> forceReference</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> (fieldRef.<a class="code" href="a00913.html#a6f6e35925b675df79f87d3484b50f555">needReference</a>() || forceReference)</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a02856.html">word</a> refCellName = field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="stringliteral">&quot;RefCell&quot;</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a02856.html">word</a> refPointName = field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="stringliteral">&quot;RefPoint&quot;</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="a02856.html">word</a> refValueName = field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="stringliteral">&quot;RefValue&quot;</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05013.html">rawSetWriter.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04997.html">coordSet.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08959.html">fileName.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07771.html">OFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a02073.html#a55f289087f5b7a0a6607f119fb7a715a">   34</a></span>&#160;<a class="code" href="a02073.html#a55f289087f5b7a0a6607f119fb7a715a">Foam::rawSetWriter&lt;Type&gt;::rawSetWriter</a>()</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a02874.html">writer</a>&lt;Type&gt;()</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a02073.html#a8b23aea778c0cedaaff5a43e70f86d0a">   43</a></span>&#160;<a class="code" href="a02073.html#a8b23aea778c0cedaaff5a43e70f86d0a">Foam::rawSetWriter&lt;Type&gt;::~rawSetWriter</a>()</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">if</span> (dict.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(refCellName))</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="keywordflow">if</span> (Pstream::master())</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                refCelli = <a class="code" href="a10675.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(dict.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(refCellName));</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                <span class="keywordflow">if</span> (refCelli &lt; 0 || refCelli &gt;= field.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>().nCells())</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                    <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                    (</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                        <span class="stringliteral">&quot;void Foam::setRefCell\n&quot;</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                        <span class="stringliteral">&quot;    (\n&quot;</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                        <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                        <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                        <span class="stringliteral">&quot;        const dictionary&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                        <span class="stringliteral">&quot;        label&amp; scalar&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                        <span class="stringliteral">&quot;        bool\n&quot;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                        <span class="stringliteral">&quot;)&quot;</span>,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                        dict</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                    )   &lt;&lt; <span class="stringliteral">&quot;Illegal master cellID &quot;</span> &lt;&lt; refCelli</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                        &lt;&lt; <span class="stringliteral">&quot;. Should be 0..&quot;</span> &lt;&lt; field.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>().nCells()</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                        &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                refCelli = -1;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dict.<a class="code" href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(refPointName))</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="a02776.html">point</a> refPointi(dict.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(refPointName));</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="a00780.html">Foam::fileName</a> <a class="code" href="a02073.html#a7e00becc93ddea8f58a4eb730b36060e">Foam::rawSetWriter&lt;Type&gt;::getFileName</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a02073.html#a7e00becc93ddea8f58a4eb730b36060e">   51</a></span>&#160;(</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00407.html">coordSet</a>&amp; points,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">wordList</a>&amp; valueSetNames</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> this-&gt;getBaseName(points, valueSetNames) + <span class="stringliteral">&quot;.xy&quot;</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02073.html#a630f6b7c40da086ca6bfde703206e847">Foam::rawSetWriter&lt;Type&gt;::write</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a02073.html#a630f6b7c40da086ca6bfde703206e847">   62</a></span>&#160;(</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00407.html">coordSet</a>&amp; points,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">wordList</a>&amp; valueSetNames,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">List</a>&lt;<span class="keyword">const</span> <a class="code" href="a00755.html">Field&lt;Type&gt;</a>*&gt;&amp; valueSets,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a01736.html">Ostream</a>&amp; os</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Collect sets into columns</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a01364.html">List&lt;const List&lt;Type&gt;</a>*&gt; columns(valueSets.size());</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSets, i)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        columns[i] = valueSets[i];</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    this-&gt;writeTable(points, columns, os);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="comment">// Try fast approximate search avoiding octree construction</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            refCelli = field.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>().findCell(refPointi, polyMesh::FACE_PLANES);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> hasRef = (refCelli &gt;= 0 ? 1 : 0);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> sumHasRef = returnReduce&lt;label&gt;(hasRef, <a class="code" href="a02456.html">sumOp&lt;label&gt;</a>());</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">// If reference cell no found use octree search</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="comment">// with cell tet-decompositoin</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordflow">if</span> (sumHasRef != 1)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                refCelli = field.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>().findCell(refPointi);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                hasRef = (refCelli &gt;= 0 ? 1 : 0);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                sumHasRef = returnReduce&lt;label&gt;(hasRef, <a class="code" href="a02456.html">sumOp&lt;label&gt;</a>());</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keywordflow">if</span> (sumHasRef != 1)</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                (</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                    <span class="stringliteral">&quot;void Foam::setRefCell\n&quot;</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                    <span class="stringliteral">&quot;    (\n&quot;</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                    <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    <span class="stringliteral">&quot;        const dictionary&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <span class="stringliteral">&quot;        label&amp; scalar&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    <span class="stringliteral">&quot;        bool\n&quot;</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    <span class="stringliteral">&quot;    )&quot;</span>,</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    dict</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                )   &lt;&lt; <span class="stringliteral">&quot;Unable to set reference cell for field &quot;</span> &lt;&lt; field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>()</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;    Reference point &quot;</span> &lt;&lt; refPointName</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; refPointi</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; found on &quot;</span> &lt;&lt; sumHasRef &lt;&lt; <span class="stringliteral">&quot; domains (should be one)&quot;</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <a class="code" href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            (</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <span class="stringliteral">&quot;void Foam::setRefCell\n&quot;</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                <span class="stringliteral">&quot;    (\n&quot;</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                <span class="stringliteral">&quot;        const volScalarField&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="stringliteral">&quot;        const dictionary&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="stringliteral">&quot;        label&amp; scalar&amp;,\n&quot;</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                <span class="stringliteral">&quot;        bool\n&quot;</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                <span class="stringliteral">&quot;    )&quot;</span>,</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                dict</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            )   &lt;&lt; <span class="stringliteral">&quot;Unable to set reference cell for field &quot;</span> &lt;&lt; field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>()</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;    Please supply either &quot;</span> &lt;&lt; refCellName</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; or &quot;</span> &lt;&lt; refPointName &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        refValue = <a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(dict.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(refValueName));</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10675.html#a570c09c24c272131fed0306cf8e33fcd">Foam::setRefCell</a></div>
-<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="a10675.html#a87d3286ae07e5b0442403d2fc0143d4a">  141</a></span>&#160;(</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; field,</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict,</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&amp; refCelli,</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    scalar&amp; refValue,</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> forceReference</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;)</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;{</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <a class="code" href="a10675.html#a570c09c24c272131fed0306cf8e33fcd">setRefCell</a>(field, field, dict, refCelli, refValue, forceReference);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;}</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;Foam::scalar <a class="code" href="a10675.html#ab8c5925a3fe1c81494baa5e0fd3ca98b">Foam::getRefCellValue</a></div>
-<div class="line"><a name="l00154"></a><span class="lineno"><a class="line" href="a10675.html#ab8c5925a3fe1c81494baa5e0fd3ca98b">  154</a></span>&#160;(</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; field,</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> refCelli</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;)</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;{</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    scalar refCellValue = (refCelli &gt;= 0 ? field[refCelli] : 0.0);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10675.html#a8d528a67d2a9c6fe4fb94bc86872624b">returnReduce</a>(refCellValue, <a class="code" href="a02456.html">sumOp&lt;scalar&gt;</a>());</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00518_html_ae9d6521e0e8d3956f9b49ddeb44877b8"><div class="ttname"><a href="a00518.html#ae9d6521e0e8d3956f9b49ddeb44877b8">Foam::dictionary::found</a></div><div class="ttdeci">bool found(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Search dictionary for given keyword. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00306">dictionary.C:306</a></div></div>
-<div class="ttc" id="a10675_html_abb09fbcf651d29208982dd7a601b606f"><div class="ttname"><a href="a10675.html#abb09fbcf651d29208982dd7a601b606f">Foam::readLabel</a></div><div class="ttdeci">label readLabel(Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00064">label.H:64</a></div></div>
-<div class="ttc" id="a00913_html_a6f6e35925b675df79f87d3484b50f555"><div class="ttname"><a href="a00913.html#a6f6e35925b675df79f87d3484b50f555">Foam::GeometricField::needReference</a></div><div class="ttdeci">bool needReference() const </div><div class="ttdoc">Does the field need a reference level for solution. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00860">GeometricField.C:860</a></div></div>
-<div class="ttc" id="a10675_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10675.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
-<div class="ttc" id="a07673_html_af60657ab907624ce6ce9a2bb0f29c1ec"><div class="ttname"><a href="a07673.html#af60657ab907624ce6ce9a2bb0f29c1ec">FatalIOErrorIn</a></div><div class="ttdeci">#define FatalIOErrorIn(functionName, ios)                                                                        </div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00325">error.H:325</a></div></div>
-<div class="ttc" id="a02456_html"><div class="ttname"><a href="a02456.html">Foam::sumOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08855_source.html#l00162">ops.H:162</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a570c09c24c272131fed0306cf8e33fcd"><div class="ttname"><a href="a10675.html#a570c09c24c272131fed0306cf8e33fcd">Foam::setRefCell</a></div><div class="ttdeci">void setRefCell(const volScalarField &amp;field, const volScalarField &amp;fieldRef, const dictionary &amp;dict, label &amp;refCelli, scalar &amp;refValue, const bool forceReference=false)</div><div class="ttdoc">If the field fieldRef needs referencing find the reference cell nearest. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00031">findRefCell.C:31</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00527_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10675_html_ab8c5925a3fe1c81494baa5e0fd3ca98b"><div class="ttname"><a href="a10675.html#ab8c5925a3fe1c81494baa5e0fd3ca98b">Foam::getRefCellValue</a></div><div class="ttdeci">scalar getRefCellValue(const volScalarField &amp;field, const label refCelli)</div><div class="ttdoc">Return the current value of field in the reference cell. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00154">findRefCell.C:154</a></div></div>
-<div class="ttc" id="a05013_html"><div class="ttname"><a href="a05013.html">findRefCell.H</a></div><div class="ttdoc">Find the reference cell nearest (in index) to the given cell but which is not on a cyclic...</div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a10675_html_a8d528a67d2a9c6fe4fb94bc86872624b"><div class="ttname"><a href="a10675.html#a8d528a67d2a9c6fe4fb94bc86872624b">Foam::returnReduce</a></div><div class="ttdeci">T returnReduce(const T &amp;Value, const BinaryOp &amp;bop, const int tag=Pstream::msgType(), const label comm=UPstream::worldComm)</div><div class="ttdef"><b>Definition:</b> <a href="a07747_source.html#l00086">PstreamReduceOps.H:86</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a08879_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08879_source.html#l00038">doubleScalar.C:38</a></div></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02073.html#a630f6b7c40da086ca6bfde703206e847">Foam::rawSetWriter&lt;Type&gt;::write</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a02073.html#a9bf084f0ac71ff0d1cf543a8e7b2a9f0">   83</a></span>&#160;(</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> writeTracks,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02031.html">PtrList&lt;coordSet&gt;</a>&amp; points,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">wordList</a>&amp; valueSetNames,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">List</a>&lt;<a class="code" href="a01364.html">List</a>&lt;<a class="code" href="a00755.html">Field&lt;Type&gt;</a> &gt; &gt;&amp; valueSets,</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a01736.html">Ostream</a>&amp; os</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">if</span> (valueSets.size() != valueSetNames.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Number of variables:&quot;</span> &lt;&lt; valueSetNames.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Number of valueSets:&quot;</span> &lt;&lt; valueSets.size()</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="a01364.html">List&lt;const List&lt;Type&gt;</a>*&gt; columns(valueSets.size());</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(points, trackI)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">// Collect sets into columns</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSets, i)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            columns[i] = &amp;valueSets[i][trackI];</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        this-&gt;writeTable(points[trackI], columns, os);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04997_html"><div class="ttname"><a href="a04997.html">coordSet.H</a></div></div>
+<div class="ttc" id="a02073_html_a7e00becc93ddea8f58a4eb730b36060e"><div class="ttname"><a href="a02073.html#a7e00becc93ddea8f58a4eb730b36060e">Foam::rawSetWriter::getFileName</a></div><div class="ttdeci">virtual fileName getFileName(const coordSet &amp;, const wordList &amp;) const </div><div class="ttdoc">Generate file name with correct extension. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00051">rawSetWriter.C:51</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07942_source.html#l00057">Field.H:57</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; word &gt;</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a05013_html"><div class="ttname"><a href="a05013.html">rawSetWriter.H</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a07771_html"><div class="ttname"><a href="a07771.html">OFstream.H</a></div></div>
+<div class="ttc" id="a02073_html_a630f6b7c40da086ca6bfde703206e847"><div class="ttname"><a href="a02073.html#a630f6b7c40da086ca6bfde703206e847">Foam::rawSetWriter::write</a></div><div class="ttdeci">virtual void write(const coordSet &amp;, const wordList &amp;, const List&lt; const Field&lt; Type &gt; * &gt; &amp;, Ostream &amp;) const </div><div class="ttdoc">General entry point for writing. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00062">rawSetWriter.C:62</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a02874_html"><div class="ttname"><a href="a02874.html">Foam::writer</a></div><div class="ttdoc">Base class for graphics format writing. Entry points are. </div><div class="ttdef"><b>Definition:</b> <a href="a05019_source.html#l00078">writer.H:78</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a02031_html"><div class="ttname"><a href="a02031.html">Foam::PtrList</a></div><div class="ttdoc">A templated 1D list of pointers to objects of type <T>, where the size of the array is known and used...</div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00061">List.H:61</a></div></div>
+<div class="ttc" id="a02073_html_a55f289087f5b7a0a6607f119fb7a715a"><div class="ttname"><a href="a02073.html#a55f289087f5b7a0a6607f119fb7a715a">Foam::rawSetWriter::rawSetWriter</a></div><div class="ttdeci">rawSetWriter()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00034">rawSetWriter.C:34</a></div></div>
+<div class="ttc" id="a02073_html_a8b23aea778c0cedaaff5a43e70f86d0a"><div class="ttname"><a href="a02073.html#a8b23aea778c0cedaaff5a43e70f86d0a">Foam::rawSetWriter::~rawSetWriter</a></div><div class="ttdeci">virtual ~rawSetWriter()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a05012_source.html#l00043">rawSetWriter.C:43</a></div></div>
+<div class="ttc" id="a08959_html"><div class="ttname"><a href="a08959.html">fileName.H</a></div></div>
+<div class="ttc" id="a00407_html"><div class="ttname"><a href="a00407.html">Foam::coordSet</a></div><div class="ttdoc">Holds list of sampling positions. </div><div class="ttdef"><b>Definition:</b> <a href="a04997_source.html#l00049">coordSet.H:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

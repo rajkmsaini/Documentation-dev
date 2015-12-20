@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b05602f37bb521a7142c0a3e200b5f35.html">fileFormats</a></li><li class="navelem"><a class="el" href="dir_276074facfd9ea15c0477839cf5f076d.html">sampledSetWriters</a></li><li class="navelem"><a class="el" href="dir_b88224a5c354b65ad50578548bbab247.html">jplot</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2052808828190f934b76e979ee65af8a.html">engine</a></li><li class="navelem"><a class="el" href="dir_519b65c37d0222dfd330392f4e2f4458.html">engineMesh</a></li><li class="navelem"><a class="el" href="dir_a5039ba4f538f281d2ef96cdafc71598.html">engineMesh</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">jplotSetWriter.C</div>  </div>
+<div class="title">engineMesh.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04970.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,103 +121,148 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04971.html">jplotSetWriter.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08101.html">clock.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04958.html">coordSet.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08907.html">fileName.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07720.html">OFstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a01215.html">Foam::jplotSetWriter&lt;Type&gt;::writeHeader</a>(Ostream&amp; os)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> os</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;# JPlot input file&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;#&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;# Generated by sample on &quot;</span> &lt;&lt; clock::date().c_str() &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a01215.html#a72051d2e35b558d072fbe80f0864219d">   48</a></span>&#160;<a class="code" href="a01215.html#a72051d2e35b558d072fbe80f0864219d">Foam::jplotSetWriter&lt;Type&gt;::jplotSetWriter</a>()</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a02861.html">writer</a>&lt;Type&gt;()</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04971.html">engineMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07866.html">dimensionedScalar.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(engineMesh, 0);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a10725.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(engineMesh, IOobject);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a00637.html#ac9e1a1e4fbbd91b4fb4cd7b1155ccd5f">   40</a></span>&#160;Foam::engineMesh::engineMesh(<span class="keyword">const</span> <a class="code" href="a01179.html">IOobject</a>&amp; io)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;:</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a00876.html">fvMesh</a>(io),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    engineDB_(<a class="code" href="a10725.html#a28f53307dad4466f23067e79a948e2a1">refCast</a>&lt;const <a class="code" href="a00639.html">engineTime</a>&gt;(time())),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    pistonIndex_(-1),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    linerIndex_(-1),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    cylinderHeadIndex_(-1),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    deckHeight_(<span class="stringliteral">&quot;deckHeight&quot;</span>, <a class="code" href="a10725.html#a2c2f48175b211109246a24c633d02441">dimLength</a>, GREAT),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    pistonPosition_(<span class="stringliteral">&quot;pistonPosition&quot;</span>, <a class="code" href="a10725.html#a2c2f48175b211109246a24c633d02441">dimLength</a>, -GREAT)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> foundPiston = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">bool</span> foundLiner = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">bool</span> foundCylinderHead = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a01215.html#a653aba6058d2210e46c373b947ffa038">   57</a></span>&#160;<a class="code" href="a01215.html#a653aba6058d2210e46c373b947ffa038">Foam::jplotSetWriter&lt;Type&gt;::~jplotSetWriter</a>()</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="a00774.html">Foam::fileName</a> <a class="code" href="a01215.html#a7e00becc93ddea8f58a4eb730b36060e">Foam::jplotSetWriter&lt;Type&gt;::getFileName</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a01215.html#a7e00becc93ddea8f58a4eb730b36060e">   65</a></span>&#160;(</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">wordList</a>&amp; valueSetNames</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> this-&gt;getBaseName(points, valueSetNames) + <span class="stringliteral">&quot;.dat&quot;</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>(), i)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[i].<a class="code" href="a00876.html#a75b72488d2e82151b025744974919d5d">name</a>() == <span class="stringliteral">&quot;piston&quot;</span>)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <a class="code" href="a00637.html#ad9913493c05e8ddc5c637fea2a9868e0">pistonIndex_</a> = i;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            foundPiston = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[i].<a class="code" href="a00876.html#a75b72488d2e82151b025744974919d5d">name</a>() == <span class="stringliteral">&quot;liner&quot;</span>)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <a class="code" href="a00637.html#a45bbba315abe5d03f5a0988466cc8709">linerIndex_</a> = i;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            foundLiner = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[i].<a class="code" href="a00876.html#a75b72488d2e82151b025744974919d5d">name</a>() == <span class="stringliteral">&quot;cylinderHead&quot;</span>)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <a class="code" href="a00637.html#adb6941a32676349e05135b1302679451">cylinderHeadIndex_</a> = i;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            foundCylinderHead = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01215.html#a630f6b7c40da086ca6bfde703206e847">Foam::jplotSetWriter&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a01215.html#a630f6b7c40da086ca6bfde703206e847">   76</a></span>&#160;(</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">wordList</a>&amp; valueSetNames,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">List</a>&lt;<span class="keyword">const</span> <a class="code" href="a00749.html">Field&lt;Type&gt;</a>*&gt;&amp; valueSets,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    os  &lt;&lt; <span class="stringliteral">&quot;# JPlot file&quot;</span> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;# column 1: &quot;</span> &lt;&lt; points.<a class="code" href="a00403.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSets, i)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        os  &lt;&lt; <span class="stringliteral">&quot;# column &quot;</span> &lt;&lt; i + 2 &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; valueSetNames[i] &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">reduce</a>(foundPiston, <a class="code" href="a01722.html">orOp&lt;bool&gt;</a>());</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">reduce</a>(foundLiner, <a class="code" href="a01722.html">orOp&lt;bool&gt;</a>());</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">reduce</a>(foundCylinderHead, <a class="code" href="a01722.html">orOp&lt;bool&gt;</a>());</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (!foundPiston)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;cannot find piston patch&quot;</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (!foundLiner)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;cannot find liner patch&quot;</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Collect sets into columns</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a01355.html">List&lt;const List&lt;Type&gt;</a>*&gt; columns(valueSets.size());</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSets, i)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        columns[i] = valueSets[i];</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    this-&gt;writeTable(points, columns, os);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04971_html"><div class="ttname"><a href="a04971.html">jplotSetWriter.H</a></div></div>
-<div class="ttc" id="a00403_html"><div class="ttname"><a href="a00403.html">Foam::coordSet</a></div><div class="ttdoc">Holds list of sampling positions. </div><div class="ttdef"><b>Definition:</b> <a href="a04958_source.html#l00049">coordSet.H:49</a></div></div>
-<div class="ttc" id="a00403_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a00403.html#a75b72488d2e82151b025744974919d5d">Foam::coordSet::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdef"><b>Definition:</b> <a href="a04958_source.html#l00111">coordSet.H:111</a></div></div>
-<div class="ttc" id="a01215_html"><div class="ttname"><a href="a01215.html">Foam::jplotSetWriter</a></div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00047">jplotSetWriter.H:47</a></div></div>
-<div class="ttc" id="a01215_html_a7e00becc93ddea8f58a4eb730b36060e"><div class="ttname"><a href="a01215.html#a7e00becc93ddea8f58a4eb730b36060e">Foam::jplotSetWriter::getFileName</a></div><div class="ttdeci">virtual fileName getFileName(const coordSet &amp;, const wordList &amp;) const </div><div class="ttdoc">Generate file name with correct extension. </div><div class="ttdef"><b>Definition:</b> <a href="a04970_source.html#l00065">jplotSetWriter.C:65</a></div></div>
-<div class="ttc" id="a07720_html"><div class="ttname"><a href="a07720.html">OFstream.H</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; word &gt;</a></div></div>
-<div class="ttc" id="a01215_html_a653aba6058d2210e46c373b947ffa038"><div class="ttname"><a href="a01215.html#a653aba6058d2210e46c373b947ffa038">Foam::jplotSetWriter::~jplotSetWriter</a></div><div class="ttdeci">virtual ~jplotSetWriter()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04970_source.html#l00057">jplotSetWriter.C:57</a></div></div>
-<div class="ttc" id="a01215_html_a72051d2e35b558d072fbe80f0864219d"><div class="ttname"><a href="a01215.html#a72051d2e35b558d072fbe80f0864219d">Foam::jplotSetWriter::jplotSetWriter</a></div><div class="ttdeci">jplotSetWriter()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a04970_source.html#l00048">jplotSetWriter.C:48</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a02861_html"><div class="ttname"><a href="a02861.html">Foam::writer</a></div><div class="ttdoc">Base class for graphics format writing. Entry points are. </div><div class="ttdef"><b>Definition:</b> <a href="a04980_source.html#l00078">writer.H:78</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00057">Field.H:57</a></div></div>
-<div class="ttc" id="a04958_html"><div class="ttname"><a href="a04958.html">coordSet.H</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a08907_html"><div class="ttname"><a href="a08907.html">fileName.H</a></div></div>
-<div class="ttc" id="a01215_html_a630f6b7c40da086ca6bfde703206e847"><div class="ttname"><a href="a01215.html#a630f6b7c40da086ca6bfde703206e847">Foam::jplotSetWriter::write</a></div><div class="ttdeci">virtual void write(const coordSet &amp;, const wordList &amp;, const List&lt; const Field&lt; Type &gt; * &gt; &amp;, Ostream &amp;) const </div><div class="ttdoc">General entry point for writing. </div><div class="ttdef"><b>Definition:</b> <a href="a04970_source.html#l00076">jplotSetWriter.C:76</a></div></div>
-<div class="ttc" id="a08101_html"><div class="ttname"><a href="a08101.html">clock.H</a></div></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">if</span> (!foundCylinderHead)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;cannot find cylinderHead patch&quot;</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a00637.html#ad9913493c05e8ddc5c637fea2a9868e0">pistonIndex_</a> != -1)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <a class="code" href="a00637.html#ae2d22f53e4d51512c3912f00874fcf5d">pistonPosition_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() = -GREAT;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[<a class="code" href="a00637.html#ad9913493c05e8ddc5c637fea2a9868e0">pistonIndex_</a>].patch().localPoints().<a class="code" href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">size</a>())</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                <a class="code" href="a00637.html#ae2d22f53e4d51512c3912f00874fcf5d">pistonPosition_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() =</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[<a class="code" href="a00637.html#ad9913493c05e8ddc5c637fea2a9868e0">pistonIndex_</a>].patch().localPoints()).z();</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <a class="code" href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">reduce</a>(<a class="code" href="a00637.html#ae2d22f53e4d51512c3912f00874fcf5d">pistonPosition_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>(), <a class="code" href="a01447.html">maxOp&lt;scalar&gt;</a>());</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a00637.html#adb6941a32676349e05135b1302679451">cylinderHeadIndex_</a> != -1)</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <a class="code" href="a00637.html#a95742af83ca59005bc00027c1ed512a6">deckHeight_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() = GREAT;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[<a class="code" href="a00637.html#adb6941a32676349e05135b1302679451">cylinderHeadIndex_</a>].patch().localPoints().<a class="code" href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">size</a>())</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                <a class="code" href="a00637.html#a95742af83ca59005bc00027c1ed512a6">deckHeight_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() = <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                (</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                    <a class="code" href="a00876.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[<a class="code" href="a00637.html#adb6941a32676349e05135b1302679451">cylinderHeadIndex_</a>].patch().localPoints()</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                ).z();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <a class="code" href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">reduce</a>(<a class="code" href="a00637.html#a95742af83ca59005bc00027c1ed512a6">deckHeight_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>(), <a class="code" href="a01501.html">minOp&lt;scalar&gt;</a>());</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;deckHeight: &quot;</span> &lt;&lt; <a class="code" href="a00637.html#a95742af83ca59005bc00027c1ed512a6">deckHeight_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;piston position: &quot;</span> &lt;&lt; <a class="code" href="a00637.html#ae2d22f53e4d51512c3912f00874fcf5d">pistonPosition_</a>.<a class="code" href="a00532.html#a080d3824651cfcf52f72acceec615aaa">value</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="a00637.html#a0fa4f655b0cc2e79a6bfdc97ad8db585">  131</a></span>&#160;<a class="code" href="a00637.html#a0fa4f655b0cc2e79a6bfdc97ad8db585">Foam::engineMesh::~engineMesh</a>()</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;{}</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00637_html_a45bbba315abe5d03f5a0988466cc8709"><div class="ttname"><a href="a00637.html#a45bbba315abe5d03f5a0988466cc8709">Foam::engineMesh::linerIndex_</a></div><div class="ttdeci">label linerIndex_</div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00071">engineMesh.H:71</a></div></div>
+<div class="ttc" id="a00639_html"><div class="ttname"><a href="a00639.html">Foam::engineTime</a></div><div class="ttdoc">Manage time in terms of engine RPM and crank-angle. </div><div class="ttdef"><b>Definition:</b> <a href="a04982_source.html#l00068">engineTime.H:68</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10725.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
+<div class="ttc" id="a10725_html_a2c2f48175b211109246a24c633d02441"><div class="ttname"><a href="a10725.html#a2c2f48175b211109246a24c633d02441">Foam::dimLength</a></div><div class="ttdeci">const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07882_source.html#l00050">dimensionSets.H:50</a></div></div>
+<div class="ttc" id="a04971_html"><div class="ttname"><a href="a04971.html">engineMesh.H</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a10725_html_a28f53307dad4466f23067e79a948e2a1"><div class="ttname"><a href="a10725.html#a28f53307dad4466f23067e79a948e2a1">Foam::refCast</a></div><div class="ttdeci">To &amp; refCast(From &amp;r)</div><div class="ttdoc">Reference type cast template function. </div><div class="ttdef"><b>Definition:</b> <a href="a07864_source.html#l00106">typeInfo.H:106</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a00637_html_a95742af83ca59005bc00027c1ed512a6"><div class="ttname"><a href="a00637.html#a95742af83ca59005bc00027c1ed512a6">Foam::engineMesh::deckHeight_</a></div><div class="ttdeci">dimensionedScalar deckHeight_</div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00074">engineMesh.H:74</a></div></div>
+<div class="ttc" id="a00876_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a00876.html#a75b72488d2e82151b025744974919d5d">Foam::fvMesh::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return reference to name. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00257">fvMesh.H:257</a></div></div>
+<div class="ttc" id="a01722_html"><div class="ttname"><a href="a01722.html">Foam::orOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00178">ops.H:178</a></div></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01501_html"><div class="ttname"><a href="a01501.html">Foam::minOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00173">ops.H:173</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a01447_html"><div class="ttname"><a href="a01447.html">Foam::maxOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00172">ops.H:172</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a07866_html"><div class="ttname"><a href="a07866.html">dimensionedScalar.H</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a00876_html_a971347d65410875e38ea654dfd193a19"><div class="ttname"><a href="a00876.html#a971347d65410875e38ea654dfd193a19">Foam::fvMesh::boundary</a></div><div class="ttdeci">const fvBoundaryMesh &amp; boundary() const </div><div class="ttdoc">Return reference to boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05870_source.html#l00550">fvMesh.C:550</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a01284_html_a1cec4cf79400b24ceeea973e9913dbf5"><div class="ttname"><a href="a01284.html#a1cec4cf79400b24ceeea973e9913dbf5">Foam::lduMesh::reduce</a></div><div class="ttdeci">void reduce(T &amp;Value, const BinaryOp &amp;bop) const </div><div class="ttdoc">Helper: reduce with current communicator. </div><div class="ttdef"><b>Definition:</b> <a href="a08473_source.html#l00032">lduMeshTemplates.C:32</a></div></div>
+<div class="ttc" id="a00637_html_ad9913493c05e8ddc5c637fea2a9868e0"><div class="ttname"><a href="a00637.html#ad9913493c05e8ddc5c637fea2a9868e0">Foam::engineMesh::pistonIndex_</a></div><div class="ttdeci">label pistonIndex_</div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00070">engineMesh.H:70</a></div></div>
+<div class="ttc" id="a00532_html_a080d3824651cfcf52f72acceec615aaa"><div class="ttname"><a href="a00532.html#a080d3824651cfcf52f72acceec615aaa">Foam::dimensioned::value</a></div><div class="ttdeci">const Type &amp; value() const </div><div class="ttdoc">Return const reference to value. </div><div class="ttdef"><b>Definition:</b> <a href="a07874_source.html#l00261">dimensionedType.C:261</a></div></div>
+<div class="ttc" id="a00637_html_adb6941a32676349e05135b1302679451"><div class="ttname"><a href="a00637.html#adb6941a32676349e05135b1302679451">Foam::engineMesh::cylinderHeadIndex_</a></div><div class="ttdeci">label cylinderHeadIndex_</div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00072">engineMesh.H:72</a></div></div>
+<div class="ttc" id="a00637_html_ae2d22f53e4d51512c3912f00874fcf5d"><div class="ttname"><a href="a00637.html#ae2d22f53e4d51512c3912f00874fcf5d">Foam::engineMesh::pistonPosition_</a></div><div class="ttdeci">dimensionedScalar pistonPosition_</div><div class="ttdef"><b>Definition:</b> <a href="a04971_source.html#l00075">engineMesh.H:75</a></div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a00637_html_a0fa4f655b0cc2e79a6bfdc97ad8db585"><div class="ttname"><a href="a00637.html#a0fa4f655b0cc2e79a6bfdc97ad8db585">Foam::engineMesh::~engineMesh</a></div><div class="ttdeci">virtual ~engineMesh()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04970_source.html#l00131">engineMesh.C:131</a></div></div>
+<div class="ttc" id="a00984_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">Foam::HashTable&lt; regIOobject * &gt;::size</a></div><div class="ttdeci">label size() const</div><div class="ttdoc">Return number of elements in table. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

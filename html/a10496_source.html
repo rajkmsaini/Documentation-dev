@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1eda626aeac0f0ad2848c36acaa5d501.html">TurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_65e3a25be7d63d0357fd279a6ba5d718.html">incompressible</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1eda626aeac0f0ad2848c36acaa5d501.html">TurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_7904bc8e3270082a35070ba525b2d08a.html">compressible</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">incompressibleTurbulenceModel.C</div>  </div>
+<div class="title">compressibleTurbulenceModel.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10496.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,96 +121,77 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10497.html">incompressibleTurbulenceModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10497.html">compressibleTurbulenceModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06145.html">surfaceInterpolate.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(incompressibleTurbulenceModel, 0);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(compressibleTurbulenceModel, 0);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;Foam::incompressibleTurbulenceModel::incompressibleTurbulenceModel</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a01040.html#a69b9bd00a43dbd224c247e059dd8ae54">   39</a></span>&#160;(</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00915.html">geometricOneField</a>&amp;,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; U,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; alphaRhoPhi,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; phi,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; propertiesName</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="a10682.html#a77b65c2577103c706f0aa2c4cb851bdd">turbulenceModel</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    (</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        U,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        alphaRhoPhi,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        phi,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        propertiesName</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    )</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a01040.html#ade8fb1431336c11c1314fc324691128f">   58</a></span>&#160;<a class="code" href="a01040.html#ade8fb1431336c11c1314fc324691128f">Foam::incompressibleTurbulenceModel::mu</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02683.html#a873c2bd19b9d6641c6c1f03df3a292aa">nu</a>();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::scalarField&gt;</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a01040.html#acae726ca47a0d12feecf68ad52e5800f">   65</a></span>&#160;<a class="code" href="a01040.html#ade8fb1431336c11c1314fc324691128f">Foam::incompressibleTurbulenceModel::mu</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a03836.html#ab5a19e77b8d6682fbbf4e06d99341df9">nu</a>(patchi);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="a01040.html#a9f0a1039a5009b124a3d9bc6d9d8e5f4">   72</a></span>&#160;<a class="code" href="a01040.html#a9f0a1039a5009b124a3d9bc6d9d8e5f4">Foam::incompressibleTurbulenceModel::mut</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a03211.html#af6531e43f0c5439f236dbbba8d0ede60">nut</a>();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::scalarField&gt;</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a01040.html#ac904583db9b811006ae292b246c1981e">   79</a></span>&#160;<a class="code" href="a01040.html#a9f0a1039a5009b124a3d9bc6d9d8e5f4">Foam::incompressibleTurbulenceModel::mut</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a03211.html#af6531e43f0c5439f236dbbba8d0ede60">nut</a>(patchi);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a01040.html#ac8dc824da0ccdabf0634985370560494">   86</a></span>&#160;<a class="code" href="a01040.html#ac8dc824da0ccdabf0634985370560494">Foam::incompressibleTurbulenceModel::muEff</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span> nuEff();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::scalarField&gt;</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="a01040.html#a9141af33a74f6d550dae28d881e87246">   93</a></span>&#160;<a class="code" href="a01040.html#ac8dc824da0ccdabf0634985370560494">Foam::incompressibleTurbulenceModel::muEff</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> nuEff(patchi);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04277_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04277_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
-<div class="ttc" id="a00915_html"><div class="ttname"><a href="a00915.html">Foam::geometricOneField</a></div><div class="ttdoc">A class representing the concept of a GeometricField of 1 used to avoid unnecessary manipulations for...</div><div class="ttdef"><b>Definition:</b> <a href="a07980_source.html#l00052">geometricOneField.H:52</a></div></div>
-<div class="ttc" id="a10682_html_a77b65c2577103c706f0aa2c4cb851bdd"><div class="ttname"><a href="a10682.html#a77b65c2577103c706f0aa2c4cb851bdd">Foam::compressible::turbulenceModel</a></div><div class="ttdeci">ThermalDiffusivity&lt; CompressibleTurbulenceModel&lt; fluidThermo &gt; &gt; turbulenceModel</div><div class="ttdef"><b>Definition:</b> <a href="a10494_source.html#l00059">turbulentFluidThermoModel.H:59</a></div></div>
-<div class="ttc" id="a02683_html_a873c2bd19b9d6641c6c1f03df3a292aa"><div class="ttname"><a href="a02683.html#a873c2bd19b9d6641c6c1f03df3a292aa">Foam::turbulenceModel::nu</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; nu() const  =0</div><div class="ttdoc">Return the laminar viscosity. </div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01040_html_a9f0a1039a5009b124a3d9bc6d9d8e5f4"><div class="ttname"><a href="a01040.html#a9f0a1039a5009b124a3d9bc6d9d8e5f4">Foam::incompressibleTurbulenceModel::mut</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; mut() const </div><div class="ttdoc">Return the turbulence dynamic viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10496_source.html#l00072">incompressibleTurbulenceModel.C:72</a></div></div>
-<div class="ttc" id="a01040_html_ade8fb1431336c11c1314fc324691128f"><div class="ttname"><a href="a01040.html#ade8fb1431336c11c1314fc324691128f">Foam::incompressibleTurbulenceModel::mu</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; mu() const </div><div class="ttdoc">Return the laminar dynamic viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10496_source.html#l00058">incompressibleTurbulenceModel.C:58</a></div></div>
-<div class="ttc" id="a03211_html_af6531e43f0c5439f236dbbba8d0ede60"><div class="ttname"><a href="a03211.html#af6531e43f0c5439f236dbbba8d0ede60">nut</a></div><div class="ttdeci">scalar nut</div><div class="ttdef"><b>Definition:</b> <a href="a03211_source.html#l00005">evaluateNearWall.H:5</a></div></div>
-<div class="ttc" id="a10497_html"><div class="ttname"><a href="a10497.html">incompressibleTurbulenceModel.H</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a03836_html_ab5a19e77b8d6682fbbf4e06d99341df9"><div class="ttname"><a href="a03836.html#ab5a19e77b8d6682fbbf4e06d99341df9">nu</a></div><div class="ttdeci">volScalarField &amp; nu</div><div class="ttdef"><b>Definition:</b> <a href="a03836_source.html#l00185">readMechanicalProperties.H:185</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01040_html_ac8dc824da0ccdabf0634985370560494"><div class="ttname"><a href="a01040.html#ac8dc824da0ccdabf0634985370560494">Foam::incompressibleTurbulenceModel::muEff</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; muEff() const </div><div class="ttdoc">Return the effective dynamic viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10496_source.html#l00086">incompressibleTurbulenceModel.C:86</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;Foam::compressibleTurbulenceModel::compressibleTurbulenceModel</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a00340.html#a237440cee6c5014ebc3b304d76b9f3f7">   41</a></span>&#160;(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">volScalarField</a>&amp; rho,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">volVectorField</a>&amp; U,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; alphaRhoPhi,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; phi,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; propertiesName</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a10732.html#a77b65c2577103c706f0aa2c4cb851bdd">turbulenceModel</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        U,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        alphaRhoPhi,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        phi,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        propertiesName</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    ),</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    rho_(rho)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::surfaceScalarField&gt;</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00340.html#a334d7c89ab4f3e2deccced733b0165e5">   63</a></span>&#160;<a class="code" href="a00340.html#a334d7c89ab4f3e2deccced733b0165e5">Foam::compressibleTurbulenceModel::phi</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a02695.html#a5828da03a859a3aaa358802cd2daf505">phi_</a>.<a class="code" href="a00533.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>() == <a class="code" href="a00535.html">dimensionSet</a>(0, 3, -1, 0, 0))</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a02695.html#a5828da03a859a3aaa358802cd2daf505">phi_</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a02695.html#a5828da03a859a3aaa358802cd2daf505">phi_</a>/<a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(<a class="code" href="a00340.html#ab78356ab728aa016ae26aa9ac0137ec4">rho_</a>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a00340.html#a08af1a37723666be75ea81a381135677">   76</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00340.html#a08af1a37723666be75ea81a381135677">Foam::compressibleTurbulenceModel::correctEnergyTransport</a>()</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10759_html_a768cc91e806b7278729a11134de57ecf"><div class="ttname"><a href="a10759.html#a768cc91e806b7278729a11134de57ecf">Foam::fvc::interpolate</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; interpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;tvf, const surfaceScalarField &amp;faceFlux, Istream &amp;schemeData)</div><div class="ttdoc">Interpolate field onto faces using scheme given by Istream. </div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a00340_html_a334d7c89ab4f3e2deccced733b0165e5"><div class="ttname"><a href="a00340.html#a334d7c89ab4f3e2deccced733b0165e5">Foam::compressibleTurbulenceModel::phi</a></div><div class="ttdeci">virtual tmp&lt; surfaceScalarField &gt; phi() const </div><div class="ttdoc">Return the volumetric flux field. </div><div class="ttdef"><b>Definition:</b> <a href="a10496_source.html#l00063">compressibleTurbulenceModel.C:63</a></div></div>
+<div class="ttc" id="a00535_html"><div class="ttname"><a href="a00535.html">Foam::dimensionSet</a></div><div class="ttdoc">Dimension set for the base types. </div><div class="ttdef"><b>Definition:</b> <a href="a07879_source.html#l00116">dimensionSet.H:116</a></div></div>
+<div class="ttc" id="a00533_html_a6098093e7de06370342a85cfae8b31f5"><div class="ttname"><a href="a00533.html#a6098093e7de06370342a85cfae8b31f5">Foam::DimensionedField::dimensions</a></div><div class="ttdeci">const dimensionSet &amp; dimensions() const </div><div class="ttdoc">Return dimensions. </div><div class="ttdef"><b>Definition:</b> <a href="a07892_source.html#l00046">DimensionedFieldI.H:46</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a00340_html_a08af1a37723666be75ea81a381135677"><div class="ttname"><a href="a00340.html#a08af1a37723666be75ea81a381135677">Foam::compressibleTurbulenceModel::correctEnergyTransport</a></div><div class="ttdeci">virtual void correctEnergyTransport()</div><div class="ttdoc">Correct the turbulence thermal diffusivity for energy transport. </div><div class="ttdef"><b>Definition:</b> <a href="a10496_source.html#l00076">compressibleTurbulenceModel.C:76</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00340_html_ab78356ab728aa016ae26aa9ac0137ec4"><div class="ttname"><a href="a00340.html#ab78356ab728aa016ae26aa9ac0137ec4">Foam::compressibleTurbulenceModel::rho_</a></div><div class="ttdeci">const volScalarField &amp; rho_</div><div class="ttdef"><b>Definition:</b> <a href="a10497_source.html#l00060">compressibleTurbulenceModel.H:60</a></div></div>
+<div class="ttc" id="a10497_html"><div class="ttname"><a href="a10497.html">compressibleTurbulenceModel.H</a></div></div>
+<div class="ttc" id="a02695_html_a5828da03a859a3aaa358802cd2daf505"><div class="ttname"><a href="a02695.html#a5828da03a859a3aaa358802cd2daf505">Foam::turbulenceModel::phi_</a></div><div class="ttdeci">const surfaceScalarField &amp; phi_</div><div class="ttdef"><b>Definition:</b> <a href="a10718_source.html#l00074">turbulenceModel.H:74</a></div></div>
+<div class="ttc" id="a06145_html"><div class="ttname"><a href="a06145.html">surfaceInterpolate.H</a></div><div class="ttdoc">Surface Interpolation. </div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a10732_html_a77b65c2577103c706f0aa2c4cb851bdd"><div class="ttname"><a href="a10732.html#a77b65c2577103c706f0aa2c4cb851bdd">Foam::compressible::turbulenceModel</a></div><div class="ttdeci">ThermalDiffusivity&lt; CompressibleTurbulenceModel&lt; fluidThermo &gt; &gt; turbulenceModel</div><div class="ttdef"><b>Definition:</b> <a href="a10545_source.html#l00060">turbulentFluidThermoModel.H:60</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_d0d736d3dc14112e53d1ae4faa8f931f.html">mesh</a></li><li class="navelem"><a class="el" href="dir_15449a1ef4a09517cc5e2efa6b11565e.html">manipulation</a></li><li class="navelem"><a class="el" href="dir_ddcf5fe0f04ff5f039a323c80f06f3e5.html">createBaffles</a></li><li class="navelem"><a class="el" href="dir_f0d22ac95d480b5787982d11ae824c2e.html">faceSelection</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_d0d736d3dc14112e53d1ae4faa8f931f.html">mesh</a></li><li class="navelem"><a class="el" href="dir_5e38c77784c29cb5c03b448ec3140896.html">generation</a></li><li class="navelem"><a class="el" href="dir_525b031d9ecda2adbb84a631566a9480.html">foamyMesh</a></li><li class="navelem"><a class="el" href="dir_616e89101b4d92e7765258ddbabd9ee1.html">conformalVoronoiMesh</a></li><li class="navelem"><a class="el" href="dir_f1df6d196b3151b9ad71b4ae721f3070.html">searchableSurfaceFeatures</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">faceZoneSelection.C</div>  </div>
+<div class="title">searchableSurfaceFeatures.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04108.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,111 +121,81 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04109.html">faceZoneSelection.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04109.html">searchableSurfaceFeatures.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>faceSelections</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(faceZoneSelection, 0);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a>(faceSelection, faceZoneSelection, dictionary);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a00736.html#aca66a02420a3fe7a7b233fe6dd3c6d1a">Foam::faceSelections::faceZoneSelection::faceZoneSelection</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;(</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> word&amp; <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> fvMesh&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    faceSelection(name, mesh, dict),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    zoneName_(dict_.<a class="code" href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;zoneName&quot;</span>))</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="a00736.html#a58ca8270ae91bb3851224fe8a8a2c782">Foam::faceSelections::faceZoneSelection::~faceZoneSelection</a>()</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(searchableSurfaceFeatures, 0);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a10725.html#a21bac6c4f619436df01a12ba97d11602">defineRunTimeSelectionTable</a>(searchableSurfaceFeatures, dict);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::searchableSurfaceFeatures&gt;</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a02262.html#aecffaec0b3ed92ae567e23404b5eb61b">Foam::searchableSurfaceFeatures::New</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> searchableSurface&amp; surface,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> dictionary&amp; dict</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    word searchableSurfaceFeaturesType = surface.type() + <span class="stringliteral">&quot;Features&quot;</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    dictConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        dictConstructorTablePtr_-&gt;find(searchableSurfaceFeaturesType);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown searchableSurfaceFeatures type &quot;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            &lt;&lt; searchableSurfaceFeaturesType &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid searchableSurfaceFeatures types : &quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            &lt;&lt; dictConstructorTablePtr_-&gt;sortedToc()</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00736.html#ad62952eae380a8c7d1afd69dbc32066d">Foam::faceSelections::faceZoneSelection::select</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;(</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> zoneID,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a10675.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; faceToZoneID,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">boolList</a>&amp; faceToFlip</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> readID = mesh_.faceZones().findZoneID(zoneName_);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (readID == -1)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        (</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="stringliteral">&quot;faceSelections::faceZoneSelection::select(labelList&amp;) const&quot;</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Cannot find faceZone &quot;</span> &lt;&lt; zoneName_ &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;Valid zones are &quot;</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            &lt;&lt; mesh_.faceZones().names()</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> faceZone&amp; fZone = mesh_.faceZones()[readID];</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> autoPtr&lt;searchableSurfaceFeatures&gt;(cstrIter()(<a class="code" href="a02262.html#a3cb4ed4350bdff76b1a056891918e3e8">surface</a>, <a class="code" href="a02262.html#a673ccade304bbbc88a006b8fdcb01523">dict</a>));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;Foam::searchableSurfaceFeatures::searchableSurfaceFeatures</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;(</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> searchableSurface&amp; surface,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> dictionary&amp; dict</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    surface_(surface),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    dict_(dict)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{}</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<a class="code" href="a02262.html#acee044ff4461157403e9d4c78d1bc610">Foam::searchableSurfaceFeatures::~searchableSurfaceFeatures</a>()</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fZone, i)</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = fZone[i];</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">if</span> (faceToZoneID[faceI] == -1)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            faceToZoneID[faceI] = zoneID;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            faceToFlip[faceI] = fZone.flipMap()[i];</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (faceToZoneID[faceI] != zoneID)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            (</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                <span class="stringliteral">&quot;faceSelections::faceZoneSelection::select(labelList&amp;) const&quot;</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            )   &lt;&lt; <span class="stringliteral">&quot;Face &quot;</span> &lt;&lt; faceI &lt;&lt; <span class="stringliteral">&quot; already in faceZone &quot;</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                &lt;&lt; faceToZoneID[faceI]</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="a00726.html#ad3eb5d765fa8fc6c4f0cfd7bd4b995ab">faceSelection::select</a>(zoneID, faceToZoneID, faceToFlip);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a00736_html_aca66a02420a3fe7a7b233fe6dd3c6d1a"><div class="ttname"><a href="a00736.html#aca66a02420a3fe7a7b233fe6dd3c6d1a">Foam::faceSelections::faceZoneSelection::faceZoneSelection</a></div><div class="ttdeci">faceZoneSelection(const word &amp;name, const fvMesh &amp;mesh, const dictionary &amp;dict)</div><div class="ttdoc">Construct from dictionary. </div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a00736_html_ad62952eae380a8c7d1afd69dbc32066d"><div class="ttname"><a href="a00736.html#ad62952eae380a8c7d1afd69dbc32066d">Foam::faceSelections::faceZoneSelection::select</a></div><div class="ttdeci">virtual void select(const label zoneID, labelList &amp;, boolList &amp;) const </div><div class="ttdoc">Apply this selector. </div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00736_html_a58ca8270ae91bb3851224fe8a8a2c782"><div class="ttname"><a href="a00736.html#a58ca8270ae91bb3851224fe8a8a2c782">Foam::faceSelections::faceZoneSelection::~faceZoneSelection</a></div><div class="ttdeci">virtual ~faceZoneSelection()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a10675_html_a5e3d604f75e54acc2c36172444a6f612"><div class="ttname"><a href="a10675.html#a5e3d604f75e54acc2c36172444a6f612">Foam::boolList</a></div><div class="ttdeci">List&lt; bool &gt; boolList</div><div class="ttdoc">Bool container classes. </div><div class="ttdef"><b>Definition:</b> <a href="a08753_source.html#l00050">boolList.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a04109_html"><div class="ttname"><a href="a04109.html">faceZoneSelection.H</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00726_html_ad3eb5d765fa8fc6c4f0cfd7bd4b995ab"><div class="ttname"><a href="a00726.html#ad3eb5d765fa8fc6c4f0cfd7bd4b995ab">Foam::faceSelection::select</a></div><div class="ttdeci">virtual void select(const label, labelList &amp;, boolList &amp;) const  =0</div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10675.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00056">labelList.H:56</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a03837_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03837.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a21bac6c4f619436df01a12ba97d11602"><div class="ttname"><a href="a10725.html#a21bac6c4f619436df01a12ba97d11602">Foam::defineRunTimeSelectionTable</a></div><div class="ttdeci">defineRunTimeSelectionTable(reactionRateFlameArea, dictionary)</div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a02262_html_a3cb4ed4350bdff76b1a056891918e3e8"><div class="ttname"><a href="a02262.html#a3cb4ed4350bdff76b1a056891918e3e8">Foam::searchableSurfaceFeatures::surface</a></div><div class="ttdeci">const searchableSurface &amp; surface() const </div><div class="ttdoc">Return a reference to the searchable surface. </div><div class="ttdef"><b>Definition:</b> <a href="a04109_source.html#l00124">searchableSurfaceFeatures.H:124</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a02262_html_acee044ff4461157403e9d4c78d1bc610"><div class="ttname"><a href="a02262.html#acee044ff4461157403e9d4c78d1bc610">Foam::searchableSurfaceFeatures::~searchableSurfaceFeatures</a></div><div class="ttdeci">virtual ~searchableSurfaceFeatures()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02262_html_a673ccade304bbbc88a006b8fdcb01523"><div class="ttname"><a href="a02262.html#a673ccade304bbbc88a006b8fdcb01523">Foam::searchableSurfaceFeatures::dict</a></div><div class="ttdeci">const dictionary &amp; dict() const </div><div class="ttdoc">Return a reference to the dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04109_source.html#l00130">searchableSurfaceFeatures.H:130</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a04109_html"><div class="ttname"><a href="a04109.html">searchableSurfaceFeatures.H</a></div></div>
+<div class="ttc" id="a02262_html_aecffaec0b3ed92ae567e23404b5eb61b"><div class="ttname"><a href="a02262.html#aecffaec0b3ed92ae567e23404b5eb61b">Foam::searchableSurfaceFeatures::New</a></div><div class="ttdeci">static autoPtr&lt; searchableSurfaceFeatures &gt; New(const searchableSurface &amp;surface, const dictionary &amp;dict)</div><div class="ttdoc">Return a reference to the selected searchableSurfaceFeatures. </div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

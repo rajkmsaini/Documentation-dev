@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_5d57e3901430bcc99a7ddac11a899224.html">fvMatrices</a></li><li class="navelem"><a class="el" href="dir_21e8caa1e273a2fd1ca8d8e5e2ca4486.html">solvers</a></li><li class="navelem"><a class="el" href="dir_f99e131fc9aeec90fd7de12971615c66.html">GAMGSymSolver</a></li><li class="navelem"><a class="el" href="dir_074079a069de8f79c099d1df5b7d181e.html">GAMGAgglomerations</a></li><li class="navelem"><a class="el" href="dir_c937caec585cfc02c7caaffd869e0bf3.html">faceAreaPairGAMGAgglomeration</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_211d73fd6015a334f4cd90c9fb88c421.html">gradSchemes</a></li><li class="navelem"><a class="el" href="dir_a9b56d32af131ce544d3e9340bd38699.html">LeastSquaresGrad</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">faceAreaPairGAMGAgglomeration.C</div>  </div>
+<div class="title">LeastSquaresGrad.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05736.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,113 +121,142 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05737.html">faceAreaPairGAMGAgglomeration.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05738.html">LeastSquaresGrad.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05744.html">LeastSquaresVectors.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05729.html">gaussGrad.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06158.html">volMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05199.html">zeroGradientFvPatchField.H</a>&quot;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(faceAreaPairGAMGAgglomeration, 0);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        GAMGAgglomeration,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        faceAreaPairGAMGAgglomeration,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        lduMesh</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    );</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    (</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        GAMGAgglomeration,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        faceAreaPairGAMGAgglomeration,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        geometry</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    );</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> Stencil&gt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a02618.html">Foam::tmp</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;&lt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a00921.html">Foam::GeometricField</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    &lt;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keyword">typename</span> <a class="code" href="a01738.html#a178b9c293efe9e4a0ed072901783c692">Foam::outerProduct&lt;Foam::vector, Type&gt;::type</a>,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a00886.html">Foam::fvPatchField</a>,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a02805.html">Foam::volMesh</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    &gt;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a01287.html#a953dc53a2936ee24fc70db6c322dd50a">Foam::fv::LeastSquaresGrad&lt;Type, Stencil&gt;::calcGrad</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;(</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> GeometricField&lt;Type, fvPatchField, volMesh&gt;&amp; vtf,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> word&amp; name</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">outerProduct&lt;vector, Type&gt;::type</a> GradType;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = vtf.mesh();</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a00711.html#a7906519c7c208b56f01aaf7addac8958">Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a00711.html#a7906519c7c208b56f01aaf7addac8958">   56</a></span>&#160;(</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01276.html">lduMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; controlDict</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;:</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a01751.html">pairGAMGAgglomeration</a>(mesh, controlDict)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; fvmesh = refCast&lt;const fvMesh&gt;(<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">//agglomerate(mesh, sqrt(fvmesh.magSf().internalField()));</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    agglomerate</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        mesh,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <a class="code" href="a10675.html#aa9d8965aaebcf396a2acfeed4942976b">cmptMultiply</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            (</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                fvmesh.<a class="code" href="a00868.html#a27258a12b9e2a3fbb5121219b4ce84f9">Sf</a>().<a class="code" href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">internalField</a>()</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;               /<a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(fvmesh.<a class="code" href="a00868.html#abe570f4831157153654b9ffb2676214f">magSf</a>().<a class="code" href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">internalField</a>()),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                <a class="code" href="a10675.html#a7ea82552101f041fad7635b3ed036a84">vector</a>(1, 1.01, 1.02)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                <span class="comment">//vector::one</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            )</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        )</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    );</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<a class="code" href="a00711.html#a7906519c7c208b56f01aaf7addac8958">Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a00711.html#a771335514475afe4f926dd75ab90ffd2">   84</a></span>&#160;(</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01276.html">lduMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; cellVolumes,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00749.html">vectorField</a>&amp; faceAreas,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; controlDict</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;:</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="a01751.html">pairGAMGAgglomeration</a>(mesh, controlDict)</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//agglomerate(mesh, sqrt(mag(faceAreas)));</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    agglomerate</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    (</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        mesh,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        (</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <a class="code" href="a10675.html#aa9d8965aaebcf396a2acfeed4942976b">cmptMultiply</a></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            (</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                faceAreas</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;               /<a class="code" href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(faceAreas)),</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <a class="code" href="a10675.html#a7ea82552101f041fad7635b3ed036a84">vector</a>(1, 1.01, 1.02)</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                <span class="comment">//vector::one</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            )</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        )</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    );</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Get reference to least square vectors</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> LeastSquaresVectors&lt;Stencil&gt;&amp; lsv = <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">LeastSquaresVectors&lt;Stencil&gt;::New</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    (</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        mesh</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    );</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    tmp&lt;GeometricField&lt;GradType, fvPatchField, volMesh&gt; &gt; tlsGrad</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    (</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">new</span> GeometricField&lt;GradType, fvPatchField, volMesh&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        (</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            IOobject</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            (</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                name,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                vtf.instance(),</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                IOobject::NO_READ,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                IOobject::NO_WRITE</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            ),</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            mesh,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            dimensioned&lt;GradType&gt;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            (</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                <span class="stringliteral">&quot;zero&quot;</span>,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                vtf.dimensions()/<a class="code" href="a10725.html#a2c2f48175b211109246a24c633d02441">dimLength</a>,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                pTraits&lt;GradType&gt;::zero</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            ),</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            zeroGradientFvPatchField&lt;GradType&gt;::typeName</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        )</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    );</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    GeometricField&lt;GradType, fvPatchField, volMesh&gt;&amp; lsGrad = tlsGrad();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    Field&lt;GradType&gt;&amp; lsGradIf = lsGrad;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> extendedCentredCellToCellStencil&amp; stencil = lsv.stencil();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> List&lt;List&lt;label&gt; &gt;&amp; stencilAddr = stencil.stencil();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> List&lt;List&lt;vector&gt; &gt;&amp; lsvs = lsv.vectors();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Construct flat version of vtf</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// including all values referred to by the stencil</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    List&lt;Type&gt; flatVtf(stencil.map().constructSize(), pTraits&lt;Type&gt;::zero);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// Insert internal values</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(vtf, celli)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        flatVtf[celli] = vtf[celli];</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// Insert boundary values</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(vtf.boundaryField(), <a class="code" href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keyword">const</span> fvPatchField&lt;Type&gt;&amp; ptf = vtf.boundaryField()[<a class="code" href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nCompact =</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            ptf.patch().start()</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;          - mesh.nInternalFaces()</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;          + mesh.nCells();</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00711_html_a7906519c7c208b56f01aaf7addac8958"><div class="ttname"><a href="a00711.html#a7906519c7c208b56f01aaf7addac8958">Foam::faceAreaPairGAMGAgglomeration::faceAreaPairGAMGAgglomeration</a></div><div class="ttdeci">faceAreaPairGAMGAgglomeration(const lduMesh &amp;mesh, const dictionary &amp;controlDict)</div><div class="ttdoc">Construct given mesh and controls. </div><div class="ttdef"><b>Definition:</b> <a href="a05736_source.html#l00056">faceAreaPairGAMGAgglomeration.C:56</a></div></div>
-<div class="ttc" id="a01751_html"><div class="ttname"><a href="a01751.html">Foam::pairGAMGAgglomeration</a></div><div class="ttdoc">Agglomerate using the pair algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="a08308_source.html#l00049">pairGAMGAgglomeration.H:49</a></div></div>
-<div class="ttc" id="a10675_html_a8616bd62eebf2342a80222fecb1bda71"><div class="ttname"><a href="a10675.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a></div><div class="ttdeci">dimensionedScalar sqrt(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00142">dimensionedScalar.C:142</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00868_html_a27258a12b9e2a3fbb5121219b4ce84f9"><div class="ttname"><a href="a00868.html#a27258a12b9e2a3fbb5121219b4ce84f9">Foam::fvMesh::Sf</a></div><div class="ttdeci">const surfaceVectorField &amp; Sf() const </div><div class="ttdoc">Return cell face area vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00347">fvMeshGeometry.C:347</a></div></div>
-<div class="ttc" id="a00913_html_a9536140d36d69bbac40496f6b817aa0a"><div class="ttname"><a href="a00913.html#a9536140d36d69bbac40496f6b817aa0a">Foam::GeometricField::internalField</a></div><div class="ttdeci">InternalField &amp; internalField()</div><div class="ttdoc">Return internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00688">GeometricField.C:688</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01276_html"><div class="ttname"><a href="a01276.html">Foam::lduMesh</a></div><div class="ttdoc">Abstract base class for meshes which provide LDU addressing for the construction of lduMatrix and LDU...</div><div class="ttdef"><b>Definition:</b> <a href="a08420_source.html#l00051">lduMesh.H:51</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a00868_html_abe570f4831157153654b9ffb2676214f"><div class="ttname"><a href="a00868.html#abe570f4831157153654b9ffb2676214f">Foam::fvMesh::magSf</a></div><div class="ttdeci">const surfaceScalarField &amp; magSf() const </div><div class="ttdoc">Return cell face area magnitudes. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00358">fvMeshGeometry.C:358</a></div></div>
-<div class="ttc" id="a05737_html"><div class="ttname"><a href="a05737.html">faceAreaPairGAMGAgglomeration.H</a></div></div>
-<div class="ttc" id="a10675_html_afa9b44b3e43e788db69b2360f64c0aef"><div class="ttname"><a href="a10675.html#afa9b44b3e43e788db69b2360f64c0aef">Foam::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream)</div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a10675_html_aa9d8965aaebcf396a2acfeed4942976b"><div class="ttname"><a href="a10675.html#aa9d8965aaebcf396a2acfeed4942976b">Foam::cmptMultiply</a></div><div class="ttdeci">dimensioned&lt; Type &gt; cmptMultiply(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a10675_html_a7ea82552101f041fad7635b3ed036a84"><div class="ttname"><a href="a10675.html#a7ea82552101f041fad7635b3ed036a84">Foam::vector</a></div><div class="ttdeci">Vector&lt; scalar &gt; vector</div><div class="ttdoc">A scalar version of the templated Vector. </div><div class="ttdef"><b>Definition:</b> <a href="a08993_source.html#l00049">vector.H:49</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(ptf, i)</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            flatVtf[nCompact++] = ptf[i];</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">// Do all swapping to complete flatVtf</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    stencil.map().distribute(flatVtf);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// Accumulate the cell-centred gradient from the</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// weighted least-squares vectors and the flattened field values</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stencilAddr, celli)</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; compactCells = stencilAddr[celli];</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keyword">const</span> List&lt;vector&gt;&amp; lsvc = lsvs[celli];</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(compactCells, i)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            lsGradIf[celli] += lsvc[i]*flatVtf[compactCells[i]];</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="comment">// Correct the boundary conditions</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    lsGrad.correctBoundaryConditions();</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="a02919.html#a00a7f09fddd305c7a7977494b2a6a952">gaussGrad&lt;Type&gt;::correctBoundaryConditions</a>(vtf, lsGrad);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">return</span> tlsGrad;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a04316_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04316.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04316_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
+<div class="ttc" id="a10725_html_a2c2f48175b211109246a24c633d02441"><div class="ttname"><a href="a10725.html#a2c2f48175b211109246a24c633d02441">Foam::dimLength</a></div><div class="ttdeci">const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07882_source.html#l00050">dimensionSets.H:50</a></div></div>
+<div class="ttc" id="a01287_html_a953dc53a2936ee24fc70db6c322dd50a"><div class="ttname"><a href="a01287.html#a953dc53a2936ee24fc70db6c322dd50a">Foam::fv::LeastSquaresGrad::calcGrad</a></div><div class="ttdeci">virtual tmp&lt; GeometricField&lt; typename outerProduct&lt; vector, Type &gt;::type, fvPatchField, volMesh &gt; &gt; calcGrad(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;vsf, const word &amp;name) const </div><div class="ttdoc">Return the gradient of the given field to the gradScheme::grad. </div></div>
+<div class="ttc" id="a10725_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10725.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08887_source.html#l00056">labelList.H:56</a></div></div>
+<div class="ttc" id="a05199_html"><div class="ttname"><a href="a05199.html">zeroGradientFvPatchField.H</a></div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a05738_html"><div class="ttname"><a href="a05738.html">LeastSquaresGrad.H</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a05729_html"><div class="ttname"><a href="a05729.html">gaussGrad.H</a></div></div>
+<div class="ttc" id="a06158_html"><div class="ttname"><a href="a06158.html">volMesh.H</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a01738_html_a178b9c293efe9e4a0ed072901783c692"><div class="ttname"><a href="a01738.html#a178b9c293efe9e4a0ed072901783c692">Foam::outerProduct::type</a></div><div class="ttdeci">typeOfRank&lt; typename pTraits&lt; arg1 &gt;::cmptType, int(pTraits&lt; arg1 &gt;::rank)+int(pTraits&lt; arg2 &gt;::rank) &gt;::type type</div><div class="ttdef"><b>Definition:</b> <a href="a09051_source.html#l00072">products.H:72</a></div></div>
+<div class="ttc" id="a02919_html_a00a7f09fddd305c7a7977494b2a6a952"><div class="ttname"><a href="a02919.html#a00a7f09fddd305c7a7977494b2a6a952">correctBoundaryConditions</a></div><div class="ttdeci">U correctBoundaryConditions()</div></div>
+<div class="ttc" id="a02805_html"><div class="ttname"><a href="a02805.html">Foam::volMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a06158_source.html#l00047">volMesh.H:47</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a05744_html"><div class="ttname"><a href="a05744.html">LeastSquaresVectors.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

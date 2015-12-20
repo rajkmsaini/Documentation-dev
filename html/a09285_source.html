@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_5fa51d5799d140e0f60107297bff2985.html">utilities</a></li><li class="navelem"><a class="el" href="dir_ef7b0d097825adb3463d5bbbbe4f5a27.html">blendingFactor</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e82badcb6e86a7406e8ef8dc75ac578f.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_968d740a125fac5a9438cf439486387f.html">fvTools</a></li><li class="navelem"><a class="el" href="dir_e24ccc8a8eb34dca40168be41550388d.html">calcFvcDiv</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">blendingFactorTemplates.C</div>  </div>
+<div class="title">calcFvcDivTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09285.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,123 +121,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05563.html">gaussConvectionScheme.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05932.html">blendedSchemeBase.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05617.html">fvcCellReduce.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a00913.html">Foam::volScalarField</a>&amp; Foam::blendingFactor::factor</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00140.html#a7efa0a50911fc0d9fa25db037eb1c89f">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; field</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a> fieldName = <span class="stringliteral">&quot;blendingFactor:&quot;</span> + field.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> (!obr_.foundObject&lt;<a class="code" href="a00913.html">volScalarField</a>&gt;(fieldName))</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh = refCast&lt;const fvMesh&gt;(obr_);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="a00913.html">volScalarField</a>* factorPtr =</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keyword">new</span> <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            (</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                (</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                    fieldName,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                    mesh.<a class="code" href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                    <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                    IOobject::NO_READ,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                    IOobject::NO_WRITE</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                ),</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                mesh,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">dimless</a>, 0.0),</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            );</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        obr_.<a class="code" href="a02134.html#af5d1fdcbfe78592afb590a4c244acf20">store</a>(factorPtr);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const_cast&lt;</span><a class="code" href="a00913.html">volScalarField</a>&amp;<span class="keyword">&gt;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            obr_.lookupObject&lt;<a class="code" href="a00913.html">volScalarField</a>&gt;(fieldName)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        );</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">void</span> Foam::blendingFactor::calc()</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> fieldType;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (!obr_.<a class="code" href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">foundObject</a>&lt;fieldType&gt;(fieldName_))</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = refCast&lt;const fvMesh&gt;(obr_);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> fieldType&amp; field = mesh.lookupObject&lt;fieldType&gt;(fieldName_);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">const</span> word divScheme(<span class="stringliteral">&quot;div(&quot;</span> + phiName_ + <span class="charliteral">&#39;,&#39;</span> + fieldName_ + <span class="charliteral">&#39;)&#39;</span>);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    ITstream&amp; its = mesh.divScheme(divScheme);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&amp; phi =</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        mesh.lookupObject&lt;<a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a>&gt;(phiName_);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    tmp&lt;fv::convectionScheme&lt;Type&gt; &gt; cs =</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a00398.html#af588839e72c5544d36b0eb36a09e83aa">fv::convectionScheme&lt;Type&gt;::New</a>(mesh, phi, its);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">const</span> fv::gaussConvectionScheme&lt;Type&gt;&amp; gcs =</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        refCast&lt;const fv::gaussConvectionScheme&lt;Type&gt; &gt;(cs());</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> surfaceInterpolationScheme&lt;Type&gt;&amp; interpScheme =</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        gcs.interpScheme();</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="a10675.html#a7f38c7df863d37f5357047d27dab7711">isA</a>&lt;blendedSchemeBase&lt;Type&gt; &gt;(interpScheme))</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a>(<span class="stringliteral">&quot;void Foam::blendingFactor::execute()&quot;</span>)</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            &lt;&lt; interpScheme.typeName &lt;&lt; <span class="stringliteral">&quot; is not a blended scheme&quot;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// retrieve the face-based blending factor</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">const</span> blendedSchemeBase&lt;Type&gt;&amp; blendedScheme =</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        refCast&lt;const blendedSchemeBase&lt;Type&gt; &gt;(interpScheme);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">surfaceScalarField</a> factorf(blendedScheme.blendingFactor(field));</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// convert into vol field whose values represent the local face maxima</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; factor = this-&gt;factor(field);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    factor = <a class="code" href="a10709.html#ad1eef12eff315ed10d8e18008e01b8eb">fvc::cellReduce</a>(factorf, maxEqOp&lt;scalar&gt;());</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    factor.correctBoundaryConditions();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01678_html_af3bf58996b7f5a073485a5590fbebd84"><div class="ttname"><a href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">Foam::objectRegistry::foundObject</a></div><div class="ttdeci">bool foundObject(const word &amp;name) const </div><div class="ttdoc">Is the named Type found? </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00142">objectRegistryTemplates.C:142</a></div></div>
-<div class="ttc" id="a10675_html_a625a5be4b29d27fa4e5d9e36ba649307"><div class="ttname"><a href="a10675.html#a625a5be4b29d27fa4e5d9e36ba649307">Foam::surfaceScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt; surfaceScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a05563_html"><div class="ttname"><a href="a05563.html">gaussConvectionScheme.H</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a05617_html"><div class="ttname"><a href="a05617.html">fvcCellReduce.H</a></div><div class="ttdoc">Construct a volume field from a surface field using a combine operator. </div></div>
-<div class="ttc" id="a00868_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00243">fvMesh.H:243</a></div></div>
-<div class="ttc" id="a05932_html"><div class="ttname"><a href="a05932.html">blendedSchemeBase.H</a></div></div>
-<div class="ttc" id="a00398_html_af588839e72c5544d36b0eb36a09e83aa"><div class="ttname"><a href="a00398.html#af588839e72c5544d36b0eb36a09e83aa">Foam::fv::convectionScheme::New</a></div><div class="ttdeci">static tmp&lt; convectionScheme&lt; Type &gt; &gt; New(const fvMesh &amp;mesh, const surfaceScalarField &amp;faceFlux, Istream &amp;schemeData)</div><div class="ttdoc">Return a pointer to a new convectionScheme created on freestore. </div><div class="ttdef"><b>Definition:</b> <a href="a05559_source.html#l00058">convectionScheme.C:58</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a02134_html_af5d1fdcbfe78592afb590a4c244acf20"><div class="ttname"><a href="a02134.html#af5d1fdcbfe78592afb590a4c244acf20">Foam::regIOobject::store</a></div><div class="ttdeci">void store()</div><div class="ttdoc">Transfer ownership of this object to its registry. </div><div class="ttdef"><b>Definition:</b> <a href="a07785_source.html#l00034">regIOobjectI.H:34</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_a7f38c7df863d37f5357047d27dab7711"><div class="ttname"><a href="a10675.html#a7f38c7df863d37f5357047d27dab7711">Foam::isA</a></div><div class="ttdeci">bool isA(const Type &amp;t)</div><div class="ttdoc">Check if a dynamic_cast to typeid is possible. </div><div class="ttdef"><b>Definition:</b> <a href="a07813_source.html#l00134">typeInfo.H:134</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a10675_html_a22e1fa85a26a2936be87e1582718e0cc"><div class="ttname"><a href="a10675.html#a22e1fa85a26a2936be87e1582718e0cc">Foam::dimless</a></div><div class="ttdeci">const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00047">dimensionSets.H:47</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a10709_html_ad1eef12eff315ed10d8e18008e01b8eb"><div class="ttname"><a href="a10709.html#ad1eef12eff315ed10d8e18008e01b8eb">Foam::fvc::cellReduce</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; cellReduce(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf, const CombineOp &amp;cop)</div><div class="ttdef"><b>Definition:</b> <a href="a05616_source.html#l00046">fvcCellReduce.C:46</a></div></div>
-<div class="ttc" id="a10675_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05682.html">fvcDiv.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> FieldType&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> Foam::calcFvcDiv::calcDiv</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> word&amp; fieldName,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> word&amp; resultName,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">bool</span>&amp; processed</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = refCast&lt;const fvMesh&gt;(obr_);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (mesh.foundObject&lt;FieldType&gt;(fieldName))</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keyword">const</span> FieldType&amp; vf = mesh.lookupObject&lt;FieldType&gt;(fieldName);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; field = divField(resultName, vf.dimensions());</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        field = <a class="code" href="a10759.html#a585533948ad80abfe589d920c641f251">fvc::div</a>(vf);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        processed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05682_html"><div class="ttname"><a href="a05682.html">fvcDiv.H</a></div><div class="ttdoc">Calculate the divergence of the given field. </div></div>
+<div class="ttc" id="a10725_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a10759_html_a585533948ad80abfe589d920c641f251"><div class="ttname"><a href="a10759.html#a585533948ad80abfe589d920c641f251">Foam::fvc::div</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; div(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05681_source.html#l00047">fvcDiv.C:47</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

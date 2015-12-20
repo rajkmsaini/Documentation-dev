@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_466e4f5b4cc1582939ab4ceba36098d8.html">IOstreams</a></li><li class="navelem"><a class="el" href="dir_3bcf6d087081efad30da69158be5063e.html">IOstreams</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_5b778b533e0642b15b61ea7e4b236f8c.html">error</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">INew.H</div>  </div>
+<div class="title">errorManip.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07725.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,85 +120,158 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::INew</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::errorManip</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A helper class when constructing from an Istream or dictionary</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef INew_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define INew_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08395.html">autoPtr.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// Forward declaration of classes</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">class </span>Istream;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Error stream manipulators for exit and abort which may terminate the</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    program or throw an exception depending if the exception</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    handling has been switched on (off by default).</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">Usage</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    \code</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">        error &lt;&lt; &quot;message1&quot; &lt;&lt; &quot;message2&quot; &lt;&lt; FoamDataType &lt;&lt; exit(error, errNo);</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">        error &lt;&lt; &quot;message1&quot; &lt;&lt; &quot;message2&quot; &lt;&lt; FoamDataType &lt;&lt; abort(error);</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    \endcode</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifndef errorManip_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define errorManip_H</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07724.html">error.H</a>&quot;</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">                           Class INew Declaration</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a01062.html">   49</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a01062.html">INew</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a01062.html#a72bd9af099dd14e8f55deb13c867cdb5">   55</a></span>&#160;    <span class="comment">//- Construct null</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a01062.html#a72bd9af099dd14e8f55deb13c867cdb5">INew</a>()</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00676.html">   50</a></span>&#160;<span class="comment">// Forward declaration of friend functions and operators</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err&gt; <span class="keyword">class </span><a class="code" href="a00676.html">errorManip</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err&gt; <a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt;(Ostream&amp;, errorManip&lt;Err&gt;);</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a00677.html">   53</a></span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err, <span class="keyword">class</span> T&gt; <span class="keyword">class </span><a class="code" href="a00677.html">errorManipArg</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt;(Ostream&amp;, errorManipArg&lt;Err, T&gt;);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">   59</a></span>&#160;    <span class="comment">//- Construct from Istream</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a00084.html">autoPtr&lt;T&gt;</a> <a class="code" href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">operator()</a>(<a class="code" href="a01191.html">Istream</a>&amp; is)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> T::New(is);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a01062.html#a178c99b2e0e3465f05cc2fbe4e04ceb8">   65</a></span>&#160;    <span class="comment">//- Construct from word and Istream</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a00084.html">autoPtr&lt;T&gt;</a> <a class="code" href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">operator()</a>(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp;, <a class="code" href="a01191.html">Istream</a>&amp; is)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> T::New(is);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="a01062.html#a8d9bde47c7319ac50321d8bcec8f1b7b">   71</a></span>&#160;    <span class="comment">//- Construct from dictionary</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a00084.html">autoPtr&lt;T&gt;</a> <a class="code" href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">operator()</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> T::New(dict);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">                         Class errorManip Declaration</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">class </span><a class="code" href="a00676.html">errorManip</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    void (Err::*fPtr_)();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    Err&amp; err_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a00676.html#a2c0200a23ae61e9affbffeb63ef405c0">   70</a></span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a00676.html#a2c0200a23ae61e9affbffeb63ef405c0">errorManip</a>(<span class="keywordtype">void</span> (Err::*fPtr)(), Err&amp; t)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    :</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        fPtr_(fPtr),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        err_(t)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    {}</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a01062.html#aa418bce01e6e2a8e7507cce9ed80f414">   77</a></span>&#160;    <span class="comment">//- Construct from word and dictionary</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a00084.html">autoPtr&lt;T&gt;</a> <a class="code" href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">operator()</a>(<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp;, <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> T::New(dict);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">friend</span> <a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt; &lt;Err&gt;(<a class="code" href="a01736.html">Ostream</a>&amp; os, <a class="code" href="a00676.html">errorManip&lt;Err&gt;</a> m);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;};</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="a10725.html#af8a8ccd9be247980c6fe1969bc3c68d1">   81</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">inline</span> <a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt;(Ostream&amp; os, errorManip&lt;Err&gt; m)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    (m.err_.*m.fPtr_)();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">                        Class errorManipArg Declaration</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a08395_html"><div class="ttname"><a href="a08395.html">autoPtr.H</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a01062_html"><div class="ttname"><a href="a01062.html">Foam::INew</a></div><div class="ttdoc">A helper class when constructing from an Istream or dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00049">INew.H:49</a></div></div>
-<div class="ttc" id="a01062_html_ad7f69aa09dc8d4ff8f74f184f1e516c1"><div class="ttname"><a href="a01062.html#ad7f69aa09dc8d4ff8f74f184f1e516c1">Foam::INew::operator()</a></div><div class="ttdeci">autoPtr&lt; T &gt; operator()(Istream &amp;is) const </div><div class="ttdoc">Construct from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00059">INew.H:59</a></div></div>
-<div class="ttc" id="a01062_html_a72bd9af099dd14e8f55deb13c867cdb5"><div class="ttname"><a href="a01062.html#a72bd9af099dd14e8f55deb13c867cdb5">Foam::INew::INew</a></div><div class="ttdeci">INew()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00055">INew.H:55</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">//- errorManipArg</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">class </span>errorManipArg</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;{</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    void (Err::*fPtr_)(<span class="keyword">const</span> <a class="code" href="a10725.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    Err&amp; err_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="a10725.html#ae57fda0abb14bb0944947c463c6e09d4">T</a> arg_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="a00677.html#a8bda01f132cc67dfe93d377592a4a914">  102</a></span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="a00677.html#a8bda01f132cc67dfe93d377592a4a914">errorManipArg</a>(<span class="keywordtype">void</span> (Err::*fPtr)(<span class="keyword">const</span> <a class="code" href="a10725.html#ae57fda0abb14bb0944947c463c6e09d4">T</a>), Err&amp; t, <span class="keyword">const</span> <a class="code" href="a10725.html#ae57fda0abb14bb0944947c463c6e09d4">T</a> i)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    :</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        fPtr_(fPtr),</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        err_(t),</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        arg_(i)</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    {}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">friend</span> <a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt; &lt;Err, T&gt;(<a class="code" href="a01736.html">Ostream</a>&amp; os, <a class="code" href="a00677.html">errorManipArg&lt;Err, T&gt;</a> m);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;};</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="a10725.html#a94abdd69ea77beb2cb2d0486f64a4de9">  114</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Err, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">inline</span> <a class="code" href="a01736.html">Ostream</a>&amp; operator&lt;&lt;(Ostream&amp; os, errorManipArg&lt;Err, T&gt; m)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;{</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    (m.err_.*m.fPtr_)(m.arg_);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="a10725.html#a06ca7250d8e89caf05243ec094843642">  124</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00677.html">errorManipArg&lt;error, int&gt;</a></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a00675.html">error</a>&amp; err, <span class="keyword">const</span> <span class="keywordtype">int</span> errNo = 1)</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;{</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00677.html">errorManipArg&lt;error, int&gt;</a>(&amp;<a class="code" href="a00675.html#a8e05d3ad7f8730ff9a8bab5360fd7854">error::exit</a>, err, errNo);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="a10725.html#a447107a607d03e417307c203fa5fb44b">  131</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00676.html">errorManip&lt;error&gt;</a></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a00675.html">error</a>&amp; err)</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;{</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00676.html">errorManip&lt;error&gt;</a>(&amp;<a class="code" href="a00675.html#ac54f53dc342019e8db34f4aa581a5792">error::abort</a>, err);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="a10725.html#a678f290932b0bd491da283be98f5826a">  138</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00677.html">errorManipArg&lt;IOerror, int&gt;</a></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a01173.html">IOerror</a>&amp; err, <span class="keyword">const</span> <span class="keywordtype">int</span> errNo = 1)</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;{</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00677.html">errorManipArg&lt;IOerror, int&gt;</a>(&amp;<a class="code" href="a01173.html#a8e05d3ad7f8730ff9a8bab5360fd7854">IOerror::exit</a>, err, errNo);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="a10725.html#a96e1589c449543d30e3c99729ca87b25">  145</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a00676.html">errorManip&lt;IOerror&gt;</a></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a01173.html">IOerror</a>&amp; err)</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;{</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00676.html">errorManip&lt;IOerror&gt;</a>(&amp;<a class="code" href="a01173.html#ac54f53dc342019e8db34f4aa581a5792">IOerror::abort</a>, err);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;}</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01173_html"><div class="ttname"><a href="a01173.html">Foam::IOerror</a></div><div class="ttdoc">Report an I/O error. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00196">error.H:196</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a00676_html"><div class="ttname"><a href="a00676.html">Foam::errorManip</a></div><div class="ttdoc">Error stream manipulators for exit and abort which may terminate the program or throw an exception de...</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00050">errorManip.H:50</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00675_html"><div class="ttname"><a href="a00675.html">Foam::error</a></div><div class="ttdoc">Class to handle errors and exceptions in a simple, consistent stream-based manner. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00066">error.H:66</a></div></div>
+<div class="ttc" id="a10725_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10725.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00131">errorManip.H:131</a></div></div>
+<div class="ttc" id="a00675_html_a8e05d3ad7f8730ff9a8bab5360fd7854"><div class="ttname"><a href="a00675.html#a8e05d3ad7f8730ff9a8bab5360fd7854">Foam::error::exit</a></div><div class="ttdeci">void exit(const int errNo=1)</div><div class="ttdoc">Exit : can be called for any error to exit program. </div><div class="ttdef"><b>Definition:</b> <a href="a07723_source.html#l00168">error.C:168</a></div></div>
+<div class="ttc" id="a00675_html_ac54f53dc342019e8db34f4aa581a5792"><div class="ttname"><a href="a00675.html#ac54f53dc342019e8db34f4aa581a5792">Foam::error::abort</a></div><div class="ttdeci">void abort()</div><div class="ttdoc">Abort : used to stop code for fatal errors. </div><div class="ttdef"><b>Definition:</b> <a href="a07723_source.html#l00209">error.C:209</a></div></div>
+<div class="ttc" id="a00677_html_a8bda01f132cc67dfe93d377592a4a914"><div class="ttname"><a href="a00677.html#a8bda01f132cc67dfe93d377592a4a914">Foam::errorManipArg::errorManipArg</a></div><div class="ttdeci">errorManipArg(void(Err::*fPtr)(const T), Err &amp;t, const T i)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00102">errorManip.H:102</a></div></div>
+<div class="ttc" id="a10725_html_ae57fda0abb14bb0944947c463c6e09d4"><div class="ttname"><a href="a10725.html#ae57fda0abb14bb0944947c463c6e09d4">Foam::T</a></div><div class="ttdeci">void T(FieldField&lt; Field, Type &gt; &amp;f1, const FieldField&lt; Field, Type &gt; &amp;f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00055">FieldFieldFunctions.C:55</a></div></div>
+<div class="ttc" id="a07724_html"><div class="ttname"><a href="a07724.html">error.H</a></div></div>
+<div class="ttc" id="a01173_html_a8e05d3ad7f8730ff9a8bab5360fd7854"><div class="ttname"><a href="a01173.html#a8e05d3ad7f8730ff9a8bab5360fd7854">Foam::IOerror::exit</a></div><div class="ttdeci">void exit(const int errNo=1)</div><div class="ttdoc">Exit : can be called for any error to exit program. </div><div class="ttdef"><b>Definition:</b> <a href="a07726_source.html#l00168">IOerror.C:168</a></div></div>
+<div class="ttc" id="a00677_html"><div class="ttname"><a href="a00677.html">Foam::errorManipArg</a></div><div class="ttdoc">errorManipArg </div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00053">errorManip.H:53</a></div></div>
+<div class="ttc" id="a00676_html_a2c0200a23ae61e9affbffeb63ef405c0"><div class="ttname"><a href="a00676.html#a2c0200a23ae61e9affbffeb63ef405c0">Foam::errorManip::errorManip</a></div><div class="ttdeci">errorManip(void(Err::*fPtr)(), Err &amp;t)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00070">errorManip.H:70</a></div></div>
+<div class="ttc" id="a01173_html_ac54f53dc342019e8db34f4aa581a5792"><div class="ttname"><a href="a01173.html#ac54f53dc342019e8db34f4aa581a5792">Foam::IOerror::abort</a></div><div class="ttdeci">void abort()</div><div class="ttdoc">Abort : used to stop code for fatal errors. </div><div class="ttdef"><b>Definition:</b> <a href="a07726_source.html#l00209">IOerror.C:209</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

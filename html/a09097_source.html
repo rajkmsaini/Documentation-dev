@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a03451fb51a99aeda64b9111367b1019.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_e8edcdfe104a2a1ceea328e2145ca73e.html">foamCalcFunctions</a></li><li class="navelem"><a class="el" href="dir_bfcb018a42f8a829ae9e479a66188d55.html">field</a></li><li class="navelem"><a class="el" href="dir_cc7e32ab66a60df50dcd8712ed8cd7cf.html">mag</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_72b2b5518d1565784443265ec6729f79.html">parallel</a></li><li class="navelem"><a class="el" href="dir_e048e8eb4dfe5719d368ebac837fe95a.html">decompose</a></li><li class="navelem"><a class="el" href="dir_e3b70d1802e286fd48b60eaae8da0038.html">decompositionMethods</a></li><li class="navelem"><a class="el" href="dir_9e69b39d0380318df2fa662500312bbd.html">geomDecomp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">writeMagField.C</div>  </div>
+<div class="title">geomDecomp.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09097.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,56 +119,97 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01381.html#a1fc01f73549231837e1c4efeca94ec46">Foam::calcTypes::mag::writeMagField</a></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="a01381.html#a1fc01f73549231837e1c4efeca94ec46">   28</a></span>&#160;(</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01170.html">IOobject</a>&amp; header,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; mesh,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span>&amp; processed</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a00913.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a> fieldType;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span> (header.<a class="code" href="a01170.html#a88c20567fd22659923753b6b3e3966c3">headerClassName</a>() == fieldType::typeName)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Reading &quot;</span> &lt;&lt; header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        fieldType field(header, mesh);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::geomDecomp</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Geometrical domain decomposition</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    geomDecomp.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef geomDecomp_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define geomDecomp_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09093.html">decompositionMethod.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09042.html">Vector.H</a>&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Calculating mag&quot;</span> &lt;&lt; header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a00913.html">volScalarField</a> magField</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        (</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            (</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="stringliteral">&quot;mag&quot;</span> + header.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>(),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                mesh.<a class="code" href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>().<a class="code" href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">timeName</a>(),</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                IOobject::NO_READ</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            ),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a>(field)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        );</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        magField.<a class="code" href="a02134.html#a6e5faa425b059eeb55cd904755791076">write</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                           Class geomDecomp Declaration</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a00918.html">   47</a></span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span><a class="code" href="a00918.html">geomDecomp</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00506.html">decompositionMethod</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        processed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="ttc" id="a01170_html_a88c20567fd22659923753b6b3e3966c3"><div class="ttname"><a href="a01170.html#a88c20567fd22659923753b6b3e3966c3">Foam::IOobject::headerClassName</a></div><div class="ttdeci">const word &amp; headerClassName() const </div><div class="ttdoc">Return name of the class name read from header. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00266">IOobject.H:266</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a02596_html_a5ae6a110de1b22323e19a46943c7f0c1"><div class="ttname"><a href="a02596.html#a5ae6a110de1b22323e19a46943c7f0c1">Foam::Time::timeName</a></div><div class="ttdeci">static word timeName(const scalar, const int precision=precision_)</div><div class="ttdoc">Return time name of given scalar time. </div><div class="ttdef"><b>Definition:</b> <a href="a07803_source.html#l00741">Time.C:741</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01381_html_a1fc01f73549231837e1c4efeca94ec46"><div class="ttname"><a href="a01381.html#a1fc01f73549231837e1c4efeca94ec46">Foam::calcTypes::mag::writeMagField</a></div><div class="ttdeci">void writeMagField(const IOobject &amp;header, const fvMesh &amp;mesh, bool &amp;processed)</div><div class="ttdoc">Write component fields. </div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00028">writeMagField.C:28</a></div></div>
-<div class="ttc" id="a00868_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a00868.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::fvMesh::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the top-level database. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00243">fvMesh.H:243</a></div></div>
-<div class="ttc" id="a02134_html_a6e5faa425b059eeb55cd904755791076"><div class="ttname"><a href="a02134.html#a6e5faa425b059eeb55cd904755791076">Foam::regIOobject::write</a></div><div class="ttdeci">virtual bool write() const </div><div class="ttdoc">Write using setting from DB. </div><div class="ttdef"><b>Definition:</b> <a href="a07787_source.html#l00126">regIOobjectWrite.C:126</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05550_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Protected data</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a00918.html#a254e52e5ed0a6e8e149f9e69e38f54e2">   56</a></span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a00918.html#a254e52e5ed0a6e8e149f9e69e38f54e2">geomDecomDict_</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a00918.html#ab5edede78651843ce2817278de6be71c">   58</a></span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00918.html#a937c0b77e07154a0788f7382843f4d77">   59</a></span>&#160;        <a class="code" href="a02787.html">Vector&lt;label&gt;</a> <a class="code" href="a00918.html#ab5edede78651843ce2817278de6be71c">n_</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a00918.html#a986789a9e6be4b81fc9587072f054687">   60</a></span>&#160;        scalar <a class="code" href="a00918.html#a937c0b77e07154a0788f7382843f4d77">delta_</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a02561.html">tensor</a> <a class="code" href="a00918.html#a986789a9e6be4b81fc9587072f054687">rotDelta_</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Construct given the decomposition dictionary</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//  and the derived type name</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="a00918.html#aa6caae05fc0b23f3f66d229bd248c170">geomDecomp</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        (</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; decompositionDict,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; derivedType</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        );</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Return for every coordinate the wanted processor number.</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a01364.html">labelList</a> <a class="code" href="a00918.html#a1a8b94908918ff4d1d1bdfcdc93466fc">decompose</a></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        (</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; <a class="code" href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a>,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; pointWeights</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        ) = 0;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//- Like decompose but with uniform weights on the points</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a01364.html">labelList</a> <a class="code" href="a00918.html#a1a8b94908918ff4d1d1bdfcdc93466fc">decompose</a>(<span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp;) = 0;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a09042_html"><div class="ttname"><a href="a09042.html">Vector.H</a></div></div>
+<div class="ttc" id="a00918_html_a937c0b77e07154a0788f7382843f4d77"><div class="ttname"><a href="a00918.html#a937c0b77e07154a0788f7382843f4d77">Foam::geomDecomp::delta_</a></div><div class="ttdeci">scalar delta_</div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00059">geomDecomp.H:59</a></div></div>
+<div class="ttc" id="a00918_html_ab5edede78651843ce2817278de6be71c"><div class="ttname"><a href="a00918.html#ab5edede78651843ce2817278de6be71c">Foam::geomDecomp::n_</a></div><div class="ttdeci">Vector&lt; label &gt; n_</div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00058">geomDecomp.H:58</a></div></div>
+<div class="ttc" id="a00918_html_aa6caae05fc0b23f3f66d229bd248c170"><div class="ttname"><a href="a00918.html#aa6caae05fc0b23f3f66d229bd248c170">Foam::geomDecomp::geomDecomp</a></div><div class="ttdeci">geomDecomp(const dictionary &amp;decompositionDict, const word &amp;derivedType)</div><div class="ttdoc">Construct given the decomposition dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09096_source.html#l00031">geomDecomp.C:31</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00918_html_a254e52e5ed0a6e8e149f9e69e38f54e2"><div class="ttname"><a href="a00918.html#a254e52e5ed0a6e8e149f9e69e38f54e2">Foam::geomDecomp::geomDecomDict_</a></div><div class="ttdeci">const dictionary &amp; geomDecomDict_</div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00056">geomDecomp.H:56</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a00918_html_a986789a9e6be4b81fc9587072f054687"><div class="ttname"><a href="a00918.html#a986789a9e6be4b81fc9587072f054687">Foam::geomDecomp::rotDelta_</a></div><div class="ttdeci">tensor rotDelta_</div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00060">geomDecomp.H:60</a></div></div>
+<div class="ttc" id="a00918_html"><div class="ttname"><a href="a00918.html">Foam::geomDecomp</a></div><div class="ttdoc">Geometrical domain decomposition. </div><div class="ttdef"><b>Definition:</b> <a href="a09097_source.html#l00047">geomDecomp.H:47</a></div></div>
+<div class="ttc" id="a00918_html_a1a8b94908918ff4d1d1bdfcdc93466fc"><div class="ttname"><a href="a00918.html#a1a8b94908918ff4d1d1bdfcdc93466fc">Foam::geomDecomp::decompose</a></div><div class="ttdeci">virtual labelList decompose(const pointField &amp;points, const scalarField &amp;pointWeights)=0</div><div class="ttdoc">Return for every coordinate the wanted processor number. </div></div>
+<div class="ttc" id="a00506_html"><div class="ttname"><a href="a00506.html">Foam::decompositionMethod</a></div><div class="ttdoc">Abstract base class for decomposition. </div><div class="ttdef"><b>Definition:</b> <a href="a09093_source.html#l00048">decompositionMethod.H:48</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; label &gt;</a></div></div>
+<div class="ttc" id="a02561_html"><div class="ttname"><a href="a02561.html">Foam::Tensor&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a04274_html_a1adbc4c519b2cee284a47d6682036276"><div class="ttname"><a href="a04274.html#a1adbc4c519b2cee284a47d6682036276">points</a></div><div class="ttdeci">const pointField &amp; points</div><div class="ttdef"><b>Definition:</b> <a href="a04274_source.html#l00001">gmvOutputHeader.H:1</a></div></div>
+<div class="ttc" id="a09093_html"><div class="ttname"><a href="a09093.html">decompositionMethod.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

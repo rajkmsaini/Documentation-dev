@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_bc741cf0feed825022d764837944696d.html">phaseSystems</a></li><li class="navelem"><a class="el" href="dir_de2215bca3b7007a388f9dfd3a1d4715.html">phaseModel</a></li><li class="navelem"><a class="el" href="dir_13eb0135d55be060c8c8783afb13c88a.html">ReactingPhaseModel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_9a8884475cf7812a7a55716c3274f065.html">twoPhaseEulerFoam</a></li><li class="navelem"><a class="el" href="dir_cfe205aac25c0433b15142b141b5f211.html">twoPhaseSystem</a></li><li class="navelem"><a class="el" href="dir_3e8be733bb068cb60ed08284b20e7288.html">BlendedInterfacialModel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">ReactingPhaseModel.C</div>  </div>
+<div class="title">BlendedInterfacialModel.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03645.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,109 +119,149 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03646.html">ReactingPhaseModel.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03664.html">phaseSystem.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05732.html">fvMatrix.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasePhaseModel, <span class="keyword">class</span> ReactionType&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a02082.html#a8da2f573c47ae95c6cd9cef192cf332c">Foam::ReactingPhaseModel&lt;BasePhaseModel, ReactionType&gt;::ReactingPhaseModel</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> phaseSystem&amp; fluid,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> word&amp; phaseName,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> index</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    BasePhaseModel(fluid, phaseName, index, false),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    reaction_</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    (</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        ReactionType::New(fluid.<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>(), this-&gt;<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>())</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    )</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    this-&gt;thermo_ = &amp;reaction_-&gt;thermo();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::BlendedInterfacialModel</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    BlendedInterfacialModel.C</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef BlendedInterfacialModel_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define BlendedInterfacialModel_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;blendingMethod.H&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;phasePair.H&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;orderedPhasePair.H&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08041.html">geometricZeroField.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    this-&gt;thermo_-&gt;validate</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="a01170.html#ad5705e6da2a025ad75b4cf5d748d7d30">IOobject::groupName</a>(<a class="code" href="a00749.html#af642af0897d5cb478b60511ba0e60f10">phaseModel::typeName</a>, this-&gt;<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="stringliteral">&quot;h&quot;</span>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="stringliteral">&quot;e&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    );</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                         Class BlendedInterfacialModel Declaration</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> modelType&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span>BlendedInterfacialModel</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// Private data</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasePhaseModel, <span class="keyword">class</span> ReactionType&gt;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<a class="code" href="a02082.html#ac6b17e48dee7f43f7345e0eae1b9315f">Foam::ReactingPhaseModel&lt;BasePhaseModel, ReactionType&gt;::~ReactingPhaseModel</a>()</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//- Unordered phase pair</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> phasePair&amp; pair_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">//- Ordered phase pair for dispersed phase 1 in continuous phase 2</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">const</span> orderedPhasePair&amp; pair1In2_;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Ordered phase pair for dispersed phase 2 in continuous phase 1</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const</span> orderedPhasePair&amp; pair2In1_;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasePhaseModel, <span class="keyword">class</span> ReactionType&gt;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02082.html#a16cd2a750588934340d7aa3ae0996d2b">Foam::ReactingPhaseModel&lt;BasePhaseModel, ReactionType&gt;::correctThermo</a>()</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    reaction_-&gt;setTurbulence</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        const_cast&lt;compressibleTurbulenceModel&amp;&gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        (</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            this-&gt;<a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>().<span class="keyword">template</span> lookupObject&lt;compressibleTurbulenceModel&gt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            (</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                <a class="code" href="a01170.html#ad5705e6da2a025ad75b4cf5d748d7d30">IOobject::groupName</a></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                (</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                    <a class="code" href="a02683.html#a1bd8bb0fb60b71d271b25c14b5d66b63">turbulenceModel::propertiesName</a>,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                    this-&gt;<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                )</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            )</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        )</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    );</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">//- Model for region with no obvious dispersed phase</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        autoPtr&lt;modelType&gt; model_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">//- Model for dispersed phase 1 in continuous phase 2</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        autoPtr&lt;modelType&gt; model1In2_;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//- Model for dispersed phase 2 in continuous phase 1</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        autoPtr&lt;modelType&gt; model2In1_;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Blending model</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">const</span> blendingMethod&amp; blending_;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//- If true set coefficients and forces to 0 at fixed-flux BCs</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordtype">bool</span> correctFixedFluxBCs_;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Private Member Functions</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a03678.html#a795a68a890c021946a33af5190903efe">BasePhaseModel::correctThermo</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    reaction_-&gt;correct();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        BlendedInterfacialModel(<span class="keyword">const</span> BlendedInterfacialModel&lt;modelType&gt;&amp;);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> BlendedInterfacialModel&lt;modelType&gt;&amp;);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasePhaseModel, <span class="keyword">class</span> ReactionType&gt;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::fvScalarMatrix&gt;</a></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="a02082.html#a470c63340c4a514e6d7d6a2cc3080f57">Foam::ReactingPhaseModel&lt;BasePhaseModel, ReactionType&gt;::R</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;(</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>&amp; Yi</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> reaction_-&gt;R(Yi);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasePhaseModel, <span class="keyword">class</span> ReactionType&gt;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<a class="code" href="a02082.html#a8d9d252ff8881a78e443c3c68b1f6335">Foam::ReactingPhaseModel&lt;BasePhaseModel, ReactionType&gt;::Sh</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span> reaction_-&gt;Sh();</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a03678_html_a795a68a890c021946a33af5190903efe"><div class="ttname"><a href="a03678.html#a795a68a890c021946a33af5190903efe">correctThermo</a></div><div class="ttdeci">fluid correctThermo()</div></div>
-<div class="ttc" id="a00749_html_af642af0897d5cb478b60511ba0e60f10"><div class="ttname"><a href="a00749.html#af642af0897d5cb478b60511ba0e60f10">Foam::Field::typeName</a></div><div class="ttdeci">static const char *const typeName</div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00094">Field.H:94</a></div></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a02082_html_a8d9d252ff8881a78e443c3c68b1f6335"><div class="ttname"><a href="a02082.html#a8d9d252ff8881a78e443c3c68b1f6335">Foam::ReactingPhaseModel::Sh</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; Sh() const </div><div class="ttdoc">Return the reacton heat source. </div></div>
-<div class="ttc" id="a03664_html"><div class="ttname"><a href="a03664.html">phaseSystem.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a02082_html_a16cd2a750588934340d7aa3ae0996d2b"><div class="ttname"><a href="a02082.html#a16cd2a750588934340d7aa3ae0996d2b">Foam::ReactingPhaseModel::correctThermo</a></div><div class="ttdeci">virtual void correctThermo()</div><div class="ttdoc">Correct the thermodynamics. </div></div>
-<div class="ttc" id="a01170_html_ad5705e6da2a025ad75b4cf5d748d7d30"><div class="ttname"><a href="a01170.html#ad5705e6da2a025ad75b4cf5d748d7d30">Foam::IOobject::groupName</a></div><div class="ttdeci">static word groupName(Name name, const word &amp;group)</div></div>
-<div class="ttc" id="a05732_html"><div class="ttname"><a href="a05732.html">fvMatrix.H</a></div></div>
-<div class="ttc" id="a02082_html_a470c63340c4a514e6d7d6a2cc3080f57"><div class="ttname"><a href="a02082.html#a470c63340c4a514e6d7d6a2cc3080f57">Foam::ReactingPhaseModel::R</a></div><div class="ttdeci">virtual tmp&lt; fvScalarMatrix &gt; R(volScalarField &amp;Yi) const </div><div class="ttdoc">Return the species fraction equation. </div></div>
-<div class="ttc" id="a03646_html"><div class="ttname"><a href="a03646.html">ReactingPhaseModel.H</a></div></div>
-<div class="ttc" id="a02082_html_a8da2f573c47ae95c6cd9cef192cf332c"><div class="ttname"><a href="a02082.html#a8da2f573c47ae95c6cd9cef192cf332c">Foam::ReactingPhaseModel::ReactingPhaseModel</a></div><div class="ttdeci">ReactingPhaseModel(const phaseSystem &amp;fluid, const word &amp;phaseName, const label index)</div></div>
-<div class="ttc" id="a02683_html_a1bd8bb0fb60b71d271b25c14b5d66b63"><div class="ttname"><a href="a02683.html#a1bd8bb0fb60b71d271b25c14b5d66b63">Foam::turbulenceModel::propertiesName</a></div><div class="ttdeci">static const word propertiesName</div><div class="ttdoc">Default name of the turbulence properties dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a10668_source.html#l00097">turbulenceModel.H:97</a></div></div>
-<div class="ttc" id="a10675_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10675.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05555_source.html#l00052">volFieldsFwd.H:52</a></div></div>
-<div class="ttc" id="a02082_html_ac6b17e48dee7f43f7345e0eae1b9315f"><div class="ttname"><a href="a02082.html#ac6b17e48dee7f43f7345e0eae1b9315f">Foam::ReactingPhaseModel::~ReactingPhaseModel</a></div><div class="ttdeci">virtual ~ReactingPhaseModel()</div><div class="ttdoc">Destructor. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">//- Correct coeff/value on fixed flux boundary conditions</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> GeometricField&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordtype">void</span> correctFixedFluxBCs(GeometricField&amp; field) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Construct from the model table, dictionary and pairs</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        BlendedInterfacialModel</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        (</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01841.html#af363db3b15b36bf4fa7997d250543a18">phasePair::dictTable</a>&amp; modelTable,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> blendingMethod&amp; blending,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">const</span> phasePair&amp; pair,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> orderedPhasePair&amp; pair1In2,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <span class="keyword">const</span> orderedPhasePair&amp; pair2In1,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> correctFixedFluxBCs = <span class="keyword">true</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        );</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="a00140.html#af965d40a66a82b4475329a9a4614a902">~BlendedInterfacialModel</a>();</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="comment">//- Return true if a model is specified for the supplied phase</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00140.html#aa432da371c98eef8cb9bd3838b773a7a">hasModel</a>(<span class="keyword">const</span> <a class="code" href="a00140.html#a8d34d00d8841842d1634132672f2fcc1">phaseModel</a>&amp; phase) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="comment">//- Return the model for the supplied phase</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">const</span> modelType&amp; <a class="code" href="a00140.html#a8d34d00d8841842d1634132672f2fcc1">phaseModel</a>(<span class="keyword">const</span> <a class="code" href="a00140.html#a8d34d00d8841842d1634132672f2fcc1">phaseModel</a>&amp; phase) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">//- Return the blended force coefficient</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        tmp&lt;volScalarField&gt; <a class="code" href="a00140.html#a5f97e679211ae7ceed61a1df1694f5a3">K</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">//- Return the face blended force coefficient</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        tmp&lt;surfaceScalarField&gt; <a class="code" href="a00140.html#ae5657690105b6fbb0ea7fac56c6f709a">Kf</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="comment">//- Return the blended force</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        tmp&lt;GeometricField&lt;Type, fvPatchField, volMesh&gt; &gt; <a class="code" href="a00140.html#aec062438907d89f3fe872dfe9ba75570">F</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="comment">//- Return the face blended force</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        tmp&lt;surfaceScalarField&gt; <a class="code" href="a00140.html#ab7690853988ed2296d58bfbf5e5c9e9b">Ff</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="comment">//- Return the blended diffusivity</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        tmp&lt;volScalarField&gt; <a class="code" href="a00140.html#a2d384a93addc6500bfda47d220a0bbfd">D</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;};</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">    #include &quot;BlendedInterfacialModel.C&quot;</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00140_html_aec062438907d89f3fe872dfe9ba75570"><div class="ttname"><a href="a00140.html#aec062438907d89f3fe872dfe9ba75570">Foam::BlendedInterfacialModel::F</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; F() const </div><div class="ttdoc">Return the blended force. </div></div>
+<div class="ttc" id="a08041_html"><div class="ttname"><a href="a08041.html">geometricZeroField.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00140_html_a2d384a93addc6500bfda47d220a0bbfd"><div class="ttname"><a href="a00140.html#a2d384a93addc6500bfda47d220a0bbfd">Foam::BlendedInterfacialModel::D</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; D() const </div><div class="ttdoc">Return the blended diffusivity. </div></div>
+<div class="ttc" id="a01841_html_af363db3b15b36bf4fa7997d250543a18"><div class="ttname"><a href="a01841.html#af363db3b15b36bf4fa7997d250543a18">Foam::phasePair::dictTable</a></div><div class="ttdeci">HashTable&lt; dictionary, phasePairKey, phasePairKey::hash &gt; dictTable</div><div class="ttdoc">Dictionary hash table. </div><div class="ttdef"><b>Definition:</b> <a href="a03686_source.html#l00059">phasePair.H:59</a></div></div>
+<div class="ttc" id="a00140_html_a8d34d00d8841842d1634132672f2fcc1"><div class="ttname"><a href="a00140.html#a8d34d00d8841842d1634132672f2fcc1">Foam::BlendedInterfacialModel::phaseModel</a></div><div class="ttdeci">const modelType &amp; phaseModel(const phaseModel &amp;phase) const </div><div class="ttdoc">Return the model for the supplied phase. </div></div>
+<div class="ttc" id="a00140_html_ab7690853988ed2296d58bfbf5e5c9e9b"><div class="ttname"><a href="a00140.html#ab7690853988ed2296d58bfbf5e5c9e9b">Foam::BlendedInterfacialModel::Ff</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; Ff() const </div><div class="ttdoc">Return the face blended force. </div></div>
+<div class="ttc" id="a00140_html_af965d40a66a82b4475329a9a4614a902"><div class="ttname"><a href="a00140.html#af965d40a66a82b4475329a9a4614a902">Foam::BlendedInterfacialModel::~BlendedInterfacialModel</a></div><div class="ttdeci">~BlendedInterfacialModel()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a00140_html_ae5657690105b6fbb0ea7fac56c6f709a"><div class="ttname"><a href="a00140.html#ae5657690105b6fbb0ea7fac56c6f709a">Foam::BlendedInterfacialModel::Kf</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; Kf() const </div><div class="ttdoc">Return the face blended force coefficient. </div></div>
+<div class="ttc" id="a00140_html_a5f97e679211ae7ceed61a1df1694f5a3"><div class="ttname"><a href="a00140.html#a5f97e679211ae7ceed61a1df1694f5a3">Foam::BlendedInterfacialModel::K</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; K() const </div><div class="ttdoc">Return the blended force coefficient. </div></div>
+<div class="ttc" id="a00140_html_aa432da371c98eef8cb9bd3838b773a7a"><div class="ttname"><a href="a00140.html#aa432da371c98eef8cb9bd3838b773a7a">Foam::BlendedInterfacialModel::hasModel</a></div><div class="ttdeci">bool hasModel(const phaseModel &amp;phase) const </div><div class="ttdoc">Return true if a model is specified for the supplied phase. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

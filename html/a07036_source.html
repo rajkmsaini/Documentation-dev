@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7be0d8c199b9408ae01f5d77515b8def.html">mesh</a></li><li class="navelem"><a class="el" href="dir_ade3ea1948a418ffb78a293f495540d7.html">blockMesh</a></li><li class="navelem"><a class="el" href="dir_8447882a29dd15b2ac259f90a5263f87.html">curvedEdges</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7be0d8c199b9408ae01f5d77515b8def.html">mesh</a></li><li class="navelem"><a class="el" href="dir_c04cd1fd02bb0d2c4c2f2aa3e7a8ece5.html">autoMesh</a></li><li class="navelem"><a class="el" href="dir_2ed70c589061122d8c252fc1024d37eb.html">autoHexMesh</a></li><li class="navelem"><a class="el" href="dir_a4c6b2cc7c246ae75e729d303ab27485.html">autoHexMeshDriver</a></li><li class="navelem"><a class="el" href="dir_9f4f21acb638f115de6f300ab09ca4d4.html">refinementParameters</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">arcEdge.H</div>  </div>
+<div class="title">refinementParameters.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07036.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,115 +119,149 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::arcEdge</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Defines the arcEdge of a circle in terms of 3 points on its circumference</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    arcEdge.C</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef arcEdge_H</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define arcEdge_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07044.html">curvedEdge.H</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07207.html">cylindricalCS.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                           Class arcEdge Declaration</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a00063.html">   49</a></span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a00063.html">arcEdge</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00442.html">curvedEdge</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a02776.html">point</a> p1_, p2_, p3_;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a00489.html">cylindricalCS</a> cs_;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        scalar angle_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        scalar radius_;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07037.html">refinementParameters.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08181.html">unitConversion.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08595.html">globalIndex.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a02114.html#a034a6c727dd370424501b580ebf0ddc7">   33</a></span>&#160;Foam::refinementParameters::refinementParameters(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    maxGlobalCells_(<a class="code" href="a10725.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;maxGlobalCells&quot;</span>))),</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    maxLocalCells_(<a class="code" href="a10725.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;maxLocalCells&quot;</span>))),</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    minRefineCells_(<a class="code" href="a10725.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;minRefinementCells&quot;</span>))),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    planarAngle_</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    (</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        dict.lookupOrDefault</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="stringliteral">&quot;planarAngle&quot;</span>,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <a class="code" href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;resolveFeatureAngle&quot;</span>))</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        )</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    ),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    nBufferLayers_(<a class="code" href="a10725.html#abb09fbcf651d29208982dd7a601b606f">readLabel</a>(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;nCellsBetweenLevels&quot;</span>))),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    keepPoints_(<a class="code" href="a00755.html">pointField</a>(1, dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;locationInMesh&quot;</span>))),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    allowFreeStandingZoneFaces_(dict.<a class="code" href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a>(<span class="stringliteral">&quot;allowFreeStandingZoneFaces&quot;</span>)),</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    useTopologicalSnapDetection_</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        dict.lookupOrDefault&lt;bool&gt;(<span class="stringliteral">&quot;useTopologicalSnapDetection&quot;</span>, true)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    ),</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    maxLoadUnbalance_(dict.lookupOrDefault&lt;scalar&gt;(<span class="stringliteral">&quot;maxLoadUnbalance&quot;</span>, 0)),</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    handleSnapProblems_</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    (</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        dict.lookupOrDefault&lt;<a class="code" href="a02514.html">Switch</a>&gt;(<span class="stringliteral">&quot;handleSnapProblems&quot;</span>, true)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    )</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    scalar featAngle(<a class="code" href="a10725.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;resolveFeatureAngle&quot;</span>)));</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Calculate the coordinate system, angle and radius</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a00489.html">cylindricalCS</a> calcAngle();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="a00063.html">arcEdge</a>(<span class="keyword">const</span> <a class="code" href="a00063.html">arcEdge</a>&amp;);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a00063.html">arcEdge</a>&amp;);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span> (featAngle &lt; 0 || featAngle &gt; 180)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        curvature_ = -GREAT;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        curvature_ = <a class="code" href="a10725.html#aebb41a148f7cf44b63e12f69e487e49f">Foam::cos</a>(<a class="code" href="a10725.html#af706f965be4d1457b0f1e7fade1c0118">degToRad</a>(featAngle));</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a00063.html#a3800b32a1a7cf4b80d2f98668701b4a7">TypeName</a>(<span class="stringliteral">&quot;arc&quot;</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a02114.html#ac54235794f8476daa34fa06976a9f882">   74</a></span>&#160;<a class="code" href="a01364.html">Foam::labelList</a> <a class="code" href="a02114.html#ac54235794f8476daa34fa06976a9f882">Foam::refinementParameters::findCells</a>(<span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)<span class="keyword"></span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">const</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Force calculation of tet-diag decomposition (for use in findCell)</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    (void)mesh.<a class="code" href="a01916.html#af5d47c5deccb842cb4b331facc1aa22a">tetBasePtIs</a>();</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a00063.html">arcEdge</a></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        (</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">pointField</a>&amp; <a class="code" href="a04235.html#a1adbc4c519b2cee284a47d6682036276">points</a>,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00442.html#a96b607a9a9baa575783b4af443ef613f">start</a>, <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00442.html#a8ed0e876210c2c116b5694307a830518">end</a>,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">point</a>&amp; pMid</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        );</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">//- Construct from Istream setting pointsList</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a00063.html">arcEdge</a>(<span class="keyword">const</span> <a class="code" href="a00749.html">pointField</a>&amp; points, <a class="code" href="a01191.html">Istream</a>&amp;);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Global calculation engine</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="a00931.html">globalIndex</a> globalCells(mesh.<a class="code" href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">nCells</a>());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Cell label per point</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a01364.html">labelList</a> cellLabels(keepPoints_.size());</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(keepPoints_, i)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02787.html">point</a>&amp; keepPoint = keepPoints_[i];</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> localCellI = mesh.<a class="code" href="a01916.html#a647086624d55a7c95a57306f1c389af5">findCell</a>(keepPoint);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a00063.html#afb42c1e94aeadebb7d87dde97a10724c">   92</a></span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00063.html#afb42c1e94aeadebb7d87dde97a10724c">~arcEdge</a>(){}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//- Return the point position corresponding to the curve parameter</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//  0 &lt;= lambda &lt;= 1</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a02776.html">point</a> <a class="code" href="a00063.html#aea231d67874600b4fbac91e1f58eda5f">position</a>(<span class="keyword">const</span> scalar) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Return the length of the curve</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        scalar <a class="code" href="a00063.html#a8b35735b5afe7675bdb73473a5a23d90">length</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;};</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> globalCellI = -1;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (localCellI != -1)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            globalCellI = globalCells.toGlobal(localCellI);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <a class="code" href="a10725.html#a7ffd6af4acc2eb9ba72ee296b5ecda23">reduce</a>(globalCellI, <a class="code" href="a01447.html">maxOp&lt;label&gt;</a>());</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">if</span> (globalCellI == -1)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Point &quot;</span> &lt;&lt; keepPoint</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; is not inside the mesh or on a face or edge.&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Bounding box of the mesh:&quot;</span> &lt;&lt; mesh.<a class="code" href="a01916.html#a7774f6a2399cc071ff06ba6bb6d38b26">bounds</a>()</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00442_html"><div class="ttname"><a href="a00442.html">Foam::curvedEdge</a></div><div class="ttdoc">Define a curved edge that is parameterized for 0<lambda<1 between the start and end point...</div><div class="ttdef"><b>Definition:</b> <a href="a07044_source.html#l00053">curvedEdge.H:53</a></div></div>
-<div class="ttc" id="a04235_html_a1adbc4c519b2cee284a47d6682036276"><div class="ttname"><a href="a04235.html#a1adbc4c519b2cee284a47d6682036276">points</a></div><div class="ttdeci">const pointField &amp; points</div><div class="ttdef"><b>Definition:</b> <a href="a04235_source.html#l00001">gmvOutputHeader.H:1</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a00063_html_aea231d67874600b4fbac91e1f58eda5f"><div class="ttname"><a href="a00063.html#aea231d67874600b4fbac91e1f58eda5f">Foam::arcEdge::position</a></div><div class="ttdeci">point position(const scalar) const </div><div class="ttdoc">Return the point position corresponding to the curve parameter. </div><div class="ttdef"><b>Definition:</b> <a href="a07035_source.html#l00134">arcEdge.C:134</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00442_html_a96b607a9a9baa575783b4af443ef613f"><div class="ttname"><a href="a00442.html#a96b607a9a9baa575783b4af443ef613f">Foam::curvedEdge::start</a></div><div class="ttdeci">label start() const </div><div class="ttdoc">Return label of start point. </div><div class="ttdef"><b>Definition:</b> <a href="a07045_source.html#l00028">curvedEdgeI.H:28</a></div></div>
-<div class="ttc" id="a00063_html_afb42c1e94aeadebb7d87dde97a10724c"><div class="ttname"><a href="a00063.html#afb42c1e94aeadebb7d87dde97a10724c">Foam::arcEdge::~arcEdge</a></div><div class="ttdeci">virtual ~arcEdge()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07036_source.html#l00092">arcEdge.H:92</a></div></div>
-<div class="ttc" id="a00063_html"><div class="ttname"><a href="a00063.html">Foam::arcEdge</a></div><div class="ttdoc">Defines the arcEdge of a circle in terms of 3 points on its circumference. </div><div class="ttdef"><b>Definition:</b> <a href="a07036_source.html#l00049">arcEdge.H:49</a></div></div>
-<div class="ttc" id="a00063_html_a3800b32a1a7cf4b80d2f98668701b4a7"><div class="ttname"><a href="a00063.html#a3800b32a1a7cf4b80d2f98668701b4a7">Foam::arcEdge::TypeName</a></div><div class="ttdeci">TypeName(&quot;arc&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; vector &gt;</a></div></div>
-<div class="ttc" id="a00063_html_a8b35735b5afe7675bdb73473a5a23d90"><div class="ttname"><a href="a00063.html#a8b35735b5afe7675bdb73473a5a23d90">Foam::arcEdge::length</a></div><div class="ttdeci">scalar length() const </div><div class="ttdoc">Return the length of the curve. </div><div class="ttdef"><b>Definition:</b> <a href="a07035_source.html#l00158">arcEdge.C:158</a></div></div>
-<div class="ttc" id="a07207_html"><div class="ttname"><a href="a07207.html">cylindricalCS.H</a></div></div>
-<div class="ttc" id="a00489_html"><div class="ttname"><a href="a00489.html">Foam::cylindricalCS</a></div><div class="ttdoc">Cylindrical coordinate system. </div><div class="ttdef"><b>Definition:</b> <a href="a07207_source.html#l00048">cylindricalCS.H:48</a></div></div>
-<div class="ttc" id="a07044_html"><div class="ttname"><a href="a07044.html">curvedEdge.H</a></div></div>
-<div class="ttc" id="a00442_html_a8ed0e876210c2c116b5694307a830518"><div class="ttname"><a href="a00442.html#a8ed0e876210c2c116b5694307a830518">Foam::curvedEdge::end</a></div><div class="ttdeci">label end() const </div><div class="ttdoc">Return label of end point. </div><div class="ttdef"><b>Definition:</b> <a href="a07045_source.html#l00034">curvedEdgeI.H:34</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> procI = globalCells.whichProcID(globalCellI);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> procCellI = globalCells.toLocal(procI, globalCellI);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Found point &quot;</span> &lt;&lt; keepPoint &lt;&lt; <span class="stringliteral">&quot; in cell &quot;</span> &lt;&lt; procCellI</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; on processor &quot;</span> &lt;&lt; procI &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">if</span> (globalCells.isLocal(globalCellI))</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            cellLabels[i] = localCellI;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            cellLabels[i] = -1;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> cellLabels;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01916_html_a647086624d55a7c95a57306f1c389af5"><div class="ttname"><a href="a01916.html#a647086624d55a7c95a57306f1c389af5">Foam::polyMesh::findCell</a></div><div class="ttdeci">label findCell(const point &amp;p, const cellDecomposition=CELL_TETS) const </div><div class="ttdoc">Find cell enclosing this location and return index. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l01411">polyMesh.C:1411</a></div></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01967_html_ae79b5e96cf8d9a4e6b3993e6f2709374"><div class="ttname"><a href="a01967.html#ae79b5e96cf8d9a4e6b3993e6f2709374">Foam::primitiveMesh::nCells</a></div><div class="ttdeci">label nCells() const </div><div class="ttdef"><b>Definition:</b> <a href="a08733_source.html#l00094">primitiveMeshI.H:94</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a08595_html"><div class="ttname"><a href="a08595.html">globalIndex.H</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a01447_html"><div class="ttname"><a href="a01447.html">Foam::maxOp</a></div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00172">ops.H:172</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a08181_html"><div class="ttname"><a href="a08181.html">unitConversion.H</a></div><div class="ttdoc">Unit conversion functions. </div></div>
+<div class="ttc" id="a02114_html_ac54235794f8476daa34fa06976a9f882"><div class="ttname"><a href="a02114.html#ac54235794f8476daa34fa06976a9f882">Foam::refinementParameters::findCells</a></div><div class="ttdeci">labelList findCells(const polyMesh &amp;) const </div><div class="ttdoc">Checks that cells are in mesh. Returns cells they are in. </div><div class="ttdef"><b>Definition:</b> <a href="a07036_source.html#l00074">refinementParameters.C:74</a></div></div>
+<div class="ttc" id="a07037_html"><div class="ttname"><a href="a07037.html">refinementParameters.H</a></div></div>
+<div class="ttc" id="a10725_html_abb09fbcf651d29208982dd7a601b606f"><div class="ttname"><a href="a10725.html#abb09fbcf651d29208982dd7a601b606f">Foam::readLabel</a></div><div class="ttdeci">label readLabel(Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00064">label.H:64</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a10725_html_a828d57f6d9b9806c086a3f840a147115"><div class="ttname"><a href="a10725.html#a828d57f6d9b9806c086a3f840a147115">Foam::readScalar</a></div><div class="ttdeci">bool readScalar(const char *buf, doubleScalar &amp;s)</div><div class="ttdoc">Read whole of buf as a scalar. Return true if succesful. </div><div class="ttdef"><b>Definition:</b> <a href="a08932_source.html#l00063">doubleScalar.H:63</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a10725_html_a7ffd6af4acc2eb9ba72ee296b5ecda23"><div class="ttname"><a href="a10725.html#a7ffd6af4acc2eb9ba72ee296b5ecda23">Foam::reduce</a></div><div class="ttdeci">void reduce(const List&lt; UPstream::commsStruct &gt; &amp;comms, T &amp;Value, const BinaryOp &amp;bop, const int tag, const label comm)</div><div class="ttdef"><b>Definition:</b> <a href="a07798_source.html#l00043">PstreamReduceOps.H:43</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a02514_html"><div class="ttname"><a href="a02514.html">Foam::Switch</a></div><div class="ttdoc">A simple wrapper around bool so that it can be read as a word: true/false, on/off, yes/no, y/n, t/f, or none. </div><div class="ttdef"><b>Definition:</b> <a href="a08807_source.html#l00060">Switch.H:60</a></div></div>
+<div class="ttc" id="a10725_html_aebb41a148f7cf44b63e12f69e487e49f"><div class="ttname"><a href="a10725.html#aebb41a148f7cf44b63e12f69e487e49f">Foam::cos</a></div><div class="ttdeci">dimensionedScalar cos(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07865_source.html#l00256">dimensionedScalar.C:256</a></div></div>
+<div class="ttc" id="a01916_html_a7774f6a2399cc071ff06ba6bb6d38b26"><div class="ttname"><a href="a01916.html#a7774f6a2399cc071ff06ba6bb6d38b26">Foam::polyMesh::bounds</a></div><div class="ttdeci">const boundBox &amp; bounds() const </div><div class="ttdoc">Return mesh bounding box. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00427">polyMesh.H:427</a></div></div>
+<div class="ttc" id="a08931_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08931_source.html#l00038">doubleScalar.C:38</a></div></div>
+<div class="ttc" id="a00931_html"><div class="ttname"><a href="a00931.html">Foam::globalIndex</a></div><div class="ttdoc">Calculates a unique integer (label so might not have enough room - 2G max) for processor + local inde...</div><div class="ttdef"><b>Definition:</b> <a href="a08595_source.html#l00063">globalIndex.H:63</a></div></div>
+<div class="ttc" id="a10725_html_af706f965be4d1457b0f1e7fade1c0118"><div class="ttname"><a href="a10725.html#af706f965be4d1457b0f1e7fade1c0118">Foam::degToRad</a></div><div class="ttdeci">scalar degToRad(const scalar deg)</div><div class="ttdoc">Conversion from degrees to radians. </div><div class="ttdef"><b>Definition:</b> <a href="a08181_source.html#l00045">unitConversion.H:45</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a03876_html_aa12e10d2264a98b7f09469676a073768"><div class="ttname"><a href="a03876.html#aa12e10d2264a98b7f09469676a073768">lookup</a></div><div class="ttdeci">stressControl lookup(&quot;compactNormalStress&quot;) &gt;&gt; compactNormalStress</div></div>
+<div class="ttc" id="a01916_html_af5d47c5deccb842cb4b331facc1aa22a"><div class="ttname"><a href="a01916.html#af5d47c5deccb842cb4b331facc1aa22a">Foam::polyMesh::tetBasePtIs</a></div><div class="ttdeci">const labelList &amp; tetBasePtIs() const </div><div class="ttdoc">Return the tetBasePtIs. </div><div class="ttdef"><b>Definition:</b> <a href="a08630_source.html#l00818">polyMesh.C:818</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

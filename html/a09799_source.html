@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a88fe22feb23ce5f078a04a1df67721.html">surfMesh</a></li><li class="navelem"><a class="el" href="dir_3ad8f5f9808d8196d04eb1769c1a10a8.html">surfaceFormats</a></li><li class="navelem"><a class="el" href="dir_07abf67a6bec1375387dc9343497187d.html">smesh</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a5b93d9ceb327a1197b724c6aefedcbd.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_7ca4084a0a6342ee22329da340f40c5e.html">sixDoFSolvers</a></li><li class="navelem"><a class="el" href="dir_52cd36955bc5c05865cb672035deab01.html">Newmark</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">SMESHsurfaceFormatRunTime.C</div>  </div>
+<div class="title">Newmark.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09799.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,49 +121,116 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09798.html">SMESHsurfaceFormat.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07792.html">addToMemberFunctionSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09800.html">Newmark.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>sixDoFSolvers</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>fileFormats</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// write MeshedSurfaceProxy</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a10704.html#a7b24b5a49fdf2c66da4878f97696490a">addNamedTemplatedToMemberFunctionSelectionTable</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;(</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    MeshedSurfaceProxy,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    SMESHsurfaceFormat,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    face,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    fileExtension,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    smesh</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="a10704.html#a7b24b5a49fdf2c66da4878f97696490a">addNamedTemplatedToMemberFunctionSelectionTable</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;(</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    MeshedSurfaceProxy,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    SMESHsurfaceFormat,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a03883.html#a85e205b40128f23c7ad84f2d6fe1a4b1">triFace</a>,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    fileExtension,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    smesh</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10806.html#afd1af6b92676ecc12a5255043ae99e23">defineTypeNameAndDebug</a>(Newmark, 0);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10806.html#a6c4c46f2c4f394260a6a8621e1d1d82c">addToRunTimeSelectionTable</a>(sixDoFSolver, Newmark, dictionary);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a01581.html#a06223014f4ddc77f19c12b99f8fa8516">Foam::sixDoFSolvers::Newmark::Newmark</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a01581.html#a06223014f4ddc77f19c12b99f8fa8516">   44</a></span>&#160;(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a02325.html">sixDoFRigidBodyMotion</a>&amp; body</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a02330.html">sixDoFSolver</a>(body),</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    gamma_(dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;scalar&gt;(<span class="stringliteral">&quot;gamma&quot;</span>, 0.5)),</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    beta_</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    (</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        (</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            0.25*<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(gamma_ + 0.5),</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;scalar&gt;(<span class="stringliteral">&quot;beta&quot;</span>, 0.25)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        )</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    )</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{}</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10704_html_a7b24b5a49fdf2c66da4878f97696490a"><div class="ttname"><a href="a10704.html#a7b24b5a49fdf2c66da4878f97696490a">Foam::fileFormats::addNamedTemplatedToMemberFunctionSelectionTable</a></div><div class="ttdeci">addNamedTemplatedToMemberFunctionSelectionTable(MeshedSurfaceProxy, AC3DsurfaceFormat, face, write, fileExtension, ac)</div></div>
-<div class="ttc" id="a02904_html_a8f30b3c2179b03a7acf273e9dea43342"><div class="ttname"><a href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a></div><div class="ttdeci">runTime write()</div></div>
-<div class="ttc" id="a03883_html_a85e205b40128f23c7ad84f2d6fe1a4b1"><div class="ttname"><a href="a03883.html#a85e205b40128f23c7ad84f2d6fe1a4b1">triFace</a></div><div class="ttdeci">face triFace(3)</div></div>
-<div class="ttc" id="a09798_html"><div class="ttname"><a href="a09798.html">SMESHsurfaceFormat.H</a></div></div>
-<div class="ttc" id="a07792_html"><div class="ttname"><a href="a07792.html">addToMemberFunctionSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into member function selection tables. </div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="a01581.html#a5096eb4b4dec593357e23b59fb8a3b7c">   64</a></span>&#160;<a class="code" href="a01581.html#a5096eb4b4dec593357e23b59fb8a3b7c">Foam::sixDoFSolvers::Newmark::~Newmark</a>()</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01581.html#ac2506fa66385de8f42d372481f088348">Foam::sixDoFSolvers::Newmark::solve</a></div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="a01581.html#ac2506fa66385de8f42d372481f088348">   71</a></span>&#160;(</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">bool</span> firstIter,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; fGlobal,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp; tauGlobal,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    scalar deltaT,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    scalar deltaT0</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;{</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Update the linear acceleration and torque</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    updateAcceleration(fGlobal, tauGlobal);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Correct linear velocity</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    v() =</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        tConstraints()</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      &amp; (v0() + aDamp()*deltaT*(gamma_*a() + (1 - gamma_)*<a class="code" href="a10735.html#a94b8a67d6ab1ebab765e5262d1376fa9">a0</a>()));</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Correct angular momentum</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">pi</a>() =</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        rConstraints()</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      &amp; (pi0() + aDamp()*deltaT*(gamma_*tau() + (1 - gamma_)*tau0()));</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Correct position</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    centreOfRotation() =</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        centreOfRotation0()</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      + (</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            tConstraints()</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;          &amp; (</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                deltaT*v0()</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;              + <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(deltaT)*beta_*a() + <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(deltaT)*(0.5 - beta_)*<a class="code" href="a10735.html#a94b8a67d6ab1ebab765e5262d1376fa9">a0</a>()</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            )</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        );</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// Correct orientation</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="a02787.html">vector</a> piDeltaT =</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        rConstraints()</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      &amp; (</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            deltaT*pi0()</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;          + <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(deltaT)*beta_*tau() + <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(deltaT)*(0.5 - beta_)*tau0()</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        );</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="a02691.html">Tuple2&lt;tensor, vector&gt;</a> Qpi = rotate(Q0(), piDeltaT, 1);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="a02045.html">Q</a>() = Qpi.<a class="code" href="a02691.html#a6bc9dc0330d36f5f75e816ddc4ec213e">first</a>();</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10806_html_afd1af6b92676ecc12a5255043ae99e23"><div class="ttname"><a href="a10806.html#afd1af6b92676ecc12a5255043ae99e23">Foam::sixDoFSolvers::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(CrankNicolson, 0)</div></div>
+<div class="ttc" id="a10737_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
+<div class="ttc" id="a10735_html_a94b8a67d6ab1ebab765e5262d1376fa9"><div class="ttname"><a href="a10735.html#a94b8a67d6ab1ebab765e5262d1376fa9">Foam::constant::atomic::a0</a></div><div class="ttdeci">const dimensionedScalar a0</div><div class="ttdoc">Bohr radius: default SI units: [m]. </div></div>
+<div class="ttc" id="a02691_html_a6bc9dc0330d36f5f75e816ddc4ec213e"><div class="ttname"><a href="a02691.html#a6bc9dc0330d36f5f75e816ddc4ec213e">Foam::Tuple2::first</a></div><div class="ttdeci">const Type1 &amp; first() const </div><div class="ttdoc">Return first. </div><div class="ttdef"><b>Definition:</b> <a href="a09028_source.html#l00094">Tuple2.H:94</a></div></div>
+<div class="ttc" id="a01581_html_a5096eb4b4dec593357e23b59fb8a3b7c"><div class="ttname"><a href="a01581.html#a5096eb4b4dec593357e23b59fb8a3b7c">Foam::sixDoFSolvers::Newmark::~Newmark</a></div><div class="ttdeci">virtual ~Newmark()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09799_source.html#l00064">Newmark.C:64</a></div></div>
+<div class="ttc" id="a02691_html"><div class="ttname"><a href="a02691.html">Foam::Tuple2</a></div><div class="ttdoc">A 2-tuple for storing two objects of different types. </div><div class="ttdef"><b>Definition:</b> <a href="a09028_source.html#l00047">Tuple2.H:47</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02330_html"><div class="ttname"><a href="a02330.html">Foam::sixDoFSolver</a></div><div class="ttdef"><b>Definition:</b> <a href="a09803_source.html#l00049">sixDoFSolver.H:49</a></div></div>
+<div class="ttc" id="a01581_html_ac2506fa66385de8f42d372481f088348"><div class="ttname"><a href="a01581.html#ac2506fa66385de8f42d372481f088348">Foam::sixDoFSolvers::Newmark::solve</a></div><div class="ttdeci">virtual void solve(bool firstIter, const vector &amp;fGlobal, const vector &amp;tauGlobal, scalar deltaT, scalar deltaT0)</div><div class="ttdoc">Drag coefficient. </div><div class="ttdef"><b>Definition:</b> <a href="a09799_source.html#l00071">Newmark.C:71</a></div></div>
+<div class="ttc" id="a10806_html_a6c4c46f2c4f394260a6a8621e1d1d82c"><div class="ttname"><a href="a10806.html#a6c4c46f2c4f394260a6a8621e1d1d82c">Foam::sixDoFSolvers::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(sixDoFSolver, CrankNicolson, dictionary)</div></div>
+<div class="ttc" id="a09800_html"><div class="ttname"><a href="a09800.html">Newmark.H</a></div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a00524_html_ab188313de67c2c7ad4a5e8151eefb49d"><div class="ttname"><a href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">Foam::dictionary::lookupOrDefault</a></div><div class="ttdeci">T lookupOrDefault(const word &amp;, const T &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return a T,. </div><div class="ttdef"><b>Definition:</b> <a href="a07689_source.html#l00033">dictionaryTemplates.C:33</a></div></div>
+<div class="ttc" id="a02325_html"><div class="ttname"><a href="a02325.html">Foam::sixDoFRigidBodyMotion</a></div><div class="ttdoc">Six degree of freedom motion for a rigid body. </div><div class="ttdef"><b>Definition:</b> <a href="a09783_source.html#l00066">sixDoFRigidBodyMotion.H:66</a></div></div>
+<div class="ttc" id="a01581_html_a06223014f4ddc77f19c12b99f8fa8516"><div class="ttname"><a href="a01581.html#a06223014f4ddc77f19c12b99f8fa8516">Foam::sixDoFSolvers::Newmark::Newmark</a></div><div class="ttdeci">Newmark(const dictionary &amp;dict, sixDoFRigidBodyMotion &amp;body)</div><div class="ttdoc">Construct from a dictionary and the body. </div><div class="ttdef"><b>Definition:</b> <a href="a09799_source.html#l00044">Newmark.C:44</a></div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a02045_html"><div class="ttname"><a href="a02045.html">Foam::Q</a></div><div class="ttdoc">This function object calculates and outputs the second invariant of the velocity gradient tensor [1/s...</div><div class="ttdef"><b>Definition:</b> <a href="a09370_source.html#l00066">Q.H:66</a></div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

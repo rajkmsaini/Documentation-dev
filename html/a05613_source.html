@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_f4030f3362933683136e1dae328f10c0.html">fvc</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_203b29e442aa07f4b4423b43d42a1b70.html">convectionSchemes</a></li><li class="navelem"><a class="el" href="dir_1ac3ee6505c7eff54d44856091d1075a.html">boundedConvectionScheme</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvc.H</div>  </div>
+<div class="title">boundedConvectionSchemes.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05613.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,62 +119,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Namespace</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::fvc</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Namespace of functions to calculate explicit derivatives.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef fvc_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define fvc_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05612.html">fv.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06089.html">surfaceInterpolate.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05655.html">fvcVolumeIntegrate.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05653.html">fvcSurfaceIntegrate.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05615.html">fvcAverage.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05639.html">fvcReconstruct.H</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05625.html">fvcDdt.H</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05624.html">fvcDDt.H</a>&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05621.html">fvcD2dt2.H</a>&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05627.html">fvcDiv.H</a>&quot;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05629.html">fvcFlux.H</a>&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05631.html">fvcGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05635.html">fvcMagSqrGradGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05649.html">fvcSnGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05619.html">fvcCurl.H</a>&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05633.html">fvcLaplacian.H</a>&quot;</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05651.html">fvcSup.H</a>&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05637.html">fvcMeshPhi.H</a>&quot;</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05635_html"><div class="ttname"><a href="a05635.html">fvcMagSqrGradGrad.H</a></div><div class="ttdoc">Calculate the magnitiude of the square of the gradient of the gradient of the given volField...</div></div>
-<div class="ttc" id="a05621_html"><div class="ttname"><a href="a05621.html">fvcD2dt2.H</a></div><div class="ttdoc">Calculate the second temporal derivative. </div></div>
-<div class="ttc" id="a05655_html"><div class="ttname"><a href="a05655.html">fvcVolumeIntegrate.H</a></div><div class="ttdoc">Volume integrate volField creating a volField. </div></div>
-<div class="ttc" id="a05612_html"><div class="ttname"><a href="a05612.html">fv.H</a></div></div>
-<div class="ttc" id="a05629_html"><div class="ttname"><a href="a05629.html">fvcFlux.H</a></div><div class="ttdoc">Calculate the face-flux of the given field. </div></div>
-<div class="ttc" id="a05649_html"><div class="ttname"><a href="a05649.html">fvcSnGrad.H</a></div><div class="ttdoc">Calculate the snGrad of the given volField. </div></div>
-<div class="ttc" id="a05637_html"><div class="ttname"><a href="a05637.html">fvcMeshPhi.H</a></div><div class="ttdoc">Calculate the mesh motion flux and convert fluxes from absolute to relative and back. </div></div>
-<div class="ttc" id="a05625_html"><div class="ttname"><a href="a05625.html">fvcDdt.H</a></div><div class="ttdoc">Calculate the first temporal derivative. </div></div>
-<div class="ttc" id="a05633_html"><div class="ttname"><a href="a05633.html">fvcLaplacian.H</a></div><div class="ttdoc">Calculate the laplacian of the given field. </div></div>
-<div class="ttc" id="a05631_html"><div class="ttname"><a href="a05631.html">fvcGrad.H</a></div><div class="ttdoc">Calculate the gradient of the given field. </div></div>
-<div class="ttc" id="a06089_html"><div class="ttname"><a href="a06089.html">surfaceInterpolate.H</a></div><div class="ttdoc">Surface Interpolation. </div></div>
-<div class="ttc" id="a05653_html"><div class="ttname"><a href="a05653.html">fvcSurfaceIntegrate.H</a></div><div class="ttdoc">Surface integrate surfaceField creating a volField. Surface sum a surfaceField creating a volField...</div></div>
-<div class="ttc" id="a05651_html"><div class="ttname"><a href="a05651.html">fvcSup.H</a></div><div class="ttdoc">Calculate the field for explicit evaluation of implicit and explicit sources. </div></div>
-<div class="ttc" id="a05619_html"><div class="ttname"><a href="a05619.html">fvcCurl.H</a></div><div class="ttdoc">Calculate the curl of the given volField by constructing the Hodge-dual of the symmetric part of the ...</div></div>
-<div class="ttc" id="a05624_html"><div class="ttname"><a href="a05624.html">fvcDDt.H</a></div><div class="ttdoc">Calculate the substantive (total) derivative. </div></div>
-<div class="ttc" id="a05639_html"><div class="ttname"><a href="a05639.html">fvcReconstruct.H</a></div><div class="ttdoc">Reconstruct volField from a face flux field. </div></div>
-<div class="ttc" id="a05627_html"><div class="ttname"><a href="a05627.html">fvcDiv.H</a></div><div class="ttdoc">Calculate the divergence of the given field. </div></div>
-<div class="ttc" id="a05615_html"><div class="ttname"><a href="a05615.html">fvcAverage.H</a></div><div class="ttdoc">Area-weighted average a surfaceField creating a volField. </div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05612.html">boundedConvectionScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a05615.html#a4268c56d4d11bb57bf7d9c0fb20c7102">makeFvConvectionScheme</a>(boundedConvectionScheme)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05612_html"><div class="ttname"><a href="a05612.html">boundedConvectionScheme.H</a></div></div>
+<div class="ttc" id="a05615_html_a4268c56d4d11bb57bf7d9c0fb20c7102"><div class="ttname"><a href="a05615.html#a4268c56d4d11bb57bf7d9c0fb20c7102">makeFvConvectionScheme</a></div><div class="ttdeci">#define makeFvConvectionScheme(SS)                                                                                      </div><div class="ttdef"><b>Definition:</b> <a href="a05615_source.html#l00217">convectionScheme.H:217</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

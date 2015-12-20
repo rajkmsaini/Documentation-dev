@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_27bacb8e19b5862d96d869422b2be03b.html">smoothers</a></li><li class="navelem"><a class="el" href="dir_1bbde5f3140bd53060fdfeb27201fcac.html">DICGaussSeidel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_12547202c65033a69d4e18947f2fbe2a.html">lduAddressing</a></li><li class="navelem"><a class="el" href="dir_dcd52ee40db40a986002fe7976fc48d2.html">lduInterfaceFields</a></li><li class="navelem"><a class="el" href="dir_cace2b3da6e2c2cbbb6395e984da1e1e.html">processorLduInterfaceField</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">DICGaussSeidelSmoother.H</div>  </div>
+<div class="title">processorLduInterfaceField.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08276.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,108 +120,139 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::DICGaussSeidelSmoother</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::processorLduInterfaceField</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Combined DIC/GaussSeidel smoother for symmetric matrices in which DIC</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    smoothing is followed by GaussSeidel to ensure that any &quot;spikes&quot; created</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    by the DIC sweeps are smoothed-out.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    DICGaussSeidelSmoother.C</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef DICGaussSeidelSmoother_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define DICGaussSeidelSmoother_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08274.html">DICSmoother.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08284.html">GaussSeidelSmoother.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Abstract base class for processor coupled interfaces.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    processorLduInterfaceField.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef processorLduInterfaceField_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define processorLduInterfaceField_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07963.html">primitiveFieldsFwd.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07864.html">typeInfo.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">                   Class DICGaussSeidelSmoother Declaration</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a00514.html">   51</a></span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">class </span><a class="code" href="a00514.html">DICGaussSeidelSmoother</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02343.html">lduMatrix::smoother</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                  Class processorLduInterfaceField Declaration</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a01990.html">   49</a></span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a01990.html">processorLduInterfaceField</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a01990.html#a334ddc45f504958adf0e411b8177302f">TypeName</a>(<span class="stringliteral">&quot;processorLduInterfaceField&quot;</span>);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a00516.html">DICSmoother</a> dicSmoother_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a00899.html">GaussSeidelSmoother</a> gsSmoother_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a01990.html#a84246dcb2da3a0d89ca6eba95b3bbf29">   61</a></span>&#160;        <span class="comment">//- Construct given coupled patch</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a01990.html#a84246dcb2da3a0d89ca6eba95b3bbf29">processorLduInterfaceField</a>()</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        {}</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="a00514.html#a4a86cc11a30b66c44d03da2c13b2f9d2">TypeName</a>(<span class="stringliteral">&quot;DICGaussSeidel&quot;</span>);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01990.html#a3ca4f0ce6cb016c0165459fa4ebb0e85">~processorLduInterfaceField</a>();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- Construct from matrix components</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a00514.html#a51194e8a5911f52c380f7fbf22c6c0d3">DICGaussSeidelSmoother</a></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        (</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a02343.html#a074540ca22ec16e716d95b4be8dd6f97">fieldName</a>,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01274.html">lduMatrix</a>&amp; <a class="code" href="a02343.html#a6c69a7b7081aed05771c6da44c39d654">matrix</a>,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; <a class="code" href="a02343.html#a9ef43df451b9271f3df59c4acdb5ed35">interfaceBouCoeffs</a>,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; <a class="code" href="a02343.html#a2cf70db201a068874f3dfbbdb7808b33">interfaceIntCoeffs</a>,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02753.html">lduInterfaceFieldPtrsList</a>&amp; <a class="code" href="a02343.html#a154f979eccaf538c3609f8c895b97ada">interfaces</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        );</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Smooth the solution for a given number of sweeps</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00514.html#a89d3f58013c5e3dc314d3ebbb8b49d33">smooth</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        (</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a04396.html#aba679271c41582099c8ccf4827fdf217">psi</a>,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; Source,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nSweeps</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">// Access</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="comment">//- Return communicator used for comms</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01990.html#a02dd39dea440f6689604bba1217aa7a5">comm</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="comment">//- Return processor number</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="a01990.html#a4fd291c397aae01bacb1ebc376fe8609">myProcNo</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="comment">//- Return neigbour processor number</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="a01990.html#a72f201805ca79a0e76759a84fcdb10a0">neighbProcNo</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="comment">//- Is the transform required</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a01990.html#a3a543d47cc9b3ccc13cfadfbaac12203">doTransform</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">//- Return face transformation tensor</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a00755.html">tensorField</a>&amp; <a class="code" href="a01990.html#aae68494d956bdfbc23908a80ab07a493">forwardT</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="comment">//- Return rank of component for transform</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="a01990.html#a89a7d4ce3492f44cbd3809bf4c20cade">rank</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Transform given patch field</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a01990.html#aa655b8ec61590cb366dc249e0aeb2434">transformCoupleField</a>(<a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; f) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02753_html"><div class="ttname"><a href="a02753.html">Foam::UPtrList&lt; const lduInterfaceField &gt;</a></div></div>
-<div class="ttc" id="a00756_html"><div class="ttname"><a href="a00756.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07857_source.html#l00051">FieldField.H:51</a></div></div>
-<div class="ttc" id="a08284_html"><div class="ttname"><a href="a08284.html">GaussSeidelSmoother.H</a></div></div>
-<div class="ttc" id="a00514_html_a51194e8a5911f52c380f7fbf22c6c0d3"><div class="ttname"><a href="a00514.html#a51194e8a5911f52c380f7fbf22c6c0d3">Foam::DICGaussSeidelSmoother::DICGaussSeidelSmoother</a></div><div class="ttdeci">DICGaussSeidelSmoother(const word &amp;fieldName, const lduMatrix &amp;matrix, const FieldField&lt; Field, scalar &gt; &amp;interfaceBouCoeffs, const FieldField&lt; Field, scalar &gt; &amp;interfaceIntCoeffs, const lduInterfaceFieldPtrsList &amp;interfaces)</div><div class="ttdoc">Construct from matrix components. </div><div class="ttdef"><b>Definition:</b> <a href="a08275_source.html#l00042">DICGaussSeidelSmoother.C:42</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a02343_html_a074540ca22ec16e716d95b4be8dd6f97"><div class="ttname"><a href="a02343.html#a074540ca22ec16e716d95b4be8dd6f97">Foam::lduMatrix::smoother::fieldName</a></div><div class="ttdeci">const word &amp; fieldName() const </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00367">lduMatrix.H:367</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00899_html"><div class="ttname"><a href="a00899.html">Foam::GaussSeidelSmoother</a></div><div class="ttdoc">A lduMatrix::smoother for Gauss-Seidel. </div><div class="ttdef"><b>Definition:</b> <a href="a08284_source.html#l00048">GaussSeidelSmoother.H:48</a></div></div>
-<div class="ttc" id="a00514_html_a4a86cc11a30b66c44d03da2c13b2f9d2"><div class="ttname"><a href="a00514.html#a4a86cc11a30b66c44d03da2c13b2f9d2">Foam::DICGaussSeidelSmoother::TypeName</a></div><div class="ttdeci">TypeName(&quot;DICGaussSeidel&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00514_html_a89d3f58013c5e3dc314d3ebbb8b49d33"><div class="ttname"><a href="a00514.html#a89d3f58013c5e3dc314d3ebbb8b49d33">Foam::DICGaussSeidelSmoother::smooth</a></div><div class="ttdeci">virtual void smooth(scalarField &amp;psi, const scalarField &amp;Source, const direction cmpt, const label nSweeps) const </div><div class="ttdoc">Smooth the solution for a given number of sweeps. </div><div class="ttdef"><b>Definition:</b> <a href="a08275_source.html#l00080">DICGaussSeidelSmoother.C:80</a></div></div>
-<div class="ttc" id="a00514_html"><div class="ttname"><a href="a00514.html">Foam::DICGaussSeidelSmoother</a></div><div class="ttdoc">Combined DIC/GaussSeidel smoother for symmetric matrices in which DIC smoothing is followed by GaussS...</div><div class="ttdef"><b>Definition:</b> <a href="a08276_source.html#l00051">DICGaussSeidelSmoother.H:51</a></div></div>
-<div class="ttc" id="a02343_html"><div class="ttname"><a href="a02343.html">Foam::lduMatrix::smoother</a></div><div class="ttdoc">Abstract base-class for lduMatrix smoothers. </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00265">lduMatrix.H:265</a></div></div>
-<div class="ttc" id="a08274_html"><div class="ttname"><a href="a08274.html">DICSmoother.H</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02343_html_a9ef43df451b9271f3df59c4acdb5ed35"><div class="ttname"><a href="a02343.html#a9ef43df451b9271f3df59c4acdb5ed35">Foam::lduMatrix::smoother::interfaceBouCoeffs</a></div><div class="ttdeci">const FieldField&lt; Field, scalar &gt; &amp; interfaceBouCoeffs() const </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00377">lduMatrix.H:377</a></div></div>
-<div class="ttc" id="a02343_html_a154f979eccaf538c3609f8c895b97ada"><div class="ttname"><a href="a02343.html#a154f979eccaf538c3609f8c895b97ada">Foam::lduMatrix::smoother::interfaces</a></div><div class="ttdeci">const lduInterfaceFieldPtrsList &amp; interfaces() const </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00387">lduMatrix.H:387</a></div></div>
-<div class="ttc" id="a02343_html_a2cf70db201a068874f3dfbbdb7808b33"><div class="ttname"><a href="a02343.html#a2cf70db201a068874f3dfbbdb7808b33">Foam::lduMatrix::smoother::interfaceIntCoeffs</a></div><div class="ttdeci">const FieldField&lt; Field, scalar &gt; &amp; interfaceIntCoeffs() const </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00382">lduMatrix.H:382</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a04396_html_aba679271c41582099c8ccf4827fdf217"><div class="ttname"><a href="a04396.html#aba679271c41582099c8ccf4827fdf217">psi</a></div><div class="ttdeci">const volScalarField &amp; psi</div><div class="ttdef"><b>Definition:</b> <a href="a04396_source.html#l00024">createFields.H:24</a></div></div>
-<div class="ttc" id="a01274_html"><div class="ttname"><a href="a01274.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00077">lduMatrix.H:77</a></div></div>
-<div class="ttc" id="a00516_html"><div class="ttname"><a href="a00516.html">Foam::DICSmoother</a></div><div class="ttdoc">Simplified diagonal-based incomplete Cholesky smoother for symmetric matrices. </div><div class="ttdef"><b>Definition:</b> <a href="a08274_source.html#l00052">DICSmoother.H:52</a></div></div>
-<div class="ttc" id="a02343_html_a6c69a7b7081aed05771c6da44c39d654"><div class="ttname"><a href="a02343.html#a6c69a7b7081aed05771c6da44c39d654">Foam::lduMatrix::smoother::matrix</a></div><div class="ttdeci">const lduMatrix &amp; matrix() const </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00372">lduMatrix.H:372</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">//- Transform given patch component field</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a01990.html#aa655b8ec61590cb366dc249e0aeb2434">transformCoupleField</a></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        (</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a00755.html">scalarField</a>&amp; f,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07989.html">tensorField.H</a>&quot;</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a01990.html#aa655b8ec61590cb366dc249e0aeb2434">  115</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01990.html#aa655b8ec61590cb366dc249e0aeb2434">Foam::processorLduInterfaceField::transformCoupleField</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;(</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="a00755.html">Field&lt;Type&gt;</a>&amp; f</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01990.html#a3a543d47cc9b3ccc13cfadfbaac12203">doTransform</a>())</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="a01990.html#aae68494d956bdfbc23908a80ab07a493">forwardT</a>().size() == 1)</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(f, <a class="code" href="a01990.html#aae68494d956bdfbc23908a80ab07a493">forwardT</a>()[0], f);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <a class="code" href="a10725.html#a919915170941701c1223291531ad010c">transform</a>(f, <a class="code" href="a01990.html#aae68494d956bdfbc23908a80ab07a493">forwardT</a>(), f);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01990_html_a3ca4f0ce6cb016c0165459fa4ebb0e85"><div class="ttname"><a href="a01990.html#a3ca4f0ce6cb016c0165459fa4ebb0e85">Foam::processorLduInterfaceField::~processorLduInterfaceField</a></div><div class="ttdeci">virtual ~processorLduInterfaceField()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08275_source.html#l00039">processorLduInterfaceField.C:39</a></div></div>
+<div class="ttc" id="a01990_html_a72f201805ca79a0e76759a84fcdb10a0"><div class="ttname"><a href="a01990.html#a72f201805ca79a0e76759a84fcdb10a0">Foam::processorLduInterfaceField::neighbProcNo</a></div><div class="ttdeci">virtual int neighbProcNo() const  =0</div><div class="ttdoc">Return neigbour processor number. </div></div>
+<div class="ttc" id="a10725_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10725.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08824_source.html#l00043">direction.H:43</a></div></div>
+<div class="ttc" id="a01990_html_a3a543d47cc9b3ccc13cfadfbaac12203"><div class="ttname"><a href="a01990.html#a3a543d47cc9b3ccc13cfadfbaac12203">Foam::processorLduInterfaceField::doTransform</a></div><div class="ttdeci">virtual bool doTransform() const  =0</div><div class="ttdoc">Is the transform required. </div></div>
+<div class="ttc" id="a01990_html_a84246dcb2da3a0d89ca6eba95b3bbf29"><div class="ttname"><a href="a01990.html#a84246dcb2da3a0d89ca6eba95b3bbf29">Foam::processorLduInterfaceField::processorLduInterfaceField</a></div><div class="ttdeci">processorLduInterfaceField()</div><div class="ttdoc">Construct given coupled patch. </div><div class="ttdef"><b>Definition:</b> <a href="a08276_source.html#l00061">processorLduInterfaceField.H:61</a></div></div>
+<div class="ttc" id="a01990_html_a334ddc45f504958adf0e411b8177302f"><div class="ttname"><a href="a01990.html#a334ddc45f504958adf0e411b8177302f">Foam::processorLduInterfaceField::TypeName</a></div><div class="ttdeci">TypeName(&quot;processorLduInterfaceField&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a07963_html"><div class="ttname"><a href="a07963.html">primitiveFieldsFwd.H</a></div><div class="ttdoc">Forward declarations of the specialisations of Field<T> for scalar, vector and tensor. </div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; tensor &gt;</a></div></div>
+<div class="ttc" id="a01990_html_a02dd39dea440f6689604bba1217aa7a5"><div class="ttname"><a href="a01990.html#a02dd39dea440f6689604bba1217aa7a5">Foam::processorLduInterfaceField::comm</a></div><div class="ttdeci">virtual label comm() const  =0</div><div class="ttdoc">Return communicator used for comms. </div></div>
+<div class="ttc" id="a01990_html_a4fd291c397aae01bacb1ebc376fe8609"><div class="ttname"><a href="a01990.html#a4fd291c397aae01bacb1ebc376fe8609">Foam::processorLduInterfaceField::myProcNo</a></div><div class="ttdeci">virtual int myProcNo() const  =0</div><div class="ttdoc">Return processor number. </div></div>
+<div class="ttc" id="a01990_html"><div class="ttname"><a href="a01990.html">Foam::processorLduInterfaceField</a></div><div class="ttdoc">Abstract base class for processor coupled interfaces. </div><div class="ttdef"><b>Definition:</b> <a href="a08276_source.html#l00049">processorLduInterfaceField.H:49</a></div></div>
+<div class="ttc" id="a07989_html"><div class="ttname"><a href="a07989.html">tensorField.H</a></div></div>
+<div class="ttc" id="a01990_html_aa655b8ec61590cb366dc249e0aeb2434"><div class="ttname"><a href="a01990.html#aa655b8ec61590cb366dc249e0aeb2434">Foam::processorLduInterfaceField::transformCoupleField</a></div><div class="ttdeci">void transformCoupleField(Field&lt; Type &gt; &amp;f) const </div><div class="ttdoc">Transform given patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a08276_source.html#l00115">processorLduInterfaceField.H:115</a></div></div>
+<div class="ttc" id="a01990_html_a89a7d4ce3492f44cbd3809bf4c20cade"><div class="ttname"><a href="a01990.html#a89a7d4ce3492f44cbd3809bf4c20cade">Foam::processorLduInterfaceField::rank</a></div><div class="ttdeci">virtual int rank() const  =0</div><div class="ttdoc">Return rank of component for transform. </div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a919915170941701c1223291531ad010c"><div class="ttname"><a href="a10725.html#a919915170941701c1223291531ad010c">Foam::transform</a></div><div class="ttdeci">dimensionSet transform(const dimensionSet &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a07878_source.html#l00465">dimensionSet.C:465</a></div></div>
+<div class="ttc" id="a07864_html"><div class="ttname"><a href="a07864.html">typeInfo.H</a></div></div>
+<div class="ttc" id="a01990_html_aae68494d956bdfbc23908a80ab07a493"><div class="ttname"><a href="a01990.html#aae68494d956bdfbc23908a80ab07a493">Foam::processorLduInterfaceField::forwardT</a></div><div class="ttdeci">virtual const tensorField &amp; forwardT() const  =0</div><div class="ttdoc">Return face transformation tensor. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_7c12a81ee82d3aaa033ce73b51dae3b7.html">faceToCell</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_c382fa095c9c33d8673c0dd60aaef275.html">fvMesh</a></li><li class="navelem"><a class="el" href="dir_f54ce79c9902d97f8b0f7c9d890967db.html">extendedStencil</a></li><li class="navelem"><a class="el" href="dir_29a0ec52e1bec07b305a38b682ef8704.html">cellToCell</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">extendedFaceToCellStencil.C</div>  </div>
+<div class="title">extendedCellToCellStencilTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05804.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,58 +121,90 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05805.html">extendedFaceToCellStencil.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00696.html#a90f7fb44e65d3534ce8bf1e65141a3e0">   32</a></span>&#160;<a class="code" href="a00696.html#a90f7fb44e65d3534ce8bf1e65141a3e0">Foam::extendedFaceToCellStencil::extendedFaceToCellStencil</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    mesh_(mesh)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// Check for transformation - not supported.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01899.html">polyBoundaryMesh</a>&amp; <a class="code" href="a02902.html#a6eea546b8fab7318f4d0d67e4ff28fde">patches</a> = mesh.<a class="code" href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patches, patchI)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">if</span> (patches[patchI].coupled())</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00416.html">coupledPolyPatch</a>&amp; cpp =</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                refCast&lt;const coupledPolyPatch&gt;(patches[patchI]);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="keywordflow">if</span> (!cpp.<a class="code" href="a00416.html#a155cd0ed094eb1c75aba4cdb37be8c4d">parallel</a>() || cpp.<a class="code" href="a00416.html#ae5833a85d0c917be6dea70be00866124">separated</a>())</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                    <span class="stringliteral">&quot;extendedFaceToCellStencil::extendedFaceToCellStencil&quot;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                    <span class="stringliteral">&quot;(const polyMesh&amp;)&quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                )   &lt;&lt; <span class="stringliteral">&quot;Coupled patches with transformations not supported.&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;Problematic patch &quot;</span> &lt;&lt; cpp.<a class="code" href="a01788.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00416_html_ae5833a85d0c917be6dea70be00866124"><div class="ttname"><a href="a00416.html#ae5833a85d0c917be6dea70be00866124">Foam::coupledPolyPatch::separated</a></div><div class="ttdeci">virtual bool separated() const </div><div class="ttdoc">Are the planes separated. </div><div class="ttdef"><b>Definition:</b> <a href="a08594_source.html#l00276">coupledPolyPatch.H:276</a></div></div>
-<div class="ttc" id="a01788_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01788.html#a75b72488d2e82151b025744974919d5d">Foam::patchIdentifier::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a08416_source.html#l00109">patchIdentifier.H:109</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a05805_html"><div class="ttname"><a href="a05805.html">extendedFaceToCellStencil.H</a></div></div>
-<div class="ttc" id="a02902_html_a6eea546b8fab7318f4d0d67e4ff28fde"><div class="ttname"><a href="a02902.html#a6eea546b8fab7318f4d0d67e4ff28fde">patches</a></div><div class="ttdeci">patches[0]</div><div class="ttdef"><b>Definition:</b> <a href="a02902_source.html#l00036">createSingleCellMesh.H:36</a></div></div>
-<div class="ttc" id="a00416_html_a155cd0ed094eb1c75aba4cdb37be8c4d"><div class="ttname"><a href="a00416.html#a155cd0ed094eb1c75aba4cdb37be8c4d">Foam::coupledPolyPatch::parallel</a></div><div class="ttdeci">virtual bool parallel() const </div><div class="ttdoc">Are the cyclic planes parallel. </div><div class="ttdef"><b>Definition:</b> <a href="a08594_source.html#l00288">coupledPolyPatch.H:288</a></div></div>
-<div class="ttc" id="a01899_html"><div class="ttname"><a href="a01899.html">Foam::polyBoundaryMesh</a></div><div class="ttdoc">Foam::polyBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08574_source.html#l00060">polyBoundaryMesh.H:60</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a01905_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01905.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00421">polyMesh.H:421</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a00696_html_a90f7fb44e65d3534ce8bf1e65141a3e0"><div class="ttname"><a href="a00696.html#a90f7fb44e65d3534ce8bf1e65141a3e0">Foam::extendedFaceToCellStencil::extendedFaceToCellStencil</a></div><div class="ttdeci">extendedFaceToCellStencil(const polyMesh &amp;)</div><div class="ttdoc">Construct from mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05804_source.html#l00032">extendedFaceToCellStencil.C:32</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00416_html"><div class="ttname"><a href="a00416.html">Foam::coupledPolyPatch</a></div><div class="ttdoc">The coupledPolyPatch is an abstract base class for patches that couple regions of the computational d...</div><div class="ttdef"><b>Definition:</b> <a href="a08594_source.html#l00051">coupledPolyPatch.H:51</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05803.html">extendedCellToCellStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05822.html">extendedCellToFaceStencil.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> WeightType&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a02618.html">Foam::tmp</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;&lt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a00921.html">Foam::GeometricField</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    &lt;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">typename</span> <a class="code" href="a01738.html#a178b9c293efe9e4a0ed072901783c692">Foam::outerProduct&lt;WeightType, Type&gt;::type</a>,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="a00886.html">Foam::fvPatchField</a>,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a02805.html">Foam::volMesh</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    &gt;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;&gt; <a class="code" href="a00695.html#a4fad99194046a1700711cf8aabb92d3a">Foam::extendedCellToCellStencil::weightedSum</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> mapDistribute&amp; map,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a8d042301b1c77516c5bfd527662e4f54">labelListList</a>&amp; stencil,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> GeometricField&lt;Type, fvPatchField, volMesh&gt;&amp; fld,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> List&lt;List&lt;WeightType&gt; &gt;&amp; stencilWeights</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">outerProduct&lt;WeightType, Type&gt;::type</a> WeightedType;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">typedef</span> GeometricField&lt;WeightedType, fvPatchField, volMesh&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        WeightedFieldType;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> fvMesh&amp; mesh = fld.mesh();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Collect internal and boundary values</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    List&lt;List&lt;Type&gt; &gt; stencilFld;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a00696.html#a5ad2e7543e803240f0dd50eac039ea73">extendedCellToFaceStencil::collectData</a>(map, stencil, fld, stencilFld);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    tmp&lt;WeightedFieldType&gt; twf</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    (</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">new</span> WeightedFieldType</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        (</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            IOobject</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            (</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                fld.name(),</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                mesh.time().timeName(),</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            ),</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            mesh,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            dimensioned&lt;WeightedType&gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            (</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                fld.name(),</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                fld.dimensions(),</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                pTraits&lt;WeightedType&gt;::zero</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            )</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        )</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    );</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    WeightedFieldType&amp; wf = twf();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(wf, celli)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">const</span> List&lt;Type&gt;&amp; stField = stencilFld[celli];</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">const</span> List&lt;WeightType&gt;&amp; stWeight = stencilWeights[celli];</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(stField, i)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            wf[celli] += stWeight[i]*stField[i];</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Boundaries values?</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> twf;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a8d042301b1c77516c5bfd527662e4f54"><div class="ttname"><a href="a10725.html#a8d042301b1c77516c5bfd527662e4f54">Foam::labelListList</a></div><div class="ttdeci">List&lt; labelList &gt; labelListList</div><div class="ttdoc">A List of labelList. </div><div class="ttdef"><b>Definition:</b> <a href="a08887_source.html#l00057">labelList.H:57</a></div></div>
+<div class="ttc" id="a00695_html_a4fad99194046a1700711cf8aabb92d3a"><div class="ttname"><a href="a00695.html#a4fad99194046a1700711cf8aabb92d3a">Foam::extendedCellToCellStencil::weightedSum</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; typename outerProduct&lt; WeightType, Type &gt;::type, fvPatchField, volMesh &gt; &gt; weightedSum(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;fld, const List&lt; List&lt; WeightType &gt; &gt; &amp;stencilWeights)</div><div class="ttdoc">Sum surface field contributions to create cell values. </div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a01738_html_a178b9c293efe9e4a0ed072901783c692"><div class="ttname"><a href="a01738.html#a178b9c293efe9e4a0ed072901783c692">Foam::outerProduct::type</a></div><div class="ttdeci">typeOfRank&lt; typename pTraits&lt; arg1 &gt;::cmptType, int(pTraits&lt; arg1 &gt;::rank)+int(pTraits&lt; arg2 &gt;::rank) &gt;::type type</div><div class="ttdef"><b>Definition:</b> <a href="a09051_source.html#l00072">products.H:72</a></div></div>
+<div class="ttc" id="a00696_html_a5ad2e7543e803240f0dd50eac039ea73"><div class="ttname"><a href="a00696.html#a5ad2e7543e803240f0dd50eac039ea73">Foam::extendedCellToFaceStencil::collectData</a></div><div class="ttdeci">static void collectData(const mapDistribute &amp;map, const labelListList &amp;stencil, const GeometricField&lt; T, fvPatchField, volMesh &gt; &amp;fld, List&lt; List&lt; T &gt; &gt; &amp;stencilFld)</div><div class="ttdoc">Use map to get the data into stencil order. </div></div>
+<div class="ttc" id="a02805_html"><div class="ttname"><a href="a02805.html">Foam::volMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a06158_source.html#l00047">volMesh.H:47</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a05822_html"><div class="ttname"><a href="a05822.html">extendedCellToFaceStencil.H</a></div></div>
+<div class="ttc" id="a05803_html"><div class="ttname"><a href="a05803.html">extendedCellToCellStencil.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

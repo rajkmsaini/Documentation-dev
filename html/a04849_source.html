@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_1dcc9f8d039401a5088c21c8f851d182.html">polyTopoChange</a></li><li class="navelem"><a class="el" href="dir_312178702b93695831f6550a8adac170.html">polyTopoChange</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_e23327a71743ffe75713f6a7da1ee175.html">polyMeshAdder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">refinementData.C</div>  </div>
+<div class="title">faceCoupleInfoTemplates.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04849.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,65 +121,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04850.html">refinementData.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04848.html">faceCoupleInfo.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; Foam::operator&lt;&lt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;(</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a01725.html">Foam::Ostream</a>&amp; os,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02098.html">Foam::refinementData</a>&amp; wDist</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span> (os.format() == IOstream::ASCII)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        os &lt;&lt; wDist.refinementCount_ &lt;&lt; token::SPACE &lt;&lt; wDist.count_;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        os.write</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        (</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            reinterpret_cast&lt;const char*&gt;(&amp;wDist.refinementCount_),</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keyword">sizeof</span>(refinementData)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        );</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Add a T entry</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>FaceList&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a00755.html">Foam::pointField</a> Foam::faceCoupleInfo::calcFaceCentres</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00724.html#af60f9ca8587a53c90b7a99e5059b9d64">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> FaceList&lt;face&gt;&amp; faces,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; points,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> start,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> size</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a00755.html">pointField</a> fc(size);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI = start;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fc, i)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        fc[i] = faces[faceI++].centre(points);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// Check state of Ostream</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    os.check(<span class="stringliteral">&quot;Ostream&amp; operator&lt;&lt;(Ostream&amp;, const refinementData&amp;)&quot;</span>);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> os;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a01191.html">Foam::Istream</a>&amp; <a class="code" href="a10675.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a>(<a class="code" href="a01191.html">Foam::Istream</a>&amp; is, <a class="code" href="a02098.html">Foam::refinementData</a>&amp; wDist)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (is.<a class="code" href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">format</a>() == IOstream::ASCII)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        is &gt;&gt; wDist.refinementCount_ &gt;&gt; wDist.count_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        is.<a class="code" href="a01191.html#a89057c9d9e24ba872ccb8546086498ec">read</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        (</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            reinterpret_cast&lt;char*&gt;(&amp;wDist.refinementCount_),</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keyword">sizeof</span>(refinementData)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        );</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// Check state of Istream</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    is.<a class="code" href="a01177.html#af85c845c01b78192c2f5302a271d153d">check</a>(<span class="stringliteral">&quot;Istream&amp; operator&gt;&gt;(Istream&amp;, refinementData&amp;)&quot;</span>);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> is;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a01191_html_a89057c9d9e24ba872ccb8546086498ec"><div class="ttname"><a href="a01191.html#a89057c9d9e24ba872ccb8546086498ec">Foam::Istream::read</a></div><div class="ttdeci">virtual Istream &amp; read(token &amp;)=0</div><div class="ttdoc">Return next token from stream. </div></div>
-<div class="ttc" id="a04850_html"><div class="ttname"><a href="a04850.html">refinementData.H</a></div></div>
-<div class="ttc" id="a01177_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01177.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07728_source.html#l00092">IOstream.C:92</a></div></div>
-<div class="ttc" id="a10675_html_a44f398e0525f8d7f48cead029868d845"><div class="ttname"><a href="a10675.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a></div><div class="ttdeci">Istream &amp; operator&gt;&gt;(Istream &amp;, edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04915_source.html#l00144">edgeMeshIO.C:144</a></div></div>
-<div class="ttc" id="a01177_html_a1e2dd3d90088c6d1ed0a27bd75d814fb"><div class="ttname"><a href="a01177.html#a1e2dd3d90088c6d1ed0a27bd75d814fb">Foam::IOstream::format</a></div><div class="ttdeci">streamFormat format() const </div><div class="ttdoc">Return current stream format. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00377">IOstream.H:377</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a02098_html"><div class="ttname"><a href="a02098.html">Foam::refinementData</a></div><div class="ttdoc">Transfers refinement levels such that slow transition between levels is maintained. Used in FaceCellWave. </div><div class="ttdef"><b>Definition:</b> <a href="a04850_source.html#l00054">refinementData.H:54</a></div></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> fc;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04848_html"><div class="ttname"><a href="a04848.html">faceCoupleInfo.H</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_dc2172eec47757b3e024133ec45cdacf.html">wallLubricationModels</a></li><li class="navelem"><a class="el" href="dir_a5a0381b2a62e42e250285b6ed33e9e3.html">wallLubricationModel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_fdd174abb8ada244b49e98779c87ac3c.html">solvers</a></li><li class="navelem"><a class="el" href="dir_d62a5a20700de1cb9696e405d497a576.html">multiphase</a></li><li class="navelem"><a class="el" href="dir_bd1c0bce0f70f7327528a03b20ac8e2b.html">reactingEulerFoam</a></li><li class="navelem"><a class="el" href="dir_27c83a420e522b8ccff26d2d4e401b3e.html">interfacialModels</a></li><li class="navelem"><a class="el" href="dir_cee67cef8b707840d7034735f1e2f9fa.html">wallDampingModels</a></li><li class="navelem"><a class="el" href="dir_cbad2e1958ced1f0dfb5531583af5593.html">interpolated</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">newWallLubricationModel.C</div>  </div>
+<div class="title">interpolatedWallDamping.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a03605.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,48 +121,85 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;wallLubricationModel.H&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a03606.html">interpolatedWallDamping.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;phasePair.H&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a00084.html">Foam::autoPtr&lt;Foam::wallLubricationModel&gt;</a> <a class="code" href="a02827.html#a20b8addd6b1958cab7b8712ecbe67207">Foam::wallLubricationModel::New</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> dictionary&amp; dict,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> phasePair&amp; pair</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    word wallLubricationModelType(dict.lookup(<span class="stringliteral">&quot;type&quot;</span>));</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Selecting wallLubricationModel for &quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        &lt;&lt; pair &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; wallLubricationModelType &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    dictionaryConstructorTable::iterator cstrIter =</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(wallLubricationModelType);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a>(<span class="stringliteral">&quot;wallLubricationModel::New&quot;</span>)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown wallLubricationModelType type &quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; wallLubricationModelType &lt;&lt; endl &lt;&lt; endl</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid wallLubricationModel types are : &quot;</span> &lt;&lt; endl</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06145.html">surfaceInterpolate.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>wallDampingModels</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(interpolated, 0);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a01150.html#ad92a30c3e8c1b95706d50a8884fe46ac">Foam::wallDampingModels::interpolated::interpolated</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> dictionary&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> phasePair&amp; pair</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    wallDampingModel(dict, pair)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> cstrIter()(<a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, pair);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a01150.html#a0074db41285b7d71b764ef377efadd07">Foam::wallDampingModels::interpolated::~interpolated</a>()</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{}</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr&lt; Foam::wallLubricationModel &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a02827_html_a20b8addd6b1958cab7b8712ecbe67207"><div class="ttname"><a href="a02827.html#a20b8addd6b1958cab7b8712ecbe67207">Foam::wallLubricationModel::New</a></div><div class="ttdeci">static autoPtr&lt; wallLubricationModel &gt; New(const dictionary &amp;dict, const phasePair &amp;pair)</div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volScalarField&gt;</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a01150.html#a3e273d5314c43b22c5b7a7b6bf7c5a4d">Foam::wallDampingModels::interpolated::damp</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;(</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> tmp&lt;volScalarField&gt;&amp; <a class="code" href="a10738.html#a2774afe1f96ab9c80af9ea7946f17bde">F</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10783.html#ae7bb06bb4b6724eb8a202da04f6e5557">limiter</a>()*<a class="code" href="a10738.html#a2774afe1f96ab9c80af9ea7946f17bde">F</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volVectorField&gt;</a></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<a class="code" href="a01150.html#a3e273d5314c43b22c5b7a7b6bf7c5a4d">Foam::wallDampingModels::interpolated::damp</a></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;(</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> tmp&lt;volVectorField&gt;&amp; <a class="code" href="a10738.html#a2774afe1f96ab9c80af9ea7946f17bde">F</a></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10783.html#ae7bb06bb4b6724eb8a202da04f6e5557">limiter</a>()*<a class="code" href="a10738.html#a2774afe1f96ab9c80af9ea7946f17bde">F</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::surfaceScalarField&gt;</a></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<a class="code" href="a01150.html#a3e273d5314c43b22c5b7a7b6bf7c5a4d">Foam::wallDampingModels::interpolated::damp</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;(</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> tmp&lt;surfaceScalarField&gt;&amp; Ff</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10759.html#a768cc91e806b7278729a11134de57ecf">fvc::interpolate</a>(<a class="code" href="a10783.html#ae7bb06bb4b6724eb8a202da04f6e5557">limiter</a>())*<a class="code" href="a02967.html#ab6163be8b61b7ebb8c44abbe3d33fd00">Ff</a>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10759_html_a768cc91e806b7278729a11134de57ecf"><div class="ttname"><a href="a10759.html#a768cc91e806b7278729a11134de57ecf">Foam::fvc::interpolate</a></div><div class="ttdeci">static tmp&lt; GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &gt; interpolate(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;tvf, const surfaceScalarField &amp;faceFlux, Istream &amp;schemeData)</div><div class="ttdoc">Interpolate field onto faces using scheme given by Istream. </div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01150_html_a0074db41285b7d71b764ef377efadd07"><div class="ttname"><a href="a01150.html#a0074db41285b7d71b764ef377efadd07">Foam::wallDampingModels::interpolated::~interpolated</a></div><div class="ttdeci">virtual ~interpolated()</div><div class="ttdoc">Destructor. </div></div>
+<div class="ttc" id="a01150_html_ad92a30c3e8c1b95706d50a8884fe46ac"><div class="ttname"><a href="a01150.html#ad92a30c3e8c1b95706d50a8884fe46ac">Foam::wallDampingModels::interpolated::interpolated</a></div><div class="ttdeci">interpolated(const dictionary &amp;dict, const phasePair &amp;pair)</div><div class="ttdoc">Construct from components. </div></div>
+<div class="ttc" id="a10783_html_ae7bb06bb4b6724eb8a202da04f6e5557"><div class="ttname"><a href="a10783.html#ae7bb06bb4b6724eb8a202da04f6e5557">Foam::MULES::limiter</a></div><div class="ttdeci">void limiter(scalarField &amp;allLambda, const RdeltaTType &amp;rDeltaT, const RhoType &amp;rho, const volScalarField &amp;psi, const surfaceScalarField &amp;phiBD, const surfaceScalarField &amp;phiCorr, const SpType &amp;Sp, const SuType &amp;Su, const scalar psiMax, const scalar psiMin)</div><div class="ttdef"><b>Definition:</b> <a href="a05801_source.html#l00168">MULESTemplates.C:168</a></div></div>
+<div class="ttc" id="a03606_html"><div class="ttname"><a href="a03606.html">interpolatedWallDamping.H</a></div></div>
+<div class="ttc" id="a01150_html_a3e273d5314c43b22c5b7a7b6bf7c5a4d"><div class="ttname"><a href="a01150.html#a3e273d5314c43b22c5b7a7b6bf7c5a4d">Foam::wallDampingModels::interpolated::damp</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; damp(const tmp&lt; volScalarField &gt; &amp;) const </div><div class="ttdoc">Return damped coefficient. </div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a10738_html_a2774afe1f96ab9c80af9ea7946f17bde"><div class="ttname"><a href="a10738.html#a2774afe1f96ab9c80af9ea7946f17bde">Foam::constant::physicoChemical::F</a></div><div class="ttdeci">const dimensionedScalar F</div><div class="ttdoc">Faraday constant: default SI units: [C/mol]. </div></div>
+<div class="ttc" id="a02967_html_ab6163be8b61b7ebb8c44abbe3d33fd00"><div class="ttname"><a href="a02967.html#ab6163be8b61b7ebb8c44abbe3d33fd00">Ff</a></div><div class="ttdeci">surfaceScalarField Ff(fluid.Ff())</div></div>
+<div class="ttc" id="a06145_html"><div class="ttname"><a href="a06145.html">surfaceInterpolate.H</a></div><div class="ttdoc">Surface Interpolation. </div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

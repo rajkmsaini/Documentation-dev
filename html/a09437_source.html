@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_76cda00b2119e3ca1b811eb59fd40c16.html">surfaceFilmModels</a></li><li class="navelem"><a class="el" href="dir_14c53c78ec2b5d882a56315f8bf4c443.html">derivedFvPatchFields</a></li><li class="navelem"><a class="el" href="dir_f85b0998d10481a4c6e046d62ec5bbc1.html">inclinedFilmNusseltInletVelocity</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_6992af9b03f6fc22ea45caf98ff89caa.html">randomProcesses</a></li><li class="navelem"><a class="el" href="dir_961fac5356e98051294954c7e09f6043.html">noise</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">inclinedFilmNusseltInletVelocityFvPatchVectorField.H</div>  </div>
+<div class="title">noiseFFT.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09437.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,157 +120,142 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::noiseFFT</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Film velocity boundary condition for inclined films that imposes a</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    sinusoidal perturbation on top of a mean flow rate, where the velocity is</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    calculated using the Nusselt solution.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    inclinedFilmNusseltInletVelocityFvPatchVectorField.C</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifndef inclinedFilmNusseltInletVelocityFvPatchVectorField_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define inclinedFilmNusseltInletVelocityFvPatchVectorField_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05463.html">fvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05130.html">fixedValueFvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08783.html">DataEntry.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    FFT of the pressure field</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    noiseFFT.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef noiseFFT_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define noiseFFT_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07969.html">scalarField.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08187.html">graph.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">     Class inclinedFilmNusseltInletVelocityFvPatchVectorField Declaration</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a01033.html">   52</a></span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span><a class="code" href="a01033.html">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">public</span> fixedValueFvPatchVectorField</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                           Class noiseFFT Declaration</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a01610.html">   49</a></span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a01610.html">noiseFFT</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00755.html">scalarField</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">//- Time spacing of the raw data</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        scalar deltat_;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Mean mass flow rate per unit length [kg/s/m]</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a00084.html">autoPtr&lt;DataEntry&lt;scalar&gt;</a> &gt; GammaMean_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Perturbation amplitude [m]</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a00084.html">autoPtr&lt;DataEntry&lt;scalar&gt;</a> &gt; a_;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a01610.html#a3eb95a687e8cb8fff74dcf23a75e5624">   62</a></span>&#160;    <span class="comment">//- Reference pressure</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">static</span> scalar <a class="code" href="a01610.html#a3eb95a687e8cb8fff74dcf23a75e5624">p0</a>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//- Perturbation frequency [rad/s/m]</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a00084.html">autoPtr&lt;DataEntry&lt;scalar&gt;</a> &gt; omega_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a01033.html#a1632099b191df31720657cb4956e6589">TypeName</a>(<span class="stringliteral">&quot;inclinedFilmNusseltInletVelocity&quot;</span>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">//- Construct from pressure field</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="a01610.html#a348f943951269966f05a396dae16446d">noiseFFT</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        (</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keyword">const</span> scalar deltat,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; pressure</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        );</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//- Construct from patch and internal field</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        (</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00877.html">fvPatch</a>&amp;,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00527.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        );</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Construct from Istream</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a01610.html#a348f943951269966f05a396dae16446d">noiseFFT</a>(<a class="code" href="a01199.html">Istream</a>&amp;);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//- Construct from pressure field file name</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a01610.html#a348f943951269966f05a396dae16446d">noiseFFT</a>(<span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; pFileName, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> skip = 0);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member Functions</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Construct from patch, internal field and dictionary</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        (</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00877.html">fvPatch</a>&amp;,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00527.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp;,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        );</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//- Construct by mapping given</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">// inclinedFilmNusseltInletVelocityFvPatchVectorField onto a new patch</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        (</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01033.html">inclinedFilmNusseltInletVelocityFvPatchVectorField</a>&amp;,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00877.html">fvPatch</a>&amp;,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00527.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp;,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00879.html">fvPatchFieldMapper</a>&amp;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        );</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Return the graph of p(t)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#ab3bb58e46b5d8aa3726e54d5e6a36273">pt</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Return the nth window</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a> <a class="code" href="a01610.html#a0a5d3be0ef4201744b9cdbb282cdfddc">window</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a4fe115e9da5548101504dfdb7df84ce4">N</a>, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a07006.html#a830e93cc5b8d859299d1a788c12be8ac">n</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">//- Return the Hanning window function</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a> <a class="code" href="a01610.html#a6ae375b81f24f96f4ae4c0e8117bb447">Hanning</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a4fe115e9da5548101504dfdb7df84ce4">N</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Return the fft of the given pressure data</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a> <a class="code" href="a01610.html#ae6564d3e0eb705d41ca7c01f4249b6c6">Pf</a>(<span class="keyword">const</span> <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a>&amp; pn) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//- Return the multi-window mean fft of the complete pressure data</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#ab358c02e9bb8afa9d8dce50bc7c2861d">meanPf</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a4fe115e9da5548101504dfdb7df84ce4">N</a>, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a579c47e7dd8af8a26ec41738d07c1f7c">nw</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Return the multi-window RMS mean fft of the complete pressure data</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#a3a16bcdb905d027b296dd0cb5ae070ee">RMSmeanPf</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a4fe115e9da5548101504dfdb7df84ce4">N</a>, <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a04425.html#a579c47e7dd8af8a26ec41738d07c1f7c">nw</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Construct as copy</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        (</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01033.html">inclinedFilmNusseltInletVelocityFvPatchVectorField</a>&amp;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        );</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="a01033.html#a40a4fa5adfca92c7ac14e855f302bf5d">  108</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02608.html">tmp&lt;fvPatchVectorField&gt;</a> <a class="code" href="a01033.html#a40a4fa5adfca92c7ac14e855f302bf5d">clone</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02608.html">tmp&lt;fvPatchVectorField&gt;</a></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            (</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                <span class="keyword">new</span> <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a>(*<span class="keyword">this</span>)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            );</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="comment">//- Construct as copy setting internal field reference</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        (</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01033.html">inclinedFilmNusseltInletVelocityFvPatchVectorField</a>&amp;,</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00527.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        );</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Return the narrow-band PFL (pressure-fluctuation level) spectrum</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#afd19402d76d82beacf0ee7003122739d">Lf</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; gPf) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Return the one-third-octave-band PFL spectrum</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">//  starting at octave with mean frequency f1</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#aa7f180fa11de4e9a567e71c29b054d0b">Ldelta</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; gLf, <span class="keyword">const</span> scalar <a class="code" href="a04425.html#a5b4b6290162aa22a61932356154d652a">f1</a>, <span class="keyword">const</span> scalar <a class="code" href="a04425.html#a26cc20849963ccda569a78f672c8e2c4">fU</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">//- Return the one-third-octave-band pressure spectrum</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="comment">//  starting at octave with mean frequency f1</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="a00945.html">graph</a> <a class="code" href="a01610.html#a9f7703f5a07fb07bf033722787651920">Pdelta</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; gLf, <span class="keyword">const</span> scalar <a class="code" href="a04425.html#a5b4b6290162aa22a61932356154d652a">f1</a>, <span class="keyword">const</span> scalar <a class="code" href="a04425.html#a26cc20849963ccda569a78f672c8e2c4">fU</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="comment">//- Return the total PFL as the sum of Lf over all frequencies</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        scalar <a class="code" href="a01610.html#ab0b8cb52eb284e8124b47e7bba012681">Lsum</a>(<span class="keyword">const</span> <a class="code" href="a00945.html">graph</a>&amp; gLf) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">//- Convert the db into Pa</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        scalar <a class="code" href="a01610.html#ac04189656a50344834ed5ed1326a0672">dbToPa</a>(<span class="keyword">const</span> scalar db) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="comment">//- Convert the db-field into Pa</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a> <a class="code" href="a01610.html#ac04189656a50344834ed5ed1326a0672">dbToPa</a>(<span class="keyword">const</span> <a class="code" href="a02618.html">tmp&lt;scalarField&gt;</a>&amp; db) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="comment">//- Construct and return a clone setting internal field reference</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="a01033.html#ab6f6b734c9ed464a2b63ba05b86aafd0">  125</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02608.html">tmp&lt;fvPatchVectorField&gt;</a> <a class="code" href="a01033.html#a40a4fa5adfca92c7ac14e855f302bf5d">clone</a></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        (</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00527.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp; iF</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        )<span class="keyword"> const</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02608.html">tmp&lt;fvPatchVectorField&gt;</a></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            (</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                <span class="keyword">new</span> <a class="code" href="a01033.html#a8900d565cb9927991007b98f695000bb">inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                (</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                    *<span class="keyword">this</span>, iF</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                )</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            );</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="comment">//- Update the coefficients associated with the patch field</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01033.html#a7e24eafac629d3733181cd942d4c902f">updateCoeffs</a>();</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">//- Write</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01033.html#a0941061ad5a26be83b4107d05750ace6">write</a>(<a class="code" href="a01725.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;};</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00527_html"><div class="ttname"><a href="a00527.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07836_source.html#l00051">DimensionedField.H:51</a></div></div>
-<div class="ttc" id="a01033_html_a1632099b191df31720657cb4956e6589"><div class="ttname"><a href="a01033.html#a1632099b191df31720657cb4956e6589">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::TypeName</a></div><div class="ttdeci">TypeName(&quot;inclinedFilmNusseltInletVelocity&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a05463_html"><div class="ttname"><a href="a05463.html">fvPatchFields.H</a></div></div>
-<div class="ttc" id="a00879_html"><div class="ttname"><a href="a00879.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05460_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a01033_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a01033.html#a0941061ad5a26be83b4107d05750ace6">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00189">inclinedFilmNusseltInletVelocityFvPatchVectorField.C:189</a></div></div>
-<div class="ttc" id="a08783_html"><div class="ttname"><a href="a08783.html">DataEntry.H</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a01033_html_a40a4fa5adfca92c7ac14e855f302bf5d"><div class="ttname"><a href="a01033.html#a40a4fa5adfca92c7ac14e855f302bf5d">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::clone</a></div><div class="ttdeci">virtual tmp&lt; fvPatchVectorField &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a09437_source.html#l00108">inclinedFilmNusseltInletVelocityFvPatchVectorField.H:108</a></div></div>
-<div class="ttc" id="a01033_html_a8900d565cb9927991007b98f695000bb"><div class="ttname"><a href="a01033.html#a8900d565cb9927991007b98f695000bb">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div><div class="ttdeci">inclinedFilmNusseltInletVelocityFvPatchVectorField(const fvPatch &amp;, const DimensionedField&lt; vector, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00035">inclinedFilmNusseltInletVelocityFvPatchVectorField.C:35</a></div></div>
-<div class="ttc" id="a01033_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a01033.html#a7e24eafac629d3733181cd942d4c902f">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients associated with the patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00109">inclinedFilmNusseltInletVelocityFvPatchVectorField.C:109</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a00877_html"><div class="ttname"><a href="a00877.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05867_source.html#l00061">fvPatch.H:61</a></div></div>
-<div class="ttc" id="a01033_html"><div class="ttname"><a href="a01033.html">Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField</a></div><div class="ttdoc">Film velocity boundary condition for inclined films that imposes a sinusoidal perturbation on top of ...</div><div class="ttdef"><b>Definition:</b> <a href="a09437_source.html#l00052">inclinedFilmNusseltInletVelocityFvPatchVectorField.H:52</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a05130_html"><div class="ttname"><a href="a05130.html">fixedValueFvPatchFields.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01610_html_ac04189656a50344834ed5ed1326a0672"><div class="ttname"><a href="a01610.html#ac04189656a50344834ed5ed1326a0672">Foam::noiseFFT::dbToPa</a></div><div class="ttdeci">scalar dbToPa(const scalar db) const </div><div class="ttdoc">Convert the db into Pa. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00439">noiseFFT.C:439</a></div></div>
+<div class="ttc" id="a01610_html_a3eb95a687e8cb8fff74dcf23a75e5624"><div class="ttname"><a href="a01610.html#a3eb95a687e8cb8fff74dcf23a75e5624">Foam::noiseFFT::p0</a></div><div class="ttdeci">static scalar p0</div><div class="ttdoc">Reference pressure. </div><div class="ttdef"><b>Definition:</b> <a href="a09437_source.html#l00062">noiseFFT.H:62</a></div></div>
+<div class="ttc" id="a01610_html_aa7f180fa11de4e9a567e71c29b054d0b"><div class="ttname"><a href="a01610.html#aa7f180fa11de4e9a567e71c29b054d0b">Foam::noiseFFT::Ldelta</a></div><div class="ttdeci">graph Ldelta(const graph &amp;gLf, const scalar f1, const scalar fU) const </div><div class="ttdoc">Return the one-third-octave-band PFL spectrum. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00311">noiseFFT.C:311</a></div></div>
+<div class="ttc" id="a01610_html_a0a5d3be0ef4201744b9cdbb282cdfddc"><div class="ttname"><a href="a01610.html#a0a5d3be0ef4201744b9cdbb282cdfddc">Foam::noiseFFT::window</a></div><div class="ttdeci">tmp&lt; scalarField &gt; window(const label N, const label n) const </div><div class="ttdoc">Return the nth window. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00125">noiseFFT.C:125</a></div></div>
+<div class="ttc" id="a04425_html_a5b4b6290162aa22a61932356154d652a"><div class="ttname"><a href="a04425.html#a5b4b6290162aa22a61932356154d652a">f1</a></div><div class="ttdeci">scalar f1</div><div class="ttdef"><b>Definition:</b> <a href="a04425_source.html#l00028">createFields.H:28</a></div></div>
+<div class="ttc" id="a01610_html_ab358c02e9bb8afa9d8dce50bc7c2861d"><div class="ttname"><a href="a01610.html#ab358c02e9bb8afa9d8dce50bc7c2861d">Foam::noiseFFT::meanPf</a></div><div class="ttdeci">graph meanPf(const label N, const label nw) const </div><div class="ttdoc">Return the multi-window mean fft of the complete pressure data. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00206">noiseFFT.C:206</a></div></div>
+<div class="ttc" id="a08187_html"><div class="ttname"><a href="a08187.html">graph.H</a></div></div>
+<div class="ttc" id="a01610_html"><div class="ttname"><a href="a01610.html">Foam::noiseFFT</a></div><div class="ttdoc">FFT of the pressure field. </div><div class="ttdef"><b>Definition:</b> <a href="a09437_source.html#l00049">noiseFFT.H:49</a></div></div>
+<div class="ttc" id="a01610_html_a348f943951269966f05a396dae16446d"><div class="ttname"><a href="a01610.html#a348f943951269966f05a396dae16446d">Foam::noiseFFT::noiseFFT</a></div><div class="ttdeci">noiseFFT(const scalar deltat, const scalarField &amp;pressure)</div><div class="ttdoc">Construct from pressure field. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00041">noiseFFT.C:41</a></div></div>
+<div class="ttc" id="a01610_html_a9f7703f5a07fb07bf033722787651920"><div class="ttname"><a href="a01610.html#a9f7703f5a07fb07bf033722787651920">Foam::noiseFFT::Pdelta</a></div><div class="ttdeci">graph Pdelta(const graph &amp;gLf, const scalar f1, const scalar fU) const </div><div class="ttdoc">Return the one-third-octave-band pressure spectrum. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00367">noiseFFT.C:367</a></div></div>
+<div class="ttc" id="a04425_html_a26cc20849963ccda569a78f672c8e2c4"><div class="ttname"><a href="a04425.html#a26cc20849963ccda569a78f672c8e2c4">fU</a></div><div class="ttdeci">scalar fU</div><div class="ttdef"><b>Definition:</b> <a href="a04425_source.html#l00031">createFields.H:31</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01610_html_ab0b8cb52eb284e8124b47e7bba012681"><div class="ttname"><a href="a01610.html#ab0b8cb52eb284e8124b47e7bba012681">Foam::noiseFFT::Lsum</a></div><div class="ttdeci">scalar Lsum(const graph &amp;gLf) const </div><div class="ttdoc">Return the total PFL as the sum of Lf over all frequencies. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00422">noiseFFT.C:422</a></div></div>
+<div class="ttc" id="a07006_html_a830e93cc5b8d859299d1a788c12be8ac"><div class="ttname"><a href="a07006.html#a830e93cc5b8d859299d1a788c12be8ac">n</a></div><div class="ttdeci">label n</div><div class="ttdef"><b>Definition:</b> <a href="a07006_source.html#l00031">TABSMDCalcMethod2.H:31</a></div></div>
+<div class="ttc" id="a01610_html_ae6564d3e0eb705d41ca7c01f4249b6c6"><div class="ttname"><a href="a01610.html#ae6564d3e0eb705d41ca7c01f4249b6c6">Foam::noiseFFT::Pf</a></div><div class="ttdeci">tmp&lt; scalarField &gt; Pf(const tmp&lt; scalarField &gt; &amp;pn) const </div><div class="ttdoc">Return the fft of the given pressure data. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00171">noiseFFT.C:171</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a07969_html"><div class="ttname"><a href="a07969.html">scalarField.H</a></div></div>
+<div class="ttc" id="a01610_html_a6ae375b81f24f96f4ae4c0e8117bb447"><div class="ttname"><a href="a01610.html#a6ae375b81f24f96f4ae4c0e8117bb447">Foam::noiseFFT::Hanning</a></div><div class="ttdeci">tmp&lt; scalarField &gt; Hanning(const label N) const </div><div class="ttdoc">Return the Hanning window function. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00156">noiseFFT.C:156</a></div></div>
+<div class="ttc" id="a01610_html_ab3bb58e46b5d8aa3726e54d5e6a36273"><div class="ttname"><a href="a01610.html#ab3bb58e46b5d8aa3726e54d5e6a36273">Foam::noiseFFT::pt</a></div><div class="ttdeci">graph pt() const </div><div class="ttdoc">Return the graph of p(t) </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00105">noiseFFT.C:105</a></div></div>
+<div class="ttc" id="a01610_html_a3a16bcdb905d027b296dd0cb5ae070ee"><div class="ttname"><a href="a01610.html#a3a16bcdb905d027b296dd0cb5ae070ee">Foam::noiseFFT::RMSmeanPf</a></div><div class="ttdeci">graph RMSmeanPf(const label N, const label nw) const </div><div class="ttdoc">Return the multi-window RMS mean fft of the complete pressure data. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00252">noiseFFT.C:252</a></div></div>
+<div class="ttc" id="a00945_html"><div class="ttname"><a href="a00945.html">Foam::graph</a></div><div class="ttdoc">Class to create, store and output qgraph files. </div><div class="ttdef"><b>Definition:</b> <a href="a08187_source.html#l00058">graph.H:58</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a01610_html_afd19402d76d82beacf0ee7003122739d"><div class="ttname"><a href="a01610.html#afd19402d76d82beacf0ee7003122739d">Foam::noiseFFT::Lf</a></div><div class="ttdeci">graph Lf(const graph &amp;gPf) const </div><div class="ttdoc">Return the narrow-band PFL (pressure-fluctuation level) spectrum. </div><div class="ttdef"><b>Definition:</b> <a href="a09436_source.html#l00297">noiseFFT.C:297</a></div></div>
+<div class="ttc" id="a04425_html_a4fe115e9da5548101504dfdb7df84ce4"><div class="ttname"><a href="a04425.html#a4fe115e9da5548101504dfdb7df84ce4">N</a></div><div class="ttdeci">label N</div><div class="ttdef"><b>Definition:</b> <a href="a04425_source.html#l00022">createFields.H:22</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a04425_html_a579c47e7dd8af8a26ec41738d07c1f7c"><div class="ttname"><a href="a04425.html#a579c47e7dd8af8a26ec41738d07c1f7c">nw</a></div><div class="ttdeci">label nw</div><div class="ttdef"><b>Definition:</b> <a href="a04425_source.html#l00025">createFields.H:25</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

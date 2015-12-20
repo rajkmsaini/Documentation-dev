@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_5ec41e9270b5d077e7da7da16451c1b6.html">ICCG</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_f03e085f4fe95c9b32f7b904515484f9.html">solvers</a></li><li class="navelem"><a class="el" href="dir_8926363f1489cc3df154fde808052730.html">diagonalSolver</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">ICCG.C</div>  </div>
+<div class="title">diagonalSolver.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08346.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,108 +121,79 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08347.html">ICCG.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08348.html">diagonalSolver.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(ICCG, 0);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    lduMatrix::solver::addsymMatrixConstructorToTable&lt;ICCG&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a10675.html#aa4211001115a8d00cf60461b07083f23">   35</a></span>&#160;        <a class="code" href="a10675.html#aa4211001115a8d00cf60461b07083f23">addICCGSymMatrixConstructorToTable_</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(diagonalSolver, 0);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a00518.html">Foam::dictionary</a> <a class="code" href="a01016.html#a7ff45fe57d4d335266093932680c1324">Foam::ICCG::solverDict</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a01016.html#a7ff45fe57d4d335266093932680c1324">   41</a></span>&#160;(</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> scalar tol,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> scalar relTol</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a00518.html">dictionary</a> <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>(<a class="code" href="a01192.html">IStringStream</a>(<span class="stringliteral">&quot;solver PCG; preconditioner DIC;&quot;</span>)());</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    dict.<a class="code" href="a00518.html#ac2ddcab42322c8d8af5e5830ab4d431b">add</a>(<span class="stringliteral">&quot;tolerance&quot;</span>, tol);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    dict.<a class="code" href="a00518.html#ac2ddcab42322c8d8af5e5830ab4d431b">add</a>(<span class="stringliteral">&quot;relTol&quot;</span>, relTol);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a00518.html">Foam::dictionary</a> <a class="code" href="a01016.html#a7ff45fe57d4d335266093932680c1324">Foam::ICCG::solverDict</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a01016.html#a142a9a7d22d38e4bcd865e9b792da4db">   55</a></span>&#160;(</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a01191.html">Istream</a>&amp; is</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    scalar tol(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is));</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    scalar relTol(<a class="code" href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(is));</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;Foam::diagonalSolver::diagonalSolver</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00516.html#a43f3da31ee7003584e2850abeeea846e">   39</a></span>&#160;(</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; fieldName,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01282.html">lduMatrix</a>&amp; matrix,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceBouCoeffs,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceIntCoeffs,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02764.html">lduInterfaceFieldPtrsList</a>&amp; interfaces,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; solverControls</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;:</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a02378.html">lduMatrix::solver</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    (</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        fieldName,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        matrix,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        interfaceBouCoeffs,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        interfaceIntCoeffs,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        interfaces,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        solverControls</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    )</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> solverDict(tol, relTol);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;Foam::ICCG::ICCG</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a01016.html#a9ca7fe31ae2750f0681ec25e23b1ad6f">   68</a></span>&#160;(</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01274.html">lduMatrix</a>&amp; matrix,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceBouCoeffs,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceIntCoeffs,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02753.html">lduInterfaceFieldPtrsList</a>&amp; interfaces,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; solverControls</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="a01812.html">PCG</a></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    (</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        fieldName,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        matrix,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        interfaceBouCoeffs,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        interfaceIntCoeffs,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        interfaces,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        solverControls</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    )</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;{}</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;Foam::ICCG::ICCG</div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a01016.html#a9012c4bc7e57a9ccbae2ce6c6515888e">   90</a></span>&#160;(</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; fieldName,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01274.html">lduMatrix</a>&amp; matrix,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceBouCoeffs,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00756.html">FieldField&lt;Field, scalar&gt;</a>&amp; interfaceIntCoeffs,</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02753.html">lduInterfaceFieldPtrsList</a>&amp; interfaces,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> scalar tolerance,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> scalar relTol</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;)</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;:</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a01812.html">PCG</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    (</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        fieldName,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        matrix,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        interfaceBouCoeffs,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        interfaceIntCoeffs,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        interfaces,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        solverDict(tolerance, relTol)</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    )</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{}</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01192_html"><div class="ttname"><a href="a01192.html">Foam::IStringStream</a></div><div class="ttdoc">Input from memory buffer stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07770_source.html#l00049">IStringStream.H:49</a></div></div>
-<div class="ttc" id="a02753_html"><div class="ttname"><a href="a02753.html">Foam::UPtrList&lt; const lduInterfaceField &gt;</a></div></div>
-<div class="ttc" id="a00756_html"><div class="ttname"><a href="a00756.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07857_source.html#l00051">FieldField.H:51</a></div></div>
-<div class="ttc" id="a01016_html_a7ff45fe57d4d335266093932680c1324"><div class="ttname"><a href="a01016.html#a7ff45fe57d4d335266093932680c1324">Foam::ICCG::solverDict</a></div><div class="ttdeci">static dictionary solverDict(const scalar tol, const scalar relTol)</div><div class="ttdoc">Return the dictionary constructed from the components. </div><div class="ttdef"><b>Definition:</b> <a href="a08346_source.html#l00041">ICCG.C:41</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a10675_html_aa4211001115a8d00cf60461b07083f23"><div class="ttname"><a href="a10675.html#aa4211001115a8d00cf60461b07083f23">Foam::addICCGSymMatrixConstructorToTable_</a></div><div class="ttdeci">lduMatrix::solver::addsymMatrixConstructorToTable&lt; ICCG &gt; addICCGSymMatrixConstructorToTable_</div><div class="ttdef"><b>Definition:</b> <a href="a08346_source.html#l00035">ICCG.C:35</a></div></div>
-<div class="ttc" id="a00518_html_ac2ddcab42322c8d8af5e5830ab4d431b"><div class="ttname"><a href="a00518.html#ac2ddcab42322c8d8af5e5830ab4d431b">Foam::dictionary::add</a></div><div class="ttdeci">bool add(entry *, bool mergeEntry=false)</div><div class="ttdoc">Add a new entry. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00739">dictionary.C:739</a></div></div>
-<div class="ttc" id="a01812_html"><div class="ttname"><a href="a01812.html">Foam::PCG</a></div><div class="ttdoc">Preconditioned conjugate gradient solver for symmetric lduMatrices using a run-time selectable precon...</div><div class="ttdef"><b>Definition:</b> <a href="a08356_source.html#l00049">PCG.H:49</a></div></div>
-<div class="ttc" id="a08879_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08879.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08879_source.html#l00038">doubleScalar.C:38</a></div></div>
-<div class="ttc" id="a10675_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10675.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
-<div class="ttc" id="a01274_html"><div class="ttname"><a href="a01274.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00077">lduMatrix.H:77</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a08347_html"><div class="ttname"><a href="a08347.html">ICCG.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a02380.html">Foam::solverPerformance</a> <a class="code" href="a00516.html#a67060ce780f6992862e39b0d82c37aa0">Foam::diagonalSolver::solve</a></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00516.html#a67060ce780f6992862e39b0d82c37aa0">   63</a></span>&#160;(</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="a00755.html">scalarField</a>&amp; psi,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; source,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    psi = source/matrix_.diag();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10725.html#a6aa7afbd80c854ca60824456e6c2f28e">solverPerformance</a></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    (</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        typeName,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        fieldName_,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        0,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        0,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        0,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">true</span>,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">false</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    );</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00516_html_a67060ce780f6992862e39b0d82c37aa0"><div class="ttname"><a href="a00516.html#a67060ce780f6992862e39b0d82c37aa0">Foam::diagonalSolver::solve</a></div><div class="ttdeci">solverPerformance solve(scalarField &amp;psi, const scalarField &amp;source, const direction cmpt=0) const </div><div class="ttdoc">Solve the matrix with this solver. </div><div class="ttdef"><b>Definition:</b> <a href="a08346_source.html#l00063">diagonalSolver.C:63</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a02380_html"><div class="ttname"><a href="a02380.html">Foam::SolverPerformance</a></div><div class="ttdoc">SolverPerformance is the class returned by the LduMatrix solver containing performance statistics...</div><div class="ttdef"><b>Definition:</b> <a href="a08304_source.html#l00049">SolverPerformance.H:49</a></div></div>
+<div class="ttc" id="a10725_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10725.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08824_source.html#l00043">direction.H:43</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a00762_html"><div class="ttname"><a href="a00762.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07908_source.html#l00051">FieldField.H:51</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a02764_html"><div class="ttname"><a href="a02764.html">Foam::UPtrList&lt; const lduInterfaceField &gt;</a></div></div>
+<div class="ttc" id="a01282_html"><div class="ttname"><a href="a01282.html">Foam::lduMatrix</a></div><div class="ttdoc">lduMatrix is a general matrix class in which the coefficients are stored as three arrays...</div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00077">lduMatrix.H:77</a></div></div>
+<div class="ttc" id="a10725_html_a6aa7afbd80c854ca60824456e6c2f28e"><div class="ttname"><a href="a10725.html#a6aa7afbd80c854ca60824456e6c2f28e">Foam::solverPerformance</a></div><div class="ttdeci">SolverPerformance&lt; scalar &gt; solverPerformance</div><div class="ttdoc">SolverPerformance instantiated for a scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a08303_source.html#l00044">solverPerformance.H:44</a></div></div>
+<div class="ttc" id="a08348_html"><div class="ttname"><a href="a08348.html">diagonalSolver.H</a></div></div>
+<div class="ttc" id="a02378_html"><div class="ttname"><a href="a02378.html">Foam::lduMatrix::solver</a></div><div class="ttdoc">Abstract base-class for lduMatrix solvers. </div><div class="ttdef"><b>Definition:</b> <a href="a08286_source.html#l00091">lduMatrix.H:91</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

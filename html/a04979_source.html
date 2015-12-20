@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b05602f37bb521a7142c0a3e200b5f35.html">fileFormats</a></li><li class="navelem"><a class="el" href="dir_276074facfd9ea15c0477839cf5f076d.html">sampledSetWriters</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2052808828190f934b76e979ee65af8a.html">engine</a></li><li class="navelem"><a class="el" href="dir_d0502c809bc9b9e57f3876f6a6d80bad.html">enginePiston</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">writer.C</div>  </div>
+<div class="title">enginePiston.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04979.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,278 +121,93 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04980.html">writer.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04958.html">coordSet.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07720.html">OFstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08160.html">OSspecific.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04980.html">enginePiston.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04982.html">engineTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08631.html">polyMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08221.html">interpolateXY.H</a>&quot;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a00084.html">Foam::autoPtr&lt; Foam::writer&lt;Type&gt;</a> &gt; <a class="code" href="a02861.html#aae3b42e8c361cdb185c69285fcf9efd7">Foam::writer&lt;Type&gt;::New</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a02861.html#aae3b42e8c361cdb185c69285fcf9efd7">   35</a></span>&#160;(</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; writeType</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">typename</span> wordConstructorTable::iterator cstrIter =</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        wordConstructorTablePtr_-&gt;find(writeType);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span> (cstrIter == wordConstructorTablePtr_-&gt;end())</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        (</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="stringliteral">&quot;writer::New(const word&amp;)&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        )   &lt;&lt; <span class="stringliteral">&quot;Unknown write type &quot;</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            &lt;&lt; writeType &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Valid write types : &quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            &lt;&lt; wordConstructorTablePtr_-&gt;sortedToc()</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;writer&lt;Type&gt;</a> &gt;(cstrIter()());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="a00774.html">Foam::fileName</a> <a class="code" href="a02861.html#afab0d3d8b295ab09ff551781c1213d78">Foam::writer&lt;Type&gt;::getBaseName</a></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a02861.html#afab0d3d8b295ab09ff551781c1213d78">   62</a></span>&#160;(</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">wordList</a>&amp; valueSets</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a00774.html">fileName</a> fName(points.<a class="code" href="a00403.html#a75b72488d2e82151b025744974919d5d">name</a>());</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSets, i)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        fName += <span class="charliteral">&#39;_&#39;</span> + valueSets[i];</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// Construct from components</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;Foam::enginePiston::enginePiston</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a00638.html#a39d33036361494e87bc4638a0b324cc5">   35</a></span>&#160;(</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; pistonPatchName,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00086.html">autoPtr&lt;coordinateSystem&gt;</a>&amp; pistonCS,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> scalar minLayer,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> scalar maxLayer</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;:</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    mesh_(mesh),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    engineDB_(refCast&lt;const engineTime&gt;(mesh.<a class="code" href="a01688.html#a48fcf6de2789aff6b430b5fc1a05693f">time</a>())),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    patchID_(pistonPatchName, mesh.<a class="code" href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>()),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    csPtr_(pistonCS),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    minLayer_(minLayer),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    maxLayer_(maxLayer)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// Construct from dictionary</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;Foam::enginePiston::enginePiston</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a00638.html#ae69395e6d79f01a188c799019717c0d7">   54</a></span>&#160;(</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; mesh,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    mesh_(mesh),</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    engineDB_(refCast&lt;const engineTime&gt;(mesh_.time())),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    patchID_(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;patch&quot;</span>), mesh.<a class="code" href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">boundaryMesh</a>()),</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    csPtr_</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    (</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">coordinateSystem::New</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        (</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            mesh_,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            dict.<a class="code" href="a00524.html#a42a549aa3e2c88399585b6462f6dbeb3">subDict</a>(<span class="stringliteral">&quot;coordinateSystem&quot;</span>)</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        )</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    ),</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    minLayer_(<a class="code" href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;minLayer&quot;</span>))),</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    maxLayer_(<a class="code" href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a>(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;maxLayer&quot;</span>)))</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{}</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> fName;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02861.html#a5487911e22a2ad9b33a348ec1a35922c">Foam::writer&lt;Type&gt;::writeCoord</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a02861.html#a5487911e22a2ad9b33a348ec1a35922c">   80</a></span>&#160;(</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> pointI,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (points.<a class="code" href="a00403.html#a62feccf6b117a623b835bcc65a71203c">hasVectorAxis</a>())</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>(points.<a class="code" href="a00403.html#a3d2a0b49b0801017e3023b5f0bbe94c6">vectorCoord</a>(pointI), os);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>(points.<a class="code" href="a00403.html#a1286edc76e59750f84243b537b8573db">scalarCoord</a>(pointI), os);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02861.html#a69989d3548580a31fb9d4796293b8932">Foam::writer&lt;Type&gt;::writeTable</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="a02861.html#a69989d3548580a31fb9d4796293b8932">   99</a></span>&#160;(</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;Type&gt;</a>&amp; values,</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(points, pointI)</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        writeCoord(points, pointI, os);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        writeSeparator(os);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>(values[pointI], os);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        os &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02861.html#a69989d3548580a31fb9d4796293b8932">Foam::writer&lt;Type&gt;::writeTable</a></div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="a02861.html#a48f016f18eebf65860d147fa77a4bb71">  117</a></span>&#160;(</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">List</a>&lt;<span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;Type&gt;</a>*&gt;&amp; valuesPtrList,</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(points, pointI)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        writeCoord(points, pointI, os);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valuesPtrList, i)</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            writeSeparator(os);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;Type&gt;</a>&amp; values = *valuesPtrList[i];</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>(values[pointI], os);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        os &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="a02861.html#acbf4da1b975e6664831b040ef03496ca">  142</a></span>&#160;<a class="code" href="a02861.html#acbf4da1b975e6664831b040ef03496ca">Foam::writer&lt;Type&gt;::writer</a>()</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;{}</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="a02861.html#a2e0de285f1a0cb791773dcfbd44bba0b">  149</a></span>&#160;<a class="code" href="a02861.html#a2e0de285f1a0cb791773dcfbd44bba0b">Foam::writer&lt;Type&gt;::~writer</a>()</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;{}</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="a02861.html#a8c1bbef22dd74fbc7201c891598c020c">  157</a></span>&#160;(</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00403.html">coordSet</a>&amp; points,</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">wordList</a>&amp; valueSetNames,</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01355.html">List</a>&lt;<a class="code" href="a00749.html">Field&lt;Type&gt;</a> &gt;&amp; valueSets,</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;{</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <a class="code" href="a01355.html">List&lt;const Field&lt;Type&gt;</a>*&gt; valueSetPtrs(valueSets.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(valueSetPtrs, i)</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    {</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        valueSetPtrs[i] = &amp;valueSets[i];</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    }</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a>(points, valueSetNames, valueSetPtrs, os);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;}</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="a02861.html#a5becaf45cd4ffbaab205126f49af01e3">  175</a></span>&#160;(</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keyword">const</span> scalar value,</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;{</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">return</span> os &lt;&lt; value;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;}</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VSType&gt;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#aafa6b577e1ffc57f3224075f8c2c933b">Foam::writer&lt;Type&gt;::writeVS</a></div>
-<div class="line"><a name="l00187"></a><span class="lineno"><a class="line" href="a02861.html#ad3eafbda3e4464e611e26f34e1324b8f">  187</a></span>&#160;(</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keyword">const</span> VSType&amp; value,</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;{</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> d=0; d&lt;VSType::nComponents; d++)</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    {</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordflow">if</span> (d &gt; 0)</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        {</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            writeSeparator(os);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        os &lt;&lt; value.component(d);</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    }</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keywordflow">return</span> os;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;}</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02861.html#a10ca1e6744d9bd1bead0578a8f300e9a">Foam::writer&lt;Type&gt;::writeSeparator</a></div>
-<div class="line"><a name="l00207"></a><span class="lineno"><a class="line" href="a02861.html#a10ca1e6744d9bd1bead0578a8f300e9a">  207</a></span>&#160;(</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;{</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    os &lt;&lt; token::SPACE &lt;&lt; token::TAB;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00217"></a><span class="lineno"><a class="line" href="a02861.html#a0ac3f20a5b4a47d005b4070e2af2a609">  217</a></span>&#160;(</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; value,</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;{</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordflow">return</span> writeVS(value, os);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;}</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00228"></a><span class="lineno"><a class="line" href="a02861.html#aaaf2373ba8942ea7fffa90ba7d0690e8">  228</a></span>&#160;(</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02390.html">sphericalTensor</a>&amp; value,</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;{</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">return</span> writeVS(value, os);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00239"></a><span class="lineno"><a class="line" href="a02861.html#acb9746a233b93922774ef3db08fbdbad">  239</a></span>&#160;(</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02525.html">symmTensor</a>&amp; value,</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;{</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordflow">return</span> writeVS(value, os);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;}</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<a class="code" href="a01725.html">Foam::Ostream</a>&amp; <a class="code" href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer&lt;Type&gt;::write</a></div>
-<div class="line"><a name="l00250"></a><span class="lineno"><a class="line" href="a02861.html#a4262c52fbb2a2460df831d4aa33b1dc3">  250</a></span>&#160;(</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02551.html">tensor</a>&amp; value,</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <a class="code" href="a01725.html">Ostream</a>&amp; os</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;{</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordflow">return</span> writeVS(value, os);</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;}</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04980_html"><div class="ttname"><a href="a04980.html">writer.H</a></div></div>
-<div class="ttc" id="a02861_html_aae3b42e8c361cdb185c69285fcf9efd7"><div class="ttname"><a href="a02861.html#aae3b42e8c361cdb185c69285fcf9efd7">Foam::writer::New</a></div><div class="ttdeci">static autoPtr&lt; writer &gt; New(const word &amp;writeFormat)</div><div class="ttdoc">Return a reference to the selected writer. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00035">writer.C:35</a></div></div>
-<div class="ttc" id="a02861_html_a2e0de285f1a0cb791773dcfbd44bba0b"><div class="ttname"><a href="a02861.html#a2e0de285f1a0cb791773dcfbd44bba0b">Foam::writer::~writer</a></div><div class="ttdeci">virtual ~writer()=0</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00149">writer.C:149</a></div></div>
-<div class="ttc" id="a02551_html"><div class="ttname"><a href="a02551.html">Foam::Tensor&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02861_html_a816fee94ede9a793ab3c56db61bfaa1c"><div class="ttname"><a href="a02861.html#a816fee94ede9a793ab3c56db61bfaa1c">Foam::writer::write</a></div><div class="ttdeci">virtual void write(const coordSet &amp;, const wordList &amp;, const List&lt; const Field&lt; Type &gt; * &gt; &amp;, Ostream &amp;) const  =0</div><div class="ttdoc">General entry point for writing. </div></div>
-<div class="ttc" id="a00403_html"><div class="ttname"><a href="a00403.html">Foam::coordSet</a></div><div class="ttdoc">Holds list of sampling positions. </div><div class="ttdef"><b>Definition:</b> <a href="a04958_source.html#l00049">coordSet.H:49</a></div></div>
-<div class="ttc" id="a00403_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a00403.html#a75b72488d2e82151b025744974919d5d">Foam::coordSet::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdef"><b>Definition:</b> <a href="a04958_source.html#l00111">coordSet.H:111</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02861_html_a5487911e22a2ad9b33a348ec1a35922c"><div class="ttname"><a href="a02861.html#a5487911e22a2ad9b33a348ec1a35922c">Foam::writer::writeCoord</a></div><div class="ttdeci">void writeCoord(const coordSet &amp;, const label sampleI, Ostream &amp;) const </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00080">writer.C:80</a></div></div>
-<div class="ttc" id="a07720_html"><div class="ttname"><a href="a07720.html">OFstream.H</a></div></div>
-<div class="ttc" id="a02904_html_a8f30b3c2179b03a7acf273e9dea43342"><div class="ttname"><a href="a02904.html#a8f30b3c2179b03a7acf273e9dea43342">write</a></div><div class="ttdeci">runTime write()</div></div>
-<div class="ttc" id="a00403_html_a3d2a0b49b0801017e3023b5f0bbe94c6"><div class="ttname"><a href="a00403.html#a3d2a0b49b0801017e3023b5f0bbe94c6">Foam::coordSet::vectorCoord</a></div><div class="ttdeci">vector vectorCoord(const label index) const </div><div class="ttdoc">Get point according to axis="xyz" specification. </div><div class="ttdef"><b>Definition:</b> <a href="a04957_source.html#l00130">coordSet.C:130</a></div></div>
-<div class="ttc" id="a02861_html_afab0d3d8b295ab09ff551781c1213d78"><div class="ttname"><a href="a02861.html#afab0d3d8b295ab09ff551781c1213d78">Foam::writer::getBaseName</a></div><div class="ttdeci">fileName getBaseName(const coordSet &amp;, const wordList &amp;) const </div><div class="ttdoc">Generates filename from coordSet and sampled fields. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00062">writer.C:62</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; word &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a02390_html"><div class="ttname"><a href="a02390.html">Foam::SphericalTensor</a></div><div class="ttdoc">Templated 3D SphericalTensor derived from VectorSpace adding construction from 1 component, element access using th ii() member function and the inner-product (dot-product) and outer-product operators. </div><div class="ttdef"><b>Definition:</b> <a href="a08898_source.html#l00051">SphericalTensor.H:51</a></div></div>
-<div class="ttc" id="a08160_html"><div class="ttname"><a href="a08160.html">OSspecific.H</a></div><div class="ttdoc">Functions used by OpenFOAM that are specific to POSIX compliant operating systems and need to be repl...</div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field</a></div><div class="ttdoc">Pre-declare SubField and related Field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07891_source.html#l00057">Field.H:57</a></div></div>
-<div class="ttc" id="a04958_html"><div class="ttname"><a href="a04958.html">coordSet.H</a></div></div>
-<div class="ttc" id="a02861_html_aafa6b577e1ffc57f3224075f8c2c933b"><div class="ttname"><a href="a02861.html#aafa6b577e1ffc57f3224075f8c2c933b">Foam::writer::writeVS</a></div><div class="ttdeci">Ostream &amp; writeVS(const VSType &amp;, Ostream &amp;) const </div></div>
-<div class="ttc" id="a02861_html_acbf4da1b975e6664831b040ef03496ca"><div class="ttname"><a href="a02861.html#acbf4da1b975e6664831b040ef03496ca">Foam::writer::writer</a></div><div class="ttdeci">writer()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00142">writer.C:142</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a02525_html"><div class="ttname"><a href="a02525.html">Foam::SymmTensor</a></div><div class="ttdoc">Templated 3D symmetric tensor derived from VectorSpace adding construction from 6 components...</div><div class="ttdef"><b>Definition:</b> <a href="a08947_source.html#l00053">SymmTensor.H:53</a></div></div>
-<div class="ttc" id="a00403_html_a62feccf6b117a623b835bcc65a71203c"><div class="ttname"><a href="a00403.html#a62feccf6b117a623b835bcc65a71203c">Foam::coordSet::hasVectorAxis</a></div><div class="ttdeci">bool hasVectorAxis() const </div><div class="ttdoc">Is axis specification a vector. </div><div class="ttdef"><b>Definition:</b> <a href="a04957_source.html#l00086">coordSet.C:86</a></div></div>
-<div class="ttc" id="a00403_html_a1286edc76e59750f84243b537b8573db"><div class="ttname"><a href="a00403.html#a1286edc76e59750f84243b537b8573db">Foam::coordSet::scalarCoord</a></div><div class="ttdeci">scalar scalarCoord(const label index) const </div><div class="ttdoc">Get coordinate of point according to axis specification. </div><div class="ttdef"><b>Definition:</b> <a href="a04957_source.html#l00093">coordSet.C:93</a></div></div>
-<div class="ttc" id="a02861_html_a69989d3548580a31fb9d4796293b8932"><div class="ttname"><a href="a02861.html#a69989d3548580a31fb9d4796293b8932">Foam::writer::writeTable</a></div><div class="ttdeci">void writeTable(const coordSet &amp;, const List&lt; Type &gt; &amp;, Ostream &amp;) const </div><div class="ttdoc">Writes single-column ascii write. Column 1 is coordSet coordinate,. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00099">writer.C:99</a></div></div>
-<div class="ttc" id="a02861_html_a10ca1e6744d9bd1bead0578a8f300e9a"><div class="ttname"><a href="a02861.html#a10ca1e6744d9bd1bead0578a8f300e9a">Foam::writer::writeSeparator</a></div><div class="ttdeci">virtual void writeSeparator(Ostream &amp;os) const </div><div class="ttdoc">Writes a separator. Used by write functions. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00207">writer.C:207</a></div></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a00638.html#af77027c10b89b764f28cf777c66c4be6">   80</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00638.html#af77027c10b89b764f28cf777c66c4be6">Foam::enginePiston::writeDict</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    os  &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;patch &quot;</span> &lt;&lt; patchID_.<a class="code" href="a00599.html#aac7e1b81fa3216f6625930887c3155e5">name</a>() &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;minLayer &quot;</span> &lt;&lt; minLayer_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;maxLayer &quot;</span> &lt;&lt; maxLayer_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04980_html"><div class="ttname"><a href="a04980.html">enginePiston.H</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a08221_html"><div class="ttname"><a href="a08221.html">interpolateXY.H</a></div><div class="ttdoc">Interpolates y values from one curve to another with a different x distribution. </div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">Foam::token::END_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00105">token.H:105</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">Foam::token::END_STATEMENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00099">token.H:99</a></div></div>
+<div class="ttc" id="a04982_html"><div class="ttname"><a href="a04982.html">engineTime.H</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a00638_html_af77027c10b89b764f28cf777c66c4be6"><div class="ttname"><a href="a00638.html#af77027c10b89b764f28cf777c66c4be6">Foam::enginePiston::writeDict</a></div><div class="ttdeci">void writeDict(Ostream &amp;) const </div><div class="ttdoc">Write dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a04979_source.html#l00080">enginePiston.C:80</a></div></div>
+<div class="ttc" id="a08631_html"><div class="ttname"><a href="a08631.html">polyMesh.H</a></div></div>
+<div class="ttc" id="a01688_html_a48fcf6de2789aff6b430b5fc1a05693f"><div class="ttname"><a href="a01688.html#a48fcf6de2789aff6b430b5fc1a05693f">Foam::objectRegistry::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return time. </div><div class="ttdef"><b>Definition:</b> <a href="a07832_source.html#l00117">objectRegistry.H:117</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a08931_html_ae60dd7219bd73316385eb9b8f9802227"><div class="ttname"><a href="a08931.html#ae60dd7219bd73316385eb9b8f9802227">readScalar</a></div><div class="ttdeci">#define readScalar</div><div class="ttdef"><b>Definition:</b> <a href="a08931_source.html#l00038">doubleScalar.C:38</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">Foam::token::BEGIN_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00104">token.H:104</a></div></div>
+<div class="ttc" id="a00599_html_aac7e1b81fa3216f6625930887c3155e5"><div class="ttname"><a href="a00599.html#aac7e1b81fa3216f6625930887c3155e5">Foam::DynamicID::name</a></div><div class="ttdeci">const keyType &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a08463_source.html#l00095">DynamicID.H:95</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00524_html_a42a549aa3e2c88399585b6462f6dbeb3"><div class="ttname"><a href="a00524.html#a42a549aa3e2c88399585b6462f6dbeb3">Foam::dictionary::subDict</a></div><div class="ttdeci">const dictionary &amp; subDict(const word &amp;) const </div><div class="ttdoc">Find and return a sub-dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00633">dictionary.C:633</a></div></div>
+<div class="ttc" id="a01916_html_a6b7f5ba89250dbd7a1c6c7860ab60fe3"><div class="ttname"><a href="a01916.html#a6b7f5ba89250dbd7a1c6c7860ab60fe3">Foam::polyMesh::boundaryMesh</a></div><div class="ttdeci">const polyBoundaryMesh &amp; boundaryMesh() const </div><div class="ttdoc">Return boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00421">polyMesh.H:421</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

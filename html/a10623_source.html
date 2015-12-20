@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1eda626aeac0f0ad2848c36acaa5d501.html">TurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_a3dc37bcacf99bb6122ed819dac99f09.html">turbulenceModels</a></li><li class="navelem"><a class="el" href="dir_e1ba69a335a6ac3bdd8ba5810ae6ea2d.html">nonlinearEddyViscosity</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1eda626aeac0f0ad2848c36acaa5d501.html">TurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_a3dc37bcacf99bb6122ed819dac99f09.html">turbulenceModels</a></li><li class="navelem"><a class="el" href="dir_2ce9cd11231736fb615d4764f347b0fd.html">eddyViscosity</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">nonlinearEddyViscosity.C</div>  </div>
+<div class="title">eddyViscosity.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10623.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,139 +121,153 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10624.html">nonlinearEddyViscosity.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05613.html">fvc.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05656.html">fvm.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10624.html">eddyViscosity.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05668.html">fvc.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05711.html">fvm.H</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a01611.html#a0cee2dcc97e7d6e461d9c183c682974d">Foam::nonlinearEddyViscosity&lt;BasicTurbulenceModel&gt;::nonlinearEddyViscosity</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a01611.html#a0cee2dcc97e7d6e461d9c183c682974d">   34</a></span>&#160;(</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; modelName,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00605.html#a06a66094f33d6817d19225445c5ea874">alphaField</a>&amp; alpha,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00605.html#a1dda906cfc9022335f0782a632302cd8">rhoField</a>&amp; rho,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; U,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; alphaRhoPhi,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; phi,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00605.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">transportModel</a>&amp; transport,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; propertiesName</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a00611.html#a59f91a8c753c93f62365ce72484ca138">Foam::eddyViscosity&lt;BasicTurbulenceModel&gt;::eddyViscosity</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00611.html#a59f91a8c753c93f62365ce72484ca138">   34</a></span>&#160;(</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; type,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00611.html#a06a66094f33d6817d19225445c5ea874">alphaField</a>&amp; alpha,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00611.html#a1dda906cfc9022335f0782a632302cd8">rhoField</a>&amp; rho,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">volVectorField</a>&amp; U,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; alphaRhoPhi,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">surfaceScalarField</a>&amp; phi,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00611.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">transportModel</a>&amp; transport,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; propertiesName</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;)</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a00605.html">eddyViscosity&lt;BasicTurbulenceModel&gt;</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a01349.html">linearViscousStress&lt;BasicTurbulenceModel&gt;</a></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    (</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        modelName,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a10685.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">type</a>,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a10735.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        alphaRhoPhi,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        transport,</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        propertiesName</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    ),</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    nonlinearStress_</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    nut_</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    (</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a01179.html">IOobject</a></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        (</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            IOobject::groupName(<span class="stringliteral">&quot;nonlinearStress&quot;</span>, U.group()),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            IOobject::groupName(<span class="stringliteral">&quot;nut&quot;</span>, U.group()),</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            this-&gt;runTime_.timeName(),</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            this-&gt;mesh_</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        ),</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        this-&gt;mesh_,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="a00526.html">dimensionedSymmTensor</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="stringliteral">&quot;nonlinearStress&quot;</span>,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(<a class="code" href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">dimVelocity</a>),</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            symmTensor::zero</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        )</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    )</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volSymmTensorField&gt;</a></div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="a01611.html#a5b616007efd56ecd63ab335beb746aef">   80</a></span>&#160;<a class="code" href="a01611.html#a5b616007efd56ecd63ab335beb746aef">Foam::nonlinearEddyViscosity&lt;BasicTurbulenceModel&gt;::R</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volSymmTensorField&gt;</a> tR</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    (</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a00605.html">eddyViscosity&lt;BasicTurbulenceModel&gt;::R</a>()</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    );</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    tR() += nonlinearStress_;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> tR;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            this-&gt;mesh_,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            IOobject::MUST_READ,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            IOobject::AUTO_WRITE</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        ),</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        this-&gt;mesh_</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    )</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="a00611.html#a662f37411f405f8a8c278141c5eb6b85">   75</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00611.html#a662f37411f405f8a8c278141c5eb6b85">Foam::eddyViscosity&lt;BasicTurbulenceModel&gt;::read</a>()</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">BasicTurbulenceModel::read</a>();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::volSymmTensorField&gt;</a></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a00611.html#a5b616007efd56ecd63ab335beb746aef">   83</a></span>&#160;<a class="code" href="a00611.html#a5b616007efd56ecd63ab335beb746aef">Foam::eddyViscosity&lt;BasicTurbulenceModel&gt;::R</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="a02618.html">tmp&lt;volScalarField&gt;</a> tk(<a class="code" href="a06985.html#a42272bb337960349582ed8080d315ae2">k</a>());</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// Get list of patchField type names from k</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a01364.html">wordList</a> patchFieldTypes(tk().boundaryField().types());</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::volSymmTensorField&gt;</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="a01611.html#a2100c17734b208e9539274853e45243b">   93</a></span>&#160;<a class="code" href="a01611.html#a2100c17734b208e9539274853e45243b">Foam::nonlinearEddyViscosity&lt;BasicTurbulenceModel&gt;::devRhoReff</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volSymmTensorField&gt;</a> tdevRhoReff</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    (</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <a class="code" href="a00605.html">eddyViscosity&lt;BasicTurbulenceModel&gt;::devRhoReff</a>()</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    );</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    tdevRhoReff() += this-&gt;rho_*nonlinearStress_;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">return</span> tdevRhoReff;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// For k patchField types which do not have an equivalent for symmTensor</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// set to calculated</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(patchFieldTypes, i)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        (</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;           !<a class="code" href="a00886.html">fvPatchField&lt;symmTensor&gt;::patchConstructorTablePtr_</a></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                -&gt;<a class="code" href="a07006.html#a7141f237b2648c631ce5b73215683565">found</a>(patchFieldTypes[i])</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        )</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            patchFieldTypes[i] = <a class="code" href="a00197.html">calculatedFvPatchField&lt;symmTensor&gt;::typeName</a>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::fvVectorMatrix&gt;</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<a class="code" href="a01611.html#acc389cc45eb481c08fc9fdbe24edd0da">Foam::nonlinearEddyViscosity&lt;BasicTurbulenceModel&gt;::divDevRhoReff</a></div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="a01611.html#acc389cc45eb481c08fc9fdbe24edd0da">  107</a></span>&#160;(</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="a00913.html">volVectorField</a>&amp; U</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;{</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    (</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <a class="code" href="a10709.html#a585533948ad80abfe589d920c641f251">fvc::div</a>(this-&gt;rho_*nonlinearStress_)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      + <a class="code" href="a00605.html">eddyViscosity&lt;BasicTurbulenceModel&gt;::divDevRhoReff</a>(U)</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    );</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<a class="code" href="a02608.html">Foam::tmp&lt;Foam::fvVectorMatrix&gt;</a></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<a class="code" href="a01611.html#acc389cc45eb481c08fc9fdbe24edd0da">Foam::nonlinearEddyViscosity&lt;BasicTurbulenceModel&gt;::divDevRhoReff</a></div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="a01611.html#a771cce8a8ce68125e8809f6e004b150b">  122</a></span>&#160;(</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; rho,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="a00913.html">volVectorField</a>&amp; U</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;volSymmTensorField&gt;</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    (</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keyword">new</span> <a class="code" href="a10725.html#aabdad09180c3f9931b009711bb4582c0">volSymmTensorField</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        (</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <a class="code" href="a01179.html">IOobject</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            (</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                IOobject::groupName(<span class="stringliteral">&quot;R&quot;</span>, this-&gt;U_.group()),</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                this-&gt;runTime_.timeName(),</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                this-&gt;mesh_,</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                IOobject::NO_READ,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                IOobject::NO_WRITE,</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                false</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            ),</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            ((2.0/3.0)*<a class="code" href="a10725.html#a7db00de24ac08e377162e877c6b19c25">I</a>)*tk() - (nut_)*<a class="code" href="a10725.html#a042ede1d98e91923a7cc5e14e9f86854">dev</a>(<a class="code" href="a10725.html#a446550beb700669a32e76d9b87d5e043">twoSymm</a>(<a class="code" href="a10759.html#a7c00ec90ecc15ed3005255e42c52827a">fvc::grad</a>(this-&gt;U_))),</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            patchFieldTypes</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        )</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    );</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="a00611.html#a41d45236c37b75848f4b1667a11fb50e">  125</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00611.html#a41d45236c37b75848f4b1667a11fb50e">Foam::eddyViscosity&lt;BasicTurbulenceModel&gt;::validate</a>()</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;{</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    (</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <a class="code" href="a10709.html#a585533948ad80abfe589d920c641f251">fvc::div</a>(rho*nonlinearStress_)</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      + <a class="code" href="a00605.html">eddyViscosity&lt;BasicTurbulenceModel&gt;::divDevRhoReff</a>(rho, U)</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    );</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10685_html_a97fb79d7ca4d61fd4a89879cf7f990ae"><div class="ttname"><a href="a10685.html#a97fb79d7ca4d61fd4a89879cf7f990ae">Foam::constant::atomic::alpha</a></div><div class="ttdeci">const dimensionedScalar alpha</div><div class="ttdoc">Fine-structure constant: default SI units: []. </div><div class="ttdef"><b>Definition:</b> <a href="a03838_source.html#l00222">readThermalProperties.H:222</a></div></div>
-<div class="ttc" id="a01611_html_acc389cc45eb481c08fc9fdbe24edd0da"><div class="ttname"><a href="a01611.html#acc389cc45eb481c08fc9fdbe24edd0da">Foam::nonlinearEddyViscosity::divDevRhoReff</a></div><div class="ttdeci">virtual tmp&lt; fvVectorMatrix &gt; divDevRhoReff(volVectorField &amp;U) const </div><div class="ttdoc">Return the source term for the momentum equation. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00107">nonlinearEddyViscosity.C:107</a></div></div>
-<div class="ttc" id="a01611_html_a5b616007efd56ecd63ab335beb746aef"><div class="ttname"><a href="a01611.html#a5b616007efd56ecd63ab335beb746aef">Foam::nonlinearEddyViscosity::R</a></div><div class="ttdeci">virtual tmp&lt; volSymmTensorField &gt; R() const </div><div class="ttdoc">Return the Reynolds stress tensor. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00080">nonlinearEddyViscosity.C:80</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a48a6d59f43b62ef8c6bfa58c3db34dfa"><div class="ttname"><a href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">Foam::dimVelocity</a></div><div class="ttdeci">const dimensionSet dimVelocity</div></div>
-<div class="ttc" id="a00605_html_a1dda906cfc9022335f0782a632302cd8"><div class="ttname"><a href="a00605.html#a1dda906cfc9022335f0782a632302cd8">Foam::eddyViscosity::rhoField</a></div><div class="ttdeci">BasicTurbulenceModel::rhoField rhoField</div><div class="ttdef"><b>Definition:</b> <a href="a10574_source.html#l00074">eddyViscosity.H:74</a></div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a01611_html_a2100c17734b208e9539274853e45243b"><div class="ttname"><a href="a01611.html#a2100c17734b208e9539274853e45243b">Foam::nonlinearEddyViscosity::devRhoReff</a></div><div class="ttdeci">virtual tmp&lt; volSymmTensorField &gt; devRhoReff() const </div><div class="ttdoc">Return the effective stress tensor. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00093">nonlinearEddyViscosity.C:93</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned</a></div><div class="ttdoc">Generic dimensioned Type class. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a05613_html"><div class="ttname"><a href="a05613.html">fvc.H</a></div></div>
-<div class="ttc" id="a01611_html_a0cee2dcc97e7d6e461d9c183c682974d"><div class="ttname"><a href="a01611.html#a0cee2dcc97e7d6e461d9c183c682974d">Foam::nonlinearEddyViscosity::nonlinearEddyViscosity</a></div><div class="ttdeci">nonlinearEddyViscosity(const word &amp;modelName, const alphaField &amp;alpha, const rhoField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;alphaRhoPhi, const surfaceScalarField &amp;phi, const transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00034">nonlinearEddyViscosity.C:34</a></div></div>
-<div class="ttc" id="a00605_html"><div class="ttname"><a href="a00605.html">Foam::eddyViscosity</a></div><div class="ttdoc">Eddy viscosity turbulence model base class. </div><div class="ttdef"><b>Definition:</b> <a href="a10574_source.html#l00052">eddyViscosity.H:52</a></div></div>
-<div class="ttc" id="a10624_html"><div class="ttname"><a href="a10624.html">nonlinearEddyViscosity.H</a></div></div>
-<div class="ttc" id="a03181_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03181_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
-<div class="ttc" id="a10675_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07819_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a00605_html_ac0a5dc3c45a2d1c61a649bc435a1a48a"><div class="ttname"><a href="a00605.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">Foam::eddyViscosity::transportModel</a></div><div class="ttdeci">BasicTurbulenceModel::transportModel transportModel</div><div class="ttdef"><b>Definition:</b> <a href="a10574_source.html#l00075">eddyViscosity.H:75</a></div></div>
-<div class="ttc" id="a10709_html_a585533948ad80abfe589d920c641f251"><div class="ttname"><a href="a10709.html#a585533948ad80abfe589d920c641f251">Foam::fvc::div</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; Type, fvPatchField, volMesh &gt; &gt; div(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05626_source.html#l00047">fvcDiv.C:47</a></div></div>
-<div class="ttc" id="a00605_html_a06a66094f33d6817d19225445c5ea874"><div class="ttname"><a href="a00605.html#a06a66094f33d6817d19225445c5ea874">Foam::eddyViscosity::alphaField</a></div><div class="ttdeci">BasicTurbulenceModel::alphaField alphaField</div><div class="ttdef"><b>Definition:</b> <a href="a10574_source.html#l00073">eddyViscosity.H:73</a></div></div>
-<div class="ttc" id="a05656_html"><div class="ttname"><a href="a05656.html">fvm.H</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a02906_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02906_source.html#l00082">pEqn.H:82</a></div></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    correctNut();</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="a00611.html#aa4d8a8ca44f2b13f84ba64733f6e0252">  132</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00611.html#aa4d8a8ca44f2b13f84ba64733f6e0252">Foam::eddyViscosity&lt;BasicTurbulenceModel&gt;::correct</a>()</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;{</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="a02953.html#a8f2ec7df0ad2ec79360a5d964f55de87">BasicTurbulenceModel::correct</a>();</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a7db00de24ac08e377162e877c6b19c25"><div class="ttname"><a href="a10725.html#a7db00de24ac08e377162e877c6b19c25">Foam::I</a></div><div class="ttdeci">static const sphericalTensor I(1)</div></div>
+<div class="ttc" id="a07006_html_a7141f237b2648c631ce5b73215683565"><div class="ttname"><a href="a07006.html#a7141f237b2648c631ce5b73215683565">found</a></div><div class="ttdeci">bool found</div><div class="ttdef"><b>Definition:</b> <a href="a07006_source.html#l00032">TABSMDCalcMethod2.H:32</a></div></div>
+<div class="ttc" id="a00611_html_a41d45236c37b75848f4b1667a11fb50e"><div class="ttname"><a href="a00611.html#a41d45236c37b75848f4b1667a11fb50e">Foam::eddyViscosity::validate</a></div><div class="ttdeci">virtual void validate()</div><div class="ttdoc">Validate the turbulence fields after construction. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00125">eddyViscosity.C:125</a></div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a02978_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02978.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02978_source.html#l00096">readInitialConditions.H:96</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a10725_html_a042ede1d98e91923a7cc5e14e9f86854"><div class="ttname"><a href="a10725.html#a042ede1d98e91923a7cc5e14e9f86854">Foam::dev</a></div><div class="ttdeci">dimensionedSymmTensor dev(const dimensionedSymmTensor &amp;dt)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00104">dimensionedSymmTensor.C:104</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; word &gt;</a></div></div>
+<div class="ttc" id="a10735_html_a97fb79d7ca4d61fd4a89879cf7f990ae"><div class="ttname"><a href="a10735.html#a97fb79d7ca4d61fd4a89879cf7f990ae">Foam::constant::atomic::alpha</a></div><div class="ttdeci">const dimensionedScalar alpha</div><div class="ttdoc">Fine-structure constant: default SI units: []. </div><div class="ttdef"><b>Definition:</b> <a href="a03877_source.html#l00216">readThermalProperties.H:216</a></div></div>
+<div class="ttc" id="a10725_html_a446550beb700669a32e76d9b87d5e043"><div class="ttname"><a href="a10725.html#a446550beb700669a32e76d9b87d5e043">Foam::twoSymm</a></div><div class="ttdeci">dimensionedSymmTensor twoSymm(const dimensionedSymmTensor &amp;dt)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00093">dimensionedSymmTensor.C:93</a></div></div>
+<div class="ttc" id="a01179_html"><div class="ttname"><a href="a01179.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00091">IOobject.H:91</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a05711_html"><div class="ttname"><a href="a05711.html">fvm.H</a></div></div>
+<div class="ttc" id="a10725_html_aabdad09180c3f9931b009711bb4582c0"><div class="ttname"><a href="a10725.html#aabdad09180c3f9931b009711bb4582c0">Foam::volSymmTensorField</a></div><div class="ttdeci">GeometricField&lt; symmTensor, fvPatchField, volMesh &gt; volSymmTensorField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00058">volFieldsFwd.H:58</a></div></div>
+<div class="ttc" id="a00611_html_aa4d8a8ca44f2b13f84ba64733f6e0252"><div class="ttname"><a href="a00611.html#aa4d8a8ca44f2b13f84ba64733f6e0252">Foam::eddyViscosity::correct</a></div><div class="ttdeci">virtual void correct()=0</div><div class="ttdoc">Solve the turbulence equations and correct the turbulence viscosity. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00132">eddyViscosity.C:132</a></div></div>
+<div class="ttc" id="a00611_html_a5b616007efd56ecd63ab335beb746aef"><div class="ttname"><a href="a00611.html#a5b616007efd56ecd63ab335beb746aef">Foam::eddyViscosity::R</a></div><div class="ttdeci">virtual tmp&lt; volSymmTensorField &gt; R() const </div><div class="ttdoc">Return the Reynolds stress tensor. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00083">eddyViscosity.C:83</a></div></div>
+<div class="ttc" id="a10624_html"><div class="ttname"><a href="a10624.html">eddyViscosity.H</a></div></div>
+<div class="ttc" id="a02919_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02919.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02919_source.html#l00082">pEqn.H:82</a></div></div>
+<div class="ttc" id="a00611_html_a06a66094f33d6817d19225445c5ea874"><div class="ttname"><a href="a00611.html#a06a66094f33d6817d19225445c5ea874">Foam::eddyViscosity::alphaField</a></div><div class="ttdeci">BasicTurbulenceModel::alphaField alphaField</div><div class="ttdef"><b>Definition:</b> <a href="a10624_source.html#l00073">eddyViscosity.H:73</a></div></div>
+<div class="ttc" id="a10759_html_a7c00ec90ecc15ed3005255e42c52827a"><div class="ttname"><a href="a10759.html#a7c00ec90ecc15ed3005255e42c52827a">Foam::fvc::grad</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; typename outerProduct&lt; vector, Type &gt;::type, fvPatchField, volMesh &gt;&gt; grad(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05685_source.html#l00052">fvcGrad.C:52</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a01349_html"><div class="ttname"><a href="a01349.html">Foam::linearViscousStress</a></div><div class="ttdoc">Linear viscous stress turbulence model base class. </div><div class="ttdef"><b>Definition:</b> <a href="a10672_source.html#l00050">linearViscousStress.H:50</a></div></div>
+<div class="ttc" id="a03195_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03195.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03195_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
+<div class="ttc" id="a00611_html_a1dda906cfc9022335f0782a632302cd8"><div class="ttname"><a href="a00611.html#a1dda906cfc9022335f0782a632302cd8">Foam::eddyViscosity::rhoField</a></div><div class="ttdeci">BasicTurbulenceModel::rhoField rhoField</div><div class="ttdef"><b>Definition:</b> <a href="a10624_source.html#l00074">eddyViscosity.H:74</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a06985_html_a42272bb337960349582ed8080d315ae2"><div class="ttname"><a href="a06985.html#a42272bb337960349582ed8080d315ae2">k</a></div><div class="ttdeci">label k</div><div class="ttdoc">Boltzmann constant. </div><div class="ttdef"><b>Definition:</b> <a href="a06985_source.html#l00041">LISASMDCalcMethod2.H:41</a></div></div>
+<div class="ttc" id="a05668_html"><div class="ttname"><a href="a05668.html">fvc.H</a></div></div>
+<div class="ttc" id="a00611_html_a662f37411f405f8a8c278141c5eb6b85"><div class="ttname"><a href="a00611.html#a662f37411f405f8a8c278141c5eb6b85">Foam::eddyViscosity::read</a></div><div class="ttdeci">virtual bool read()=0</div><div class="ttdoc">Re-read model coefficients if they have changed. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00075">eddyViscosity.C:75</a></div></div>
+<div class="ttc" id="a00611_html_ac0a5dc3c45a2d1c61a649bc435a1a48a"><div class="ttname"><a href="a00611.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">Foam::eddyViscosity::transportModel</a></div><div class="ttdeci">BasicTurbulenceModel::transportModel transportModel</div><div class="ttdef"><b>Definition:</b> <a href="a10624_source.html#l00075">eddyViscosity.H:75</a></div></div>
+<div class="ttc" id="a00197_html"><div class="ttname"><a href="a00197.html">Foam::calculatedFvPatchField</a></div><div class="ttdoc">This boundary condition is not designed to be evaluated; it is assmued that the value is assigned via...</div><div class="ttdef"><b>Definition:</b> <a href="a05158_source.html#l00065">calculatedFvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00611_html_a59f91a8c753c93f62365ce72484ca138"><div class="ttname"><a href="a00611.html#a59f91a8c753c93f62365ce72484ca138">Foam::eddyViscosity::eddyViscosity</a></div><div class="ttdeci">eddyViscosity(const word &amp;modelName, const alphaField &amp;alpha, const rhoField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;alphaRhoPhi, const surfaceScalarField &amp;phi, const transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a10623_source.html#l00034">eddyViscosity.C:34</a></div></div>
+<div class="ttc" id="a02953_html_a8f2ec7df0ad2ec79360a5d964f55de87"><div class="ttname"><a href="a02953.html#a8f2ec7df0ad2ec79360a5d964f55de87">correct</a></div><div class="ttdeci">Info&lt;&lt; &quot;Predicted p max-min : &quot;&lt;&lt; max(p).value()&lt;&lt; &quot; &quot;&lt;&lt; min(p).value()&lt;&lt; endl;rho==max(psi *p+alphal *rhol0+((alphav *psiv+alphal *psil)-psi)*pSat, rhoMin);#1&quot;/home/dm2/henry/OpenFOAM/OpenFOAM-dev/applications/solvers/multiphase/cavitatingFoam/alphavPsi.H&quot;1{alphav=max(min((rho-rholSat)/(rhovSat-rholSat), scalar(1)), scalar(0));alphal=1.0-alphav;Info&lt;&lt; &quot;max-min alphav: &quot;&lt;&lt; max(alphav).value()&lt;&lt; &quot; &quot;&lt;&lt; min(alphav).value()&lt;&lt; endl;psiModel-&gt; correct()</div><div class="ttdef"><b>Definition:</b> <a href="a02953_source.html#l00074">pEqn.H:74</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

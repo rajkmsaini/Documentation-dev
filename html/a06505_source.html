@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_0e9805b96b2bf461314a136059d44950.html">Templates</a></li><li class="navelem"><a class="el" href="dir_faa4c92a8e58dc732cc7edb294caad34.html">MPPICParcel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_b8d19ddbdf0975644e34192d6313800e.html">parcels</a></li><li class="navelem"><a class="el" href="dir_d25ce32b8f85f1a08cd016b541e3d76e.html">derived</a></li><li class="navelem"><a class="el" href="dir_087b6e12855ff7752791f87375553a21.html">basicReactingParcel</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">MPPICParcelI.H</div>  </div>
+<div class="title">makeBasicReactingParcelSubmodels.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06505.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,80 +121,68 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06452.html">basicReactingCloud.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ParcelType&gt;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">inline</span> <a class="code" href="a01529.html#a4943d1c6bfd161fd4143b35b87ae5815">Foam::MPPICParcel&lt;ParcelType&gt;::MPPICParcel</a></div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a01529.html#a4943d1c6bfd161fd4143b35b87ae5815">   30</a></span>&#160;(</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; owner,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; position,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> tetFaceI,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> tetPtI</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    ParcelType(owner, position, cellI, tetFaceI, tetPtI),</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    UCorrect_(vector::zero)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ParcelType&gt;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">inline</span> <a class="code" href="a01529.html#a4943d1c6bfd161fd4143b35b87ae5815">Foam::MPPICParcel&lt;ParcelType&gt;::MPPICParcel</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a01529.html#a3d3f72024325152f692a7d9deb306700">   45</a></span>&#160;(</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; owner,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; position,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> tetFaceI,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> tetPtI,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> typeId,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> scalar nParticle0,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> scalar d0,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> scalar dTarget0,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; U0,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02776.html">vector</a>&amp; UCorrect0,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> <span class="keyword">typename</span> ParcelType::constantProperties&amp; constProps</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;:</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    ParcelType</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    (</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        owner,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        position,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        cellI,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        tetFaceI,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        tetPtI,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        typeId,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        nParticle0,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        d0,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        dTarget0,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        U0,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        constProps</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    ),</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    UCorrect_(UCorrect0)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ParcelType&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="a01529.html#acd5a412303f9bb7739a0e9d55c1a3cb4">   81</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a02776.html">Foam::vector</a>&amp; <a class="code" href="a01529.html#acd5a412303f9bb7739a0e9d55c1a3cb4">Foam::MPPICParcel&lt;ParcelType&gt;::UCorrect</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> UCorrect_;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ParcelType&gt;</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="a01529.html#a1e41f6cb23aa71d12153e885813eb34d">   88</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a02776.html">Foam::vector</a>&amp; <a class="code" href="a01529.html#acd5a412303f9bb7739a0e9d55c1a3cb4">Foam::MPPICParcel&lt;ParcelType&gt;::UCorrect</a>()</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> UCorrect_;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01529_html_a4943d1c6bfd161fd4143b35b87ae5815"><div class="ttname"><a href="a01529.html#a4943d1c6bfd161fd4143b35b87ae5815">Foam::MPPICParcel::MPPICParcel</a></div><div class="ttdeci">MPPICParcel(const polyMesh &amp;mesh, const vector &amp;position, const label cellI, const label tetFaceI, const label tetPtI)</div><div class="ttdoc">Construct from owner, position, and cloud owner. </div><div class="ttdef"><b>Definition:</b> <a href="a06505_source.html#l00030">MPPICParcelI.H:30</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a01529_html_acd5a412303f9bb7739a0e9d55c1a3cb4"><div class="ttname"><a href="a01529.html#acd5a412303f9bb7739a0e9d55c1a3cb4">Foam::MPPICParcel::UCorrect</a></div><div class="ttdeci">const vector &amp; UCorrect() const </div><div class="ttdoc">Return const access to correction velocity. </div><div class="ttdef"><b>Definition:</b> <a href="a06505_source.html#l00081">MPPICParcelI.H:81</a></div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06514.html">makeParcelCloudFunctionObjects.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Kinematic</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06532.html">makeThermoParcelForces.H</a>&quot;</span> <span class="comment">// thermo variant</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06516.html">makeParcelDispersionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06529.html">makeReactingParcelInjectionModels.H</a>&quot;</span> <span class="comment">// Reacting variant</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06520.html">makeParcelPatchInteractionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06521.html">makeParcelStochasticCollisionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06531.html">makeReactingParcelSurfaceFilmModels.H</a>&quot;</span> <span class="comment">// Reacting variant</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Thermodynamic</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06518.html">makeParcelHeatTransferModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// Reacting</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06528.html">makeReactingParcelCompositionModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06530.html">makeReactingParcelPhaseChangeModels.H</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a06505.html#a44041926aba9fb8188abc6397ea51b1a">makeParcelCloudFunctionObjects</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// Kinematic sub-models</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="a06505.html#a84855e07595659e4f16e098ae7e89085">makeThermoParcelForces</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="a06505.html#a41444dc50f9a8daf3b8975cda670858c">makeParcelDispersionModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="a06505.html#a97eb4e87ca3eec0d6def0587562137c6">makeReactingParcelInjectionModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a06505.html#a6451e658edba73f31ff8edfe3519608c">makeParcelPatchInteractionModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a06505.html#a5dc6923c5e3ca95fde431609a1798ef3">makeParcelStochasticCollisionModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a06505.html#a66a969810069f799306f59ad80152f13">makeReactingParcelSurfaceFilmModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// Thermo sub-models</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="a06505.html#aaf32712f41806b6337689c648e7b2006">makeParcelHeatTransferModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// Reacting sub-models</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="a06505.html#a46c8a3f6cbcd3c1bf3f775a3a3125bd9">makeReactingParcelCompositionModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a06505.html#a3822ee01cc6689822754bf4ea55b034b">makeReactingParcelPhaseChangeModels</a>(<a class="code" href="a10725.html#ac1803d3bbb54088a963b927df755b27d">basicReactingCloud</a>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a06530_html"><div class="ttname"><a href="a06530.html">makeReactingParcelPhaseChangeModels.H</a></div></div>
+<div class="ttc" id="a06505_html_a41444dc50f9a8daf3b8975cda670858c"><div class="ttname"><a href="a06505.html#a41444dc50f9a8daf3b8975cda670858c">makeParcelDispersionModels</a></div><div class="ttdeci">makeParcelDispersionModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06521_html"><div class="ttname"><a href="a06521.html">makeParcelStochasticCollisionModels.H</a></div></div>
+<div class="ttc" id="a06518_html"><div class="ttname"><a href="a06518.html">makeParcelHeatTransferModels.H</a></div></div>
+<div class="ttc" id="a06505_html_aaf32712f41806b6337689c648e7b2006"><div class="ttname"><a href="a06505.html#aaf32712f41806b6337689c648e7b2006">makeParcelHeatTransferModels</a></div><div class="ttdeci">makeParcelHeatTransferModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06505_html_a3822ee01cc6689822754bf4ea55b034b"><div class="ttname"><a href="a06505.html#a3822ee01cc6689822754bf4ea55b034b">makeReactingParcelPhaseChangeModels</a></div><div class="ttdeci">makeReactingParcelPhaseChangeModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06514_html"><div class="ttname"><a href="a06514.html">makeParcelCloudFunctionObjects.H</a></div></div>
+<div class="ttc" id="a06505_html_a6451e658edba73f31ff8edfe3519608c"><div class="ttname"><a href="a06505.html#a6451e658edba73f31ff8edfe3519608c">makeParcelPatchInteractionModels</a></div><div class="ttdeci">makeParcelPatchInteractionModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06529_html"><div class="ttname"><a href="a06529.html">makeReactingParcelInjectionModels.H</a></div></div>
+<div class="ttc" id="a06505_html_a97eb4e87ca3eec0d6def0587562137c6"><div class="ttname"><a href="a06505.html#a97eb4e87ca3eec0d6def0587562137c6">makeReactingParcelInjectionModels</a></div><div class="ttdeci">makeReactingParcelInjectionModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06532_html"><div class="ttname"><a href="a06532.html">makeThermoParcelForces.H</a></div></div>
+<div class="ttc" id="a06520_html"><div class="ttname"><a href="a06520.html">makeParcelPatchInteractionModels.H</a></div></div>
+<div class="ttc" id="a06505_html_a46c8a3f6cbcd3c1bf3f775a3a3125bd9"><div class="ttname"><a href="a06505.html#a46c8a3f6cbcd3c1bf3f775a3a3125bd9">makeReactingParcelCompositionModels</a></div><div class="ttdeci">makeReactingParcelCompositionModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06452_html"><div class="ttname"><a href="a06452.html">basicReactingCloud.H</a></div></div>
+<div class="ttc" id="a06505_html_a44041926aba9fb8188abc6397ea51b1a"><div class="ttname"><a href="a06505.html#a44041926aba9fb8188abc6397ea51b1a">makeParcelCloudFunctionObjects</a></div><div class="ttdeci">makeParcelCloudFunctionObjects(basicReactingCloud)</div></div>
+<div class="ttc" id="a06505_html_a84855e07595659e4f16e098ae7e89085"><div class="ttname"><a href="a06505.html#a84855e07595659e4f16e098ae7e89085">makeThermoParcelForces</a></div><div class="ttdeci">makeThermoParcelForces(basicReactingCloud)</div></div>
+<div class="ttc" id="a06531_html"><div class="ttname"><a href="a06531.html">makeReactingParcelSurfaceFilmModels.H</a></div></div>
+<div class="ttc" id="a06505_html_a5dc6923c5e3ca95fde431609a1798ef3"><div class="ttname"><a href="a06505.html#a5dc6923c5e3ca95fde431609a1798ef3">makeParcelStochasticCollisionModels</a></div><div class="ttdeci">makeParcelStochasticCollisionModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a10725_html_ac1803d3bbb54088a963b927df755b27d"><div class="ttname"><a href="a10725.html#ac1803d3bbb54088a963b927df755b27d">Foam::basicReactingCloud</a></div><div class="ttdeci">ReactingCloud&lt; ThermoCloud&lt; KinematicCloud&lt; Cloud&lt; basicReactingParcel &gt; &gt; &gt; &gt; basicReactingCloud</div><div class="ttdef"><b>Definition:</b> <a href="a06452_source.html#l00056">basicReactingCloud.H:56</a></div></div>
+<div class="ttc" id="a06528_html"><div class="ttname"><a href="a06528.html">makeReactingParcelCompositionModels.H</a></div></div>
+<div class="ttc" id="a06505_html_a66a969810069f799306f59ad80152f13"><div class="ttname"><a href="a06505.html#a66a969810069f799306f59ad80152f13">makeReactingParcelSurfaceFilmModels</a></div><div class="ttdeci">makeReactingParcelSurfaceFilmModels(basicReactingCloud)</div></div>
+<div class="ttc" id="a06516_html"><div class="ttname"><a href="a06516.html">makeParcelDispersionModels.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

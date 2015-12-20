@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a88fe22feb23ce5f078a04a1df67721.html">surfMesh</a></li><li class="navelem"><a class="el" href="dir_c7b425ce1feba157c3a628060f167f64.html">MeshedSurface</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a5b93d9ceb327a1197b724c6aefedcbd.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_7bf5f2e6b4a44539c2947a2841ca313c.html">sixDoFRigidBodyMotion</a></li><li class="navelem"><a class="el" href="dir_a3fa1b3e93b4dbff76eabd3f1d052245.html">constraints</a></li><li class="navelem"><a class="el" href="dir_a9dfc540c9528b4ed421d4fe90fa1328.html">point</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">MeshedSurfaceZones.C</div>  </div>
+<div class="title">sixDoFRigidBodyMotionPointConstraint.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09763.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,210 +119,130 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09756.html">MeshedSurface.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a01454.html#af68c0ce74b1ff6da07f8481db8c415ef">   31</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#af68c0ce74b1ff6da07f8481db8c415ef">Foam::MeshedSurface&lt;Face&gt;::checkZones</a>()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">// extra safety, ensure we have at some zones</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// and they cover all the faces - fix start silently</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a01355.html">surfZoneList</a>&amp; zones = this-&gt;storedZones();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span> (zones.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> count = 0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(zones, zoneI)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            zones[zoneI].start() = count;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            count += zones[zoneI].<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        }</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::sixDoFRigidBodyMotionConstraints::point</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Translation constraint on the centre of rotation:</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">        fixed in space.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    If &#39;centreOfRotation&#39; is not provided in the dictionary the centre of mass</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    is used.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    sixDoFRigidBodyMotionPointConstraint.C</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef sixDoFRigidBodyMotionPointConstraint_H</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define sixDoFRigidBodyMotionPointConstraint_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09765.html">sixDoFRigidBodyMotionConstraint.H</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08774.html">point.H</a>&quot;</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">if</span> (count &lt; this-&gt;size())</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <a class="code" href="a07677.html#ae65af40830b9f1505c94610fa4be1df2">WarningIn</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            (</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <span class="stringliteral">&quot;MeshedSurface::checkZones()\n&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            )</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;more faces &quot;</span> &lt;&lt; this-&gt;size() &lt;&lt; <span class="stringliteral">&quot; than zones &quot;</span> &lt;&lt; count</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; ... extending final zone&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            zones.<a class="code" href="a02720.html#aef07c02ea1c27bdb5906043b399e0ff0">last</a>().size() += count - this-&gt;size();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (count &gt; this-&gt;size())</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            (</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                <span class="stringliteral">&quot;MeshedSurface::checkZones()\n&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            )</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;more zones &quot;</span> &lt;&lt; count &lt;&lt; <span class="stringliteral">&quot; than faces &quot;</span> &lt;&lt; this-&gt;size()</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">namespace </span>sixDoFRigidBodyMotionConstraints</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">                           Class point Declaration</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a01867.html">   56</a></span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">class </span><a class="code" href="a01867.html">point</a></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02326.html">sixDoFRigidBodyMotionConstraint</a></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Fixed centre of rotation</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="a02787.html">Foam::point</a> centreOfRotation_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#adbdf3d1bcbfa5875f4be969e01f911f6">Foam::MeshedSurface&lt;Face&gt;::sortFacesAndStore</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="a01454.html#adbdf3d1bcbfa5875f4be969e01f911f6">   72</a></span>&#160;(</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02868.html">Xfer</a>&lt;<a class="code" href="a01355.html">List&lt;Face&gt;</a> &gt;&amp; unsortedFaces,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02868.html">Xfer</a>&lt;<a class="code" href="a01355.html">List&lt;label&gt;</a> &gt;&amp; zoneIds,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> sorted</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a01355.html">List&lt;Face&gt;</a>  oldFaces(unsortedFaces);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a01355.html">List&lt;label&gt;</a> zones(zoneIds);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (sorted)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">// already sorted - simply transfer faces</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        this-&gt;storedFaces().transfer(oldFaces);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">// unsorted - determine the sorted order:</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// avoid SortableList since we discard the main list anyhow</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a01355.html">List&lt;label&gt;</a> <a class="code" href="a10675.html#aa77215843e964fac259ab06e68d0ee02">faceMap</a>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a10675.html#acf128ea037506c14446998bb7ca39264">sortedOrder</a>(zones, faceMap);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        zones.<a class="code" href="a01355.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="comment">// sorted faces</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a01355.html">List&lt;Face&gt;</a> newFaces(faceMap.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(faceMap, faceI)</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="comment">// use transfer to recover memory where possible</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        this-&gt;storedFaces().transfer(newFaces);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    zones.<a class="code" href="a01355.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#a41dedb9ad09b4b76d73e548b1de9b61b">Foam::MeshedSurface&lt;Face&gt;::addZones</a></div>
-<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="a01454.html#a41dedb9ad09b4b76d73e548b1de9b61b">  111</a></span>&#160;(</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">UList&lt;surfZone&gt;</a>&amp; srfZones,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> cullEmpty</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;)</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nZone = 0;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="a01867.html#abcdfd3f8dc1c5bf025bfddf99cb299a6">TypeName</a>(<span class="stringliteral">&quot;point&quot;</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="code" href="a01867.html#a900dc9819468a4e4c8f91e4de995316c">point</a></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        (</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; <a class="code" href="a02326.html#a75b72488d2e82151b025744974919d5d">name</a>,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; sDoFRBMCDict,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02325.html">sixDoFRigidBodyMotion</a>&amp; motion</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        );</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="a01867.html#a138aefca8a3fcda6574641e23eea497e">   83</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a00086.html">autoPtr&lt;sixDoFRigidBodyMotionConstraint&gt;</a> <a class="code" href="a01867.html#a138aefca8a3fcda6574641e23eea497e">clone</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;sixDoFRigidBodyMotionConstraint&gt;</a></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            (</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                <span class="keyword">new</span> <a class="code" href="a01867.html#a900dc9819468a4e4c8f91e4de995316c">point</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            );</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01867.html#a1b24c7edc0e57a3863df4dd7b3e264cf">~point</a>();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Set the centre of rotation to the point</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01867.html#a2798d30da66c23cfe4e880d873608682">setCentreOfRotation</a>(<a class="code" href="a02787.html">Foam::point</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//- Apply and accumulate translational constraints</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01867.html#aa22b8c9b9329b5048112f873d1ea0f6d">constrainTranslation</a>(<a class="code" href="a01870.html">pointConstraint</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Apply and accumulate rotational constraints</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01867.html#aaeee2d0d4a87de2bfa9a957bd687eb29">constrainRotation</a>(<a class="code" href="a01870.html">pointConstraint</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="comment">//- Update properties from given dictionary</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a01867.html#a64da2087e03e55d0dddd0cd6e5ac05ea">read</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; sDoFRBMCCoeff);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">//- Write</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01867.html#a0941061ad5a26be83b4107d05750ace6">write</a>(<a class="code" href="a01736.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;};</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="a01355.html">surfZoneList</a>&amp; zones = this-&gt;storedZones();</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(zones.<a class="code" href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(zones, zoneI)</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keywordflow">if</span> (srfZones[zoneI].size() || !cullEmpty)</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            zones[nZone] = <a class="code" href="a02496.html">surfZone</a>(srfZones[zoneI], nZone);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            nZone++;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(nZone);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#a41dedb9ad09b4b76d73e548b1de9b61b">Foam::MeshedSurface&lt;Face&gt;::addZones</a></div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="a01454.html#ab2544a8dd4eab4aebcb5579e83668fee">  134</a></span>&#160;(</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">labelUList</a>&amp; sizes,</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">UList&lt;word&gt;</a>&amp; names,</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> cullEmpty</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;)</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;{</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> start   = 0;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nZone = 0;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="a01355.html">surfZoneList</a>&amp; zones = this-&gt;storedZones();</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(sizes.<a class="code" href="a02720.html#a723361dc2020160f5492e8fe2d09fa44">size</a>());</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(zones, zoneI)</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">if</span> (sizes[zoneI] || !cullEmpty)</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        {</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            zones[nZone] = <a class="code" href="a02496.html">surfZone</a></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            (</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                names[zoneI],</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                sizes[zoneI],</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                start,</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                nZone</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            );</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            start += sizes[zoneI];</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            nZone++;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        }</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(nZone);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#a41dedb9ad09b4b76d73e548b1de9b61b">Foam::MeshedSurface&lt;Face&gt;::addZones</a></div>
-<div class="line"><a name="l00166"></a><span class="lineno"><a class="line" href="a01454.html#a2eecc751cfbff68704785530b5039a7e">  166</a></span>&#160;(</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">labelUList</a>&amp; sizes,</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> cullEmpty</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;)</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;{</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> start   = 0;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nZone = 0;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <a class="code" href="a01355.html">surfZoneList</a>&amp; zones = this-&gt;storedZones();</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(sizes.<a class="code" href="a02720.html#a723361dc2020160f5492e8fe2d09fa44">size</a>());</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(zones, zoneI)</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    {</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">if</span> (sizes[zoneI] || !cullEmpty)</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            zones[nZone] = <a class="code" href="a02496.html">surfZone</a></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            (</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                <a class="code" href="a02856.html">word</a>(<span class="stringliteral">&quot;zone&quot;</span>) + ::<a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a>(nZone),</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                sizes[zoneI],</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;                start,</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                nZone</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            );</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;            start += sizes[zoneI];</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            nZone++;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        }</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    }</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    zones.<a class="code" href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(nZone);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;}</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Face&gt;</div>
-<div class="line"><a name="l00196"></a><span class="lineno"><a class="line" href="a01454.html#af19fadba5abdc3bc385ffccdd2805e18">  196</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01454.html#af19fadba5abdc3bc385ffccdd2805e18">Foam::MeshedSurface&lt;Face&gt;::removeZones</a>()</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;{</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    this-&gt;storedZones().clear();</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;}</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01454_html_af19fadba5abdc3bc385ffccdd2805e18"><div class="ttname"><a href="a01454.html#af19fadba5abdc3bc385ffccdd2805e18">Foam::MeshedSurface::removeZones</a></div><div class="ttdeci">virtual void removeZones()</div><div class="ttdoc">Remove surface zones. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00196">MeshedSurfaceZones.C:196</a></div></div>
-<div class="ttc" id="a09756_html"><div class="ttname"><a href="a09756.html">MeshedSurface.H</a></div></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a02720_html_aef07c02ea1c27bdb5906043b399e0ff0"><div class="ttname"><a href="a02720.html#aef07c02ea1c27bdb5906043b399e0ff0">Foam::UList::last</a></div><div class="ttdeci">T &amp; last()</div><div class="ttdoc">Return the last element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07619_source.html#l00131">UListI.H:131</a></div></div>
-<div class="ttc" id="a01454_html_adbdf3d1bcbfa5875f4be969e01f911f6"><div class="ttname"><a href="a01454.html#adbdf3d1bcbfa5875f4be969e01f911f6">Foam::MeshedSurface::sortFacesAndStore</a></div><div class="ttdeci">void sortFacesAndStore(const Xfer&lt; List&lt; Face &gt; &gt; &amp;unsortedFaces, const Xfer&lt; List&lt; label &gt; &gt; &amp;zoneIds, const bool sorted)</div><div class="ttdoc">Sort faces by zones and store sorted faces. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00072">MeshedSurfaceZones.C:72</a></div></div>
-<div class="ttc" id="a02868_html"><div class="ttname"><a href="a02868.html">Foam::Xfer</a></div><div class="ttdoc">A simple container for copying or transferring objects of type <T>. </div><div class="ttdef"><b>Definition:</b> <a href="a08400_source.html#l00085">Xfer.H:85</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a01355_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01355.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07588_source.html#l00076">ListI.H:76</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a02496_html"><div class="ttname"><a href="a02496.html">Foam::surfZone</a></div><div class="ttdoc">A surface zone on a MeshedSurface. </div><div class="ttdef"><b>Definition:</b> <a href="a09850_source.html#l00062">surfZone.H:62</a></div></div>
-<div class="ttc" id="a01355_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a01355.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::List::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the list, i.e. set size to zero. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00379">List.C:379</a></div></div>
-<div class="ttc" id="a01355_html_aedb985ffeaf1bdbfeccc2a8730405703"><div class="ttname"><a href="a01355.html#aedb985ffeaf1bdbfeccc2a8730405703">Foam::List::setSize</a></div><div class="ttdeci">void setSize(const label)</div><div class="ttdoc">Reset size of List. </div><div class="ttdef"><b>Definition:</b> <a href="a07586_source.html#l00318">List.C:318</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a02720_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a02720.html#a723361dc2020160f5492e8fe2d09fa44">Foam::UList::size</a></div><div class="ttdeci">label size() const </div><div class="ttdoc">Return the number of elements in the UList. </div><div class="ttdef"><b>Definition:</b> <a href="a07619_source.html#l00299">UListI.H:299</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a10675_html_aa77215843e964fac259ab06e68d0ee02"><div class="ttname"><a href="a10675.html#aa77215843e964fac259ab06e68d0ee02">Foam::faceMap</a></div><div class="ttdeci">Pair&lt; int &gt; faceMap(const label facePi, const face &amp;faceP, const label faceNi, const face &amp;faceN)</div><div class="ttdef"><b>Definition:</b> <a href="a07033_source.html#l00090">blockMeshMergeFast.C:90</a></div></div>
-<div class="ttc" id="a01454_html_a41dedb9ad09b4b76d73e548b1de9b61b"><div class="ttname"><a href="a01454.html#a41dedb9ad09b4b76d73e548b1de9b61b">Foam::MeshedSurface::addZones</a></div><div class="ttdeci">virtual void addZones(const UList&lt; surfZone &gt; &amp;, const bool cullEmpty=false)</div><div class="ttdoc">Add surface zones. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00111">MeshedSurfaceZones.C:111</a></div></div>
-<div class="ttc" id="a01454_html_af68c0ce74b1ff6da07f8481db8c415ef"><div class="ttname"><a href="a01454.html#af68c0ce74b1ff6da07f8481db8c415ef">Foam::MeshedSurface::checkZones</a></div><div class="ttdeci">void checkZones()</div><div class="ttdoc">Basic sanity check on zones. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00031">MeshedSurfaceZones.C:31</a></div></div>
-<div class="ttc" id="a10675_html_acf128ea037506c14446998bb7ca39264"><div class="ttname"><a href="a10675.html#acf128ea037506c14446998bb7ca39264">Foam::sortedOrder</a></div><div class="ttdeci">void sortedOrder(const UList&lt; T &gt; &amp;, labelList &amp;order)</div><div class="ttdoc">Generate the (stable) sort order for the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07595_source.html#l00179">ListOpsTemplates.C:179</a></div></div>
-<div class="ttc" id="a02720_html"><div class="ttname"><a href="a02720.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00060">HashTable.H:60</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a07677_html_ae65af40830b9f1505c94610fa4be1df2"><div class="ttname"><a href="a07677.html#ae65af40830b9f1505c94610fa4be1df2">WarningIn</a></div><div class="ttdeci">#define WarningIn(fn)                                                                                                                </div><div class="ttdoc">Report a warning using Foam::Warning. </div><div class="ttdef"><b>Definition:</b> <a href="a07677_source.html#l00254">messageStream.H:254</a></div></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// End namespace solidBodyMotionFunctions</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01867_html_aa22b8c9b9329b5048112f873d1ea0f6d"><div class="ttname"><a href="a01867.html#aa22b8c9b9329b5048112f873d1ea0f6d">Foam::sixDoFRigidBodyMotionConstraints::point::constrainTranslation</a></div><div class="ttdeci">virtual void constrainTranslation(pointConstraint &amp;) const </div><div class="ttdoc">Apply and accumulate translational constraints. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00082">sixDoFRigidBodyMotionPointConstraint.C:82</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a01867_html_aaeee2d0d4a87de2bfa9a957bd687eb29"><div class="ttname"><a href="a01867.html#aaeee2d0d4a87de2bfa9a957bd687eb29">Foam::sixDoFRigidBodyMotionConstraints::point::constrainRotation</a></div><div class="ttdeci">virtual void constrainRotation(pointConstraint &amp;) const </div><div class="ttdoc">Apply and accumulate rotational constraints. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00091">sixDoFRigidBodyMotionPointConstraint.C:91</a></div></div>
+<div class="ttc" id="a01867_html_a138aefca8a3fcda6574641e23eea497e"><div class="ttname"><a href="a01867.html#a138aefca8a3fcda6574641e23eea497e">Foam::sixDoFRigidBodyMotionConstraints::point::clone</a></div><div class="ttdeci">virtual autoPtr&lt; sixDoFRigidBodyMotionConstraint &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00083">sixDoFRigidBodyMotionPointConstraint.H:83</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01867_html_a64da2087e03e55d0dddd0cd6e5ac05ea"><div class="ttname"><a href="a01867.html#a64da2087e03e55d0dddd0cd6e5ac05ea">Foam::sixDoFRigidBodyMotionConstraints::point::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;sDoFRBMCCoeff)</div><div class="ttdoc">Update properties from given dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00098">sixDoFRigidBodyMotionPointConstraint.C:98</a></div></div>
+<div class="ttc" id="a01867_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a01867.html#a0941061ad5a26be83b4107d05750ace6">Foam::sixDoFRigidBodyMotionConstraints::point::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00115">sixDoFRigidBodyMotionPointConstraint.C:115</a></div></div>
+<div class="ttc" id="a01867_html"><div class="ttname"><a href="a01867.html">Foam::sixDoFRigidBodyMotionConstraints::point</a></div><div class="ttdoc">Translation constraint on the centre of rotation: fixed in space. </div><div class="ttdef"><b>Definition:</b> <a href="a09763_source.html#l00056">sixDoFRigidBodyMotionPointConstraint.H:56</a></div></div>
+<div class="ttc" id="a01867_html_a2798d30da66c23cfe4e880d873608682"><div class="ttname"><a href="a01867.html#a2798d30da66c23cfe4e880d873608682">Foam::sixDoFRigidBodyMotionConstraints::point::setCentreOfRotation</a></div><div class="ttdeci">virtual void setCentreOfRotation(Foam::point &amp;) const </div><div class="ttdoc">Set the centre of rotation to the point. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00073">sixDoFRigidBodyMotionPointConstraint.C:73</a></div></div>
+<div class="ttc" id="a01867_html_a900dc9819468a4e4c8f91e4de995316c"><div class="ttname"><a href="a01867.html#a900dc9819468a4e4c8f91e4de995316c">Foam::sixDoFRigidBodyMotionConstraints::point::point</a></div><div class="ttdeci">point(const word &amp;name, const dictionary &amp;sDoFRBMCDict, const sixDoFRigidBodyMotion &amp;motion)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00051">sixDoFRigidBodyMotionPointConstraint.C:51</a></div></div>
+<div class="ttc" id="a01870_html"><div class="ttname"><a href="a01870.html">Foam::pointConstraint</a></div><div class="ttdoc">Accumulates point constraints through successive applications of the applyConstraint function...</div><div class="ttdef"><b>Definition:</b> <a href="a08130_source.html#l00056">pointConstraint.H:56</a></div></div>
+<div class="ttc" id="a01867_html_abcdfd3f8dc1c5bf025bfddf99cb299a6"><div class="ttname"><a href="a01867.html#abcdfd3f8dc1c5bf025bfddf99cb299a6">Foam::sixDoFRigidBodyMotionConstraints::point::TypeName</a></div><div class="ttdeci">TypeName(&quot;point&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a08774_html"><div class="ttname"><a href="a08774.html">point.H</a></div></div>
+<div class="ttc" id="a02326_html"><div class="ttname"><a href="a02326.html">Foam::sixDoFRigidBodyMotionConstraint</a></div><div class="ttdoc">Base class for defining constraints for sixDoF motions. </div><div class="ttdef"><b>Definition:</b> <a href="a09765_source.html#l00065">sixDoFRigidBodyMotionConstraint.H:65</a></div></div>
+<div class="ttc" id="a02326_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a02326.html#a75b72488d2e82151b025744974919d5d">Foam::sixDoFRigidBodyMotionConstraint::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return the name. </div><div class="ttdef"><b>Definition:</b> <a href="a09765_source.html#l00136">sixDoFRigidBodyMotionConstraint.H:136</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a09765_html"><div class="ttname"><a href="a09765.html">sixDoFRigidBodyMotionConstraint.H</a></div></div>
+<div class="ttc" id="a02325_html"><div class="ttname"><a href="a02325.html">Foam::sixDoFRigidBodyMotion</a></div><div class="ttdoc">Six degree of freedom motion for a rigid body. </div><div class="ttdef"><b>Definition:</b> <a href="a09783_source.html#l00066">sixDoFRigidBodyMotion.H:66</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a01867_html_a1b24c7edc0e57a3863df4dd7b3e264cf"><div class="ttname"><a href="a01867.html#a1b24c7edc0e57a3863df4dd7b3e264cf">Foam::sixDoFRigidBodyMotionConstraints::point::~point</a></div><div class="ttdeci">virtual ~point()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09762_source.html#l00066">sixDoFRigidBodyMotionPointConstraint.C:66</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

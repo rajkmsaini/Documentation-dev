@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_ad006ac2d4adf68d191bc9af38a824ca.html">thermophysical</a></li><li class="navelem"><a class="el" href="dir_951da15e0d5e25ea971ef53cbd589459.html">equilibriumCO</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_2cb9088fcfa5d85f3ea0b5a37d6be287.html">preProcessing</a></li><li class="navelem"><a class="el" href="dir_2bff761b90451d3e5a5395d4816ecc83.html">wallFunctionTable</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">equilibriumCO.C</div>  </div>
+<div class="title">wallFunctionTableApp.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04580.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,147 +120,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Application</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    equilibriumCO</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    wallFunctionTable</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Calculates the equilibrium level of carbon monoxide.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Generates a table suitable for use by tabulated wall functions.</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08097.html">argList.H</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07804.html">Time.H</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07633.html">dictionary.H</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07718.html">IFstream.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08160.html">OSspecific.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07727.html">IOmanip.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10278.html">specie.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10230.html">perfectGas.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10304.html">thermo.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10299.html">janafThermo.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10281.html">absoluteEnthalpy.H</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07562.html">SLPtrList.H</a>&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10675.html">Foam</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a02575.html">species::thermo&lt;janafThermo&lt;perfectGas&lt;specie&gt;</a> &gt;, <a class="code" href="a00007.html">absoluteEnthalpy</a>&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05075.html">fvCFD.H</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04577.html">tabulatedWallFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08213.html">setRootCase.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08209.html">createTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08204.html">createMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    IOdictionary <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    (</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        IOobject</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        (</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="stringliteral">&quot;wallFunctionDict&quot;</span>,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            runTime.constant(),</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            IOobject::MUST_READ_IF_MODIFIED</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        )</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    );</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08162.html">setRootCase.H</a>&quot;</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">    #include &quot;<a class="code" href="a08158.html">createTime.H</a>&quot;</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    autoPtr&lt;tabulatedWallFunctions::tabulatedWallFunction&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        twf(<a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">tabulatedWallFunctions::tabulatedWallFunction::New</a>(<a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>));</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">//    twf-&gt;writeData(Info);</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;Reading thermodynamic data IOdictionary&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    twf-&gt;write();</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a01163.html">IOdictionary</a> thermoData</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    (</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        (</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="stringliteral">&quot;thermoData&quot;</span>,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            runTime.constant(),</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            runTime,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418">IOobject::MUST_READ_IF_MODIFIED</a>,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a>,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            false</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        )</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    );</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    scalar P = 1e5;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    scalar T = 3000.0;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a02331.html">SLPtrList&lt;thermo&gt;</a> EQreactions;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    EQreactions.<a class="code" href="a01362.html#aa0809a881c9618cbaafc6a4451614dd6">append</a></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    (</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">new</span> thermo</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        (</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;CO2&quot;</span>))</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;         ==</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;CO&quot;</span>))</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;          + 0.5*<a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;O2&quot;</span>))</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        )</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    );</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    EQreactions.<a class="code" href="a01362.html#aa0809a881c9618cbaafc6a4451614dd6">append</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    (</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">new</span> thermo</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        (</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;O2&quot;</span>))</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;         ==</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            2.0*<a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;O&quot;</span>))</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        )</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    );</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    EQreactions.<a class="code" href="a01362.html#aa0809a881c9618cbaafc6a4451614dd6">append</a></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    (</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keyword">new</span> thermo</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        (</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;H2O&quot;</span>))</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;         ==</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;H2&quot;</span>))</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;          + 0.5*<a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;O2&quot;</span>))</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        )</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    );</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    EQreactions.<a class="code" href="a01362.html#aa0809a881c9618cbaafc6a4451614dd6">append</a></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    (</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keyword">new</span> thermo</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        (</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;H2O&quot;</span>))</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;         ==</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;H&quot;</span>))</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;          + <a class="code" href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a>(thermoData.subDict(<span class="stringliteral">&quot;OH&quot;</span>))</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        )</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    );</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a02331.html">SLPtrList&lt;thermo&gt;</a>, EQreactions, iter)</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Kc(EQreactions) = &quot;</span> &lt;&lt; iter().Kc(P, T) &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;end&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a07562_html"><div class="ttname"><a href="a07562.html">SLPtrList.H</a></div></div>
-<div class="ttc" id="a08162_html"><div class="ttname"><a href="a08162.html">setRootCase.H</a></div></div>
-<div class="ttc" id="a07718_html"><div class="ttname"><a href="a07718.html">IFstream.H</a></div></div>
-<div class="ttc" id="a10281_html"><div class="ttname"><a href="a10281.html">absoluteEnthalpy.H</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a10278_html"><div class="ttname"><a href="a10278.html">specie.H</a></div></div>
-<div class="ttc" id="a07618_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07618.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00449">UList.H:449</a></div></div>
-<div class="ttc" id="a08158_html"><div class="ttname"><a href="a08158.html">createTime.H</a></div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418">Foam::IOobject::MUST_READ_IF_MODIFIED</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00109">IOobject.H:109</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01170_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00118">IOobject.H:118</a></div></div>
-<div class="ttc" id="a10304_html"><div class="ttname"><a href="a10304.html">thermo.H</a></div></div>
-<div class="ttc" id="a01163_html"><div class="ttname"><a href="a01163.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07706_source.html#l00053">IOdictionary.H:53</a></div></div>
-<div class="ttc" id="a07633_html"><div class="ttname"><a href="a07633.html">dictionary.H</a></div></div>
-<div class="ttc" id="a02575_html"><div class="ttname"><a href="a02575.html">Foam::species::thermo</a></div><div class="ttdef"><b>Definition:</b> <a href="a10304_source.html#l00052">thermo.H:52</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a08160_html"><div class="ttname"><a href="a08160.html">OSspecific.H</a></div><div class="ttdoc">Functions used by OpenFOAM that are specific to POSIX compliant operating systems and need to be repl...</div></div>
-<div class="ttc" id="a04395_html_a980bff86900317ef8c7c787f7ad804f3"><div class="ttname"><a href="a04395.html#a980bff86900317ef8c7c787f7ad804f3">thermo</a></div><div class="ttdeci">psiReactionThermo &amp; thermo</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00032">createFields.H:32</a></div></div>
-<div class="ttc" id="a07804_html"><div class="ttname"><a href="a07804.html">Time.H</a></div></div>
-<div class="ttc" id="a01362_html_aa0809a881c9618cbaafc6a4451614dd6"><div class="ttname"><a href="a01362.html#aa0809a881c9618cbaafc6a4451614dd6">Foam::LList&lt; SLListBase, T * &gt;::append</a></div><div class="ttdeci">void append(const T * &amp;a)</div><div class="ttdoc">Add at tail of list. </div><div class="ttdef"><b>Definition:</b> <a href="a07541_source.html#l00166">LList.H:166</a></div></div>
-<div class="ttc" id="a08097_html"><div class="ttname"><a href="a08097.html">argList.H</a></div></div>
-<div class="ttc" id="a10230_html"><div class="ttname"><a href="a10230.html">perfectGas.H</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a09365_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09365_source.html#l00054">postCalc.C:54</a></div></div>
-<div class="ttc" id="a07727_html"><div class="ttname"><a href="a07727.html">IOmanip.H</a></div><div class="ttdoc">Istream and Ostream manipulators taking arguments. </div></div>
-<div class="ttc" id="a02331_html"><div class="ttname"><a href="a02331.html">Foam::SLPtrList</a></div><div class="ttdoc">Non-intrusive singly-linked pointer list. </div><div class="ttdef"><b>Definition:</b> <a href="a07562_source.html#l00047">SLPtrList.H:47</a></div></div>
-<div class="ttc" id="a10299_html"><div class="ttname"><a href="a10299.html">janafThermo.H</a></div></div>
-<div class="ttc" id="a00007_html"><div class="ttname"><a href="a00007.html">Foam::absoluteEnthalpy</a></div><div class="ttdoc">Thermodynamics mapping class to expose the absolute enthalpy function as the standard enthalpy functi...</div><div class="ttdef"><b>Definition:</b> <a href="a10281_source.html#l00045">absoluteEnthalpy.H:45</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;End\n&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a05075_html"><div class="ttname"><a href="a05075.html">fvCFD.H</a></div></div>
+<div class="ttc" id="a08209_html"><div class="ttname"><a href="a08209.html">createTime.H</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a08213_html"><div class="ttname"><a href="a08213.html">setRootCase.H</a></div></div>
+<div class="ttc" id="a08204_html"><div class="ttname"><a href="a08204.html">createMesh.H</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a09417_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09417.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09417_source.html#l00054">postCalc.C:54</a></div></div>
+<div class="ttc" id="a04577_html"><div class="ttname"><a href="a04577.html">tabulatedWallFunction.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

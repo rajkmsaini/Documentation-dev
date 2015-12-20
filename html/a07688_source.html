@@ -88,15 +88,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_b1391b8691e21d3cff54e51a698f3c2b.html">functionObjects</a></li><li class="navelem"><a class="el" href="dir_57b516a07ed18b74e0e3780c449bacd8.html">IOOutputFilter</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_63c634f7a7cfd679ac26c67fb30fc32f.html">db</a></li><li class="navelem"><a class="el" href="dir_43e4f3d5f4ba74ef6e29186317ac2bae.html">dictionary</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">IOOutputFilter.H</div>  </div>
+<div class="title">dictionaryIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="a07688.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------* \</span></div>
+<a href="a07688.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
@@ -119,172 +119,249 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::IOOutputFilter</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    IOdictionary wrapper around OutputFilter to allow them to read from</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    their associated dictionaries.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">Note</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    The IOobject or the objectRegistry will normally have to be</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    derived from a fvMesh for a subsequent cast (within OutputFilter)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    to work correctly.</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    IOOutputFilter.C</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#ifndef IOOutputFilter_H</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define IOOutputFilter_H</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07706.html">IOdictionary.H</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08724.html">pointFieldFwd.H</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07684.html">dictionary.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07769.html">IFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07706.html">inputModeEntry.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09074.html">regExp.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a00524.html#a4cea470990d165a35c1b2333a569b586">Foam::dictionary::dictionary</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00524.html#ab4614c246e8d5f3e3bfc05ca32c44549">   34</a></span>&#160;(</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00780.html">fileName</a>&amp; name,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; parentDict,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a01199.html">Istream</a>&amp; is</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a00527.html">dictionaryName</a>(parentDict.<a class="code" href="a00527.html#acd3da3556711337d571c60cf9ffb91cc">name</a>() + <span class="charliteral">&#39;.&#39;</span> + <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>),</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    parent_(parentDict)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(is);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// Forward declaration of classes</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span>mapPolyMesh;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a00524.html#adbc4e3eded4fe4a704a91820758a3b16">   47</a></span>&#160;<a class="code" href="a00524.html#a4cea470990d165a35c1b2333a569b586">Foam::dictionary::dictionary</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="a00527.html">dictionaryName</a>(is.name()),</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    parent_(<a class="code" href="a00524.html">dictionary</a>::null)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Reset input mode as this is a &quot;top-level&quot; dictionary</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a01131.html#ac8bb3912a3ce86b15842e79d0b421204">functionEntries::inputModeEntry::clear</a>();</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">                       Class IOOutputFilter Declaration</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">read</a>(is);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a01173.html">   59</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> OutputFilter&gt;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">class </span><a class="code" href="a01173.html">IOOutputFilter</a></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01163.html">IOdictionary</a>,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">public</span> OutputFilter</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00524.html#afd2db3adb2438b6fdeeae92106165a5d">   59</a></span>&#160;<a class="code" href="a00524.html#a4cea470990d165a35c1b2333a569b586">Foam::dictionary::dictionary</a>(<a class="code" href="a01199.html">Istream</a>&amp; is, <span class="keyword">const</span> <span class="keywordtype">bool</span> keepHeader)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a00527.html">dictionaryName</a>(is.name()),</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    parent_(<a class="code" href="a00524.html">dictionary</a>::null)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// Reset input mode as this is a &quot;top-level&quot; dictionary</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="a01131.html#ac8bb3912a3ce86b15842e79d0b421204">functionEntries::inputModeEntry::clear</a>();</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Disallow default bitwise copy construct and assignment</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="a01173.html">IOOutputFilter</a>(<span class="keyword">const</span> <a class="code" href="a01173.html">IOOutputFilter</a>&amp;);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a01173.html">IOOutputFilter</a>&amp;);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">read</a>(is, keepHeader);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Construct from an IOobject for IOdictionary</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">//  Allow the possibility to load fields from files</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a01173.html">IOOutputFilter</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        (</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; outputFilterName,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01170.html">IOobject</a>&amp; ioDict,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> loadFromFile = <span class="keyword">false</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        );</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">//- Construct for given objectRegistry and dictionary</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//  Allow dictionary to be optional</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//  Allow the possibility to load fields from files</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a01173.html">IOOutputFilter</a></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        (</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; outputFilterName,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01678.html">objectRegistry</a>&amp;,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a00521.html#a0c0f7c5d75947353dc8dc6cbe4df98ea">dictName</a> = OutputFilter::typeName() + <span class="stringliteral">&quot;Dict&quot;</span>,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0">IOobject::readOption</a> rOpt = <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418">IOobject::MUST_READ_IF_MODIFIED</a>,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> loadFromFile = <span class="keyword">false</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        );</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">//- Construct for given objectRegistry and dictionary</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//  Dictionary read from full path.</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//  Allow the possibility to load fields from files</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a01173.html">IOOutputFilter</a></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        (</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; outputFilterName,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01678.html">objectRegistry</a>&amp;,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; <a class="code" href="a00521.html#a0c0f7c5d75947353dc8dc6cbe4df98ea">dictName</a>,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0">IOobject::readOption</a> rOpt = <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418">IOobject::MUST_READ_IF_MODIFIED</a>,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> loadFromFile = <span class="keyword">false</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        );</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01173.html#a097b3b41f097feb5a129315aeef4e6f9">~IOOutputFilter</a>();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="a00524.html#af3405fd7196738ecd5be06824ac7dcc5">   73</a></span>&#160;<a class="code" href="a00086.html">Foam::autoPtr&lt;Foam::dictionary&gt;</a> <a class="code" href="a00524.html#af3405fd7196738ecd5be06824ac7dcc5">Foam::dictionary::New</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00086.html">autoPtr&lt;dictionary&gt;</a>(<span class="keyword">new</span> <a class="code" href="a00524.html">dictionary</a>(is));</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="a00524.html#a74110bdf434afa7e444306eb4b04999b">   81</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">Foam::dictionary::read</a>(<a class="code" href="a01199.html">Istream</a>&amp; is, <span class="keyword">const</span> <span class="keywordtype">bool</span> keepHeader)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Check for empty dictionary</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (is.<a class="code" href="a01185.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">eof</a>())</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (!is.<a class="code" href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a>(is)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Istream not OK for reading dictionary &quot;</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">FatalIOError</a>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="a02619.html">token</a> currToken(is);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">if</span> (currToken != <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a>)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        is.<a class="code" href="a01199.html#af22e503b062298eef54e360dfc06d0b4">putBack</a>(currToken);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">while</span> (!is.<a class="code" href="a01185.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">eof</a>() &amp;&amp; <a class="code" href="a00660.html#a8a226a546ec766d55192e65b55f87715">entry::New</a>(*<span class="keyword">this</span>, is))</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {}</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// normally remove the FoamFile header entry if it exists</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">if</span> (!keepHeader)</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keyword">remove</span>(<span class="stringliteral">&quot;FoamFile&quot;</span>);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="a01173.html#af34301b2a007a0daccad2eec475d6a90">  116</a></span>&#160;        <span class="comment">//- Return name</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a01173.html#af34301b2a007a0daccad2eec475d6a90">name</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a01163.html#a6d60057c26042eaf7fa1b3b6fb07b582">IOdictionary::name</a>();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">if</span> (is.<a class="code" href="a01185.html#ae5145c481e0280c8b6b365e616058d36">bad</a>())</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;dictionary::read(Istream&amp;, bool) : &quot;</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Istream not OK after reading dictionary &quot;</span> &lt;&lt; <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="comment">//- Inherit read from OutputFilter</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">using</span> <a class="code" href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">OutputFilter::read</a>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="comment">//- Read output filter properties</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a01173.html#af816873151ddb0126e98bb2f914d8ed5">read</a>();</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="comment">//- Inherit write from regIOobject</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keyword">using</span> <a class="code" href="a02134.html#a6e5faa425b059eeb55cd904755791076">regIOobject::write</a>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">  126</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">Foam::dictionary::read</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;{</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">return</span> this-&gt;<a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">read</a>(is, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="comment">//- Sample and write</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01173.html#aac759501cf6c7895a70eecbef0226ae1">write</a>();</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="a01173.html#ab5a629c99c9d92a7cd31da2c331b7048">  134</a></span>&#160;        <span class="comment">//- Update for changes of mesh</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01173.html#ab5a629c99c9d92a7cd31da2c331b7048">updateMesh</a>(<span class="keyword">const</span> <a class="code" href="a01422.html">mapPolyMesh</a>&amp; mpm)</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            <a class="code" href="a01173.html#af816873151ddb0126e98bb2f914d8ed5">read</a>();</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            OutputFilter::updateMesh(mpm);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        }</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="a01173.html#a9b529fbb842a3de08934612733e48d57">  141</a></span>&#160;        <span class="comment">//- Update for changes of mesh</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01173.html#a9b529fbb842a3de08934612733e48d57">movePoints</a>(<span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>)</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        {</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <a class="code" href="a01173.html#af816873151ddb0126e98bb2f914d8ed5">read</a>();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            OutputFilter::movePoints(mesh);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        }</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;};</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="a00524.html#a7d3cf723e574a5adaba6b5a7409a39e2">  132</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00524.html#a7d3cf723e574a5adaba6b5a7409a39e2">Foam::dictionary::substituteKeyword</a>(<span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; keyword)</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;{</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="a02869.html">word</a> varName = keyword(1, keyword.size()-1);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="comment">// lookup the variable name in the given dictionary</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00660.html">entry</a>* ePtr = lookupEntryPtr(varName, <span class="keyword">true</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="comment">// if defined insert its entries into this dictionary</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordflow">if</span> (ePtr != NULL)</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; addDict = ePtr-&gt;dict();</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a01029.html">IDLList&lt;entry&gt;</a>, addDict, iter)</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        {</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <a class="code" href="a10725.html#a8d90b63d17d5d750735638b24d06454c">add</a>(iter());</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        }</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    }</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a07687.html">IOOutputFilter.C</a>&quot;</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01173_html"><div class="ttname"><a href="a01173.html">Foam::IOOutputFilter</a></div><div class="ttdoc">IOdictionary wrapper around OutputFilter to allow them to read from their associated dictionaries...</div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00059">IOOutputFilter.H:59</a></div></div>
-<div class="ttc" id="a10675_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10675.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08826_source.html#l00087">int32IO.C:87</a></div></div>
-<div class="ttc" id="a07706_html"><div class="ttname"><a href="a07706.html">IOdictionary.H</a></div></div>
-<div class="ttc" id="a01173_html_aac759501cf6c7895a70eecbef0226ae1"><div class="ttname"><a href="a01173.html#aac759501cf6c7895a70eecbef0226ae1">Foam::IOOutputFilter::write</a></div><div class="ttdeci">virtual void write()</div><div class="ttdoc">Sample and write. </div><div class="ttdef"><b>Definition:</b> <a href="a07687_source.html#l00118">IOOutputFilter.C:118</a></div></div>
-<div class="ttc" id="a07687_html"><div class="ttname"><a href="a07687.html">IOOutputFilter.C</a></div></div>
-<div class="ttc" id="a01422_html"><div class="ttname"><a href="a01422.html">Foam::mapPolyMesh</a></div><div class="ttdoc">Class containing mesh-to-mesh mapping information after a change in polyMesh topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08568_source.html#l00158">mapPolyMesh.H:158</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a6be8dd810194d4022a4faec0a869d418">Foam::IOobject::MUST_READ_IF_MODIFIED</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00109">IOobject.H:109</a></div></div>
-<div class="ttc" id="a01163_html_a6d60057c26042eaf7fa1b3b6fb07b582"><div class="ttname"><a href="a01163.html#a6d60057c26042eaf7fa1b3b6fb07b582">Foam::IOdictionary::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Name function is needed to disambiguate those inherited. </div><div class="ttdef"><b>Definition:</b> <a href="a07705_source.html#l00183">IOdictionary.C:183</a></div></div>
-<div class="ttc" id="a02134_html_a6e5faa425b059eeb55cd904755791076"><div class="ttname"><a href="a02134.html#a6e5faa425b059eeb55cd904755791076">Foam::regIOobject::write</a></div><div class="ttdeci">virtual bool write() const </div><div class="ttdoc">Write using setting from DB. </div><div class="ttdef"><b>Definition:</b> <a href="a07787_source.html#l00126">regIOobjectWrite.C:126</a></div></div>
-<div class="ttc" id="a01173_html_ab5a629c99c9d92a7cd31da2c331b7048"><div class="ttname"><a href="a01173.html#ab5a629c99c9d92a7cd31da2c331b7048">Foam::IOOutputFilter::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(const mapPolyMesh &amp;mpm)</div><div class="ttdoc">Update for changes of mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00134">IOOutputFilter.H:134</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0">Foam::IOobject::readOption</a></div><div class="ttdeci">readOption</div><div class="ttdoc">Enumeration defining the read options. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00106">IOobject.H:106</a></div></div>
-<div class="ttc" id="a01163_html"><div class="ttname"><a href="a01163.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07706_source.html#l00053">IOdictionary.H:53</a></div></div>
-<div class="ttc" id="a01173_html_a097b3b41f097feb5a129315aeef4e6f9"><div class="ttname"><a href="a01173.html#a097b3b41f097feb5a129315aeef4e6f9">Foam::IOOutputFilter::~IOOutputFilter</a></div><div class="ttdeci">virtual ~IOOutputFilter()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07687_source.html#l00096">IOOutputFilter.C:96</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a01678_html"><div class="ttname"><a href="a01678.html">Foam::objectRegistry</a></div><div class="ttdoc">Registry of regIOobjects. </div><div class="ttdef"><b>Definition:</b> <a href="a07781_source.html#l00050">objectRegistry.H:50</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a08724_html"><div class="ttname"><a href="a08724.html">pointFieldFwd.H</a></div></div>
-<div class="ttc" id="a00521_html_a0c0f7c5d75947353dc8dc6cbe4df98ea"><div class="ttname"><a href="a00521.html#a0c0f7c5d75947353dc8dc6cbe4df98ea">Foam::dictionaryName::dictName</a></div><div class="ttdeci">const word dictName() const </div><div class="ttdoc">Return the local dictionary name (final part of scoped name) </div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00115">dictionary.H:115</a></div></div>
-<div class="ttc" id="a01173_html_a9b529fbb842a3de08934612733e48d57"><div class="ttname"><a href="a01173.html#a9b529fbb842a3de08934612733e48d57">Foam::IOOutputFilter::movePoints</a></div><div class="ttdeci">virtual void movePoints(const polyMesh &amp;mesh)</div><div class="ttdoc">Update for changes of mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00141">IOOutputFilter.H:141</a></div></div>
-<div class="ttc" id="a01173_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a01173.html#af816873151ddb0126e98bb2f914d8ed5">Foam::IOOutputFilter::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Read output filter properties. </div><div class="ttdef"><b>Definition:</b> <a href="a07687_source.html#l00103">IOOutputFilter.C:103</a></div></div>
-<div class="ttc" id="a01173_html_af34301b2a007a0daccad2eec475d6a90"><div class="ttname"><a href="a01173.html#af34301b2a007a0daccad2eec475d6a90">Foam::IOOutputFilter::name</a></div><div class="ttdeci">virtual const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00116">IOOutputFilter.H:116</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="a10725.html#a0349ad00d7d28c685bdd8e8cce210641">  158</a></span>&#160;<a class="code" href="a01199.html">Foam::Istream</a>&amp; <a class="code" href="a10725.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a>(<a class="code" href="a01199.html">Istream</a>&amp; is, <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;{</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="comment">// Reset input mode assuming this is a &quot;top-level&quot; dictionary</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <a class="code" href="a01131.html#ac8bb3912a3ce86b15842e79d0b421204">functionEntries::inputModeEntry::clear</a>();</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    dict.<a class="code" href="a00524.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    dict.<a class="code" href="a00527.html#acd3da3556711337d571c60cf9ffb91cc">name</a>() = is.<a class="code" href="a01185.html#ab27acd1d200f0d245337451aa2f31517">name</a>();</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    dict.<a class="code" href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">read</a>(is);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordflow">return</span> is;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;}</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
+<div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="a00524.html#a4a8c5a25ca68b97e8408d4016287b5e2">  173</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00524.html#a4a8c5a25ca68b97e8408d4016287b5e2">Foam::dictionary::write</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os, <span class="keywordtype">bool</span> subDict)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordflow">if</span> (subDict)</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    {</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">token::BEGIN_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">incrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    }</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a01029.html">IDLList&lt;entry&gt;</a>, *<span class="keyword">this</span>, iter)</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    {</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00660.html">entry</a>&amp; <a class="code" href="a10725.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a> = *iter;</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="comment">// Write entry</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a>;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="comment">// Add extra new line between entries for &quot;top-level&quot; dictionaries</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">if</span> (!subDict &amp;&amp; parent() == <a class="code" href="a00524.html#ab64fe8a4887aeb21e53102caba5ff115">dictionary::null</a> &amp;&amp; e != *last())</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        {</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;            os  &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        }</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="comment">// Check stream before going to next entry.</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordflow">if</span> (!os.<a class="code" href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>())</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        {</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <a class="code" href="a07728.html#a58548a3fc67fb931bc4e99f94d5f41b8">WarningInFunction</a></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                &lt;&lt; <span class="stringliteral">&quot;Can&#39;t write entry &quot;</span> &lt;&lt; iter().keyword()</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                &lt;&lt; <span class="stringliteral">&quot; for dictionary &quot;</span> &lt;&lt; <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>()</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        }</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    }</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordflow">if</span> (subDict)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    {</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        os  &lt;&lt; <a class="code" href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">decrIndent</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">token::END_BLOCK</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    }</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;}</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
+<div class="line"><a name="l00210"></a><span class="lineno"><a class="line" href="a10725.html#a919603ac30cdc696c420b3fedf60ce94">  210</a></span>&#160;<a class="code" href="a01736.html">Foam::Ostream</a>&amp; <a class="code" href="a10725.html#ae86a76a63deefbe1a4490c873ad8e1b2">Foam::operator&lt;&lt;</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os, <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;{</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    dict.<a class="code" href="a00524.html#a4a8c5a25ca68b97e8408d4016287b5e2">write</a>(os, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a5baff2b2334a238271b33f039e5dde5c"><div class="ttname"><a href="a10725.html#a5baff2b2334a238271b33f039e5dde5c">Foam::incrIndent</a></div><div class="ttdeci">Ostream &amp; incrIndent(Ostream &amp;os)</div><div class="ttdoc">Increment the indent level. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00228">Ostream.H:228</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a00524_html_a7d3cf723e574a5adaba6b5a7409a39e2"><div class="ttname"><a href="a00524.html#a7d3cf723e574a5adaba6b5a7409a39e2">Foam::dictionary::substituteKeyword</a></div><div class="ttdeci">bool substituteKeyword(const word &amp;keyword)</div><div class="ttdoc">Substitute the given keyword prepended by &#39;$&#39; with the. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00132">dictionaryIO.C:132</a></div></div>
+<div class="ttc" id="a10725_html_a8d90b63d17d5d750735638b24d06454c"><div class="ttname"><a href="a10725.html#a8d90b63d17d5d750735638b24d06454c">Foam::add</a></div><div class="ttdeci">void add(FieldField&lt; Field1, typename typeOfSum&lt; Type1, Type2 &gt;::type &gt; &amp;f, const FieldField&lt; Field1, Type1 &gt; &amp;f1, const FieldField&lt; Field2, Type2 &gt; &amp;f2)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00870">FieldFieldFunctions.C:870</a></div></div>
+<div class="ttc" id="a07684_html"><div class="ttname"><a href="a07684.html">dictionary.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a07728_html_a58548a3fc67fb931bc4e99f94d5f41b8"><div class="ttname"><a href="a07728.html#a58548a3fc67fb931bc4e99f94d5f41b8">WarningInFunction</a></div><div class="ttdeci">#define WarningInFunction</div><div class="ttdoc">Report a warning using Foam::Warning. </div><div class="ttdef"><b>Definition:</b> <a href="a07728_source.html#l00259">messageStream.H:259</a></div></div>
+<div class="ttc" id="a00527_html"><div class="ttname"><a href="a00527.html">Foam::dictionaryName</a></div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00078">dictionary.H:78</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a07706_html"><div class="ttname"><a href="a07706.html">inputModeEntry.H</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a02619_html"><div class="ttname"><a href="a02619.html">Foam::token</a></div><div class="ttdoc">A token holds items read from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00067">token.H:67</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a3019a113fdbe1f6734054dee2d5f692e">Foam::token::END_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00105">token.H:105</a></div></div>
+<div class="ttc" id="a01131_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a01131.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::functionEntries::inputModeEntry::clear</a></div><div class="ttdeci">static void clear()</div><div class="ttdoc">Reset the inputMode to default (ie, merge) </div><div class="ttdef"><b>Definition:</b> <a href="a07705_source.html#l00109">inputModeEntry.C:109</a></div></div>
+<div class="ttc" id="a00524_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a00524.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::dictionary::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clear the dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l01052">dictionary.C:1052</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a01185_html_ab27acd1d200f0d245337451aa2f31517"><div class="ttname"><a href="a01185.html#ab27acd1d200f0d245337451aa2f31517">Foam::IOstream::name</a></div><div class="ttdeci">virtual const fileName &amp; name() const </div><div class="ttdoc">Return the name of the stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00297">IOstream.H:297</a></div></div>
+<div class="ttc" id="a07724_html_ace9d7789841cd28051f24d4eea0688f9"><div class="ttname"><a href="a07724.html#ace9d7789841cd28051f24d4eea0688f9">FatalIOErrorInFunction</a></div><div class="ttdeci">#define FatalIOErrorInFunction(ios)</div><div class="ttdoc">Report an error message using Foam::FatalIOError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00331">error.H:331</a></div></div>
+<div class="ttc" id="a10725_html_aa962c58f164ba66de90b6dbb08ace4c8"><div class="ttname"><a href="a10725.html#aa962c58f164ba66de90b6dbb08ace4c8">Foam::FatalIOError</a></div><div class="ttdeci">IOerror FatalIOError</div></div>
+<div class="ttc" id="a10725_html_ae297c57ea5b952a8bc9e4f30f7ea8701"><div class="ttname"><a href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">Foam::indent</a></div><div class="ttdeci">Ostream &amp; indent(Ostream &amp;os)</div><div class="ttdoc">Indent stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00221">Ostream.H:221</a></div></div>
+<div class="ttc" id="a00524_html_ab6e27a0a7953d55de8b58e77078d82b9"><div class="ttname"><a href="a00524.html#ab6e27a0a7953d55de8b58e77078d82b9">Foam::dictionary::read</a></div><div class="ttdeci">bool read(Istream &amp;)</div><div class="ttdoc">Read dictionary from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00126">dictionaryIO.C:126</a></div></div>
+<div class="ttc" id="a00660_html_a8a226a546ec766d55192e65b55f87715"><div class="ttname"><a href="a00660.html#a8a226a546ec766d55192e65b55f87715">Foam::entry::New</a></div><div class="ttdeci">static bool New(dictionary &amp;parentDict, Istream &amp;)</div><div class="ttdoc">Construct from Istream and insert into dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07692_source.html#l00091">entryIO.C:91</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a07769_html"><div class="ttname"><a href="a07769.html">IFstream.H</a></div></div>
+<div class="ttc" id="a00524_html_ab64fe8a4887aeb21e53102caba5ff115"><div class="ttname"><a href="a00524.html#ab64fe8a4887aeb21e53102caba5ff115">Foam::dictionary::null</a></div><div class="ttdeci">static const dictionary null</div><div class="ttdoc">Null dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00193">dictionary.H:193</a></div></div>
+<div class="ttc" id="a01185_html_ac4bcdb9a2c4adf5c3d247a711a7142cc"><div class="ttname"><a href="a01185.html#ac4bcdb9a2c4adf5c3d247a711a7142cc">Foam::IOstream::eof</a></div><div class="ttdeci">bool eof() const </div><div class="ttdoc">Return true if end of input seen. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00339">IOstream.H:339</a></div></div>
+<div class="ttc" id="a01185_html_ae5145c481e0280c8b6b365e616058d36"><div class="ttname"><a href="a01185.html#ae5145c481e0280c8b6b365e616058d36">Foam::IOstream::bad</a></div><div class="ttdeci">bool bad() const </div><div class="ttdoc">Return true if stream is corrupted. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00351">IOstream.H:351</a></div></div>
+<div class="ttc" id="a00524_html_a4a8c5a25ca68b97e8408d4016287b5e2"><div class="ttname"><a href="a00524.html#a4a8c5a25ca68b97e8408d4016287b5e2">Foam::dictionary::write</a></div><div class="ttdeci">void write(Ostream &amp;, const bool subDict=true) const </div><div class="ttdoc">Write dictionary, normally with sub-dictionary formatting. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00173">dictionaryIO.C:173</a></div></div>
+<div class="ttc" id="a01029_html"><div class="ttname"><a href="a01029.html">Foam::IDLList&lt; entry &gt;</a></div></div>
+<div class="ttc" id="a07669_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00449">UList.H:449</a></div></div>
+<div class="ttc" id="a01185_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a01185.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::IOstream::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdoc">Return true if next operation might succeed. </div><div class="ttdef"><b>Definition:</b> <a href="a07780_source.html#l00333">IOstream.H:333</a></div></div>
+<div class="ttc" id="a00524_html_a4cea470990d165a35c1b2333a569b586"><div class="ttname"><a href="a00524.html#a4cea470990d165a35c1b2333a569b586">Foam::dictionary::dictionary</a></div><div class="ttdeci">dictionary()</div><div class="ttdoc">Construct top-level dictionary null. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00113">dictionary.C:113</a></div></div>
+<div class="ttc" id="a09074_html"><div class="ttname"><a href="a09074.html">regExp.H</a></div></div>
+<div class="ttc" id="a10725_html_a4225a7492f7d468ad5b985282c8ee7b1"><div class="ttname"><a href="a10725.html#a4225a7492f7d468ad5b985282c8ee7b1">Foam::e</a></div><div class="ttdeci">const double e</div><div class="ttdoc">Elementary charge. </div><div class="ttdef"><b>Definition:</b> <a href="a08930_source.html#l00078">doubleFloat.H:78</a></div></div>
+<div class="ttc" id="a00524_html_af3405fd7196738ecd5be06824ac7dcc5"><div class="ttname"><a href="a00524.html#af3405fd7196738ecd5be06824ac7dcc5">Foam::dictionary::New</a></div><div class="ttdeci">static autoPtr&lt; dictionary &gt; New(Istream &amp;)</div><div class="ttdoc">Construct top-level dictionary on freestore from Istream. </div><div class="ttdef"><b>Definition:</b> <a href="a07688_source.html#l00073">dictionaryIO.C:73</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a10725_html_a44f398e0525f8d7f48cead029868d845"><div class="ttname"><a href="a10725.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a></div><div class="ttdeci">Istream &amp; operator&gt;&gt;(Istream &amp;, edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04954_source.html#l00141">edgeMeshIO.C:141</a></div></div>
+<div class="ttc" id="a01199_html_af22e503b062298eef54e360dfc06d0b4"><div class="ttname"><a href="a01199.html#af22e503b062298eef54e360dfc06d0b4">Foam::Istream::putBack</a></div><div class="ttdeci">void putBack(const token &amp;)</div><div class="ttdoc">Put back token. </div><div class="ttdef"><b>Definition:</b> <a href="a07781_source.html#l00030">Istream.C:30</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a1a359ac3023cdc0a2d09f3c5124e09d1">Foam::token::BEGIN_BLOCK</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00104">token.H:104</a></div></div>
+<div class="ttc" id="a00660_html"><div class="ttname"><a href="a00660.html">Foam::entry</a></div><div class="ttdoc">A keyword and a list of tokens is an &#39;entry&#39;. </div><div class="ttdef"><b>Definition:</b> <a href="a07691_source.html#l00065">entry.H:65</a></div></div>
+<div class="ttc" id="a10725_html_a1c3a44e035fae1cd9d5a4a60a7e1c32b"><div class="ttname"><a href="a10725.html#a1c3a44e035fae1cd9d5a4a60a7e1c32b">Foam::decrIndent</a></div><div class="ttdeci">Ostream &amp; decrIndent(Ostream &amp;os)</div><div class="ttdoc">Decrement the indent level. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00235">Ostream.H:235</a></div></div>
+<div class="ttc" id="a00527_html_acd3da3556711337d571c60cf9ffb91cc"><div class="ttname"><a href="a00527.html#acd3da3556711337d571c60cf9ffb91cc">Foam::dictionaryName::name</a></div><div class="ttdeci">const fileName &amp; name() const </div><div class="ttdoc">Return the dictionary name. </div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00103">dictionary.H:103</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
+<div class="ttc" id="a10725_html_ae86a76a63deefbe1a4490c873ad8e1b2"><div class="ttname"><a href="a10725.html#ae86a76a63deefbe1a4490c873ad8e1b2">Foam::operator&lt;&lt;</a></div><div class="ttdeci">Ostream &amp; operator&lt;&lt;(Ostream &amp;, const edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04954_source.html#l00130">edgeMeshIO.C:130</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

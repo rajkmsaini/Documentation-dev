@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_3f6e7e10cc3663a460947d1f6ad52004.html">preconditioners</a></li><li class="navelem"><a class="el" href="dir_8ec52d526757eb83c7f104aacdfebe14.html">FDICPreconditioner</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_b07477ab37bc0cd7eb28fb569c691c21.html">matrices</a></li><li class="navelem"><a class="el" href="dir_bce8a1f1efa9a7681b85c119e7b79042.html">lduMatrix</a></li><li class="navelem"><a class="el" href="dir_12547202c65033a69d4e18947f2fbe2a.html">lduAddressing</a></li><li class="navelem"><a class="el" href="dir_ac9806e1218e6f4577e01d62bb1655cd.html">lduInterface</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">FDICPreconditioner.H</div>  </div>
+<div class="title">lduInterface.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08265.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,108 +120,121 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::FDICPreconditioner</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::lduInterface</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Faster version of the DICPreconditioner diagonal-based incomplete</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Cholesky preconditioner for symmetric matrices</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    (symmetric equivalent of DILU) in which the the reciprocal of the</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    preconditioned diagonal and the upper coefficients divided by the diagonal</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    are calculated and stored.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    An abstract base class for implicitly-coupled interfaces</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    e.g. processor and cyclic patches.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    lduInterface.C</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    FDICPreconditioner.C</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef lduInterface_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define lduInterface_H</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef FDICPreconditioner_H</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define FDICPreconditioner_H</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08235.html">lduMatrix.H</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">                           Class FDICPreconditioner Declaration</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a00743.html">   52</a></span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span><a class="code" href="a00743.html">FDICPreconditioner</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01939.html">lduMatrix::preconditioner</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- The reciprocal preconditioned diagonal</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a00749.html">scalarField</a> rD_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a00749.html">scalarField</a> rDuUpper_;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a00749.html">scalarField</a> rDlUpper_;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07955.html">labelField.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07864.html">typeInfo.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07794.html">Pstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">                     Class lduInterface Declaration</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a01278.html">   53</a></span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a01278.html">lduInterface</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a01278.html#a013b975b0f85c25a736648c3b840a61f">lduInterface</a>(<span class="keyword">const</span> <a class="code" href="a01278.html">lduInterface</a>&amp;);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a01278.html">lduInterface</a>&amp;);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="a00743.html">FDICPreconditioner</a>(<span class="keyword">const</span> <a class="code" href="a00743.html">FDICPreconditioner</a>&amp;);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="a01278.html#ac24d7e2dff17026d58cb652b18a95fa9">TypeName</a>(<span class="stringliteral">&quot;lduInterface&quot;</span>);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a00743.html">FDICPreconditioner</a>&amp;);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Constructors</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="a00743.html#ac4928315f10c915b5862d1b9869bf5e5">TypeName</a>(<span class="stringliteral">&quot;FDIC&quot;</span>);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="a01278.html#a013b975b0f85c25a736648c3b840a61f">   73</a></span>&#160;        <span class="comment">//- Construct null</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a01278.html#a013b975b0f85c25a736648c3b840a61f">lduInterface</a>()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        {}</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a01278.html#ab5cef27b0bb6a7719b5c2614f0ce0ce5">~lduInterface</a>();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//- Construct from matrix components and preconditioner solver controls</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="a00743.html">FDICPreconditioner</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        (</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02366.html">lduMatrix::solver</a>&amp;,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; solverControlsUnused</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        );</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">// Access</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="comment">//- Return faceCell addressing</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; <a class="code" href="a01278.html#a0a66d3c394cc17cb7ec479ebc0151f9a">faceCells</a>() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="a00743.html#a92a6e614797127fac3824c3e7c9f8578">   90</a></span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a00743.html#a92a6e614797127fac3824c3e7c9f8578">~FDICPreconditioner</a>()</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    {}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="comment">//- Return wA the preconditioned form of residual rA</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00743.html#a365a52f60a6c9be0a4775e814d50c2c7">precondition</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        (</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; wA,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; rA,</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt=0</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;};</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">// Interface transfer functions</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="comment">//- Return the values of the given internal data adjacent to</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="comment">//  the interface as a field</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;labelField&gt;</a> <a class="code" href="a01278.html#a301265c5b6ed48c7add8f9596ac04f52">interfaceInternalField</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            (</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; internalData</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            ) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="comment">//- Initialise transfer of internal field adjacent to the interface</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="a01278.html#a07b6c32ae22f4a397dc8865bb37db3fc">  100</a></span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a01278.html#a07b6c32ae22f4a397dc8865bb37db3fc">initInternalFieldTransfer</a></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            (</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02762.html#a12cf32e9b7820a2c00bf40c8617ab55b">Pstream::commsTypes</a> commsType,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; iF</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">            </span>{}</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="comment">//- Transfer and return internal field adjacent to the interface</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;labelField&gt;</a> <a class="code" href="a01278.html#a4d89b37dbc9733065c7ca52b8fcfb352">internalFieldTransfer</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            (</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02762.html#a12cf32e9b7820a2c00bf40c8617ab55b">Pstream::commsTypes</a> commsType,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02731.html">labelUList</a>&amp; iF</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            ) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;};</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a08235_html"><div class="ttname"><a href="a08235.html">lduMatrix.H</a></div></div>
-<div class="ttc" id="a00743_html_ac4928315f10c915b5862d1b9869bf5e5"><div class="ttname"><a href="a00743.html#ac4928315f10c915b5862d1b9869bf5e5">Foam::FDICPreconditioner::TypeName</a></div><div class="ttdeci">TypeName(&quot;FDIC&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a01939_html"><div class="ttname"><a href="a01939.html">Foam::lduMatrix::preconditioner</a></div><div class="ttdoc">Abstract base-class for lduMatrix preconditioners. </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00405">lduMatrix.H:405</a></div></div>
-<div class="ttc" id="a00743_html"><div class="ttname"><a href="a00743.html">Foam::FDICPreconditioner</a></div><div class="ttdoc">Faster version of the DICPreconditioner diagonal-based incomplete Cholesky preconditioner for symmetr...</div><div class="ttdef"><b>Definition:</b> <a href="a08265_source.html#l00052">FDICPreconditioner.H:52</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00743_html_a365a52f60a6c9be0a4775e814d50c2c7"><div class="ttname"><a href="a00743.html#a365a52f60a6c9be0a4775e814d50c2c7">Foam::FDICPreconditioner::precondition</a></div><div class="ttdeci">virtual void precondition(scalarField &amp;wA, const scalarField &amp;rA, const direction cmpt=0) const </div><div class="ttdoc">Return wA the preconditioned form of residual rA. </div><div class="ttdef"><b>Definition:</b> <a href="a08264_source.html#l00089">FDICPreconditioner.C:89</a></div></div>
-<div class="ttc" id="a00743_html_a92a6e614797127fac3824c3e7c9f8578"><div class="ttname"><a href="a00743.html#a92a6e614797127fac3824c3e7c9f8578">Foam::FDICPreconditioner::~FDICPreconditioner</a></div><div class="ttdeci">virtual ~FDICPreconditioner()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08265_source.html#l00090">FDICPreconditioner.H:90</a></div></div>
-<div class="ttc" id="a02366_html"><div class="ttname"><a href="a02366.html">Foam::lduMatrix::solver</a></div><div class="ttdoc">Abstract base-class for lduMatrix solvers. </div><div class="ttdef"><b>Definition:</b> <a href="a08235_source.html#l00091">lduMatrix.H:91</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01278_html_ab5cef27b0bb6a7719b5c2614f0ce0ce5"><div class="ttname"><a href="a01278.html#ab5cef27b0bb6a7719b5c2614f0ce0ce5">Foam::lduInterface::~lduInterface</a></div><div class="ttdeci">virtual ~lduInterface()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a08264_source.html#l00038">lduInterface.C:38</a></div></div>
+<div class="ttc" id="a07955_html"><div class="ttname"><a href="a07955.html">labelField.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02762_html_a12cf32e9b7820a2c00bf40c8617ab55b"><div class="ttname"><a href="a02762.html#a12cf32e9b7820a2c00bf40c8617ab55b">Foam::UPstream::commsTypes</a></div><div class="ttdeci">commsTypes</div><div class="ttdoc">Types of communications. </div><div class="ttdef"><b>Definition:</b> <a href="a07806_source.html#l00064">UPstream.H:64</a></div></div>
+<div class="ttc" id="a01278_html_a013b975b0f85c25a736648c3b840a61f"><div class="ttname"><a href="a01278.html#a013b975b0f85c25a736648c3b840a61f">Foam::lduInterface::lduInterface</a></div><div class="ttdeci">lduInterface()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a08265_source.html#l00073">lduInterface.H:73</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a01278_html_a301265c5b6ed48c7add8f9596ac04f52"><div class="ttname"><a href="a01278.html#a301265c5b6ed48c7add8f9596ac04f52">Foam::lduInterface::interfaceInternalField</a></div><div class="ttdeci">virtual tmp&lt; labelField &gt; interfaceInternalField(const labelUList &amp;internalData) const  =0</div><div class="ttdoc">Return the values of the given internal data adjacent to. </div></div>
+<div class="ttc" id="a01278_html_a4d89b37dbc9733065c7ca52b8fcfb352"><div class="ttname"><a href="a01278.html#a4d89b37dbc9733065c7ca52b8fcfb352">Foam::lduInterface::internalFieldTransfer</a></div><div class="ttdeci">virtual tmp&lt; labelField &gt; internalFieldTransfer(const Pstream::commsTypes commsType, const labelUList &amp;iF) const  =0</div><div class="ttdoc">Transfer and return internal field adjacent to the interface. </div></div>
+<div class="ttc" id="a01278_html_a07b6c32ae22f4a397dc8865bb37db3fc"><div class="ttname"><a href="a01278.html#a07b6c32ae22f4a397dc8865bb37db3fc">Foam::lduInterface::initInternalFieldTransfer</a></div><div class="ttdeci">virtual void initInternalFieldTransfer(const Pstream::commsTypes commsType, const labelUList &amp;iF) const </div><div class="ttdoc">Initialise transfer of internal field adjacent to the interface. </div><div class="ttdef"><b>Definition:</b> <a href="a08265_source.html#l00100">lduInterface.H:100</a></div></div>
+<div class="ttc" id="a07794_html"><div class="ttname"><a href="a07794.html">Pstream.H</a></div></div>
+<div class="ttc" id="a01278_html"><div class="ttname"><a href="a01278.html">Foam::lduInterface</a></div><div class="ttdoc">An abstract base class for implicitly-coupled interfaces e.g. processor and cyclic patches...</div><div class="ttdef"><b>Definition:</b> <a href="a08265_source.html#l00053">lduInterface.H:53</a></div></div>
+<div class="ttc" id="a01278_html_ac24d7e2dff17026d58cb652b18a95fa9"><div class="ttname"><a href="a01278.html#ac24d7e2dff17026d58cb652b18a95fa9">Foam::lduInterface::TypeName</a></div><div class="ttdeci">TypeName(&quot;lduInterface&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a02731_html"><div class="ttname"><a href="a02731.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00060">HashTable.H:60</a></div></div>
+<div class="ttc" id="a01278_html_a0a66d3c394cc17cb7ec479ebc0151f9a"><div class="ttname"><a href="a01278.html#a0a66d3c394cc17cb7ec479ebc0151f9a">Foam::lduInterface::faceCells</a></div><div class="ttdeci">virtual const labelUList &amp; faceCells() const  =0</div><div class="ttdoc">Return faceCell addressing. </div></div>
+<div class="ttc" id="a07864_html"><div class="ttname"><a href="a07864.html">typeInfo.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_f4030f3362933683136e1dae328f10c0.html">fvc</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_2ea871e4defbdbd60808750cae643c63.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_91771073560c986101bf22be7764122a.html">ddtSchemes</a></li><li class="navelem"><a class="el" href="dir_319e35742be97dd39dc64120b058bf02.html">CoEulerDdtScheme</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">fvcReconstructMag.C</div>  </div>
+<div class="title">CoEulerDdtSchemes.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05640.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,155 +121,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05639.html">fvcReconstruct.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05816.html">fvMesh.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05549.html">surfaceFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05151.html">zeroGradientFvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span>fvc</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a10709.html#a29cdad91ee3fc2ac251ac2b4872557da">   44</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a10709.html#a29cdad91ee3fc2ac251ac2b4872557da">reconstructMag</a>(<span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; ssf)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00868.html">fvMesh</a>&amp; <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a> = ssf.<a class="code" href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">labelUList</a>&amp; owner = mesh.<a class="code" href="a00868.html#a81b70644afb4bbfce365e57592142fcc">owner</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02720.html">labelUList</a>&amp; neighbour = mesh.<a class="code" href="a00868.html#a942a1cffef163625ee3408ae1f057dec">neighbour</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a00167.html">C</a> = mesh.<a class="code" href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">C</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceVectorField</a>&amp; Cf = mesh.<a class="code" href="a00868.html#a9b2a54af40110cb50711a0ad3b0e2ecb">Cf</a>();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceVectorField</a>&amp; Sf = mesh.<a class="code" href="a00868.html#a27258a12b9e2a3fbb5121219b4ce84f9">Sf</a>();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; magSf = mesh.<a class="code" href="a00868.html#abe570f4831157153654b9ffb2676214f">magSf</a>();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> treconField</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    (</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        (</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            (</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                <span class="stringliteral">&quot;reconstruct(&quot;</span>+ssf.<a class="code" href="a01170.html#a75b72488d2e82151b025744974919d5d">name</a>()+<span class="charliteral">&#39;)&#39;</span>,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                ssf.<a class="code" href="a01170.html#a927868ca22fb186135659bc0acadd47b">instance</a>(),</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                <a class="code" href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            ),</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            mesh,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a00526.html">dimensionedScalar</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <span class="stringliteral">&quot;0&quot;</span>,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                ssf.<a class="code" href="a00527.html#a6098093e7de06370342a85cfae8b31f5">dimensions</a>()/<a class="code" href="a10675.html#a44193c38bfc37e4c0b7045f9bf17d4d5">dimArea</a>,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                scalar(0)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            ),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        )</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    );</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; rf = treconField();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(owner, facei)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> own = owner[facei];</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nei = neighbour[facei];</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        rf[own] += (Sf[facei] &amp; (Cf[facei] - C[own]))*ssf[facei]/magSf[facei];</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        rf[nei] -= (Sf[facei] &amp; (Cf[facei] - C[nei]))*ssf[facei]/magSf[facei];</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">const</span> surfaceScalarField::GeometricBoundaryField&amp; bsf = ssf.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(bsf, <a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>)</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00885.html">fvsPatchScalarField</a>&amp; psf = bsf[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02720.html">labelUList</a>&amp; pOwner = mesh.<a class="code" href="a00868.html#a971347d65410875e38ea654dfd193a19">boundary</a>()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>].faceCells();</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00749.html">vectorField</a>&amp; pCf = Cf.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00749.html">vectorField</a>&amp; pSf = Sf.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; pMagSf = magSf.<a class="code" href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[<a class="code" href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a>];</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pOwner, pFacei)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> own = pOwner[pFacei];</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            rf[own] +=</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                (pSf[pFacei] &amp; (pCf[pFacei] - C[own]))</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;               *psf[pFacei]/pMagSf[pFacei];</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    rf /= mesh.<a class="code" href="a00868.html#a9b38835cfdb259530b9d5006af5644e5">V</a>();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    treconField().correctBoundaryConditions();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> treconField;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="a10709.html#aa6e1792629c86826302c6cedf8258ec3">  118</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a10709.html#a29cdad91ee3fc2ac251ac2b4872557da">reconstructMag</a>(<span class="keyword">const</span> <a class="code" href="a02608.html">tmp&lt;surfaceScalarField&gt;</a>&amp; tssf)</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;{</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> tvf</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    (</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <a class="code" href="a10709.html#a29cdad91ee3fc2ac251ac2b4872557da">fvc::reconstructMag</a>(tssf())</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    );</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    tssf.<a class="code" href="a02608.html#a5b0c20bea8c40bf73b3160cb1e0da350">clear</a>();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> tvf;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;} <span class="comment">// End namespace fvc</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a04277_html_a9de2b4c1ceff9c416def9afc63bf63a0"><div class="ttname"><a href="a04277.html#a9de2b4c1ceff9c416def9afc63bf63a0">patchi</a></div><div class="ttdeci">label patchi</div><div class="ttdef"><b>Definition:</b> <a href="a04277_source.html#l00001">getPatchFieldScalar.H:1</a></div></div>
-<div class="ttc" id="a00868_html"><div class="ttname"><a href="a00868.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00078">fvMesh.H:78</a></div></div>
-<div class="ttc" id="a00913_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00913.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a07968_source.html#l00699">GeometricField.C:699</a></div></div>
-<div class="ttc" id="a00868_html_a27258a12b9e2a3fbb5121219b4ce84f9"><div class="ttname"><a href="a00868.html#a27258a12b9e2a3fbb5121219b4ce84f9">Foam::fvMesh::Sf</a></div><div class="ttdeci">const surfaceVectorField &amp; Sf() const </div><div class="ttdoc">Return cell face area vectors. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00347">fvMeshGeometry.C:347</a></div></div>
-<div class="ttc" id="a02608_html_a5b0c20bea8c40bf73b3160cb1e0da350"><div class="ttname"><a href="a02608.html#a5b0c20bea8c40bf73b3160cb1e0da350">Foam::tmp::clear</a></div><div class="ttdeci">void clear() const </div><div class="ttdoc">If object pointer points to valid object: </div><div class="ttdef"><b>Definition:</b> <a href="a08399_source.html#l00174">tmpI.H:174</a></div></div>
-<div class="ttc" id="a00868_html_a9b38835cfdb259530b9d5006af5644e5"><div class="ttname"><a href="a00868.html#a9b38835cfdb259530b9d5006af5644e5">Foam::fvMesh::V</a></div><div class="ttdeci">const DimensionedField&lt; scalar, volMesh &gt; &amp; V() const </div><div class="ttdoc">Return cell volumes. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00199">fvMeshGeometry.C:199</a></div></div>
-<div class="ttc" id="a01170_html_a927868ca22fb186135659bc0acadd47b"><div class="ttname"><a href="a01170.html#a927868ca22fb186135659bc0acadd47b">Foam::IOobject::instance</a></div><div class="ttdeci">const fileName &amp; instance() const </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00337">IOobject.H:337</a></div></div>
-<div class="ttc" id="a00868_html_a81b70644afb4bbfce365e57592142fcc"><div class="ttname"><a href="a00868.html#a81b70644afb4bbfce365e57592142fcc">Foam::fvMesh::owner</a></div><div class="ttdeci">const labelUList &amp; owner() const </div><div class="ttdoc">Internal face owner. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00282">fvMesh.H:282</a></div></div>
-<div class="ttc" id="a00167_html"><div class="ttname"><a href="a00167.html">Foam::C</a></div><div class="ttdoc">Graphite solid properties. </div><div class="ttdef"><b>Definition:</b> <a href="a10039_source.html#l00057">C.H:57</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04686_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04686.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04686_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
-<div class="ttc" id="a00527_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00527.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
-<div class="ttc" id="a00868_html_a9b2a54af40110cb50711a0ad3b0e2ecb"><div class="ttname"><a href="a00868.html#a9b2a54af40110cb50711a0ad3b0e2ecb">Foam::fvMesh::Cf</a></div><div class="ttdeci">const surfaceVectorField &amp; Cf() const </div><div class="ttdoc">Return face centres as surfaceVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00380">fvMeshGeometry.C:380</a></div></div>
-<div class="ttc" id="a10675_html_a44193c38bfc37e4c0b7045f9bf17d4d5"><div class="ttname"><a href="a10675.html#a44193c38bfc37e4c0b7045f9bf17d4d5">Foam::dimArea</a></div><div class="ttdeci">const dimensionSet dimArea(sqr(dimLength))</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00057">dimensionSets.H:57</a></div></div>
-<div class="ttc" id="a05549_html"><div class="ttname"><a href="a05549.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00868_html_abe570f4831157153654b9ffb2676214f"><div class="ttname"><a href="a00868.html#abe570f4831157153654b9ffb2676214f">Foam::fvMesh::magSf</a></div><div class="ttdeci">const surfaceScalarField &amp; magSf() const </div><div class="ttdoc">Return cell face area magnitudes. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00358">fvMeshGeometry.C:358</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a00868_html_add65fc7bb62260f0f5144592e78ccdba"><div class="ttname"><a href="a00868.html#add65fc7bb62260f0f5144592e78ccdba">Foam::fvMesh::C</a></div><div class="ttdeci">const volVectorField &amp; C() const </div><div class="ttdoc">Return cell centres as volVectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a05817_source.html#l00369">fvMeshGeometry.C:369</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a01170_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00118">IOobject.H:118</a></div></div>
-<div class="ttc" id="a10709_html_a29cdad91ee3fc2ac251ac2b4872557da"><div class="ttname"><a href="a10709.html#a29cdad91ee3fc2ac251ac2b4872557da">Foam::fvc::reconstructMag</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; reconstructMag(const surfaceScalarField &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a05640_source.html#l00044">fvcReconstructMag.C:44</a></div></div>
-<div class="ttc" id="a00527_html_a6098093e7de06370342a85cfae8b31f5"><div class="ttname"><a href="a00527.html#a6098093e7de06370342a85cfae8b31f5">Foam::DimensionedField::dimensions</a></div><div class="ttdeci">const dimensionSet &amp; dimensions() const </div><div class="ttdoc">Return dimensions. </div><div class="ttdef"><b>Definition:</b> <a href="a07841_source.html#l00046">DimensionedFieldI.H:46</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01170_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01170.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00260">IOobject.H:260</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvsPatchField, surfaceMesh &gt;</a></div></div>
-<div class="ttc" id="a05151_html"><div class="ttname"><a href="a05151.html">zeroGradientFvPatchFields.H</a></div></div>
-<div class="ttc" id="a05816_html"><div class="ttname"><a href="a05816.html">fvMesh.H</a></div></div>
-<div class="ttc" id="a02720_html"><div class="ttname"><a href="a02720.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00060">HashTable.H:60</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a00868_html_a942a1cffef163625ee3408ae1f057dec"><div class="ttname"><a href="a00868.html#a942a1cffef163625ee3408ae1f057dec">Foam::fvMesh::neighbour</a></div><div class="ttdeci">const labelUList &amp; neighbour() const </div><div class="ttdoc">Internal face neighbour. </div><div class="ttdef"><b>Definition:</b> <a href="a05816_source.html#l00288">fvMesh.H:288</a></div></div>
-<div class="ttc" id="a05639_html"><div class="ttname"><a href="a05639.html">fvcReconstruct.H</a></div><div class="ttdoc">Reconstruct volField from a face flux field. </div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">Foam::IOobject::NO_READ</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00111">IOobject.H:111</a></div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvsPatchField</a></div><div class="ttdoc">An abstract base class with a fat-interface to all derived classes covering all possible ways in whic...</div><div class="ttdef"><b>Definition:</b> <a href="a05541_source.html#l00065">fvsPatchField.H:65</a></div></div>
-<div class="ttc" id="a00868_html_a971347d65410875e38ea654dfd193a19"><div class="ttname"><a href="a00868.html#a971347d65410875e38ea654dfd193a19">Foam::fvMesh::boundary</a></div><div class="ttdeci">const fvBoundaryMesh &amp; boundary() const </div><div class="ttdoc">Return reference to boundary mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05815_source.html#l00552">fvMesh.C:552</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05639.html">CoEulerDdtScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05871.html">fvMesh.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a05645.html#ae8e39db01222d039bd7d5f57bc5c5ca2">makeFvDdtScheme</a>(CoEulerDdtScheme)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a05645_html_ae8e39db01222d039bd7d5f57bc5c5ca2"><div class="ttname"><a href="a05645.html#ae8e39db01222d039bd7d5f57bc5c5ca2">makeFvDdtScheme</a></div><div class="ttdeci">#define makeFvDdtScheme(SS)                                                                                                    </div><div class="ttdef"><b>Definition:</b> <a href="a05645_source.html#l00270">ddtScheme.H:270</a></div></div>
+<div class="ttc" id="a05871_html"><div class="ttname"><a href="a05871.html">fvMesh.H</a></div></div>
+<div class="ttc" id="a05639_html"><div class="ttname"><a href="a05639.html">CoEulerDdtScheme.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

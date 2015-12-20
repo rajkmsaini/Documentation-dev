@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_1dcc9f8d039401a5088c21c8f851d182.html">polyTopoChange</a></li><li class="navelem"><a class="el" href="dir_312178702b93695831f6550a8adac170.html">polyTopoChange</a></li><li class="navelem"><a class="el" href="dir_d9ee5e3d9912dc032da774cc35ce3131.html">addObject</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_63742796c427c97a292c80f7db71da36.html">dynamicMesh</a></li><li class="navelem"><a class="el" href="dir_a5f41142d67d2cb37e86033b3571a7be.html">motionSmoother</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">polyAddPoint.H</div>  </div>
+<div class="title">motionSmoother.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04826.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,184 +120,135 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::polyAddPoint</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::motionSmoother</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Class containing data for point addition.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef polyAddPoint_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define polyAddPoint_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08831.html">label.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08722.html">point.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04869.html">topoAction.H</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">                           Class polyAddPoint Declaration</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a01898.html">   47</a></span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span><a class="code" href="a01898.html">polyAddPoint</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02619.html">topoAction</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="comment">//- Point to add</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="a02776.html">point</a> p_;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//- Master point</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> masterPointID_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">//- Point zone ID</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> zoneID_;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//- Does the point support a cell</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">bool</span> inCell_;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Static data members</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="a01898.html#a6a95d52e841b184c7c514e3a427053dd">TypeName</a>(<span class="stringliteral">&quot;addPoint&quot;</span>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Given a displacement moves the mesh by scaling the displacement back</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    until there are no more mesh errors.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Holds displacement field (read upon construction since need boundary</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    conditions) and scaling factor and optional patch number on which to</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    scale back displacement.</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">    E.g.</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">    \verbatim</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">        // Construct iterative mesh mover.</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">        motionSmoother meshMover(mesh, labelList(1, patchI));</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">        // Set desired displacement:</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">        meshMover.displacement() = ..</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">        for (label iter = 0; iter &lt; maxIter; iter++)</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">        {</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">            if (meshMover.scaleMesh(true))</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">            {</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                Info&lt;&lt; &quot;Successfully moved mesh&quot; &lt;&lt; endl;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">                return true;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">            }</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">        }</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">    \endverbatim</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">Note</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">    - Shared points (parallel): a processor can have points which are part of</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">    pp on another processor but have no pp itself (i.e. it has points</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">    and/or edges but no faces of pp). Hence we have to be careful when e.g.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">    synchronising displacements that the value from the processor which has</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">    faces of pp get priority. This is currently handled in setDisplacement</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">    by resetting the internal displacement to zero before doing anything</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">    else. The combine operator used will give preference to non-zero</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">    values.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">    - Various routines take baffles. These are sets of boundary faces that</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">    are treated as a single internal face. This is a hack used to apply</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">    movement to internal faces.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">    - Mesh constraints are looked up from the supplied dictionary. (uses</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">    recursive lookup)</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">    motionSmoother.C</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a01898.html#a5c15ddb14f39ab6101ffd0f7683a70ce">   77</a></span>&#160;        <span class="comment">//- Construct null.  Used only for list construction</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a01898.html#a5c15ddb14f39ab6101ffd0f7683a70ce">polyAddPoint</a>()</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        :</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            p_(<a class="code" href="a02776.html">vector</a>::<a class="code" href="a02875.html">zero</a>),</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            masterPointID_(-1),</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            zoneID_(-1),</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            inCell_(false)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        {}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#ifndef motionSmoother_H</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#define motionSmoother_H</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04832.html">motionSmootherData.H</a>&quot;</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04828.html">motionSmootherAlgo.H</a>&quot;</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">//- Construct from components</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a01898.html#a6a209b8f4a3d14115134932df39c984d">   87</a></span>&#160;        <a class="code" href="a01898.html#a5c15ddb14f39ab6101ffd0f7683a70ce">polyAddPoint</a></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        (</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02776.html">point</a>&amp; <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a>,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01898.html#a8003f4a18534ccd4658bc690327d1328">masterPointID</a>,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01898.html#a9c7b8c23564285510bde7157333d170a">zoneID</a>,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="a01898.html#a62617216e036146680099967bce14395">inCell</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        )</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        :</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            p_(p),</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            masterPointID_(masterPointID),</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            zoneID_(zoneID),</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            inCell_(inCell)</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keywordflow">if</span> (zoneID_ &lt; 0 &amp;&amp; !inCell)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                (</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    <span class="stringliteral">&quot;polyAddPoint\n&quot;</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <span class="stringliteral">&quot;(\n&quot;</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    <span class="stringliteral">&quot;    const point&amp; p,\n&quot;</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    <span class="stringliteral">&quot;    const label masterPointID,\n&quot;</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    <span class="stringliteral">&quot;    const label zoneID,\n&quot;</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                    <span class="stringliteral">&quot;    const bool inCell\n&quot;</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                    <span class="stringliteral">&quot;)&quot;</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                )   &lt;&lt; <span class="stringliteral">&quot;Point is not in a cell and not in a zone.  &quot;</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;This is not allowed.\n&quot;</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot;point: &quot;</span> &lt;&lt; p</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; master: &quot;</span> &lt;&lt; masterPointID_</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; zone: &quot;</span> &lt;&lt; zoneID_</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    &lt;&lt; <a class="code" href="a10675.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="a01898.html#a9d2f48dc8d287f16c19967f3525bca93">  121</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a00084.html">autoPtr&lt;topoAction&gt;</a> <a class="code" href="a01898.html#a9d2f48dc8d287f16c19967f3525bca93">clone</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00084.html">autoPtr&lt;topoAction&gt;</a>(<span class="keyword">new</span> <a class="code" href="a01898.html#a5c15ddb14f39ab6101ffd0f7683a70ce">polyAddPoint</a>(*<span class="keyword">this</span>));</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        }</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">                           Class motionSmoother Declaration</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="a01529.html">   89</a></span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">class </span><a class="code" href="a01529.html">motionSmoother</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01531.html">motionSmootherData</a>,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01530.html">motionSmootherAlgo</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Private class</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="a01529.html#afff153ab52fb963d96c176ce8017355e">ClassName</a>(<span class="stringliteral">&quot;motionSmoother&quot;</span>);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="comment">//- Construct from mesh, patches to work on and smoothing parameters.</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//  Reads displacement field (only boundary conditions used)</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="code" href="a01529.html#ab097c084dc72ffa43f419bfdd1b9db68">motionSmoother</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        (</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <a class="code" href="a01916.html">polyMesh</a>&amp;,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            <a class="code" href="a01887.html">pointMesh</a>&amp;,</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <a class="code" href="a01970.html">indirectPrimitivePatch</a>&amp; pp,         <span class="comment">// &#39;outside&#39; points</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; <a class="code" href="a01530.html#ad8f65812db70978ef315c1db3f3cb320">adaptPatchIDs</a>,     <span class="comment">// patches forming &#39;outside&#39;</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a01530.html#a97408e571d5219b757c8399a50e90845">paramDict</a></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        );</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">//- Construct from mesh, patches to work on and smoothing parameters and</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">//  displacementfield (only boundary conditions used)</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <a class="code" href="a01529.html#ab097c084dc72ffa43f419bfdd1b9db68">motionSmoother</a></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        (</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <a class="code" href="a01916.html">polyMesh</a>&amp;,</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <a class="code" href="a01970.html">indirectPrimitivePatch</a>&amp; pp,         <span class="comment">// &#39;outside&#39; points</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; adaptPatchIDs,     <span class="comment">// patches forming &#39;outside&#39;</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00921.html">pointVectorField</a>&amp;,</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; paramDict</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        );</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;};</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="comment">// Default Destructor</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;} <span class="comment">// End namespace Foam</span></div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="a01898.html#aa185a975d27dbddf0ef3535e42da2b5c">  133</a></span>&#160;        <span class="comment">//- Point location</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02776.html">point</a>&amp; <a class="code" href="a01898.html#aa185a975d27dbddf0ef3535e42da2b5c">newPoint</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <span class="keywordflow">return</span> p_;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="a01898.html#a8003f4a18534ccd4658bc690327d1328">  139</a></span>&#160;        <span class="comment">//- Master point label</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01898.html#a8003f4a18534ccd4658bc690327d1328">masterPointID</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <span class="keywordflow">return</span> masterPointID_;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        }</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="a01898.html#a57c0f5f9fe3582c2853432cd95b38cc5">  145</a></span>&#160;        <span class="comment">//- Is the point appended with no master</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a01898.html#a57c0f5f9fe3582c2853432cd95b38cc5">appended</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">return</span> masterPointID_ &lt; 0;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="a01898.html#aa50fa1401d2e7ce31011a08f837e93fb">  151</a></span>&#160;        <span class="comment">//- Does the point belong to a zone?</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a01898.html#aa50fa1401d2e7ce31011a08f837e93fb">isInZone</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            <span class="keywordflow">return</span> zoneID_ &gt;= 0;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="a01898.html#a9c7b8c23564285510bde7157333d170a">  157</a></span>&#160;        <span class="comment">//- Point zone ID</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a01898.html#a9c7b8c23564285510bde7157333d170a">zoneID</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <span class="keywordflow">return</span> zoneID_;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        }</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="a01898.html#a62617216e036146680099967bce14395">  163</a></span>&#160;        <span class="comment">//- Does the point support a cell</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a01898.html#a62617216e036146680099967bce14395">inCell</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keywordflow">return</span> inCell_;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        }</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;};</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01898_html_a5c15ddb14f39ab6101ffd0f7683a70ce"><div class="ttname"><a href="a01898.html#a5c15ddb14f39ab6101ffd0f7683a70ce">Foam::polyAddPoint::polyAddPoint</a></div><div class="ttdeci">polyAddPoint()</div><div class="ttdoc">Construct null. Used only for list construction. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00077">polyAddPoint.H:77</a></div></div>
-<div class="ttc" id="a02619_html"><div class="ttname"><a href="a02619.html">Foam::topoAction</a></div><div class="ttdoc">A virtual base class for topological actions. </div><div class="ttdef"><b>Definition:</b> <a href="a04869_source.html#l00048">topoAction.H:48</a></div></div>
-<div class="ttc" id="a01898_html_a8003f4a18534ccd4658bc690327d1328"><div class="ttname"><a href="a01898.html#a8003f4a18534ccd4658bc690327d1328">Foam::polyAddPoint::masterPointID</a></div><div class="ttdeci">label masterPointID() const </div><div class="ttdoc">Master point label. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00139">polyAddPoint.H:139</a></div></div>
-<div class="ttc" id="a01898_html_a9d2f48dc8d287f16c19967f3525bca93"><div class="ttname"><a href="a01898.html#a9d2f48dc8d287f16c19967f3525bca93">Foam::polyAddPoint::clone</a></div><div class="ttdeci">virtual autoPtr&lt; topoAction &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00121">polyAddPoint.H:121</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04395_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00051">createFields.H:51</a></div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01898_html_a6a95d52e841b184c7c514e3a427053dd"><div class="ttname"><a href="a01898.html#a6a95d52e841b184c7c514e3a427053dd">Foam::polyAddPoint::TypeName</a></div><div class="ttdeci">TypeName(&quot;addPoint&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a01898_html_aa50fa1401d2e7ce31011a08f837e93fb"><div class="ttname"><a href="a01898.html#aa50fa1401d2e7ce31011a08f837e93fb">Foam::polyAddPoint::isInZone</a></div><div class="ttdeci">bool isInZone() const </div><div class="ttdoc">Does the point belong to a zone? </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00151">polyAddPoint.H:151</a></div></div>
-<div class="ttc" id="a10675_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10675.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00131">errorManip.H:131</a></div></div>
-<div class="ttc" id="a01898_html_a62617216e036146680099967bce14395"><div class="ttname"><a href="a01898.html#a62617216e036146680099967bce14395">Foam::polyAddPoint::inCell</a></div><div class="ttdeci">bool inCell() const </div><div class="ttdoc">Does the point support a cell. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00163">polyAddPoint.H:163</a></div></div>
-<div class="ttc" id="a02875_html"><div class="ttname"><a href="a02875.html">Foam::zero</a></div><div class="ttdoc">A class representing the concept of 0 used to avoid unnecessary manipulations for objects that are kn...</div><div class="ttdef"><b>Definition:</b> <a href="a09004_source.html#l00047">zero.H:47</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a08831_html"><div class="ttname"><a href="a08831.html">label.H</a></div></div>
-<div class="ttc" id="a01898_html_a9c7b8c23564285510bde7157333d170a"><div class="ttname"><a href="a01898.html#a9c7b8c23564285510bde7157333d170a">Foam::polyAddPoint::zoneID</a></div><div class="ttdeci">label zoneID() const </div><div class="ttdoc">Point zone ID. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00157">polyAddPoint.H:157</a></div></div>
-<div class="ttc" id="a01898_html_aa185a975d27dbddf0ef3535e42da2b5c"><div class="ttname"><a href="a01898.html#aa185a975d27dbddf0ef3535e42da2b5c">Foam::polyAddPoint::newPoint</a></div><div class="ttdeci">const point &amp; newPoint() const </div><div class="ttdoc">Point location. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00133">polyAddPoint.H:133</a></div></div>
-<div class="ttc" id="a01898_html_a57c0f5f9fe3582c2853432cd95b38cc5"><div class="ttname"><a href="a01898.html#a57c0f5f9fe3582c2853432cd95b38cc5">Foam::polyAddPoint::appended</a></div><div class="ttdeci">bool appended() const </div><div class="ttdoc">Is the point appended with no master. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00145">polyAddPoint.H:145</a></div></div>
-<div class="ttc" id="a04869_html"><div class="ttname"><a href="a04869.html">topoAction.H</a></div></div>
-<div class="ttc" id="a08722_html"><div class="ttname"><a href="a08722.html">point.H</a></div></div>
-<div class="ttc" id="a01898_html"><div class="ttname"><a href="a01898.html">Foam::polyAddPoint</a></div><div class="ttdoc">Class containing data for point addition. </div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00047">polyAddPoint.H:47</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a01529_html_ab097c084dc72ffa43f419bfdd1b9db68"><div class="ttname"><a href="a01529.html#ab097c084dc72ffa43f419bfdd1b9db68">Foam::motionSmoother::motionSmoother</a></div><div class="ttdeci">motionSmoother(polyMesh &amp;, pointMesh &amp;, indirectPrimitivePatch &amp;pp, const labelList &amp;adaptPatchIDs, const dictionary &amp;paramDict)</div><div class="ttdoc">Construct from mesh, patches to work on and smoothing parameters. </div><div class="ttdef"><b>Definition:</b> <a href="a04825_source.html#l00039">motionSmoother.C:39</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField&lt; vector, pointPatchField, pointMesh &gt;</a></div></div>
+<div class="ttc" id="a01530_html"><div class="ttname"><a href="a01530.html">Foam::motionSmootherAlgo</a></div><div class="ttdoc">Given a displacement moves the mesh by scaling the displacement back until there are no more mesh err...</div><div class="ttdef"><b>Definition:</b> <a href="a04828_source.html#l00096">motionSmootherAlgo.H:96</a></div></div>
+<div class="ttc" id="a01529_html_afff153ab52fb963d96c176ce8017355e"><div class="ttname"><a href="a01529.html#afff153ab52fb963d96c176ce8017355e">Foam::motionSmoother::ClassName</a></div><div class="ttdeci">ClassName(&quot;motionSmoother&quot;)</div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a01530_html_a97408e571d5219b757c8399a50e90845"><div class="ttname"><a href="a01530.html#a97408e571d5219b757c8399a50e90845">Foam::motionSmootherAlgo::paramDict</a></div><div class="ttdeci">const dictionary &amp; paramDict() const </div><div class="ttdef"><b>Definition:</b> <a href="a04827_source.html#l00407">motionSmootherAlgo.C:407</a></div></div>
+<div class="ttc" id="a01530_html_ad8f65812db70978ef315c1db3f3cb320"><div class="ttname"><a href="a01530.html#ad8f65812db70978ef315c1db3f3cb320">Foam::motionSmootherAlgo::adaptPatchIDs</a></div><div class="ttdeci">const labelList &amp; adaptPatchIDs() const </div><div class="ttdoc">Patch labels that are being adapted. </div><div class="ttdef"><b>Definition:</b> <a href="a04827_source.html#l00401">motionSmootherAlgo.C:401</a></div></div>
+<div class="ttc" id="a01970_html"><div class="ttname"><a href="a01970.html">Foam::PrimitivePatch</a></div><div class="ttdoc">A list of faces which address into the list of points. </div><div class="ttdef"><b>Definition:</b> <a href="a08742_source.html#l00087">PrimitivePatch.H:87</a></div></div>
+<div class="ttc" id="a01887_html"><div class="ttname"><a href="a01887.html">Foam::pointMesh</a></div><div class="ttdoc">Mesh representing a set of points created from polyMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08554_source.html#l00048">pointMesh.H:48</a></div></div>
+<div class="ttc" id="a01529_html"><div class="ttname"><a href="a01529.html">Foam::motionSmoother</a></div><div class="ttdoc">Given a displacement moves the mesh by scaling the displacement back until there are no more mesh err...</div><div class="ttdef"><b>Definition:</b> <a href="a04826_source.html#l00089">motionSmoother.H:89</a></div></div>
+<div class="ttc" id="a04832_html"><div class="ttname"><a href="a04832.html">motionSmootherData.H</a></div></div>
+<div class="ttc" id="a01531_html"><div class="ttname"><a href="a01531.html">Foam::motionSmootherData</a></div><div class="ttdef"><b>Definition:</b> <a href="a04832_source.html#l00047">motionSmootherData.H:47</a></div></div>
+<div class="ttc" id="a04828_html"><div class="ttname"><a href="a04828.html">motionSmootherAlgo.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

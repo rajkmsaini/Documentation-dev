@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_19d0872053bde092be81d7fe3f56cbf7.html">containers</a></li><li class="navelem"><a class="el" href="dir_f87fe3b02e96c330e8a853ff310f1666.html">Lists</a></li><li class="navelem"><a class="el" href="dir_59f93597cc1ee20c29d678698223cf27.html">Distribution</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_19d0872053bde092be81d7fe3f56cbf7.html">containers</a></li><li class="navelem"><a class="el" href="dir_46dbcbff8acc0ae94a21b2306d4033de.html">HashTables</a></li><li class="navelem"><a class="el" href="dir_86ef61c4f082e14e1ecb08a941813d2b.html">HashSet</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Distribution.H</div>  </div>
+<div class="title">HashSet.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07573.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -120,224 +120,241 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::Distribution</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::HashSet</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Accumulating histogram of component values.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Specified bin resolution, automatic generation of bins.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    DistributionI.H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">    Distribution.C</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    DistributionIO.C</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A HashTable with keys but without contents.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">Typedef</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Foam::wordHashSet</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    A HashSet with (the default) word keys.</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef Distribution_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define Distribution_H</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07587.html">List.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08857.html">Pair.H</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">Typedef</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    Foam::labelHashSet</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">    A HashSet with label keys.</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a00554.html">   49</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a00554.html">Distribution</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#ifndef HashSet_H</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define HashSet_H</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07575.html">HashTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08901.html">nil.H</a>&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a01191.html">Istream</a>&amp; <a class="code" href="a10675.html#a44f398e0525f8d7f48cead029868d845">operator&gt;&gt;</a>(<a class="code" href="a01191.html">Istream</a>&amp;, <a class="code" href="a00554.html">Distribution&lt;Type&gt;</a>&amp;);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a01725.html">Ostream</a>&amp; operator&lt;&lt;(Ostream&amp;, const Distribution&lt;Type&gt;&amp;);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">                         Class Distribution Declaration</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">class </span><a class="code" href="a00554.html">Distribution</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01355.html">List</a>&lt; List&lt;scalar&gt; &gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">//- Width of the bin for each component</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        Type binWidth_;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">//- The start bin index of each component</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="a01355.html">List&lt;label&gt;</a> listStarts_;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="a00554.html#a7816c67e54698fc27a07091402968528">   78</a></span>&#160;    <span class="comment">//- Component type</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a02006.html">pTraits&lt;Type&gt;::cmptType</a> <a class="code" href="a00554.html#a7816c67e54698fc27a07091402968528">cmptType</a>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">//- Construct null</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="a00554.html#a97e7a46e54c1954b71dbf6e135c469ac">Distribution</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//- Construct from separate binWidth for each component</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="a00554.html#a97e7a46e54c1954b71dbf6e135c469ac">Distribution</a>(<span class="keyword">const</span> Type&amp; <a class="code" href="a00554.html#aed9a4b77e4c78407779fcb5fc9f16988">binWidth</a>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">//- Construct as copy</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a00554.html#a97e7a46e54c1954b71dbf6e135c469ac">Distribution</a>(<span class="keyword">const</span> <a class="code" href="a00554.html">Distribution</a>&amp; d);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">                           Class HashSet Declaration</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00982.html">   59</a></span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Key=word, <span class="keyword">class</span> Hash=<span class="keywordtype">string</span>::hash&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">class </span><a class="code" href="a00982.html">HashSet</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00984.html">HashTable</a>&lt;nil, Key, Hash&gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a00982.html#a45fe3fa4618a605a875840c85ec275b4">   66</a></span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a00982.html#a611f104ac22bb3a8758640942b9dc8e0">   67</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a00984.html">HashTable&lt;nil, Key, Hash&gt;::iterator</a> <a class="code" href="a00982.html#a45fe3fa4618a605a875840c85ec275b4">iterator</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="code" href="a00984.html">HashTable&lt;nil, Key, Hash&gt;::const_iterator</a> <a class="code" href="a00982.html#a611f104ac22bb3a8758640942b9dc8e0">const_iterator</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">   73</a></span>&#160;        <span class="comment">//- Construct given initial size</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">size</a> = 128)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        :</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <a class="code" href="a00984.html">HashTable</a>&lt;<a class="code" href="a01585.html">nil</a>, Key, <a class="code" href="a00971.html">Hash</a>&gt;(<a class="code" href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">size</a>)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        {}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a00982.html#a53d63ef4a1cf6018f8ac210f25fd9ab7">   79</a></span>&#160;        <span class="comment">//- Construct from Istream</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<a class="code" href="a01199.html">Istream</a>&amp; is)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        :</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <a class="code" href="a00984.html">HashTable</a>&lt;<a class="code" href="a01585.html">nil</a>, Key, <a class="code" href="a00971.html">Hash</a>&gt;(is)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        {}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">//- Construct from UList of Key</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a02731.html">UList&lt;Key&gt;</a>&amp;);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="a00982.html#a4e0e1183a161d6c15d461655bf3cd23c">   88</a></span>&#160;        <span class="comment">//- Construct as copy</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp; hs)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        :</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <a class="code" href="a00984.html">HashTable</a>&lt;<a class="code" href="a01585.html">nil</a>, Key, <a class="code" href="a00971.html">Hash</a>&gt;(hs)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        {}</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a00554.html#a4d4d89eab55140c928abfcb593d573af">~Distribution</a>();</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Sum the total weight added to the component in the</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">//  argument</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        scalar <a class="code" href="a00554.html#a80088cced2e1dac55c838559aab75caf">totalWeight</a>(<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a01355.html">List&lt;label&gt;</a> <a class="code" href="a00554.html#a4213cac0ba739fdefa6aa228bae990d0">keys</a>(<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Return the appropriate List index for the given bin index.</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">//  Resizes the List if required</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00554.html#afc2c6ca23397ec9240c9974ac5c7d0a9">index</a>(<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt, <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a>);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="comment">//- Returns the indices of the first and last non-zero entries</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <a class="code" href="a01748.html">Pair&lt;label&gt;</a> <a class="code" href="a00554.html#a376a44980cd807789e5d3ad859bf5f06">validLimits</a>(<a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a> cmpt) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="a00982.html#a82f2ade50c327df94bca5f8f08fdabdf">   94</a></span>&#160;        <span class="comment">//- Construct by transferring the parameter contents</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a02881.html">Xfer</a>&lt;<a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a> &gt;&amp; hs)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        :</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <a class="code" href="a00984.html">HashTable</a>&lt;<a class="code" href="a01585.html">nil</a>, Key, <a class="code" href="a00971.html">Hash</a>&gt;(hs)</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        {}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="a00982.html#a8b24b087dcdc9b6bc05260120efdd327">  100</a></span>&#160;        <span class="comment">//- Construct by transferring the parameter contents</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a02881.html">Xfer</a>&lt;<a class="code" href="a00984.html">HashTable&lt;nil, Key, Hash&gt;</a> &gt;&amp; hs)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        :</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <a class="code" href="a00984.html">HashTable</a>&lt;<a class="code" href="a01585.html">nil</a>, Key, <a class="code" href="a00971.html">Hash</a>&gt;(hs)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        {}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">//- Construct from the keys of another HashTable,</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">//  the type of values held is arbitrary.</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">class</span> AnyType, <span class="keyword">class</span> AnyHash&gt;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="code" href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">HashSet</a>(<span class="keyword">const</span> <a class="code" href="a00984.html">HashTable&lt;AnyType, Key, AnyHash&gt;</a>&amp;);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        Type <a class="code" href="a00554.html#a97155b3229d31160a88d92b1325b70f3">mean</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// Member Functions</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">// From http://mathworld.wolfram.com/StatisticalMedian.html</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">// The statistical median is the value of the Distribution</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">// variable where the cumulative Distribution = 0.5.</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        Type <a class="code" href="a00554.html#a526d7107d983cd716e3a4f73e10a9c1b">median</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="comment">//- Add a value to the distribution, optionally specifying a weight</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00554.html#a33a0483e214f12ed274213001fba447e">add</a></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        (</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keyword">const</span> Type&amp; valueToAdd,</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keyword">const</span> Type&amp; weight = <a class="code" href="a02006.html">pTraits&lt;Type&gt;::one</a></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        );</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">// Edit</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">  116</a></span>&#160;        <span class="comment">//- Insert a new entry</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">insert</a>(<span class="keyword">const</span> Key&amp; key)</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00984.html#a5eee1e0e199ad59b9cb3916cd42156e0">HashTable&lt;nil, Key, Hash&gt;::insert</a>(key, <a class="code" href="a01585.html">nil</a>());</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="comment">//- Insert keys from a UList of Key</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">//  Return the number of new elements inserted</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">insert</a>(<span class="keyword">const</span> <a class="code" href="a02731.html">UList&lt;Key&gt;</a>&amp;);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">//- Return the normalised distribution (probability density)</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="comment">//  and bins</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="a01355.html">List&lt; List&lt;Pair&lt;scalar&gt;</a> &gt; &gt; <a class="code" href="a00554.html#a0d37b28f72f3671726fd61a4959e4740">normalised</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="comment">//- Return the distribution of the total bin weights</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <a class="code" href="a01355.html">List&lt; List &lt; Pair&lt;scalar&gt;</a> &gt; &gt; <a class="code" href="a00554.html#a534e886fbc527191f1449a00238be6b3">raw</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="comment">//- Return the cumulative normalised distribution and</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">//  integration locations (at end of bins)</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <a class="code" href="a01355.html">List&lt; List&lt;Pair&lt;scalar&gt;</a> &gt; &gt; <a class="code" href="a00554.html#a1f298c5b073878aa3669d18c3881ce5e">cumulativeNormalised</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="comment">//- Return the cumulative total bin weights and integration</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="comment">//  locations (at end of bins)</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <a class="code" href="a01355.html">List&lt; List&lt;Pair&lt;scalar&gt;</a> &gt; &gt; <a class="code" href="a00554.html#a37c9b55d1b1f888db4ebc5fa58dd0885">cumulativeRaw</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="comment">//- Resets the Distribution by clearing the stored lists.</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="comment">//  Leaves the same number of them and the same binWidth.</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00554.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a00982.html#abfc52fb4a4e411ba469186cf8a2ff37b">  126</a></span>&#160;        <span class="comment">//- Same as insert (cannot overwrite nil content)</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00982.html#abfc52fb4a4e411ba469186cf8a2ff37b">set</a>(<span class="keyword">const</span> Key&amp; key)</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">insert</a>(key);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="a00982.html#a19d591e80c9d86a057d38e9d52fc4dec">  132</a></span>&#160;        <span class="comment">//- Same as insert (cannot overwrite nil content)</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00982.html#abfc52fb4a4e411ba469186cf8a2ff37b">set</a>(<span class="keyword">const</span> <a class="code" href="a02731.html">UList&lt;Key&gt;</a>&amp; lst)</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">insert</a>(lst);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="a00982.html#a8254423a34c8f5eec22bd695751ca43a">  138</a></span>&#160;        <span class="comment">//- Unset the specified key - same as erase</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00982.html#a8254423a34c8f5eec22bd695751ca43a">unset</a>(<span class="keyword">const</span> Key&amp; key)</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00984.html#a12d8ea138d4886b42bc135cd082652c7">HashTable&lt;nil, Key, Hash&gt;::erase</a>(key);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        }</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="comment">// Access</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="comment">//- Return the bin width</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> Type&amp; <a class="code" href="a00554.html#aed9a4b77e4c78407779fcb5fc9f16988">binWidth</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="comment">//- Return the List start bin indices</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a01355.html">List&lt;label&gt;</a>&amp; <a class="code" href="a00554.html#a5f44996760b22812545c2758232ea465">listStarts</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="comment">// Member Operators</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="comment">//- Return true if the entry exists, same as found()</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="a00982.html#a51a0b9bf5750af19f97aa6c2c66fc5ae">operator[]</a>(<span class="keyword">const</span> Key&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <span class="comment">//- Equality. Two hashtables are equal when their contents are equal.</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="comment">//  Independent of table size or order.</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00982.html#af68156968e6d5858d9476d3041752b71">operator==</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="comment">// Write</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="comment">//- Write the distribution to file: key normalised raw.</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="comment">//  Produces a separate file for each component.</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00554.html#a3d1a19e605f456391c76defaee3cb1c5">write</a>(<span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; filePrefix) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="comment">//- The opposite of the equality operation.</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="a00982.html#abc8522d1072598e777cad8454ed274e2">operator!=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="comment">//- Combine entries from HashSets</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00982.html#aa1bc79c8911396b130ba2f9fb192b2e1">operator|=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;);</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="comment">// Member Operators</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00554.html#af4c95da6a1f84053cea75e28025f3fc0">operator=</a>(<span class="keyword">const</span> <a class="code" href="a00554.html">Distribution&lt;Type&gt;</a>&amp;);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="comment">// IOstream Operators</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="comment">//- Only retain entries found in both HashSets</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00982.html#abbb58b9d68d4ae828b0e839a0c748953">operator&amp;=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="comment">//- Only retain unique entries (xor)</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00982.html#a4fd03bcfb5feb558a4403a63a9c2c44d">operator^=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;);</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keyword">friend</span> <a class="code" href="a01191.html">Istream</a>&amp; <span class="keyword">operator</span>&gt;&gt; &lt;Type&gt;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        (</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <a class="code" href="a01191.html">Istream</a>&amp;,</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <a class="code" href="a00554.html">Distribution&lt;Type&gt;</a>&amp;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        );</div>
+<div class="line"><a name="l00167"></a><span class="lineno"><a class="line" href="a00982.html#aa3fa0853a30a68cf07a2ae9909c338aa">  167</a></span>&#160;        <span class="comment">//- Add entries listed in the given HashSet to this HashSet</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="a00982.html#aa3fa0853a30a68cf07a2ae9909c338aa">operator+=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp; rhs)</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            this-&gt;<a class="code" href="a00982.html#aa1bc79c8911396b130ba2f9fb192b2e1">operator|=</a>(rhs);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        }</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keyword">friend</span> <a class="code" href="a01725.html">Ostream</a>&amp; operator&lt;&lt; &lt;Type&gt;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        (</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            <a class="code" href="a01725.html">Ostream</a>&amp;,</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00554.html">Distribution&lt;Type&gt;</a>&amp;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        );</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;};</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="comment">//- Remove entries listed in the given HashSet from this HashSet</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a00982.html#a08b55f42a6365714799ae9b045878343">operator-=</a>(<span class="keyword">const</span> <a class="code" href="a00982.html">HashSet&lt;Key, Hash&gt;</a>&amp;);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;};</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="comment">// Global Operators</span></div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<a class="code" href="a00554.html">Distribution&lt;Type&gt;</a> <span class="keyword">operator</span>+</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;(</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00554.html">Distribution&lt;Type&gt;</a>&amp;,</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keyword">const</span> Distribution&lt;Type&gt;&amp;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;);</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07574.html">DistributionI.H</a>&quot;</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="comment">//- Combine entries from HashSets</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> Hash&gt;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;HashSet&lt;Key,Hash&gt; <span class="keyword">operator</span>|</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;(</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash1,</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash2</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">//- Create a HashSet that only contains entries found in both HashSets</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> Hash&gt;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;HashSet&lt;Key,Hash&gt; <span class="keyword">operator</span>&amp;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;(</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash1,</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash2</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;);</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a07572.html">Distribution.C</a>&quot;</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">//- Create a HashSet that only contains unique entries (xor)</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> Hash&gt;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;HashSet&lt;Key,Hash&gt; <span class="keyword">operator</span>^</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;(</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash1,</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keyword">const</span> HashSet&lt;Key,Hash&gt;&amp; hash2</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00554_html_a80088cced2e1dac55c838559aab75caf"><div class="ttname"><a href="a00554.html#a80088cced2e1dac55c838559aab75caf">Foam::Distribution::totalWeight</a></div><div class="ttdeci">scalar totalWeight(direction cmpt) const </div><div class="ttdoc">Sum the total weight added to the component in the. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00069">Distribution.C:69</a></div></div>
-<div class="ttc" id="a06955_html_a830e93cc5b8d859299d1a788c12be8ac"><div class="ttname"><a href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a></div><div class="ttdeci">label n</div><div class="ttdef"><b>Definition:</b> <a href="a06955_source.html#l00031">TABSMDCalcMethod2.H:31</a></div></div>
-<div class="ttc" id="a00554_html_a1f298c5b073878aa3669d18c3881ce5e"><div class="ttname"><a href="a00554.html#a1f298c5b073878aa3669d18c3881ce5e">Foam::Distribution::cumulativeNormalised</a></div><div class="ttdeci">List&lt; List&lt; Pair&lt; scalar &gt; &gt; &gt; cumulativeNormalised() const </div><div class="ttdoc">Return the cumulative normalised distribution and. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00425">Distribution.C:425</a></div></div>
-<div class="ttc" id="a00554_html_a4d4d89eab55140c928abfcb593d573af"><div class="ttname"><a href="a00554.html#a4d4d89eab55140c928abfcb593d573af">Foam::Distribution::~Distribution</a></div><div class="ttdeci">~Distribution()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00062">Distribution.C:62</a></div></div>
-<div class="ttc" id="a01748_html"><div class="ttname"><a href="a01748.html">Foam::Pair</a></div><div class="ttdoc">An ordered pair of two objects of type <T> with first() and second() elements. </div><div class="ttdef"><b>Definition:</b> <a href="a08764_source.html#l00049">contiguous.H:49</a></div></div>
-<div class="ttc" id="a07587_html"><div class="ttname"><a href="a07587.html">List.H</a></div></div>
-<div class="ttc" id="a00554_html_a4213cac0ba739fdefa6aa228bae990d0"><div class="ttname"><a href="a00554.html#a4213cac0ba739fdefa6aa228bae990d0">Foam::Distribution::keys</a></div><div class="ttdeci">List&lt; label &gt; keys(direction cmpt) const </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00085">Distribution.C:85</a></div></div>
-<div class="ttc" id="a00554_html_a7816c67e54698fc27a07091402968528"><div class="ttname"><a href="a00554.html#a7816c67e54698fc27a07091402968528">Foam::Distribution::cmptType</a></div><div class="ttdeci">pTraits&lt; Type &gt;::cmptType cmptType</div><div class="ttdoc">Component type. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00078">Distribution.H:78</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a00554_html_a376a44980cd807789e5d3ad859bf5f06"><div class="ttname"><a href="a00554.html#a376a44980cd807789e5d3ad859bf5f06">Foam::Distribution::validLimits</a></div><div class="ttdeci">Pair&lt; label &gt; validLimits(direction cmpt) const </div><div class="ttdoc">Returns the indices of the first and last non-zero entries. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00166">Distribution.C:166</a></div></div>
-<div class="ttc" id="a00554_html_a3d1a19e605f456391c76defaee3cb1c5"><div class="ttname"><a href="a00554.html#a3d1a19e605f456391c76defaee3cb1c5">Foam::Distribution::write</a></div><div class="ttdeci">void write(const fileName &amp;filePrefix) const </div><div class="ttdoc">Write the distribution to file: key normalised raw. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00504">Distribution.C:504</a></div></div>
-<div class="ttc" id="a00554_html_a526d7107d983cd716e3a4f73e10a9c1b"><div class="ttname"><a href="a00554.html#a526d7107d983cd716e3a4f73e10a9c1b">Foam::Distribution::median</a></div><div class="ttdeci">Type median() const </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00226">Distribution.C:226</a></div></div>
-<div class="ttc" id="a00554_html_a33a0483e214f12ed274213001fba447e"><div class="ttname"><a href="a00554.html#a33a0483e214f12ed274213001fba447e">Foam::Distribution::add</a></div><div class="ttdeci">void add(const Type &amp;valueToAdd, const Type &amp;weight=pTraits&lt; Type &gt;::one)</div><div class="ttdoc">Add a value to the distribution, optionally specifying a weight. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00313">Distribution.C:313</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a00554_html_af4c95da6a1f84053cea75e28025f3fc0"><div class="ttname"><a href="a00554.html#af4c95da6a1f84053cea75e28025f3fc0">Foam::Distribution::operator=</a></div><div class="ttdeci">void operator=(const Distribution&lt; Type &gt; &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00561">Distribution.C:561</a></div></div>
-<div class="ttc" id="a00554_html_a534e886fbc527191f1449a00238be6b3"><div class="ttname"><a href="a00554.html#a534e886fbc527191f1449a00238be6b3">Foam::Distribution::raw</a></div><div class="ttdeci">List&lt; List&lt; Pair&lt; scalar &gt; &gt; &gt; raw() const </div><div class="ttdoc">Return the distribution of the total bin weights. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00383">Distribution.C:383</a></div></div>
-<div class="ttc" id="a00554_html_a0d37b28f72f3671726fd61a4959e4740"><div class="ttname"><a href="a00554.html#a0d37b28f72f3671726fd61a4959e4740">Foam::Distribution::normalised</a></div><div class="ttdeci">List&lt; List&lt; Pair&lt; scalar &gt; &gt; &gt; normalised() const </div><div class="ttdoc">Return the normalised distribution (probability density) </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00335">Distribution.C:335</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a00554_html_a97e7a46e54c1954b71dbf6e135c469ac"><div class="ttname"><a href="a00554.html#a97e7a46e54c1954b71dbf6e135c469ac">Foam::Distribution::Distribution</a></div><div class="ttdeci">Distribution()</div><div class="ttdoc">Construct null. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00033">Distribution.C:33</a></div></div>
-<div class="ttc" id="a10675_html_a44f398e0525f8d7f48cead029868d845"><div class="ttname"><a href="a10675.html#a44f398e0525f8d7f48cead029868d845">Foam::operator&gt;&gt;</a></div><div class="ttdeci">Istream &amp; operator&gt;&gt;(Istream &amp;, edgeMesh &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a04915_source.html#l00144">edgeMeshIO.C:144</a></div></div>
-<div class="ttc" id="a02006_html"><div class="ttname"><a href="a02006.html">Foam::pTraits</a></div><div class="ttdoc">Traits class for primitives. </div><div class="ttdef"><b>Definition:</b> <a href="a08858_source.html#l00050">pTraits.H:50</a></div></div>
-<div class="ttc" id="a07574_html"><div class="ttname"><a href="a07574.html">DistributionI.H</a></div></div>
-<div class="ttc" id="a08857_html"><div class="ttname"><a href="a08857.html">Pair.H</a></div></div>
-<div class="ttc" id="a00554_html_aed9a4b77e4c78407779fcb5fc9f16988"><div class="ttname"><a href="a00554.html#aed9a4b77e4c78407779fcb5fc9f16988">Foam::Distribution::binWidth</a></div><div class="ttdeci">const Type &amp; binWidth() const </div><div class="ttdoc">Return the bin width. </div><div class="ttdef"><b>Definition:</b> <a href="a07574_source.html#l00030">DistributionI.H:30</a></div></div>
-<div class="ttc" id="a07572_html"><div class="ttname"><a href="a07572.html">Distribution.C</a></div></div>
-<div class="ttc" id="a00554_html_ac8bb3912a3ce86b15842e79d0b421204"><div class="ttname"><a href="a00554.html#ac8bb3912a3ce86b15842e79d0b421204">Foam::Distribution::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Resets the Distribution by clearing the stored lists. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00492">Distribution.C:492</a></div></div>
-<div class="ttc" id="a00554_html"><div class="ttname"><a href="a00554.html">Foam::Distribution</a></div><div class="ttdoc">Accumulating histogram of component values. Specified bin resolution, automatic generation of bins...</div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00049">Distribution.H:49</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a00554_html_a5f44996760b22812545c2758232ea465"><div class="ttname"><a href="a00554.html#a5f44996760b22812545c2758232ea465">Foam::Distribution::listStarts</a></div><div class="ttdeci">const List&lt; label &gt; &amp; listStarts() const </div><div class="ttdoc">Return the List start bin indices. </div><div class="ttdef"><b>Definition:</b> <a href="a07574_source.html#l00038">DistributionI.H:38</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a00554_html_afc2c6ca23397ec9240c9974ac5c7d0a9"><div class="ttname"><a href="a00554.html#afc2c6ca23397ec9240c9974ac5c7d0a9">Foam::Distribution::index</a></div><div class="ttdeci">label index(direction cmpt, label n)</div><div class="ttdoc">Return the appropriate List index for the given bin index. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00100">Distribution.C:100</a></div></div>
-<div class="ttc" id="a00554_html_a97155b3229d31160a88d92b1325b70f3"><div class="ttname"><a href="a00554.html#a97155b3229d31160a88d92b1325b70f3">Foam::Distribution::mean</a></div><div class="ttdeci">Type mean() const </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00197">Distribution.C:197</a></div></div>
-<div class="ttc" id="a00554_html_a37c9b55d1b1f888db4ebc5fa58dd0885"><div class="ttname"><a href="a00554.html#a37c9b55d1b1f888db4ebc5fa58dd0885">Foam::Distribution::cumulativeRaw</a></div><div class="ttdeci">List&lt; List&lt; Pair&lt; scalar &gt; &gt; &gt; cumulativeRaw() const </div><div class="ttdoc">Return the cumulative total bin weights and integration. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00461">Distribution.C:461</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00207"></a><span class="lineno"><a class="line" href="a10725.html#abcda522ef20a06fef153f35b64af17a2">  207</a></span>&#160;<span class="comment">//- A HashSet with word keys.</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00982.html">HashSet&lt;&gt;</a> <a class="code" href="a10725.html#abcda522ef20a06fef153f35b64af17a2">wordHashSet</a>;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
+<div class="line"><a name="l00210"></a><span class="lineno"><a class="line" href="a10725.html#abfcd578f4c856942a06181a689599109">  210</a></span>&#160;<span class="comment">//- A HashSet with label keys.</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="keyword">typedef</span> <a class="code" href="a00982.html">HashSet&lt;label, Hash&lt;label&gt;</a> &gt; <a class="code" href="a10725.html#abfcd578f4c856942a06181a689599109">labelHashSet</a>;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a07572.html">HashSet.C</a>&quot;</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00982_html_a45fe3fa4618a605a875840c85ec275b4"><div class="ttname"><a href="a00982.html#a45fe3fa4618a605a875840c85ec275b4">Foam::HashSet::iterator</a></div><div class="ttdeci">HashTable&lt; nil, Key, Hash &gt;::iterator iterator</div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00066">HashSet.H:66</a></div></div>
+<div class="ttc" id="a00982_html_a8254423a34c8f5eec22bd695751ca43a"><div class="ttname"><a href="a00982.html#a8254423a34c8f5eec22bd695751ca43a">Foam::HashSet::unset</a></div><div class="ttdeci">bool unset(const Key &amp;key)</div><div class="ttdoc">Unset the specified key - same as erase. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00138">HashSet.H:138</a></div></div>
+<div class="ttc" id="a00971_html"><div class="ttname"><a href="a00971.html">Foam::Hash</a></div><div class="ttdoc">Hash function class for primitives. All non-primitives used to hash entries on hash tables likely nee...</div><div class="ttdef"><b>Definition:</b> <a href="a08865_source.html#l00054">Hash.H:54</a></div></div>
+<div class="ttc" id="a01585_html"><div class="ttname"><a href="a01585.html">Foam::nil</a></div><div class="ttdoc">A zero-sized class without any storage. Used, for example, in HashSet. </div><div class="ttdef"><b>Definition:</b> <a href="a08901_source.html#l00058">nil.H:58</a></div></div>
+<div class="ttc" id="a07575_html"><div class="ttname"><a href="a07575.html">HashTable.H</a></div></div>
+<div class="ttc" id="a00982_html_a49f0753d9652681fc3a81f59951a0ad7"><div class="ttname"><a href="a00982.html#a49f0753d9652681fc3a81f59951a0ad7">Foam::HashSet::insert</a></div><div class="ttdeci">bool insert(const Key &amp;key)</div><div class="ttdoc">Insert a new entry. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00116">HashSet.H:116</a></div></div>
+<div class="ttc" id="a10725_html_abfcd578f4c856942a06181a689599109"><div class="ttname"><a href="a10725.html#abfcd578f4c856942a06181a689599109">Foam::labelHashSet</a></div><div class="ttdeci">HashSet&lt; label, Hash&lt; label &gt; &gt; labelHashSet</div><div class="ttdoc">A HashSet with label keys. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00210">HashSet.H:210</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00982_html_ab0ce0d67f107357cb5a0fb61d2a37947"><div class="ttname"><a href="a00982.html#ab0ce0d67f107357cb5a0fb61d2a37947">Foam::HashSet::HashSet</a></div><div class="ttdeci">HashSet(const label size=128)</div><div class="ttdoc">Construct given initial size. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00073">HashSet.H:73</a></div></div>
+<div class="ttc" id="a00984_html"><div class="ttname"><a href="a00984.html">Foam::HashTable</a></div><div class="ttdoc">An STL-conforming hash table. </div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00061">HashTable.H:61</a></div></div>
+<div class="ttc" id="a00982_html"><div class="ttname"><a href="a00982.html">Foam::HashSet</a></div><div class="ttdoc">A HashTable with keys but without contents. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00059">HashSet.H:59</a></div></div>
+<div class="ttc" id="a00982_html_abc8522d1072598e777cad8454ed274e2"><div class="ttname"><a href="a00982.html#abc8522d1072598e777cad8454ed274e2">Foam::HashSet::operator!=</a></div><div class="ttdeci">bool operator!=(const HashSet&lt; Key, Hash &gt; &amp;) const </div><div class="ttdoc">The opposite of the equality operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00120">HashSet.C:120</a></div></div>
+<div class="ttc" id="a00982_html_aa3fa0853a30a68cf07a2ae9909c338aa"><div class="ttname"><a href="a00982.html#aa3fa0853a30a68cf07a2ae9909c338aa">Foam::HashSet::operator+=</a></div><div class="ttdeci">void operator+=(const HashSet&lt; Key, Hash &gt; &amp;rhs)</div><div class="ttdoc">Add entries listed in the given HashSet to this HashSet. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00167">HashSet.H:167</a></div></div>
+<div class="ttc" id="a00984_html_a5eee1e0e199ad59b9cb3916cd42156e0"><div class="ttname"><a href="a00984.html#a5eee1e0e199ad59b9cb3916cd42156e0">Foam::HashTable::insert</a></div><div class="ttdeci">bool insert(const Key &amp;, const T &amp;newElmt)</div><div class="ttdoc">Insert a new hashedEntry. </div><div class="ttdef"><b>Definition:</b> <a href="a07577_source.html#l00080">HashTableI.H:80</a></div></div>
+<div class="ttc" id="a00982_html_abbb58b9d68d4ae828b0e839a0c748953"><div class="ttname"><a href="a00982.html#abbb58b9d68d4ae828b0e839a0c748953">Foam::HashSet::operator&amp;=</a></div><div class="ttdeci">void operator&amp;=(const HashSet&lt; Key, Hash &gt; &amp;)</div><div class="ttdoc">Only retain entries found in both HashSets. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00138">HashSet.C:138</a></div></div>
+<div class="ttc" id="a00984_html_a12d8ea138d4886b42bc135cd082652c7"><div class="ttname"><a href="a00984.html#a12d8ea138d4886b42bc135cd082652c7">Foam::HashTable::erase</a></div><div class="ttdeci">bool erase(const iterator &amp;)</div><div class="ttdoc">Erase a hashedEntry specified by given iterator. </div><div class="ttdef"><b>Definition:</b> <a href="a07574_source.html#l00379">HashTable.C:379</a></div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a00982_html_a08b55f42a6365714799ae9b045878343"><div class="ttname"><a href="a00982.html#a08b55f42a6365714799ae9b045878343">Foam::HashSet::operator-=</a></div><div class="ttdeci">void operator-=(const HashSet&lt; Key, Hash &gt; &amp;)</div><div class="ttdoc">Remove entries listed in the given HashSet from this HashSet. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00171">HashSet.C:171</a></div></div>
+<div class="ttc" id="a07572_html"><div class="ttname"><a href="a07572.html">HashSet.C</a></div></div>
+<div class="ttc" id="a02881_html"><div class="ttname"><a href="a02881.html">Foam::Xfer</a></div><div class="ttdoc">A simple container for copying or transferring objects of type <T>. </div><div class="ttdef"><b>Definition:</b> <a href="a08451_source.html#l00085">Xfer.H:85</a></div></div>
+<div class="ttc" id="a00982_html_af68156968e6d5858d9476d3041752b71"><div class="ttname"><a href="a00982.html#af68156968e6d5858d9476d3041752b71">Foam::HashSet::operator==</a></div><div class="ttdeci">bool operator==(const HashSet&lt; Key, Hash &gt; &amp;) const </div><div class="ttdoc">Equality. Two hashtables are equal when their contents are equal. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00095">HashSet.C:95</a></div></div>
+<div class="ttc" id="a00982_html_a4fd03bcfb5feb558a4403a63a9c2c44d"><div class="ttname"><a href="a00982.html#a4fd03bcfb5feb558a4403a63a9c2c44d">Foam::HashSet::operator^=</a></div><div class="ttdeci">void operator^=(const HashSet&lt; Key, Hash &gt; &amp;)</div><div class="ttdoc">Only retain unique entries (xor) </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00152">HashSet.C:152</a></div></div>
+<div class="ttc" id="a10725_html_abcda522ef20a06fef153f35b64af17a2"><div class="ttname"><a href="a10725.html#abcda522ef20a06fef153f35b64af17a2">Foam::wordHashSet</a></div><div class="ttdeci">HashSet wordHashSet</div><div class="ttdoc">A HashSet with word keys. </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00207">HashSet.H:207</a></div></div>
+<div class="ttc" id="a00982_html_a51a0b9bf5750af19f97aa6c2c66fc5ae"><div class="ttname"><a href="a00982.html#a51a0b9bf5750af19f97aa6c2c66fc5ae">Foam::HashSet::operator[]</a></div><div class="ttdeci">bool operator[](const Key &amp;) const </div><div class="ttdoc">Return true if the entry exists, same as found() </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00088">HashSet.C:88</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00982_html_aa1bc79c8911396b130ba2f9fb192b2e1"><div class="ttname"><a href="a00982.html#aa1bc79c8911396b130ba2f9fb192b2e1">Foam::HashSet::operator|=</a></div><div class="ttdeci">void operator|=(const HashSet&lt; Key, Hash &gt; &amp;)</div><div class="ttdoc">Combine entries from HashSets. </div><div class="ttdef"><b>Definition:</b> <a href="a07572_source.html#l00127">HashSet.C:127</a></div></div>
+<div class="ttc" id="a00982_html_a611f104ac22bb3a8758640942b9dc8e0"><div class="ttname"><a href="a00982.html#a611f104ac22bb3a8758640942b9dc8e0">Foam::HashSet::const_iterator</a></div><div class="ttdeci">HashTable&lt; nil, Key, Hash &gt;::const_iterator const_iterator</div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00067">HashSet.H:67</a></div></div>
+<div class="ttc" id="a02731_html"><div class="ttname"><a href="a02731.html">Foam::UList</a></div><div class="ttdoc">A 1D vector of objects of type <T>, where the size of the vector is known and can be used for subscri...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00060">HashTable.H:60</a></div></div>
+<div class="ttc" id="a08901_html"><div class="ttname"><a href="a08901.html">nil.H</a></div></div>
+<div class="ttc" id="a00982_html_abfc52fb4a4e411ba469186cf8a2ff37b"><div class="ttname"><a href="a00982.html#abfc52fb4a4e411ba469186cf8a2ff37b">Foam::HashSet::set</a></div><div class="ttdeci">bool set(const Key &amp;key)</div><div class="ttdoc">Same as insert (cannot overwrite nil content) </div><div class="ttdef"><b>Definition:</b> <a href="a07573_source.html#l00126">HashSet.H:126</a></div></div>
+<div class="ttc" id="a00984_html_a723361dc2020160f5492e8fe2d09fa44"><div class="ttname"><a href="a00984.html#a723361dc2020160f5492e8fe2d09fa44">Foam::HashTable&lt; nil, Key, Hash &gt;::size</a></div><div class="ttdeci">label size() const</div><div class="ttdoc">Return number of elements in table. </div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

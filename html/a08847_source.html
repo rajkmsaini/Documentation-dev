@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_3e50f45338116b169052b428016851aa.html">primitives</a></li><li class="navelem"><a class="el" href="dir_086c067a0e64eeb439d30ae0c44248d8.html">ints</a></li><li class="navelem"><a class="el" href="dir_55b63d57c5dbacea4b0ec7c6f925eb80.html">uLabel</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_3e50f45338116b169052b428016851aa.html">primitives</a></li><li class="navelem"><a class="el" href="dir_d9e7e9a9f2a6b8c09f93ad92e1b15a84.html">functions</a></li><li class="navelem"><a class="el" href="dir_39719c705025486201df4639072645d2.html">DataEntry</a></li><li class="navelem"><a class="el" href="dir_0afca8f66b32cf217d73e669bf45780e.html">Table</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">uLabel.H</div>  </div>
+<div class="title">TableBaseIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a08847.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,103 +119,80 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::uLabel</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A uLabel is an uint32_t or uint64_t as specified by the pre-processor macro</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    WM_LABEL_SIZE.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    A readLabel function is defined so that uLabel can be constructed from</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    Istream.</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef uLabel_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define uLabel_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08835.html">DataEntry.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="a01736.html">Foam::Ostream</a>&amp; Foam::operator&lt;&lt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;(</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    Ostream&amp; os,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> TableBase&lt;Type&gt;&amp; tbl</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    os  &lt;&lt; static_cast&lt;const DataEntry&lt;Type&gt;&amp;&gt;(tbl);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08838.html">uint.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a08847.html#a3ff3578da4c8dec41ab269fadd7fdc5c">   43</a></span>&#160;<span class="preprocessor">#define UINT_ADD_SIZE(x,s,y) x ## s ## y</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a08847.html#af88e7d943bf21b8d5495ef4741c53950">   44</a></span>&#160;<span class="preprocessor">#define UINT_ADD_DEF_SIZE(x,s,y) UINT_ADD_SIZE(x,s,y)</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">   45</a></span>&#160;<span class="preprocessor">#define UINT_SIZE(x,y) UINT_ADD_DEF_SIZE(x,WM_LABEL_SIZE,y)</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#if WM_LABEL_SIZE != 32 &amp;&amp; WM_LABEL_SIZE != 64</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">    #error &quot;uLabel.H: WM_LABEL_SIZE must be set to either 32 or 64&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span> (os.format() == IOstream::ASCII)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;         os &lt;&lt; token::SPACE &lt;&lt; tbl.table_;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        os.<a class="code" href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">write</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        (</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            reinterpret_cast&lt;const char*&gt;(&amp;tbl.table_),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            tbl.table_.byteSize()</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        );</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">   59</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">UINT_SIZE</a>(uint, _t) <a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Check state of Ostream</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    os.<a class="code" href="a01185.html#af85c845c01b78192c2f5302a271d153d">check</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    (</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="stringliteral">&quot;Ostream&amp; operator&lt;&lt;(Ostream&amp;, const TableBase&lt;Type&gt;&amp;, const bool)&quot;</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    );</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> os;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a10675.html#a6af3bcacb2fc9b433741739086b350be">   61</a></span>&#160;static const uLabel <a class="code" href="a10675.html#a6af3bcacb2fc9b433741739086b350be">uLabelMin</a> = <a class="code" href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">UINT_SIZE</a>(UINT, _MIN);</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a10675.html#a511c1a08c814ecd1014a352ec11f9182">   62</a></span>&#160;static const uLabel <a class="code" href="a10675.html#a511c1a08c814ecd1014a352ec11f9182">uLabelMax</a> = <a class="code" href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">UINT_SIZE</a>(UINT, _MAX);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="a10675.html#a4b6eed935c6f3d64b18e2e4dda4a9f53">   64</a></span>&#160;inline uLabel <a class="code" href="a10675.html#a4b6eed935c6f3d64b18e2e4dda4a9f53">readULabel</a>(<a class="code" href="a01191.html">Istream</a>&amp; is)</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">UINT_SIZE</a>(<a class="code" href="a10675.html#a59b4b861e734a6b003b604049b542118">readUint</a>,) (is);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02547.html#a3f337a79b0eea9e1a8a6381894c6cdf9">   63</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02547.html#a3f337a79b0eea9e1a8a6381894c6cdf9">Foam::TableBase&lt;Type&gt;::writeData</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="a04424.html#a095a2bb889e4ff86605ad8a929fdc3f5">DataEntry&lt;Type&gt;::writeData</a>(os);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    os  &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">indent</a> &lt;&lt; table_ &lt;&lt; token::END_STATEMENT &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    writeEntries(os);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">//- Raise one uLabel to the power of another</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> <a class="code" href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">pow</a>(<a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> a, <a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> <a class="code" href="a10688.html#a00faad9a19c0dc0bcae765415926e925">b</a>);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">//- Evaluate n! : 0 &lt; n &lt;= 12</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> <a class="code" href="a10675.html#ac0654901c2c49481cf0fb2047b8c2f0a">factorial</a>(<a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> <a class="code" href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a>);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a10675.html#a1a70c6e63f1db06340a7a353923070ea">   79</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a>&amp; <a class="code" href="a10675.html#a389e1b8ee9d4554b1c53f7add93773bd">setComponent</a>(<a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a>&amp; l, <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a>)</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> l;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="a10675.html#a34dbc101dcec51281ce16977cac384c5">   84</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> <a class="code" href="a10675.html#a38788135ad21a6daaf3af2a761b33508">component</a>(<span class="keyword">const</span> <a class="code" href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">uLabel</a> l, <span class="keyword">const</span> <a class="code" href="a10675.html#af747cd46e56a00c1364dc643f329dff8">direction</a>)</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> l;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08848.html">uLabelSpecific.H</a>&quot;</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#undef UINT_ADD_SIZE</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#undef UINT_ADD_DEF_SIZE</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#undef UINT_SIZE</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a06955_html_a830e93cc5b8d859299d1a788c12be8ac"><div class="ttname"><a href="a06955.html#a830e93cc5b8d859299d1a788c12be8ac">n</a></div><div class="ttdeci">label n</div><div class="ttdef"><b>Definition:</b> <a href="a06955_source.html#l00031">TABSMDCalcMethod2.H:31</a></div></div>
-<div class="ttc" id="a10675_html_aadb2d133b68e1e5162c68810a564eb8f"><div class="ttname"><a href="a10675.html#aadb2d133b68e1e5162c68810a564eb8f">Foam::uLabel</a></div><div class="ttdeci">uintWM_LABEL_SIZE_t uLabel</div><div class="ttdoc">A uLabel is an uint32_t or uint64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00059">uLabel.H:59</a></div></div>
-<div class="ttc" id="a01191_html"><div class="ttname"><a href="a01191.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07731_source.html#l00057">Istream.H:57</a></div></div>
-<div class="ttc" id="a08838_html"><div class="ttname"><a href="a08838.html">uint.H</a></div><div class="ttdoc">System uinteger. </div></div>
-<div class="ttc" id="a10675_html_ac0654901c2c49481cf0fb2047b8c2f0a"><div class="ttname"><a href="a10675.html#ac0654901c2c49481cf0fb2047b8c2f0a">Foam::factorial</a></div><div class="ttdeci">label factorial(label n)</div><div class="ttdoc">Evaluate n! : 0 < n <= 12. </div><div class="ttdef"><b>Definition:</b> <a href="a08830_source.html#l00063">label.C:63</a></div></div>
-<div class="ttc" id="a10675_html_a511c1a08c814ecd1014a352ec11f9182"><div class="ttname"><a href="a10675.html#a511c1a08c814ecd1014a352ec11f9182">Foam::uLabelMax</a></div><div class="ttdeci">static const uLabel uLabelMax</div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00062">uLabel.H:62</a></div></div>
-<div class="ttc" id="a10675_html_a7500c8e9d27a442adc75e287de074c7c"><div class="ttname"><a href="a10675.html#a7500c8e9d27a442adc75e287de074c7c">Foam::pow</a></div><div class="ttdeci">dimensionedScalar pow(const dimensionedScalar &amp;ds, const dimensionedScalar &amp;expt)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00073">dimensionedScalar.C:73</a></div></div>
-<div class="ttc" id="a10675_html_a6af3bcacb2fc9b433741739086b350be"><div class="ttname"><a href="a10675.html#a6af3bcacb2fc9b433741739086b350be">Foam::uLabelMin</a></div><div class="ttdeci">static const uLabel uLabelMin</div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00061">uLabel.H:61</a></div></div>
-<div class="ttc" id="a10675_html_a59b4b861e734a6b003b604049b542118"><div class="ttname"><a href="a10675.html#a59b4b861e734a6b003b604049b542118">Foam::readUint</a></div><div class="ttdeci">uint readUint(Istream &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08839_source.html#l00031">uintIO.C:31</a></div></div>
-<div class="ttc" id="a10688_html_a00faad9a19c0dc0bcae765415926e925"><div class="ttname"><a href="a10688.html#a00faad9a19c0dc0bcae765415926e925">Foam::constant::physicoChemical::b</a></div><div class="ttdeci">const dimensionedScalar b</div><div class="ttdoc">Wien displacement law constant: default SI units: [m.K]. </div><div class="ttdef"><b>Definition:</b> <a href="a04398_source.html#l00028">createFields.H:28</a></div></div>
-<div class="ttc" id="a10675_html_a389e1b8ee9d4554b1c53f7add93773bd"><div class="ttname"><a href="a10675.html#a389e1b8ee9d4554b1c53f7add93773bd">Foam::setComponent</a></div><div class="ttdeci">label &amp; setComponent(label &amp;l, const direction)</div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00079">label.H:79</a></div></div>
-<div class="ttc" id="a08848_html"><div class="ttname"><a href="a08848.html">uLabelSpecific.H</a></div></div>
-<div class="ttc" id="a10675_html_a38788135ad21a6daaf3af2a761b33508"><div class="ttname"><a href="a10675.html#a38788135ad21a6daaf3af2a761b33508">Foam::component</a></div><div class="ttdeci">void component(FieldField&lt; Field, typename FieldField&lt; Field, Type &gt;::cmptType &gt; &amp;sf, const FieldField&lt; Field, Type &gt; &amp;f, const direction d)</div><div class="ttdef"><b>Definition:</b> <a href="a07858_source.html#l00041">FieldFieldFunctions.C:41</a></div></div>
-<div class="ttc" id="a10675_html_af747cd46e56a00c1364dc643f329dff8"><div class="ttname"><a href="a10675.html#af747cd46e56a00c1364dc643f329dff8">Foam::direction</a></div><div class="ttdeci">unsigned char direction</div><div class="ttdef"><b>Definition:</b> <a href="a08772_source.html#l00043">direction.H:43</a></div></div>
-<div class="ttc" id="a10675_html_a4b6eed935c6f3d64b18e2e4dda4a9f53"><div class="ttname"><a href="a10675.html#a4b6eed935c6f3d64b18e2e4dda4a9f53">Foam::readULabel</a></div><div class="ttdeci">uLabel readULabel(Istream &amp;is)</div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00064">uLabel.H:64</a></div></div>
-<div class="ttc" id="a08847_html_a4aa803863cb3c40aa812fc19ad7a5f6b"><div class="ttname"><a href="a08847.html#a4aa803863cb3c40aa812fc19ad7a5f6b">UINT_SIZE</a></div><div class="ttdeci">#define UINT_SIZE(x, y)</div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00045">uLabel.H:45</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="a02547.html#aaaebcf3f29a2e700394f75d37500cbaa">   72</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02547.html#aaaebcf3f29a2e700394f75d37500cbaa">Foam::TableBase&lt;Type&gt;::writeEntries</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span> (boundsHandling_ != CLAMP)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;outOfBounds&quot;</span>) &lt;&lt; boundsHandlingToWord(boundsHandling_)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            &lt;&lt; token::END_STATEMENT &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (interpolationScheme_ != <span class="stringliteral">&quot;linear&quot;</span>)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;interpolationScheme&quot;</span>) &lt;&lt; interpolationScheme_</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            &lt;&lt; token::END_STATEMENT &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a08835_html"><div class="ttname"><a href="a08835.html">DataEntry.H</a></div></div>
+<div class="ttc" id="a01736_html_a3c58b2bb9174ea3c4a5fa58095d1290e"><div class="ttname"><a href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">Foam::Ostream::writeKeyword</a></div><div class="ttdeci">Ostream &amp; writeKeyword(const keyType &amp;)</div><div class="ttdoc">Write the keyword followed by an appropriate indentation. </div><div class="ttdef"><b>Definition:</b> <a href="a07783_source.html#l00059">Ostream.C:59</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a02547_html_aaaebcf3f29a2e700394f75d37500cbaa"><div class="ttname"><a href="a02547.html#aaaebcf3f29a2e700394f75d37500cbaa">Foam::TableBase::writeEntries</a></div><div class="ttdeci">virtual void writeEntries(Ostream &amp;os) const </div><div class="ttdoc">Write keywords only in dictionary format. Used for non-inline. </div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00072">TableBaseIO.C:72</a></div></div>
+<div class="ttc" id="a10725_html_ae297c57ea5b952a8bc9e4f30f7ea8701"><div class="ttname"><a href="a10725.html#ae297c57ea5b952a8bc9e4f30f7ea8701">Foam::indent</a></div><div class="ttdeci">Ostream &amp; indent(Ostream &amp;os)</div><div class="ttdoc">Indent stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00221">Ostream.H:221</a></div></div>
+<div class="ttc" id="a02547_html_a3f337a79b0eea9e1a8a6381894c6cdf9"><div class="ttname"><a href="a02547.html#a3f337a79b0eea9e1a8a6381894c6cdf9">Foam::TableBase::writeData</a></div><div class="ttdeci">virtual void writeData(Ostream &amp;os) const </div><div class="ttdoc">Write all table data in dictionary format. </div><div class="ttdef"><b>Definition:</b> <a href="a08847_source.html#l00063">TableBaseIO.C:63</a></div></div>
+<div class="ttc" id="a01736_html_a81a19ad9e4098b4701cc8bab9a59d78b"><div class="ttname"><a href="a01736.html#a81a19ad9e4098b4701cc8bab9a59d78b">Foam::Ostream::write</a></div><div class="ttdeci">virtual Ostream &amp; write(const token &amp;)=0</div><div class="ttdoc">Write next token to stream. </div></div>
+<div class="ttc" id="a04424_html_a095a2bb889e4ff86605ad8a929fdc3f5"><div class="ttname"><a href="a04424.html#a095a2bb889e4ff86605ad8a929fdc3f5">writeData</a></div><div class="ttdeci">const bool writeData(readBool(pdfDictionary.lookup(&quot;writeData&quot;)))</div></div>
+<div class="ttc" id="a01185_html_af85c845c01b78192c2f5302a271d153d"><div class="ttname"><a href="a01185.html#af85c845c01b78192c2f5302a271d153d">Foam::IOstream::check</a></div><div class="ttdeci">virtual bool check(const char *operation) const </div><div class="ttdoc">Check IOstream status for given operation. </div><div class="ttdef"><b>Definition:</b> <a href="a07779_source.html#l00092">IOstream.C:92</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

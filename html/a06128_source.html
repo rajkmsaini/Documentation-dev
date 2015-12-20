@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f7091aeabaea36e4bb5fe5aa28ecbeff.html">fvMotionSolver</a></li><li class="navelem"><a class="el" href="dir_a38e3b643eae30d7add43af99171ff5d.html">fvMotionSolvers</a></li><li class="navelem"><a class="el" href="dir_6fe3f7cfc1ee8390f6d9a1e7340f1b23.html">velocity</a></li><li class="navelem"><a class="el" href="dir_7b239cb6d17bd90643292a0a12c4978a.html">laplacian</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_deb7d71175aa940c147966c547ebcb7e.html">schemes</a></li><li class="navelem"><a class="el" href="dir_431b527c82c21cf1a3ed2a8a9269c081.html">quadraticLinearPureUpwindFit</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">velocityLaplacianFvMotionSolver.H</div>  </div>
+<div class="title">quadraticLinearPureUpwindFit.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06128.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,134 +119,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::velocityLaplacianFvMotionSolver</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Mesh motion solver for an fvMesh.  Based on solving the cell-centre</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    Laplacian for the motion velocity.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    velocityLaplacianFvMotionSolver.C</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef velocityLaplacianFvMotionSolver_H</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define velocityLaplacianFvMotionSolver_H</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04805.html">velocityMotionSolver.H</a>&quot;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06125.html">fvMotionSolverCore.H</a>&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06123.html">PureUpwindFitScheme.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06130.html">quadraticLinearUpwindFitPolynomial.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05852.html">upwindCFCCellToFaceStencilObject.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// Use stencil with three upwind cells:</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// upwindCFCCellToFaceStencilObject + pureUpwind</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a10725.html#a8f3f16fd1bb972207f2918d99f5dbba9">makePureUpwindFitSurfaceInterpolationScheme</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    (</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        quadraticLinearPureUpwindFit,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        quadraticLinearUpwindFitPolynomial,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        upwindCFCCellToFaceStencilObject</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    );</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// Forward class declarations</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">class </span>motionDiffusivity;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">              Class velocityLaplacianFvMotionSolver Declaration</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a02784.html">   53</a></span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">class </span><a class="code" href="a02784.html">velocityLaplacianFvMotionSolver</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02785.html">velocityMotionSolver</a>,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00875.html">fvMotionSolverCore</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">//- Cell-centre motion field</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00913.html">volVectorField</a> cellMotionU_;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//- Diffusivity used to control the motion</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="a00084.html">autoPtr&lt;motionDiffusivity&gt;</a> diffusivityPtr_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a02784.html">velocityLaplacianFvMotionSolver</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        (</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02784.html">velocityLaplacianFvMotionSolver</a>&amp;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        );</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02784.html">velocityLaplacianFvMotionSolver</a>&amp;);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a02784.html#a26accf9108ccff778de6d8da45793fb9">TypeName</a>(<span class="stringliteral">&quot;velocityLaplacian&quot;</span>);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">//- Construct from polyMesh and IOdictionary</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="a02784.html">velocityLaplacianFvMotionSolver</a></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        (</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp;,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01163.html">IOdictionary</a>&amp;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        );</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="a02784.html#af51a19e31e7ec3d33b71008722e38814">~velocityLaplacianFvMotionSolver</a>();</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="a02784.html#aef138abfbe29e5af1723fb4ad86536f1">  102</a></span>&#160;        <span class="comment">//- Return reference to the cell motion velocity field</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a02784.html#aef138abfbe29e5af1723fb4ad86536f1">cellMotionU</a>()</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="keywordflow">return</span> cellMotionU_;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="a02784.html#a7f26bf12f7ae2a8dd8b01b9be44a6177">  108</a></span>&#160;        <span class="comment">//- Return const reference to the cell motion velocity field</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a02784.html#aef138abfbe29e5af1723fb4ad86536f1">cellMotionU</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">return</span> cellMotionU_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        }</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//- Return point location obtained from the current motion field</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02608.html">tmp&lt;pointField&gt;</a> <a class="code" href="a02784.html#a897bb9550f17845c9ab361582659cbee">curPoints</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="comment">//- Solve for motion</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02784.html#af7d39f0eac0af0ed5785935ac72a1e7d">solve</a>();</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="comment">//- Update topology</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a02784.html#ad57565956fd4064299f4bd3c4eebb1d4">updateMesh</a>(<span class="keyword">const</span> <a class="code" href="a01422.html">mapPolyMesh</a>&amp;);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;};</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02785_html"><div class="ttname"><a href="a02785.html">Foam::velocityMotionSolver</a></div><div class="ttdoc">Virtual base class for velocity motion solver. </div><div class="ttdef"><b>Definition:</b> <a href="a04805_source.html#l00054">velocityMotionSolver.H:54</a></div></div>
-<div class="ttc" id="a01422_html"><div class="ttname"><a href="a01422.html">Foam::mapPolyMesh</a></div><div class="ttdoc">Class containing mesh-to-mesh mapping information after a change in polyMesh topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08568_source.html#l00158">mapPolyMesh.H:158</a></div></div>
-<div class="ttc" id="a00084_html"><div class="ttname"><a href="a00084.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00117">PtrList.H:117</a></div></div>
-<div class="ttc" id="a02784_html_ad57565956fd4064299f4bd3c4eebb1d4"><div class="ttname"><a href="a02784.html#ad57565956fd4064299f4bd3c4eebb1d4">Foam::velocityLaplacianFvMotionSolver::updateMesh</a></div><div class="ttdeci">virtual void updateMesh(const mapPolyMesh &amp;)</div><div class="ttdoc">Update topology. </div><div class="ttdef"><b>Definition:</b> <a href="a06127_source.html#l00141">velocityLaplacianFvMotionSolver.C:141</a></div></div>
-<div class="ttc" id="a00875_html"><div class="ttname"><a href="a00875.html">Foam::fvMotionSolverCore</a></div><div class="ttdoc">Base class for fvMesh based motionSolvers. </div><div class="ttdef"><b>Definition:</b> <a href="a06125_source.html#l00048">fvMotionSolverCore.H:48</a></div></div>
-<div class="ttc" id="a02784_html"><div class="ttname"><a href="a02784.html">Foam::velocityLaplacianFvMotionSolver</a></div><div class="ttdoc">Mesh motion solver for an fvMesh. Based on solving the cell-centre Laplacian for the motion velocity...</div><div class="ttdef"><b>Definition:</b> <a href="a06128_source.html#l00053">velocityLaplacianFvMotionSolver.H:53</a></div></div>
-<div class="ttc" id="a02784_html_af51a19e31e7ec3d33b71008722e38814"><div class="ttname"><a href="a02784.html#af51a19e31e7ec3d33b71008722e38814">Foam::velocityLaplacianFvMotionSolver::~velocityLaplacianFvMotionSolver</a></div><div class="ttdeci">~velocityLaplacianFvMotionSolver()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06127_source.html#l00085">velocityLaplacianFvMotionSolver.C:85</a></div></div>
-<div class="ttc" id="a06125_html"><div class="ttname"><a href="a06125.html">fvMotionSolverCore.H</a></div></div>
-<div class="ttc" id="a01163_html"><div class="ttname"><a href="a01163.html">Foam::IOdictionary</a></div><div class="ttdoc">IOdictionary is derived from dictionary and IOobject to give the dictionary automatic IO functionalit...</div><div class="ttdef"><b>Definition:</b> <a href="a07706_source.html#l00053">IOdictionary.H:53</a></div></div>
-<div class="ttc" id="a02784_html_a897bb9550f17845c9ab361582659cbee"><div class="ttname"><a href="a02784.html#a897bb9550f17845c9ab361582659cbee">Foam::velocityLaplacianFvMotionSolver::curPoints</a></div><div class="ttdeci">virtual tmp&lt; pointField &gt; curPoints() const </div><div class="ttdoc">Return point location obtained from the current motion field. </div><div class="ttdef"><b>Definition:</b> <a href="a06127_source.html#l00092">velocityLaplacianFvMotionSolver.C:92</a></div></div>
-<div class="ttc" id="a04805_html"><div class="ttname"><a href="a04805.html">velocityMotionSolver.H</a></div></div>
-<div class="ttc" id="a02784_html_af7d39f0eac0af0ed5785935ac72a1e7d"><div class="ttname"><a href="a02784.html#af7d39f0eac0af0ed5785935ac72a1e7d">Foam::velocityLaplacianFvMotionSolver::solve</a></div><div class="ttdeci">virtual void solve()</div><div class="ttdoc">Solve for motion. </div><div class="ttdef"><b>Definition:</b> <a href="a06127_source.html#l00112">velocityLaplacianFvMotionSolver.C:112</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a02784_html_aef138abfbe29e5af1723fb4ad86536f1"><div class="ttname"><a href="a02784.html#aef138abfbe29e5af1723fb4ad86536f1">Foam::velocityLaplacianFvMotionSolver::cellMotionU</a></div><div class="ttdeci">volVectorField &amp; cellMotionU()</div><div class="ttdoc">Return reference to the cell motion velocity field. </div><div class="ttdef"><b>Definition:</b> <a href="a06128_source.html#l00102">velocityLaplacianFvMotionSolver.H:102</a></div></div>
-<div class="ttc" id="a02784_html_a26accf9108ccff778de6d8da45793fb9"><div class="ttname"><a href="a02784.html#a26accf9108ccff778de6d8da45793fb9">Foam::velocityLaplacianFvMotionSolver::TypeName</a></div><div class="ttdeci">TypeName(&quot;velocityLaplacian&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a06130_html"><div class="ttname"><a href="a06130.html">quadraticLinearUpwindFitPolynomial.H</a></div></div>
+<div class="ttc" id="a06123_html"><div class="ttname"><a href="a06123.html">PureUpwindFitScheme.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a05852_html"><div class="ttname"><a href="a05852.html">upwindCFCCellToFaceStencilObject.H</a></div></div>
+<div class="ttc" id="a10725_html_a8f3f16fd1bb972207f2918d99f5dbba9"><div class="ttname"><a href="a10725.html#a8f3f16fd1bb972207f2918d99f5dbba9">Foam::makePureUpwindFitSurfaceInterpolationScheme</a></div><div class="ttdeci">makePureUpwindFitSurfaceInterpolationScheme(linearPureUpwindFit, linearFitPolynomial, pureUpwindCFCCellToFaceStencilObject)</div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_e1879fa133c4c7d7be31da46fdc26b53.html">regionModel</a></li><li class="navelem"><a class="el" href="dir_20c1d0d82e141075254a9c9d121384c9.html">regionModelFunctionObject</a></li><li class="navelem"><a class="el" href="dir_1f4087e287de573e4dc4e64e35275f57.html">regionModelFunctionObject</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ff51fe012a37fcf6e2c3724d940b7d0e.html">Pstream</a></li><li class="navelem"><a class="el" href="dir_f35db020dd38cae7d6409f3bc98df172.html">mpi</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">regionModelFunctionObjectList.C</div>  </div>
+<div class="title">allReduce.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09422.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,125 +119,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09423.html">regionModelFunctionObjectList.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="a02127.html#a882e6e0923c2f628a504cf1d07184556">Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a02127.html#a882e6e0923c2f628a504cf1d07184556">   31</a></span>&#160;(</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="a02120.html">regionModel</a>&amp; owner</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;)</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a02020.html">PtrList&lt;regionModelFunctionObject&gt;</a>(),</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    owner_(owner),</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    dict_(dictionary::null)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InNamspace</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Various functions to wrap MPI_Allreduce</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    allReduceTemplates.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef allReduce_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define allReduce_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07806.html">UPstream.H</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a02127.html#a882e6e0923c2f628a504cf1d07184556">Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a02127.html#aef7d24204fcca30d2a86bbc241823645">   42</a></span>&#160;(</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a02120.html">regionModel</a>&amp; owner,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> readFields</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a02020.html">PtrList&lt;regionModelFunctionObject&gt;</a>(),</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    owner_(owner),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    dict_(dict)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span> (readFields)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="a01355.html">wordList</a> modelNames(dict.<a class="code" href="a00518.html#a0f6e0082a283505ed197ce3e0498326b">toc</a>());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    Selecting region model functions&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">if</span> (modelNames.size() &gt; 0)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            this-&gt;<a class="code" href="a03883.html#a6f8d72476baf295a054f72dfbc9c61c3">setSize</a>(modelNames.size());</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(modelNames, i)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; modelName = modelNames[i];</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                this-&gt;set</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                (</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                    i,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                    regionModelFunctionObject::New</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                    (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                        dict,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                        owner,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                        modelName</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                    )</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                );</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;    none&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<a class="code" href="a02127.html#a882e6e0923c2f628a504cf1d07184556">Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList</a></div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a02127.html#ab1d57453e9dc6d22369df9fe2c37faf7">   87</a></span>&#160;(</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02127.html">regionModelFunctionObjectList</a>&amp; cfol</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;:</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="a02020.html">PtrList&lt;regionModelFunctionObject&gt;</a>(cfol),</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    owner_(cfol.<a class="code" href="a02127.html#a1ebb81ec09514d2b22bb9889bed005b8">owner_</a>),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    dict_(cfol.<a class="code" href="a02127.html#aa5700875c20f122199c58a0874e88573">dict_</a>)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;{}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<a class="code" href="a02127.html#a822375a644370eb1ec93b5ac6b1a8987">Foam::regionModels::regionModelFunctionObjectList::</a></div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="a02127.html#a822375a644370eb1ec93b5ac6b1a8987">  100</a></span>&#160;<a class="code" href="a02127.html#a822375a644370eb1ec93b5ac6b1a8987">~regionModelFunctionObjectList</a>()</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{}</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="a02127.html#a97f68fddfa332c08747b539aa08b04f0">  106</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02127.html#a97f68fddfa332c08747b539aa08b04f0">Foam::regionModels::regionModelFunctionObjectList::preEvolveRegion</a>()</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;{</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(*<span class="keyword">this</span>, i)</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    {</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        this-&gt;operator[](i).preEvolveRegion();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a02127.html#a1c29659b87c1b970dc3f36dea66c295e">  115</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02127.html#a1c29659b87c1b970dc3f36dea66c295e">Foam::regionModels::regionModelFunctionObjectList::postEvolveRegion</a>()</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;{</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(*<span class="keyword">this</span>, i)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        this-&gt;operator[](i).postEvolveRegion();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02127_html_a1ebb81ec09514d2b22bb9889bed005b8"><div class="ttname"><a href="a02127.html#a1ebb81ec09514d2b22bb9889bed005b8">Foam::regionModels::regionModelFunctionObjectList::owner_</a></div><div class="ttdeci">regionModel &amp; owner_</div><div class="ttdoc">Reference to the owner region model. </div><div class="ttdef"><b>Definition:</b> <a href="a09423_source.html#l00063">regionModelFunctionObjectList.H:63</a></div></div>
-<div class="ttc" id="a02127_html_a822375a644370eb1ec93b5ac6b1a8987"><div class="ttname"><a href="a02127.html#a822375a644370eb1ec93b5ac6b1a8987">Foam::regionModels::regionModelFunctionObjectList::~regionModelFunctionObjectList</a></div><div class="ttdeci">virtual ~regionModelFunctionObjectList()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09422_source.html#l00100">regionModelFunctionObjectList.C:100</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a09423_html"><div class="ttname"><a href="a09423.html">regionModelFunctionObjectList.H</a></div></div>
-<div class="ttc" id="a02127_html_a97f68fddfa332c08747b539aa08b04f0"><div class="ttname"><a href="a02127.html#a97f68fddfa332c08747b539aa08b04f0">Foam::regionModels::regionModelFunctionObjectList::preEvolveRegion</a></div><div class="ttdeci">virtual void preEvolveRegion()</div><div class="ttdoc">Pre-evolve hook. </div><div class="ttdef"><b>Definition:</b> <a href="a09422_source.html#l00106">regionModelFunctionObjectList.C:106</a></div></div>
-<div class="ttc" id="a02127_html_a1c29659b87c1b970dc3f36dea66c295e"><div class="ttname"><a href="a02127.html#a1c29659b87c1b970dc3f36dea66c295e">Foam::regionModels::regionModelFunctionObjectList::postEvolveRegion</a></div><div class="ttdeci">virtual void postEvolveRegion()</div><div class="ttdoc">Post-evolve hook. </div><div class="ttdef"><b>Definition:</b> <a href="a09422_source.html#l00115">regionModelFunctionObjectList.C:115</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a02127_html"><div class="ttname"><a href="a02127.html">Foam::regionModels::regionModelFunctionObjectList</a></div><div class="ttdef"><b>Definition:</b> <a href="a09423_source.html#l00054">regionModelFunctionObjectList.H:54</a></div></div>
-<div class="ttc" id="a02127_html_a882e6e0923c2f628a504cf1d07184556"><div class="ttname"><a href="a02127.html#a882e6e0923c2f628a504cf1d07184556">Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList</a></div><div class="ttdeci">regionModelFunctionObjectList(regionModel &amp;owner)</div><div class="ttdoc">Null constructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09422_source.html#l00031">regionModelFunctionObjectList.C:31</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02127_html_aa5700875c20f122199c58a0874e88573"><div class="ttname"><a href="a02127.html#aa5700875c20f122199c58a0874e88573">Foam::regionModels::regionModelFunctionObjectList::dict_</a></div><div class="ttdeci">const dictionary dict_</div><div class="ttdoc">Dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a09423_source.html#l00066">regionModelFunctionObjectList.H:66</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; word &gt;</a></div></div>
-<div class="ttc" id="a00518_html_a0f6e0082a283505ed197ce3e0498326b"><div class="ttname"><a href="a00518.html#a0f6e0082a283505ed197ce3e0498326b">Foam::dictionary::toc</a></div><div class="ttdeci">wordList toc() const </div><div class="ttdoc">Return the table of contents. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00707">dictionary.C:707</a></div></div>
-<div class="ttc" id="a02020_html"><div class="ttname"><a href="a02020.html">Foam::PtrList&lt; regionModelFunctionObject &gt;</a></div></div>
-<div class="ttc" id="a02120_html"><div class="ttname"><a href="a02120.html">Foam::regionModels::regionModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a09414_source.html#l00057">regionModel.H:57</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a03883_html_a6f8d72476baf295a054f72dfbc9c61c3"><div class="ttname"><a href="a03883.html#a6f8d72476baf295a054f72dfbc9c61c3">setSize</a></div><div class="ttdeci">points setSize(newPointi)</div></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;mpi.h&gt;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type, <span class="keyword">class</span> BinaryOp&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a10725.html#a72b80be403dbd448a3df4483afd44ddf">allReduce</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;(</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    Type&amp; Value,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">int</span> count,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    MPI_Datatype MPIType,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    MPI_Op op,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> BinaryOp&amp; bop,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> tag,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> communicator</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#ifdef NoRepository</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#   include &quot;<a class="code" href="a09423.html">allReduceTemplates.C</a>&quot;</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a07806_html"><div class="ttname"><a href="a07806.html">UPstream.H</a></div></div>
+<div class="ttc" id="a09423_html"><div class="ttname"><a href="a09423.html">allReduceTemplates.C</a></div></div>
+<div class="ttc" id="a10725_html_a72b80be403dbd448a3df4483afd44ddf"><div class="ttname"><a href="a10725.html#a72b80be403dbd448a3df4483afd44ddf">Foam::allReduce</a></div><div class="ttdeci">void allReduce(Type &amp;Value, int count, MPI_Datatype MPIType, MPI_Op op, const BinaryOp &amp;bop, const int tag, const label communicator)</div><div class="ttdef"><b>Definition:</b> <a href="a09423_source.html#l00032">allReduceTemplates.C:32</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

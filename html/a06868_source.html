@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_35d1b8bea394c75820a29726f930e1b8.html">molecularDynamics</a></li><li class="navelem"><a class="el" href="dir_589d2223da338fceb897292fae8915cc.html">potential</a></li><li class="navelem"><a class="el" href="dir_9487009c2385b02a6805e2d8ecc37432.html">pairPotential</a></li><li class="navelem"><a class="el" href="dir_af06faa01f54f232122be5fb12cfebde.html">basic</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_35d1b8bea394c75820a29726f930e1b8.html">molecularDynamics</a></li><li class="navelem"><a class="el" href="dir_d688c861569b69efcb20a975bc1993fa.html">molecularMeasurements</a></li><li class="navelem"><a class="el" href="dir_842dca28d2bcc227f5882819415a5c7b.html">bufferedAccumulator</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">pairPotentialIO.C</div>  </div>
+<div class="title">bufferedAccumulatorI.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06868.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,49 +121,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06866.html">pairPotential.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07724.html">IOstreams.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="a01754.html#a66202adb41e45e18c12b4fd414513671">   29</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a01754.html#a66202adb41e45e18c12b4fd414513671">Foam::pairPotential::writeEnergyAndForceTables</a>(<a class="code" href="a01725.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Writing energy and force tables to file for potential &quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        &lt;&lt; <a class="code" href="a01754.html#a50fd7d13a0f7a6007ca5027b3bb8765a">name_</a> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a01355.html">List&lt; Pair &lt;scalar&gt;</a> &gt; eTab(<a class="code" href="a01754.html#ac6481b91b3f9d985f3466fe353a9026b">energyTable</a>());</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="a01355.html">List&lt; Pair &lt;scalar&gt;</a> &gt; fTab(<a class="code" href="a01754.html#a3e2af19b82a9c2790c298d7df8279ba0">forceTable</a>());</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">inline</span> Field&lt;Type&gt;&amp; bufferedAccumulator&lt;Type&gt;::accumulationBuffer()</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[nBuffers()];</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(eTab, <a class="code" href="a10675.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a>)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        os  &lt;&lt; eTab[<a class="code" href="a10675.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a>].<a class="code" href="a02720.html#a1c9828bc3de9502754d944c95a2ce0d9">first</a>()</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            &lt;&lt; <a class="code" href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">token::SPACE</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            &lt;&lt; eTab[<a class="code" href="a10675.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a>].second()</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            &lt;&lt; <a class="code" href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">token::SPACE</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            &lt;&lt; fTab[<a class="code" href="a10675.html#a4225a7492f7d468ad5b985282c8ee7b1">e</a>].second()</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> os.<a class="code" href="a01177.html#ad2e41c8280b6cdf93d39e1135d2abdf7">good</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02609_html_a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95"><div class="ttname"><a href="a02609.html#a684efe2f2e78731b859a7baeec2217c2ac08dae7edcb5c5bb959fee5971fbad95">Foam::token::SPACE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07774_source.html#l00095">token.H:95</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a01754_html_a66202adb41e45e18c12b4fd414513671"><div class="ttname"><a href="a01754.html#a66202adb41e45e18c12b4fd414513671">Foam::pairPotential::writeEnergyAndForceTables</a></div><div class="ttdeci">bool writeEnergyAndForceTables(Ostream &amp;os) const </div><div class="ttdef"><b>Definition:</b> <a href="a06868_source.html#l00029">pairPotentialIO.C:29</a></div></div>
-<div class="ttc" id="a01754_html_a3e2af19b82a9c2790c298d7df8279ba0"><div class="ttname"><a href="a01754.html#a3e2af19b82a9c2790c298d7df8279ba0">Foam::pairPotential::forceTable</a></div><div class="ttdeci">List&lt; Pair&lt; scalar &gt; &gt; forceTable() const </div><div class="ttdef"><b>Definition:</b> <a href="a06865_source.html#l00117">pairPotential.C:117</a></div></div>
-<div class="ttc" id="a10675_html_a4225a7492f7d468ad5b985282c8ee7b1"><div class="ttname"><a href="a10675.html#a4225a7492f7d468ad5b985282c8ee7b1">Foam::e</a></div><div class="ttdeci">const double e</div><div class="ttdoc">Elementary charge. </div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00078">doubleFloat.H:78</a></div></div>
-<div class="ttc" id="a02720_html_a1c9828bc3de9502754d944c95a2ce0d9"><div class="ttname"><a href="a02720.html#a1c9828bc3de9502754d944c95a2ce0d9">Foam::UList::first</a></div><div class="ttdeci">T &amp; first()</div><div class="ttdoc">Return the first element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07619_source.html#l00117">UListI.H:117</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07524_source.html#l00059">HashTable.H:59</a></div></div>
-<div class="ttc" id="a06866_html"><div class="ttname"><a href="a06866.html">pairPotential.H</a></div></div>
-<div class="ttc" id="a01177_html_ad2e41c8280b6cdf93d39e1135d2abdf7"><div class="ttname"><a href="a01177.html#ad2e41c8280b6cdf93d39e1135d2abdf7">Foam::IOstream::good</a></div><div class="ttdeci">bool good() const </div><div class="ttdoc">Return true if next operation might succeed. </div><div class="ttdef"><b>Definition:</b> <a href="a07729_source.html#l00333">IOstream.H:333</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a01754_html_ac6481b91b3f9d985f3466fe353a9026b"><div class="ttname"><a href="a01754.html#ac6481b91b3f9d985f3466fe353a9026b">Foam::pairPotential::energyTable</a></div><div class="ttdeci">List&lt; Pair&lt; scalar &gt; &gt; energyTable() const </div><div class="ttdef"><b>Definition:</b> <a href="a06865_source.html#l00154">pairPotential.C:154</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a07724_html"><div class="ttname"><a href="a07724.html">IOstreams.H</a></div><div class="ttdoc">Useful combination of include files which define Sin, Sout and Serr and the use of IO streams general...</div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a01754_html_a50fd7d13a0f7a6007ca5027b3bb8765a"><div class="ttname"><a href="a01754.html#a50fd7d13a0f7a6007ca5027b3bb8765a">Foam::pairPotential::name_</a></div><div class="ttdeci">word name_</div><div class="ttdef"><b>Definition:</b> <a href="a06866_source.html#l00064">pairPotential.H:64</a></div></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> Field&lt;Type&gt;&amp; bufferedAccumulator&lt;Type&gt;::accumulationBuffer()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[nBuffers()];</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00166.html#a60906f5fe61310a2a46c9713d0f6b45c">   48</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00166.html#a60906f5fe61310a2a46c9713d0f6b45c">bufferedAccumulator&lt;Type&gt;::averagesTaken</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> averagesTaken_;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a00166.html#aeb9b719c7ff6f1bc2f72d061f4a4afb1">   55</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00166.html#aeb9b719c7ff6f1bc2f72d061f4a4afb1">bufferedAccumulator&lt;Type&gt;::nBuffers</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> bufferOffsets_.size();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="a00166.html#afb840aeadbaeb41ccef2b55365251649">   62</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a00166.html#afb840aeadbaeb41ccef2b55365251649">bufferedAccumulator&lt;Type&gt;::bufferLength</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>)[0].size();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a00166.html#a7a87ba5417390e5f89c66bb9b514c418">   69</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="a01364.html">List&lt;label&gt;</a>&amp; <a class="code" href="a00166.html#a7a87ba5417390e5f89c66bb9b514c418">bufferedAccumulator&lt;Type&gt;::bufferOffsets</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> bufferOffsets_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a00166_html_a7a87ba5417390e5f89c66bb9b514c418"><div class="ttname"><a href="a00166.html#a7a87ba5417390e5f89c66bb9b514c418">Foam::bufferedAccumulator::bufferOffsets</a></div><div class="ttdeci">const List&lt; label &gt; &amp; bufferOffsets() const </div><div class="ttdef"><b>Definition:</b> <a href="a06868_source.html#l00069">bufferedAccumulatorI.H:69</a></div></div>
+<div class="ttc" id="a00166_html_a60906f5fe61310a2a46c9713d0f6b45c"><div class="ttname"><a href="a00166.html#a60906f5fe61310a2a46c9713d0f6b45c">Foam::bufferedAccumulator::averagesTaken</a></div><div class="ttdeci">label averagesTaken() const </div><div class="ttdef"><b>Definition:</b> <a href="a06868_source.html#l00048">bufferedAccumulatorI.H:48</a></div></div>
+<div class="ttc" id="a00166_html_aeb9b719c7ff6f1bc2f72d061f4a4afb1"><div class="ttname"><a href="a00166.html#aeb9b719c7ff6f1bc2f72d061f4a4afb1">Foam::bufferedAccumulator::nBuffers</a></div><div class="ttdeci">label nBuffers() const </div><div class="ttdef"><b>Definition:</b> <a href="a06868_source.html#l00055">bufferedAccumulatorI.H:55</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00166_html_afb840aeadbaeb41ccef2b55365251649"><div class="ttname"><a href="a00166.html#afb840aeadbaeb41ccef2b55365251649">Foam::bufferedAccumulator::bufferLength</a></div><div class="ttdeci">label bufferLength() const </div><div class="ttdef"><b>Definition:</b> <a href="a06868_source.html#l00062">bufferedAccumulatorI.H:62</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

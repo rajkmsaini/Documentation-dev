@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_22e3beccf9f956a3c7bfcabae9a0dde0.html">conversion</a></li><li class="navelem"><a class="el" href="dir_71256a56b8286fe4549ede75413af27b.html">meshWriter</a></li><li class="navelem"><a class="el" href="dir_167744edb4cb39c8a887b03b84cdee98.html">starcd</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a28bb8a003fe9b05e061f79ecbbcb476.html">combustionModels</a></li><li class="navelem"><a class="el" href="dir_efa96353c8b7dae32ae84afea1b94888.html">rhoCombustionModel</a></li><li class="navelem"><a class="el" href="dir_38e48242d5b23333a8f001ead95135c0.html">rhoThermoCombustion</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">STARCDMeshWriter.H</div>  </div>
+<div class="title">rhoThermoCombustion.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04670.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -120,138 +120,111 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::meshWriters::STARCD</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::rhoThermoCombustion</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Writes polyMesh in pro-STAR (v4) bnd/cel/vrt format</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Density-based thermo model wrapper for combustion models</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    The cellTableId and cellTable information are used (if available).</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Otherwise the cellZones are used (if available).</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    rhoThermoCombustion.C</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">    STARCDMeshWriter.C</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef rhoThermoCombustion_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define rhoThermoCombustion_H</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifndef STARCDMeshWriter_H</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define STARCDMeshWriter_H</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04668.html">meshWriter.H</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07729.html">IOstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08446.html">autoPtr.H</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04667.html">rhoCombustionModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09967.html">rhoChemistryModel.H</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">namespace </span>combustionModels</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">namespace </span>meshWriters</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">                    Class meshWriters::STARCD Declaration</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a02416.html">   55</a></span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">class </span><a class="code" href="a02416.html">STARCD</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01471.html">meshWriter</a></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// Private Data</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">                    class rhoThermoCombustion Declaration</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a02200.html">   52</a></span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">class </span><a class="code" href="a02200.html">rhoThermoCombustion</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">public</span> <a class="code" href="a02195.html">rhoCombustionModel</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Private Member Functions</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">//- Construct as copy (not implemented)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a02200.html">rhoThermoCombustion</a>(<span class="keyword">const</span> <a class="code" href="a02200.html">rhoThermoCombustion</a>&amp;);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* defaultBoundaryName;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02200.html">rhoThermoCombustion</a>&amp;);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Private Member Functions</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Disallow default bitwise copy construct</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="a02416.html">STARCD</a>(<span class="keyword">const</span> <a class="code" href="a02416.html">STARCD</a>&amp;);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// Protected data</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//- Disallow default bitwise assignment</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> operator=(<span class="keyword">const</span> <a class="code" href="a02416.html">STARCD</a>&amp;);</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="a02200.html#a2355e892047603dfd2c190ee635fb3ee">   70</a></span>&#160;        <span class="comment">//- Pointer to thermo model</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="a00086.html">autoPtr&lt;rhoReactionThermo&gt;</a> <a class="code" href="a02200.html#a2355e892047603dfd2c190ee635fb3ee">thermoPtr_</a>;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="comment">//- Pro-STAR 4+ header format</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> writeHeader(<a class="code" href="a01725.html">Ostream</a>&amp;, <span class="keyword">const</span> <span class="keywordtype">char</span>* filetype);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">//- Write points</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordtype">void</span> writePoints(<span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; baseName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//- Write cells</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordtype">void</span> writeCells(<span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; baseName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//- Write boundary</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordtype">void</span> writeBoundary(<span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; baseName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordtype">void</span> getCellTable();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="comment">//- Construct from components</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="a02200.html">rhoThermoCombustion</a></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        (</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; modelType,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00876.html">fvMesh</a>&amp; <a class="code" href="a00323.html#a628df3d8f239d8393610d6310eb56ad1">mesh</a>,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keyword">const</span> <a class="code" href="a02869.html">word</a>&amp; phaseName</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        );</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> findDefaultBoundary() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">//- Destructor</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02200.html#a95189597d5c54cd35f85f8b347df78d5">~rhoThermoCombustion</a>();</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Static data members</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="a02416.html#af6a43d89badc1bc54a3bf6f6c6001aad">   94</a></span>&#160;        <span class="comment">//- Face addressing from OpenFOAM faces -&gt; pro-STAR faces</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <a class="code" href="a02416.html#af6a43d89badc1bc54a3bf6f6c6001aad">foamToStarFaceAddr</a>[4][6];</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">//- Open a file for writing</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="a02416.html">STARCD</a></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        (</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01905.html">polyMesh</a>&amp;,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">const</span> scalar <a class="code" href="a01471.html#a1ca05182476b410176848d7e8f27a438">scaleFactor</a> = 1.0</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        );</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">//- Destructor</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="a02416.html#a351937685dc20b84cc4ade18cce2296f">~STARCD</a>();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Member Functions</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="comment">//- Return access to the thermo package</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02198.html">rhoReactionThermo</a>&amp; <a class="code" href="a02200.html#a8813e6dc90744663c21a0ae8b705e57f">thermo</a>();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//- Return const access to the thermo package</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="a02198.html">rhoReactionThermo</a>&amp; <a class="code" href="a02200.html#a8813e6dc90744663c21a0ae8b705e57f">thermo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Return const access to the density field</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a02200.html#a9f74bf0467ab145920ee542ceb8e2ae6">rho</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;} <span class="comment">// End namespace combustionModels</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">// Edit</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="comment">//- Remove STAR-CD files for the baseName</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keywordtype">void</span> <a class="code" href="a02416.html#a13f53d4c8b3630d18bc4f74a91850099">rmFiles</a>(<span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; baseName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="comment">// Write</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="comment">//- Write volume mesh</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="a02416.html#a8124aecc769d3ddde3b4ee98d2998a69">write</a></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            (</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00774.html">fileName</a>&amp; <a class="code" href="a04280.html#a512540e874d513c0f7b5d869c11e75af">meshName</a> = <a class="code" href="a00774.html#a9fde37ecaebb960b3b4c40f17ec3a1ee">fileName::null</a></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;};</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;} <span class="comment">// End namespace meshWriters</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02416_html"><div class="ttname"><a href="a02416.html">Foam::meshWriters::STARCD</a></div><div class="ttdoc">Writes polyMesh in pro-STAR (v4) bnd/cel/vrt format. </div><div class="ttdef"><b>Definition:</b> <a href="a04670_source.html#l00055">STARCDMeshWriter.H:55</a></div></div>
-<div class="ttc" id="a02416_html_af6a43d89badc1bc54a3bf6f6c6001aad"><div class="ttname"><a href="a02416.html#af6a43d89badc1bc54a3bf6f6c6001aad">Foam::meshWriters::STARCD::foamToStarFaceAddr</a></div><div class="ttdeci">static const label foamToStarFaceAddr[4][6]</div><div class="ttdoc">Face addressing from OpenFOAM faces -> pro-STAR faces. </div><div class="ttdef"><b>Definition:</b> <a href="a04670_source.html#l00094">STARCDMeshWriter.H:94</a></div></div>
-<div class="ttc" id="a01471_html"><div class="ttname"><a href="a01471.html">Foam::meshWriter</a></div><div class="ttdoc">write OpenFOAM meshes and/or results to another CFD format </div><div class="ttdef"><b>Definition:</b> <a href="a04668_source.html#l00089">meshWriter.H:89</a></div></div>
-<div class="ttc" id="a04668_html"><div class="ttname"><a href="a04668.html">meshWriter.H</a></div></div>
-<div class="ttc" id="a02416_html_a351937685dc20b84cc4ade18cce2296f"><div class="ttname"><a href="a02416.html#a351937685dc20b84cc4ade18cce2296f">Foam::meshWriters::STARCD::~STARCD</a></div><div class="ttdeci">virtual ~STARCD()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00483">STARCDMeshWriter.C:483</a></div></div>
-<div class="ttc" id="a01471_html_a1ca05182476b410176848d7e8f27a438"><div class="ttname"><a href="a01471.html#a1ca05182476b410176848d7e8f27a438">Foam::meshWriter::scaleFactor</a></div><div class="ttdeci">void scaleFactor(const scalar scaling)</div><div class="ttdoc">Set points scaling. </div><div class="ttdef"><b>Definition:</b> <a href="a04668_source.html#l00156">meshWriter.H:156</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a07729_html"><div class="ttname"><a href="a07729.html">IOstream.H</a></div></div>
-<div class="ttc" id="a02416_html_a8124aecc769d3ddde3b4ee98d2998a69"><div class="ttname"><a href="a02416.html#a8124aecc769d3ddde3b4ee98d2998a69">Foam::meshWriters::STARCD::write</a></div><div class="ttdeci">virtual bool write(const fileName &amp;meshName=fileName::null) const </div><div class="ttdoc">Write volume mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00498">STARCDMeshWriter.C:498</a></div></div>
-<div class="ttc" id="a00774_html_a9fde37ecaebb960b3b4c40f17ec3a1ee"><div class="ttname"><a href="a00774.html#a9fde37ecaebb960b3b4c40f17ec3a1ee">Foam::fileName::null</a></div><div class="ttdeci">static const fileName null</div><div class="ttdoc">An empty fileName. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00097">fileName.H:97</a></div></div>
-<div class="ttc" id="a01905_html"><div class="ttname"><a href="a01905.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08579_source.html#l00074">polyMesh.H:74</a></div></div>
-<div class="ttc" id="a00774_html"><div class="ttname"><a href="a00774.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08907_source.html#l00069">fileName.H:69</a></div></div>
-<div class="ttc" id="a01725_html"><div class="ttname"><a href="a01725.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00053">Ostream.H:53</a></div></div>
-<div class="ttc" id="a02416_html_a13f53d4c8b3630d18bc4f74a91850099"><div class="ttname"><a href="a02416.html#a13f53d4c8b3630d18bc4f74a91850099">Foam::meshWriters::STARCD::rmFiles</a></div><div class="ttdeci">void rmFiles(const fileName &amp;baseName) const </div><div class="ttdoc">Remove STAR-CD files for the baseName. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00489">STARCDMeshWriter.C:489</a></div></div>
-<div class="ttc" id="a04280_html_a512540e874d513c0f7b5d869c11e75af"><div class="ttname"><a href="a04280.html#a512540e874d513c0f7b5d869c11e75af">meshName</a></div><div class="ttdeci">static char meshName[]</div><div class="ttdef"><b>Definition:</b> <a href="a04280_source.html#l00007">globalFoam.H:7</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00876_html"><div class="ttname"><a href="a00876.html">Foam::fvMesh</a></div><div class="ttdoc">Mesh data needed to do the Finite Volume discretisation. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00078">fvMesh.H:78</a></div></div>
+<div class="ttc" id="a09967_html"><div class="ttname"><a href="a09967.html">rhoChemistryModel.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a08446_html"><div class="ttname"><a href="a08446.html">autoPtr.H</a></div></div>
+<div class="ttc" id="a04667_html"><div class="ttname"><a href="a04667.html">rhoCombustionModel.H</a></div></div>
+<div class="ttc" id="a02200_html_a9f74bf0467ab145920ee542ceb8e2ae6"><div class="ttname"><a href="a02200.html#a9f74bf0467ab145920ee542ceb8e2ae6">Foam::combustionModels::rhoThermoCombustion::rho</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; rho() const </div><div class="ttdoc">Return const access to the density field. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00065">rhoThermoCombustion.C:65</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00323_html_a628df3d8f239d8393610d6310eb56ad1"><div class="ttname"><a href="a00323.html#a628df3d8f239d8393610d6310eb56ad1">Foam::combustionModel::mesh</a></div><div class="ttdeci">const fvMesh &amp; mesh() const </div><div class="ttdoc">Return const access to the mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a04626_source.html#l00028">combustionModelI.H:28</a></div></div>
+<div class="ttc" id="a02200_html_a2355e892047603dfd2c190ee635fb3ee"><div class="ttname"><a href="a02200.html#a2355e892047603dfd2c190ee635fb3ee">Foam::combustionModels::rhoThermoCombustion::thermoPtr_</a></div><div class="ttdeci">autoPtr&lt; rhoReactionThermo &gt; thermoPtr_</div><div class="ttdoc">Pointer to thermo model. </div><div class="ttdef"><b>Definition:</b> <a href="a04670_source.html#l00070">rhoThermoCombustion.H:70</a></div></div>
+<div class="ttc" id="a02195_html"><div class="ttname"><a href="a02195.html">Foam::combustionModels::rhoCombustionModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a04667_source.html#l00055">rhoCombustionModel.H:55</a></div></div>
+<div class="ttc" id="a02200_html"><div class="ttname"><a href="a02200.html">Foam::combustionModels::rhoThermoCombustion</a></div><div class="ttdef"><b>Definition:</b> <a href="a04670_source.html#l00052">rhoThermoCombustion.H:52</a></div></div>
+<div class="ttc" id="a00086_html"><div class="ttname"><a href="a00086.html">Foam::autoPtr</a></div><div class="ttdoc">An auto-pointer similar to the STL auto_ptr but with automatic casting to a reference to the type and...</div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00117">PtrList.H:117</a></div></div>
+<div class="ttc" id="a02200_html_a8813e6dc90744663c21a0ae8b705e57f"><div class="ttname"><a href="a02200.html#a8813e6dc90744663c21a0ae8b705e57f">Foam::combustionModels::rhoThermoCombustion::thermo</a></div><div class="ttdeci">virtual rhoReactionThermo &amp; thermo()</div><div class="ttdoc">Return access to the thermo package. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00051">rhoThermoCombustion.C:51</a></div></div>
+<div class="ttc" id="a02200_html_a95189597d5c54cd35f85f8b347df78d5"><div class="ttname"><a href="a02200.html#a95189597d5c54cd35f85f8b347df78d5">Foam::combustionModels::rhoThermoCombustion::~rhoThermoCombustion</a></div><div class="ttdeci">virtual ~rhoThermoCombustion()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a04669_source.html#l00044">rhoThermoCombustion.C:44</a></div></div>
+<div class="ttc" id="a02198_html"><div class="ttname"><a href="a02198.html">Foam::rhoReactionThermo</a></div><div class="ttdoc">Foam::rhoReactionThermo. </div><div class="ttdef"><b>Definition:</b> <a href="a10212_source.html#l00051">rhoReactionThermo.H:51</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

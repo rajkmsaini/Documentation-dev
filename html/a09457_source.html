@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_76cda00b2119e3ca1b811eb59fd40c16.html">surfaceFilmModels</a></li><li class="navelem"><a class="el" href="dir_1a2449bf10d166cb32b637bb1f2c8120.html">submodels</a></li><li class="navelem"><a class="el" href="dir_748187a7aee928611e312f378f23d627.html">kinematic</a></li><li class="navelem"><a class="el" href="dir_316ed8c8c990b1f605656b6abeafc157.html">filmThermoModel</a></li><li class="navelem"><a class="el" href="dir_7e2e1c61d3037120d3674f688c8ec618.html">liquidFilmThermo</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1cee61ac5e24023b73c87e3e265bd2be.html">regionModels</a></li><li class="navelem"><a class="el" href="dir_c87ef3e6b78969bdc2ee28161ce4593f.html">regionCoupling</a></li><li class="navelem"><a class="el" href="dir_a4cfb2738e85b1c7ee78dc9a7b4097d6.html">derivedFvPatchFields</a></li><li class="navelem"><a class="el" href="dir_971d1f5b95ab05b6f8149dd18c6f7b4a.html">filmPyrolysisRadiativeCoupledMixed</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">liquidFilmThermo.C</div>  </div>
+<div class="title">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a09457.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,544 +121,489 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09458.html">liquidFilmThermo.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08159.html">demandDrivenData.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09531.html">thermoSingleLayer.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10163.html">SLGThermo.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09458.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07278.html">mappedPatchBase.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>regionModels</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span>surfaceFilmModels</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="a10750.html#ac1ace6ec7343b253553658d2bcca8e33">defineTypeNameAndDebug</a>(liquidFilmThermo, 0);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a10750.html#a8e65981fc49a9cc390da2af27417606f">addToRunTimeSelectionTable</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;(</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    filmThermoModel,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    liquidFilmThermo,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    dictionary</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <a class="code" href="a00784.html#afb09096e0a29a690f4e1c9ed38601a49">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::filmModelType</a>&amp;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;filmModel()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    HashTable&lt;const filmModelType*&gt; models</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        = db().<a class="code" href="a02131.html#ab5a56b597db315d880e81c09a4341244">time</a>().<a class="code" href="a01688.html#a8e23a9a988d3882cb74a1ada1e71f50b">lookupClass</a>&lt;<a class="code" href="a00784.html#afb09096e0a29a690f4e1c9ed38601a49">filmModelType</a>&gt;();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(HashTable&lt;const filmModelType*&gt;, models, iter)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">if</span> (iter()-&gt;regionMesh().<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>() == filmRegionName_)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">return</span> *iter();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">   55</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">liquidFilmThermo::thermoFilm</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (!isA&lt;thermoSingleLayer&gt;(<a class="code" href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">owner_</a>))</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        (</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="stringliteral">&quot;const thermoSingleLayer&amp; liquidFilmThermo::thermoFilm() const&quot;</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        )</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Thermo model requires a &quot;</span> &lt;&lt; thermoSingleLayer::typeName</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; film to supply the pressure and temperature, but &quot;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            &lt;&lt; <a class="code" href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">owner_</a>.type() &lt;&lt; <span class="stringliteral">&quot; film model selected.  &quot;</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Use the &#39;useReferenceValues&#39; flag to employ reference &quot;</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;pressure and temperature&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10675.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> refCast&lt;const thermoSingleLayer&gt;(<a class="code" href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">owner_</a>);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a01349.html#a5673e50c4f933c26fce60fdc3fb74323">   74</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a01349.html#a5673e50c4f933c26fce60fdc3fb74323">liquidFilmThermo::initLiquid</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a> != NULL)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    dict.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;liquid&quot;</span>) &gt;&gt; <a class="code" href="a01349.html#a50fd7d13a0f7a6007ca5027b3bb8765a">name_</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    DynamicList&lt;word&gt; modelNames;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(HashTable&lt;const filmModelType*&gt;, models, iter)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        modelNames.append(iter()-&gt;regionMesh().<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>());</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;Unable to locate film region &quot;</span> &lt;&lt; filmRegionName_</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;.  Available regions include: &quot;</span> &lt;&lt; modelNames</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> **models.begin();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">const</span> <a class="code" href="a00784.html#aafc45507cbceff7c24d49e90e4b050b7">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<a class="code" href="a00784.html#aafc45507cbceff7c24d49e90e4b050b7">pyrolysisModelType</a>&amp;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;pyrModel()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    HashTable&lt;const pyrolysisModelType*&gt; models =</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        db().<a class="code" href="a02131.html#ab5a56b597db315d880e81c09a4341244">time</a>().<a class="code" href="a01688.html#a8e23a9a988d3882cb74a1ada1e71f50b">lookupClass</a>&lt;<a class="code" href="a00784.html#aafc45507cbceff7c24d49e90e4b050b7">pyrolysisModelType</a>&gt;();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(HashTable&lt;const pyrolysisModelType*&gt;, models, iter)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">if</span> (iter()-&gt;regionMesh().<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>() == pyrolysisRegionName_)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">return</span> *iter();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">owner_</a>.<a class="code" href="a02120.html#a3f74d6f26fb409562d28d2365d1bbf12">primaryMesh</a>().<a class="code" href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">foundObject</a>&lt;<a class="code" href="a02321.html">SLGThermo</a>&gt;(<span class="stringliteral">&quot;SLGThermo&quot;</span>))</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">// retrieve from film thermo</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="code" href="a01349.html#aa10788def1b8dfa8b174af3f0586ab8f">ownLiquid_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02321.html">SLGThermo</a>&amp; <a class="code" href="a02574.html">thermo</a> =</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <a class="code" href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">owner_</a>.<a class="code" href="a02120.html#a3f74d6f26fb409562d28d2365d1bbf12">primaryMesh</a>().<a class="code" href="a01678.html#affcae20935bdf1726ec1f822228a2330">lookupObject</a>&lt;<a class="code" href="a02321.html">SLGThermo</a>&gt;(<span class="stringliteral">&quot;SLGThermo&quot;</span>);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> <span class="keywordtype">id</span> = thermo.<a class="code" href="a02321.html#ad8e2f67bfe191385c993ea6c60d25a0a">liquidId</a>(<a class="code" href="a01349.html#a50fd7d13a0f7a6007ca5027b3bb8765a">name_</a>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a> = &amp;thermo.<a class="code" href="a02321.html#a5380a8807acfea3ce69f4d4386f49f64">liquids</a>().<a class="code" href="a01350.html#a67d9f77fcf67fad544225c6e5243b1e2">properties</a>()[id];</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">// new liquid create</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="code" href="a01349.html#aa10788def1b8dfa8b174af3f0586ab8f">ownLiquid_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    DynamicList&lt;word&gt; modelNames;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(HashTable&lt;const pyrolysisModelType*&gt;, models, iter)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        modelNames.append(iter()-&gt;regionMesh().<a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>());</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;Unable to locate pyrolysis region &quot;</span> &lt;&lt; pyrolysisRegionName_</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;.  Available regions include: &quot;</span> &lt;&lt; modelNames</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        &lt;&lt; <a class="code" href="a10725.html#a447107a607d03e417307c203fa5fb44b">abort</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> **models.begin();</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a> = <span class="keyword">new</span> <a class="code" href="a01351.html">liquidProperties</a>(dict.<a class="code" href="a00518.html#a42a549aa3e2c88399585b6462f6dbeb3">subDict</a>(<a class="code" href="a01349.html#a50fd7d13a0f7a6007ca5027b3bb8765a">name_</a> + <span class="stringliteral">&quot;Coeffs&quot;</span>));</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<a class="code" href="a01349.html#aaab1255e9682d0c0df807bbfe940c530">liquidFilmThermo::liquidFilmThermo</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="a01349.html#a2f446cf03779b6a7d5d49d56311fd057">  106</a></span>&#160;(</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a02466.html">surfaceFilmModel</a>&amp; owner,</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;)</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;:</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="a00785.html">filmThermoModel</a>(typeName, owner, dict),</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    name_(<span class="stringliteral">&quot;unknown_liquid&quot;</span>),</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    liquidPtr_(NULL),</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    ownLiquid_(<span class="keyword">false</span>),</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    useReferenceValues_(<a class="code" href="a10675.html#a128e6922f1b49f939c43266d8ad70ab8">readBool</a>(coeffDict_.lookup(<span class="stringliteral">&quot;useReferenceValues&quot;</span>))),</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    pRef_(0.0),</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    TRef_(0.0)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    initLiquid(coeffDict_);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordflow">if</span> (useReferenceValues_)</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        coeffDict_.lookup(<span class="stringliteral">&quot;pRef&quot;</span>) &gt;&gt; pRef_;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        coeffDict_.lookup(<span class="stringliteral">&quot;TRef&quot;</span>) &gt;&gt; TRef_;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
-<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="a01349.html#a80314d2c049aedaf23246c6311f43156">  131</a></span>&#160;<a class="code" href="a01349.html#a80314d2c049aedaf23246c6311f43156">liquidFilmThermo::~liquidFilmThermo</a>()</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;{</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#aa10788def1b8dfa8b174af3f0586ab8f">ownLiquid_</a>)</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <a class="code" href="a10675.html#a676ff999562d389fd174d693e17d230a">deleteDemandDrivenData</a>(<a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a>);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="a01349.html#a458824760a535c81f2c31586a907dc7a">  142</a></span>&#160;<span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a01349.html#a458824760a535c81f2c31586a907dc7a">liquidFilmThermo::name</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01349.html#a50fd7d13a0f7a6007ca5027b3bb8765a">name_</a>;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;scalar <a class="code" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">liquidFilmThermo::rho</a></div>
-<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="a01349.html#a339cdc8b0e2a4a0712ba30694e24c79c">  149</a></span>&#160;(</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;{</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;rho(p, T);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;}</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;scalar <a class="code" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">liquidFilmThermo::mu</a></div>
-<div class="line"><a name="l00159"></a><span class="lineno"><a class="line" href="a01349.html#abbfc8b946b079976751fabd89008f265">  159</a></span>&#160;(</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;{</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;mu(p, T);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;}</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;scalar <a class="code" href="a01349.html#a5292706a64558b88dc07af840513cb71">liquidFilmThermo::sigma</a></div>
-<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="a01349.html#a977bde99f3f597b09c928b2ed46e5b9c">  169</a></span>&#160;(</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;{</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;sigma(p, T);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;scalar <a class="code" href="a01349.html#a189768d7784b3f4d6300630f60482f21">liquidFilmThermo::Cp</a></div>
-<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="a01349.html#a13872ef65de3c5b1295e9e922f959b23">  179</a></span>&#160;(</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;{</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;Cp(p, T);</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;}</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;scalar <a class="code" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">liquidFilmThermo::kappa</a></div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="a01349.html#a36359c7c0c96df967105b3c9dbaba13e">  189</a></span>&#160;(</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;{</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;K(p, T);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</a></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">  103</a></span>&#160;(</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;:</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    mixedFvPatchScalarField(p, iF),</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="a02560.html">temperatureCoupledBase</a>(patch(), <span class="stringliteral">&quot;undefined&quot;</span>, <span class="stringliteral">&quot;undefined&quot;</span>, <span class="stringliteral">&quot;undefined-K&quot;</span>),</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    filmRegionName_(<span class="stringliteral">&quot;surfaceFilmProperties&quot;</span>),</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    pyrolysisRegionName_(<span class="stringliteral">&quot;pyrolysisProperties&quot;</span>),</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    TnbrName_(<span class="stringliteral">&quot;undefined-Tnbr&quot;</span>),</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    QrName_(<span class="stringliteral">&quot;undefined-Qr&quot;</span>),</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    convectiveScaling_(1.0),</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    filmDeltaDry_(0.0),</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    filmDeltaWet_(0.0)</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    this-&gt;refValue() = 0.0;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    this-&gt;refGrad() = 0.0;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    this-&gt;valueFraction() = 1.0;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</a></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="a00784.html#a2ceb67b40eabaf7f647b033ec879a840">  126</a></span>&#160;(</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00784.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a>&amp; psf,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp; mapper</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;:</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    mixedFvPatchScalarField(psf, p, iF, mapper),</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="a02560.html">temperatureCoupledBase</a>(patch(), psf),</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    filmRegionName_(psf.filmRegionName_),</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    pyrolysisRegionName_(psf.pyrolysisRegionName_),</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    TnbrName_(psf.TnbrName_),</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    QrName_(psf.QrName_),</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    convectiveScaling_(psf.convectiveScaling_),</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    filmDeltaDry_(psf.filmDeltaDry_),</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    filmDeltaWet_(psf.filmDeltaWet_)</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;{}</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</a></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00147"></a><span class="lineno"><a class="line" href="a00784.html#ae673557ad99c16b355a4455174d3dd20">  147</a></span>&#160;(</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;)</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;:</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    mixedFvPatchScalarField(p, iF),</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="a02560.html">temperatureCoupledBase</a>(patch(), dict),</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    filmRegionName_</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    (</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;<a class="code" href="a02869.html">word</a>&gt;(<span class="stringliteral">&quot;filmRegion&quot;</span>, <span class="stringliteral">&quot;surfaceFilmProperties&quot;</span>)</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    ),</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    pyrolysisRegionName_</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    (</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;<a class="code" href="a02869.html">word</a>&gt;(<span class="stringliteral">&quot;pyrolysisRegion&quot;</span>, <span class="stringliteral">&quot;pyrolysisProperties&quot;</span>)</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    ),</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    TnbrName_(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;Tnbr&quot;</span>)),</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    QrName_(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;Qr&quot;</span>)),</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    convectiveScaling_(dict.<a class="code" href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">lookupOrDefault</a>&lt;scalar&gt;(<span class="stringliteral">&quot;convectiveScaling&quot;</span>, 1.0)),</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    filmDeltaDry_(<a class="code" href="a10725.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;filmDeltaDry&quot;</span>))),</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    filmDeltaWet_(<a class="code" href="a10725.html#a828d57f6d9b9806c086a3f840a147115">readScalar</a>(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;filmDeltaWet&quot;</span>)))</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;{</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">if</span> (!isA&lt;mappedPatchBase&gt;(this-&gt;patch().patch()))</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    {</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;&#39; not type &#39;&quot;</span> &lt;&lt; mappedPatchBase::typeName &lt;&lt; <span class="stringliteral">&quot;&#39;&quot;</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;\n    for patch &quot;</span> &lt;&lt; p.<a class="code" href="a00885.html#a75b72488d2e82151b025744974919d5d">name</a>()</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; of field &quot;</span> &lt;&lt; <a class="code" href="a03120.html#a942cd19121a46cdc649099eb27c74b18">dimensionedInternalField</a>().name()</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; in file &quot;</span> &lt;&lt; <a class="code" href="a03120.html#a942cd19121a46cdc649099eb27c74b18">dimensionedInternalField</a>().objectPath()</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    }</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <a class="code" href="a00886.html#a6a896c9a07142ef7985d976d61181176">fvPatchScalarField::operator=</a>(<a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<span class="stringliteral">&quot;value&quot;</span>, dict, p.<a class="code" href="a00885.html#aefe0792b5b0175e6022a92a906fdf053">size</a>()));</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordflow">if</span> (dict.<a class="code" href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;refValue&quot;</span>))</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="comment">// Full restart</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        refValue() = <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<span class="stringliteral">&quot;refValue&quot;</span>, dict, p.<a class="code" href="a00885.html#aefe0792b5b0175e6022a92a906fdf053">size</a>());</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        refGrad() = <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<span class="stringliteral">&quot;refGradient&quot;</span>, dict, p.<a class="code" href="a00885.html#aefe0792b5b0175e6022a92a906fdf053">size</a>());</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        valueFraction() = <a class="code" href="a10725.html#a6e363d070e971ead1a4c40475084e584">scalarField</a>(<span class="stringliteral">&quot;valueFraction&quot;</span>, dict, p.<a class="code" href="a00885.html#aefe0792b5b0175e6022a92a906fdf053">size</a>());</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    }</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    {</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="comment">// Start from user entered data. Assume fixedValue.</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        refValue() = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        refGrad() = 0.0;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        valueFraction() = 1.0;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    }</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;}</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;scalar <a class="code" href="a01349.html#a64d70a485a53f43d27b5747c30a4bdbd">liquidFilmThermo::D</a></div>
-<div class="line"><a name="l00199"></a><span class="lineno"><a class="line" href="a01349.html#a64d70a485a53f43d27b5747c30a4bdbd">  199</a></span>&#160;(</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;{</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;D(p, T);</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;}</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;scalar <a class="code" href="a01349.html#a7154c604f3de90da13aa951d64eb40ff">liquidFilmThermo::hl</a></div>
-<div class="line"><a name="l00209"></a><span class="lineno"><a class="line" href="a01349.html#a7154c604f3de90da13aa951d64eb40ff">  209</a></span>&#160;(</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;{</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;hl(p, T);</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;}</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::</a></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<a class="code" href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00200"></a><span class="lineno"><a class="line" href="a00784.html#a2b5a7abd79c739b25791d82c1b7a43aa">  200</a></span>&#160;(</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00784.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a>&amp; psf,</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;:</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    mixedFvPatchScalarField(psf, iF),</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <a class="code" href="a02560.html">temperatureCoupledBase</a>(patch(), psf),</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    filmRegionName_(psf.filmRegionName_),</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    pyrolysisRegionName_(psf.pyrolysisRegionName_),</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    TnbrName_(psf.TnbrName_),</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    QrName_(psf.QrName_),</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    convectiveScaling_(psf.convectiveScaling_),</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    filmDeltaDry_(psf.filmDeltaDry_),</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    filmDeltaWet_(psf.filmDeltaWet_)</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;{}</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;scalar <a class="code" href="a01349.html#a65b7c31fa1e5cd0cefa36cf9ba0837fa">liquidFilmThermo::pv</a></div>
-<div class="line"><a name="l00219"></a><span class="lineno"><a class="line" href="a01349.html#a65b7c31fa1e5cd0cefa36cf9ba0837fa">  219</a></span>&#160;(</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keyword">const</span> scalar p,</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keyword">const</span> scalar T</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;) <span class="keyword">const</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;{</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordflow">return</span> liquidPtr_-&gt;pv(p, T);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;}</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
-<div class="line"><a name="l00228"></a><span class="lineno"><a class="line" href="a01349.html#acdc244cee495231a5ec9b549e4fc9131">  228</a></span>&#160;scalar <a class="code" href="a01349.html#acdc244cee495231a5ec9b549e4fc9131">liquidFilmThermo::W</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a>-&gt;<a class="code" href="a01351.html#ae252fa5c94f18abad3fa9edd8b8f62db">W</a>();</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;}</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;</div>
-<div class="line"><a name="l00234"></a><span class="lineno"><a class="line" href="a01349.html#a35dd3b4ebaafdf38a681d6ffa0ad76eb">  234</a></span>&#160;scalar <a class="code" href="a01349.html#a35dd3b4ebaafdf38a681d6ffa0ad76eb">liquidFilmThermo::Tb</a>(<span class="keyword">const</span> scalar p)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">liquidPtr_</a>-&gt;<a class="code" href="a01351.html#aa69552e0842bd2a2874c5953b93399ab">pvInvert</a>(p);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;}</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
+<div class="line"><a name="l00219"></a><span class="lineno"><a class="line" href="a00784.html#a7e24eafac629d3733181cd942d4c902f">  219</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00784.html#a7e24eafac629d3733181cd942d4c902f">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs</a>()</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;{</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordflow">if</span> (updated())</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    {</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    }</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="comment">// Get the coupling information from the mappedPatchBase</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01420.html">mappedPatchBase</a>&amp; mpp =</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        refCast&lt;const mappedPatchBase&gt;(patch().patch());</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> patchI = patch().index();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nbrPatchI = mpp.<a class="code" href="a01420.html#a3434acc5afba1f7b7b8f4c573befd8b3">samplePolyPatch</a>().<a class="code" href="a01799.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>();</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a> = patch().boundaryMesh().mesh();</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01916.html">polyMesh</a>&amp; nbrMesh = mpp.<a class="code" href="a01420.html#a80e7d2240854cf86b347a95cb1bab341">sampleMesh</a>();</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; nbrPatch =</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        refCast&lt;const fvMesh&gt;(nbrMesh).<a class="code" href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a>()[nbrPatchI];</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <a class="code" href="a00755.html">scalarField</a> intFld(patchInternalField());</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
-<div class="line"><a name="l00240"></a><span class="lineno"><a class="line" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">  240</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">liquidFilmThermo::rho</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a03197.html#a1900a6d4ca2a9f556fdda6733816e355">trho</a></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    (</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00784.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a>&amp;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        nbrField =</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        <a class="code" href="a10725.html#a28f53307dad4466f23067e79a948e2a1">refCast</a></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        &lt;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00784.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        &gt;</div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        (</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            (</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:rho&quot;</span>,</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            ),</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#adcb0103ec5c28a01ca3d8fffc9847651">dimDensity</a>, 0.0),</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        )</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    );</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">rho</a> = <a class="code" href="a03197.html#a1900a6d4ca2a9f556fdda6733816e355">trho</a>().internalField();</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            nbrPatch.<a class="code" href="a00885.html#afaaf754f8e65cc448cfe3dfb1e033ae1">lookupPatchField</a>&lt;<a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>, scalar&gt;(TnbrName_)</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        );</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="comment">// Swap to obtain full local values of neighbour internal field</span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <a class="code" href="a00755.html">scalarField</a> nbrIntFld(nbrField.patchInternalField());</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    mpp.<a class="code" href="a01420.html#a19634e92e19466f33831b6908d0a4fab">distribute</a>(nbrIntFld);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <a class="code" href="a00755.html">scalarField</a>&amp; Tp = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a> <a class="code" href="a00784.html#a4b4d28b402b6dad014790c4172a84bb6">K</a>(this-&gt;<a class="code" href="a02560.html#a27f7eb60b12da7ce5742958e36252898">kappa</a>(*<span class="keyword">this</span>));</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a> nbrK(nbrField.<a class="code" href="a02560.html#a27f7eb60b12da7ce5742958e36252898">kappa</a>(*<span class="keyword">this</span>));</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="comment">// Swap to obtain full local values of neighbour K*delta</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <a class="code" href="a00755.html">scalarField</a> KDeltaNbr(nbrK*nbrPatch.<a class="code" href="a00885.html#a68566c15658234b1c4c972ff9bfcee26">deltaCoeffs</a>());</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    mpp.<a class="code" href="a01420.html#a19634e92e19466f33831b6908d0a4fab">distribute</a>(KDeltaNbr);</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">useReferenceValues_</a>)</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    {</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(rho, cellI)</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            rho[cellI] = this-&gt;<a class="code" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">rho</a>(<a class="code" href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">pRef_</a>, <a class="code" href="a01349.html#af14c188d9750a591877aa9c1f44200cc">TRef_</a>);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    {</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; film = <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">thermoFilm</a>();</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; T = film.<a class="code" href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">T</a>();</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; p = film.<a class="code" href="a01229.html#ab77642b1717d0dfc606a7ed261396257">pPrimary</a>();</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(rho, cellI)</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        {</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            rho[cellI] = this-&gt;<a class="code" href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">rho</a>(p[cellI], T[cellI]);</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;        }</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    }</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <a class="code" href="a03197.html#a1900a6d4ca2a9f556fdda6733816e355">trho</a>().correctBoundaryConditions();</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a03197.html#a1900a6d4ca2a9f556fdda6733816e355">trho</a>;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;}</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;</div>
-<div class="line"><a name="l00288"></a><span class="lineno"><a class="line" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">  288</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">liquidFilmThermo::mu</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> tmu</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    (</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        (</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            (</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:mu&quot;</span>,</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            ),</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;            <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#a025d6b292bb66af0ecf0e11e5e8cdc86">dimPressure</a>*<a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>, 0.0),</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        )</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    );</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">mu</a> = tmu().internalField();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">useReferenceValues_</a>)</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    {</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(mu, cellI)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            mu[cellI] = this-&gt;<a class="code" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">mu</a>(<a class="code" href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">pRef_</a>, <a class="code" href="a01349.html#af14c188d9750a591877aa9c1f44200cc">TRef_</a>);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        }</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    }</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    {</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; film = <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">thermoFilm</a>();</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <a class="code" href="a00755.html">scalarField</a> myKDelta(K*patch().deltaCoeffs());</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <a class="code" href="a01364.html">scalarList</a> Tfilm(patch().size(), 0.0);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <a class="code" href="a01364.html">scalarList</a> htcwfilm(patch().size(), 0.0);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <a class="code" href="a01364.html">scalarList</a> filmDelta(patch().size(), 0.0);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02042.html">pyrolysisModelType</a>&amp; pyrolysis = pyrModel();</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02597.html">filmModelType</a>&amp; film = filmModel();</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="comment">// Obtain Rad heat (Qr)</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <a class="code" href="a00755.html">scalarField</a> <a class="code" href="a04427.html#a78bcf340cde4f20cf12473945680d11a">Qr</a>(patch().size(), 0.0);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> coupledPatchI = -1;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordflow">if</span> (pyrolysisRegionName_ == mesh.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>())</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    {</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        coupledPatchI = patchI;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        <span class="keywordflow">if</span> (QrName_ != <span class="stringliteral">&quot;none&quot;</span>)</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;        {</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            Qr = nbrPatch.<a class="code" href="a00885.html#afaaf754f8e65cc448cfe3dfb1e033ae1">lookupPatchField</a>&lt;<a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>, scalar&gt;(QrName_);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            mpp.<a class="code" href="a01420.html#a19634e92e19466f33831b6908d0a4fab">distribute</a>(Qr);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        }</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    }</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pyrolysis.<a class="code" href="a02131.html#a3f74d6f26fb409562d28d2365d1bbf12">primaryMesh</a>().<a class="code" href="a00876.html#a75b72488d2e82151b025744974919d5d">name</a>() == mesh.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>())</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    {</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        coupledPatchI = nbrPatch.<a class="code" href="a00885.html#a7d1e8acadb27bd2b4e61457d47b71b6f">index</a>();</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        <span class="keywordflow">if</span> (QrName_ != <span class="stringliteral">&quot;none&quot;</span>)</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        {</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            Qr = patch().lookupPatchField&lt;<a class="code" href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">volScalarField</a>, scalar&gt;(QrName_);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        }</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    }</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    {</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#aec48583af672626378f501eb9fc32cd1">type</a>() &lt;&lt; <span class="stringliteral">&quot; condition is intended to be applied to either the &quot;</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;primary or pyrolysis regions only&quot;</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    }</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> filmPatchI = pyrolysis.<a class="code" href="a02131.html#ab75224234f0496ea2c9f2eed3f848d1a">nbrCoupledPatchID</a>(film, coupledPatchI);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a> htcw(film.<a class="code" href="a02597.html#a46fbaeb462f37f772bcfddf3d8c10661">htcw</a>().<a class="code" href="a00990.html#a293edbfde9c3261e77d5f9243d84648e">h</a>()().boundaryField()[filmPatchI]);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="comment">// Obtain htcw</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    htcwfilm =</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        pyrolysis.<a class="code" href="a02131.html#a779f4d55fab3a54210ef162099b2bf12">mapRegionPatchField</a></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        (</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            film,</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            coupledPatchI,</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            filmPatchI,</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            htcw,</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            <span class="keyword">true</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        );</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="comment">// Obtain Tfilm at the boundary through Ts.</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="comment">// NOTE: Tf is not good as at the boundary it will retrieve Tp</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    Tfilm = film.<a class="code" href="a02597.html#a84eeb8112f81ad68b619e4b5d160a557">Ts</a>().<a class="code" href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">boundaryField</a>()[filmPatchI];</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    film.<a class="code" href="a02131.html#ae3e2347b9e0b838573435f06d9e51bf0">toPrimary</a>(filmPatchI, Tfilm);</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; T = film.<a class="code" href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">T</a>();</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; p = film.<a class="code" href="a01229.html#ab77642b1717d0dfc606a7ed261396257">pPrimary</a>();</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(mu, cellI)</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;            mu[cellI] = this-&gt;<a class="code" href="a01349.html#a6a75e732b55d976da97dddc2575579ed">mu</a>(p[cellI], T[cellI]);</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        }</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    tmu().correctBoundaryConditions();</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keywordflow">return</span> tmu;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;}</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;</div>
-<div class="line"><a name="l00336"></a><span class="lineno"><a class="line" href="a01349.html#a5292706a64558b88dc07af840513cb71">  336</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a01349.html#a5292706a64558b88dc07af840513cb71">liquidFilmThermo::sigma</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> tsigma</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    (</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        (</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            (</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:sigma&quot;</span>,</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            ),</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;            <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;            <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#af17b43c1e720e7fc1f71a24621cee022">dimMass</a>/<a class="code" href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(<a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>), 0.0),</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        )</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    );</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a01349.html#a5292706a64558b88dc07af840513cb71">sigma</a> = tsigma().internalField();</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">useReferenceValues_</a>)</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    {</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(sigma, cellI)</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        {</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;            sigma[cellI] = this-&gt;<a class="code" href="a01349.html#a5292706a64558b88dc07af840513cb71">sigma</a>(<a class="code" href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">pRef_</a>, <a class="code" href="a01349.html#af14c188d9750a591877aa9c1f44200cc">TRef_</a>);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        }</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    }</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    {</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; film = <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">thermoFilm</a>();</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; T = film.<a class="code" href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">T</a>();</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; p = film.<a class="code" href="a01229.html#ab77642b1717d0dfc606a7ed261396257">pPrimary</a>();</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(sigma, cellI)</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        {</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;            sigma[cellI] = this-&gt;<a class="code" href="a01349.html#a5292706a64558b88dc07af840513cb71">sigma</a>(p[cellI], T[cellI]);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        }</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    }</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    tsigma().correctBoundaryConditions();</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="comment">// Obtain delta</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    filmDelta =</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        pyrolysis.<a class="code" href="a02131.html#a779f4d55fab3a54210ef162099b2bf12">mapRegionPatchField</a>&lt;scalar&gt;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        (</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;            film,</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;            <span class="stringliteral">&quot;deltaf&quot;</span>,</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;            coupledPatchI,</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            true</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        );</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;     <span class="comment">// Estimate wetness of the film (1: wet , 0: dry)</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;     <a class="code" href="a00755.html">scalarField</a> ratio</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;     (</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        (</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            (</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                (filmDelta - filmDeltaDry_)/(filmDeltaWet_ - filmDeltaDry_),</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                scalar(0.0)</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            ),</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;            scalar(1.0)</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        )</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;     );</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <a class="code" href="a00755.html">scalarField</a> qConv(ratio*htcwfilm*(Tfilm - Tp)*convectiveScaling_);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <a class="code" href="a00755.html">scalarField</a> qRad((1.0 - ratio)*Qr);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <a class="code" href="a00755.html">scalarField</a> <a class="code" href="a10735.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>(KDeltaNbr - (qRad + qConv)/Tp);</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    valueFraction() = alpha/(alpha + (1.0 - ratio)*myKDelta);</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    refValue() = ratio*Tfilm + (1.0 - ratio)*(KDeltaNbr*nbrIntFld)/<a class="code" href="a10735.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>;</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    mixedFvPatchScalarField::updateCoeffs();</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordflow">if</span> (debug)</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    {</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        scalar Qc = <a class="code" href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">gSum</a>(qConv*patch().magSf());</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        scalar Qr = <a class="code" href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">gSum</a>(qRad*patch().magSf());</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        scalar Qt = <a class="code" href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">gSum</a>((qConv + qRad)*patch().magSf());</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; mesh.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <span class="charliteral">&#39;:&#39;</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;            &lt;&lt; patch().name() &lt;&lt; <span class="charliteral">&#39;:&#39;</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            &lt;&lt; this-&gt;<a class="code" href="a03120.html#a942cd19121a46cdc649099eb27c74b18">dimensionedInternalField</a>().name() &lt;&lt; <span class="stringliteral">&quot; &lt;- &quot;</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;            &lt;&lt; nbrMesh.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <span class="charliteral">&#39;:&#39;</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;            &lt;&lt; nbrPatch.<a class="code" href="a00885.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <span class="charliteral">&#39;:&#39;</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;            &lt;&lt; this-&gt;<a class="code" href="a03120.html#a942cd19121a46cdc649099eb27c74b18">dimensionedInternalField</a>().name() &lt;&lt; <span class="stringliteral">&quot; :&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;     convective heat[W] : &quot;</span> &lt;&lt; Qc &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;     radiative heat [W] : &quot;</span> &lt;&lt; Qr &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;     total heat     [W] : &quot;</span> &lt;&lt; Qt &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;     wall temperature &quot;</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; min:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#aca330ee6cfe7d602300dbc5905f8c9f6">gMin</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; max:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae8d631fb8e841947408bb711abfb1e67">gMax</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; avg:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ab45e56189711a2e5cdd381a0e2b6cc5c">gAverage</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    }</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;}</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="keywordflow">return</span> tsigma;</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;}</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;</div>
-<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="a01349.html#a189768d7784b3f4d6300630f60482f21">  384</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a01349.html#a189768d7784b3f4d6300630f60482f21">liquidFilmThermo::Cp</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> tCp</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    (</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        (</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;            (</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;                <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:Cp&quot;</span>,</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            ),</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;            <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;            <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#a29615c1c63112a96e023ee5b50833661">dimEnergy</a>/<a class="code" href="a10675.html#af17b43c1e720e7fc1f71a24621cee022">dimMass</a>/<a class="code" href="a10675.html#a838cdd1aa2ab91bb7b9a3da80956866d">dimTemperature</a>, 0.0),</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        )</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    );</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a01349.html#a189768d7784b3f4d6300630f60482f21">Cp</a> = tCp().internalField();</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">useReferenceValues_</a>)</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    {</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(Cp, cellI)</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        {</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;            Cp[cellI] = this-&gt;<a class="code" href="a01349.html#a189768d7784b3f4d6300630f60482f21">Cp</a>(<a class="code" href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">pRef_</a>, <a class="code" href="a01349.html#af14c188d9750a591877aa9c1f44200cc">TRef_</a>);</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        }</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    }</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    {</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; film = <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">thermoFilm</a>();</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; T = film.<a class="code" href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">T</a>();</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; p = film.<a class="code" href="a01229.html#ab77642b1717d0dfc606a7ed261396257">pPrimary</a>();</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(Cp, cellI)</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        {</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;            Cp[cellI] = this-&gt;<a class="code" href="a01349.html#a189768d7784b3f4d6300630f60482f21">Cp</a>(p[cellI], T[cellI]);</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        }</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    }</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00784.html#a0941061ad5a26be83b4107d05750ace6">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write</a></div>
+<div class="line"><a name="l00382"></a><span class="lineno"><a class="line" href="a00784.html#a0941061ad5a26be83b4107d05750ace6">  382</a></span>&#160;(</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    <a class="code" href="a01736.html">Ostream</a>&amp; os</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;{</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <a class="code" href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">mixedFvPatchScalarField::write</a>(os);</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    writeEntryIfDifferent&lt;word&gt;</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    (</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        os,</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        <span class="stringliteral">&quot;filmRegion&quot;</span>,</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        <span class="stringliteral">&quot;surfaceFilmProperties&quot;</span>,</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        filmRegionName_</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    );</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    writeEntryIfDifferent&lt;word&gt;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    (</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        os,</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        <span class="stringliteral">&quot;pyrolysisRegion&quot;</span>,</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="stringliteral">&quot;pyrolysisProperties&quot;</span>,</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        pyrolysisRegionName_</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    );</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    os.writeKeyword(<span class="stringliteral">&quot;Tnbr&quot;</span>)&lt;&lt; TnbrName_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    os.writeKeyword(<span class="stringliteral">&quot;Qr&quot;</span>)&lt;&lt; QrName_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    os.writeKeyword(<span class="stringliteral">&quot;convectiveScaling&quot;</span>) &lt;&lt; convectiveScaling_</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;        &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    os.writeKeyword(<span class="stringliteral">&quot;filmDeltaDry&quot;</span>) &lt;&lt; filmDeltaDry_</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    os.writeKeyword(<span class="stringliteral">&quot;filmDeltaWet&quot;</span>) &lt;&lt; filmDeltaWet_</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <a class="code" href="a02560.html#a0941061ad5a26be83b4107d05750ace6">temperatureCoupledBase::write</a>(os);</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;}</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<a class="code" href="a10725.html#a44a8c9a8ab08f6bf1f84bf3dab3f82a2">makePatchTypeField</a></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;(</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <a class="code" href="a00886.html">fvPatchScalarField</a>,</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <a class="code" href="a00784.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;);</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;} <span class="comment">// End namespace Foam</span></div>
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    tCp().correctBoundaryConditions();</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    <span class="keywordflow">return</span> tCp;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;}</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;</div>
-<div class="line"><a name="l00432"></a><span class="lineno"><a class="line" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">  432</a></span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> <a class="code" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">liquidFilmThermo::kappa</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    <a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a> tkappa</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    (</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        <span class="keyword">new</span> <a class="code" href="a00913.html">volScalarField</a></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        (</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            <a class="code" href="a01170.html">IOobject</a></div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            (</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;                <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:kappa&quot;</span>,</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().time().<a class="code" href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a>(),</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                <a class="code" href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">IOobject::NO_READ</a>,</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                <a class="code" href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">IOobject::NO_WRITE</a></div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;            ),</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            <a class="code" href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">owner</a>().regionMesh(),</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;            <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;0&quot;</span>, <a class="code" href="a10675.html#a1034b419c2aa877c655c82a3250462c4">dimPower</a>/<a class="code" href="a10675.html#a2c2f48175b211109246a24c633d02441">dimLength</a>/<a class="code" href="a10675.html#a838cdd1aa2ab91bb7b9a3da80956866d">dimTemperature</a>, 0.0),</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;            zeroGradientFvPatchScalarField::typeName</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        )</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    );</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">kappa</a> = tkappa().internalField();</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">useReferenceValues_</a>)</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    {</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(kappa, cellI)</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        {</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            kappa[cellI] = this-&gt;<a class="code" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">kappa</a>(<a class="code" href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">pRef_</a>, <a class="code" href="a01349.html#af14c188d9750a591877aa9c1f44200cc">TRef_</a>);</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        }</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    }</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    {</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02587.html">thermoSingleLayer</a>&amp; film = <a class="code" href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">thermoFilm</a>();</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; T = film.<a class="code" href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">T</a>();</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00913.html">volScalarField</a>&amp; p = film.<a class="code" href="a01229.html#ab77642b1717d0dfc606a7ed261396257">pPrimary</a>();</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(kappa, cellI)</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        {</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            kappa[cellI] = this-&gt;<a class="code" href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">kappa</a>(p[cellI], T[cellI]);</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        }</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    }</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    tkappa().correctBoundaryConditions();</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordflow">return</span> tkappa;</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;}</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;} <span class="comment">// End namespace surfaceFilmModels</span></div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;} <span class="comment">// End namespace regionModels</span></div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00783_html_aafb4a2df7e23772914e0f752420a0aa0"><div class="ttname"><a href="a00783.html#aafb4a2df7e23772914e0f752420a0aa0">Foam::regionModels::surfaceFilmModels::filmSubModelBase::owner_</a></div><div class="ttdeci">surfaceFilmModel &amp; owner_</div><div class="ttdoc">Reference to the owner surface film model. </div><div class="ttdef"><b>Definition:</b> <a href="a09449_source.html#l00063">filmSubModelBase.H:63</a></div></div>
-<div class="ttc" id="a10163_html"><div class="ttname"><a href="a10163.html">SLGThermo.H</a></div></div>
-<div class="ttc" id="a01351_html"><div class="ttname"><a href="a01351.html">Foam::liquidProperties</a></div><div class="ttdoc">The thermophysical properties of a liquidProperties. </div><div class="ttdef"><b>Definition:</b> <a href="a10023_source.html#l00053">liquidProperties.H:53</a></div></div>
-<div class="ttc" id="a01349_html_a65b7c31fa1e5cd0cefa36cf9ba0837fa"><div class="ttname"><a href="a01349.html#a65b7c31fa1e5cd0cefa36cf9ba0837fa">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::pv</a></div><div class="ttdeci">virtual scalar pv(const scalar p, const scalar T) const </div><div class="ttdoc">Return vapour pressure [Pa]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00219">liquidFilmThermo.C:219</a></div></div>
-<div class="ttc" id="a10750_html_ac1ace6ec7343b253553658d2bcca8e33"><div class="ttname"><a href="a10750.html#ac1ace6ec7343b253553658d2bcca8e33">Foam::regionModels::surfaceFilmModels::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(kinematicSingleLayer, 0)</div></div>
-<div class="ttc" id="a01349_html_acdc244cee495231a5ec9b549e4fc9131"><div class="ttname"><a href="a01349.html#acdc244cee495231a5ec9b549e4fc9131">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::W</a></div><div class="ttdeci">virtual scalar W() const </div><div class="ttdoc">Return molecular weight [kg/kmol]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00228">liquidFilmThermo.C:228</a></div></div>
-<div class="ttc" id="a10675_html_a2c2f48175b211109246a24c633d02441"><div class="ttname"><a href="a10675.html#a2c2f48175b211109246a24c633d02441">Foam::dimLength</a></div><div class="ttdeci">const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00050">dimensionSets.H:50</a></div></div>
-<div class="ttc" id="a01349_html_a189768d7784b3f4d6300630f60482f21"><div class="ttname"><a href="a01349.html#a189768d7784b3f4d6300630f60482f21">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::Cp</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; Cp() const </div><div class="ttdoc">Return specific heat capacity [J/kg/K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00384">liquidFilmThermo.C:384</a></div></div>
-<div class="ttc" id="a01349_html_a5292706a64558b88dc07af840513cb71"><div class="ttname"><a href="a01349.html#a5292706a64558b88dc07af840513cb71">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::sigma</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; sigma() const </div><div class="ttdoc">Return surface tension [kg/s2]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00336">liquidFilmThermo.C:336</a></div></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a10675_html_af17b43c1e720e7fc1f71a24621cee022"><div class="ttname"><a href="a10675.html#af17b43c1e720e7fc1f71a24621cee022">Foam::dimMass</a></div><div class="ttdeci">const dimensionSet dimMass(1, 0, 0, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00049">dimensionSets.H:49</a></div></div>
-<div class="ttc" id="a01349_html_aaab1255e9682d0c0df807bbfe940c530"><div class="ttname"><a href="a01349.html#aaab1255e9682d0c0df807bbfe940c530">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::liquidFilmThermo</a></div><div class="ttdeci">liquidFilmThermo(const liquidFilmThermo &amp;)</div><div class="ttdoc">Disallow default bitwise copy construct. </div></div>
-<div class="ttc" id="a02587_html_a76d931731d9042c4ce238ebca5c4997a"><div class="ttname"><a href="a02587.html#a76d931731d9042c4ce238ebca5c4997a">Foam::regionModels::surfaceFilmModels::thermoSingleLayer::T</a></div><div class="ttdeci">virtual const volScalarField &amp; T() const </div><div class="ttdoc">Return the film mean temperature [K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09530_source.html#l00691">thermoSingleLayer.C:691</a></div></div>
-<div class="ttc" id="a07673_html_adff97cb6cd96067a03543e744ee2179c"><div class="ttname"><a href="a07673.html#adff97cb6cd96067a03543e744ee2179c">FatalErrorIn</a></div><div class="ttdeci">#define FatalErrorIn(functionName)                                                                                      </div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07673_source.html#l00314">error.H:314</a></div></div>
-<div class="ttc" id="a01678_html_af3bf58996b7f5a073485a5590fbebd84"><div class="ttname"><a href="a01678.html#af3bf58996b7f5a073485a5590fbebd84">Foam::objectRegistry::foundObject</a></div><div class="ttdeci">bool foundObject(const word &amp;name) const </div><div class="ttdoc">Is the named Type found? </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00142">objectRegistryTemplates.C:142</a></div></div>
-<div class="ttc" id="a01349_html_a6a75e732b55d976da97dddc2575579ed"><div class="ttname"><a href="a01349.html#a6a75e732b55d976da97dddc2575579ed">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::mu</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; mu() const </div><div class="ttdoc">Return dynamic viscosity [Pa.s]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00288">liquidFilmThermo.C:288</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a01349_html_a2b3635ee75d2bce5309f4d98d6c27650"><div class="ttname"><a href="a01349.html#a2b3635ee75d2bce5309f4d98d6c27650">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::kappa</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; kappa() const </div><div class="ttdoc">Return thermal conductivity [W/m/K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00432">liquidFilmThermo.C:432</a></div></div>
-<div class="ttc" id="a10675_html_adcb0103ec5c28a01ca3d8fffc9847651"><div class="ttname"><a href="a10675.html#adcb0103ec5c28a01ca3d8fffc9847651">Foam::dimDensity</a></div><div class="ttdeci">const dimensionSet dimDensity</div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a01351_html_ae252fa5c94f18abad3fa9edd8b8f62db"><div class="ttname"><a href="a01351.html#ae252fa5c94f18abad3fa9edd8b8f62db">Foam::liquidProperties::W</a></div><div class="ttdeci">scalar W() const </div><div class="ttdoc">Molecular weight [kg/kmol]. </div><div class="ttdef"><b>Definition:</b> <a href="a10024_source.html#l00026">liquidPropertiesI.H:26</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00518_html_a42a549aa3e2c88399585b6462f6dbeb3"><div class="ttname"><a href="a00518.html#a42a549aa3e2c88399585b6462f6dbeb3">Foam::dictionary::subDict</a></div><div class="ttdeci">const dictionary &amp; subDict(const word &amp;) const </div><div class="ttdoc">Find and return a sub-dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00638">dictionary.C:638</a></div></div>
-<div class="ttc" id="a10675_html_a838cdd1aa2ab91bb7b9a3da80956866d"><div class="ttname"><a href="a10675.html#a838cdd1aa2ab91bb7b9a3da80956866d">Foam::dimTemperature</a></div><div class="ttdeci">const dimensionSet dimTemperature(0, 0, 0, 1, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00052">dimensionSets.H:52</a></div></div>
-<div class="ttc" id="a02321_html"><div class="ttname"><a href="a02321.html">Foam::SLGThermo</a></div><div class="ttdoc">Thermo package for (S)olids (L)iquids and (G)ases Takes reference to thermo package, and provides: </div><div class="ttdef"><b>Definition:</b> <a href="a10163_source.html#l00062">SLGThermo.H:62</a></div></div>
-<div class="ttc" id="a01349_html_a10d9aff28ac1e6e9a89ec4840dda9e47"><div class="ttname"><a href="a01349.html#a10d9aff28ac1e6e9a89ec4840dda9e47">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::thermoFilm</a></div><div class="ttdeci">const thermoSingleLayer &amp; thermoFilm() const </div><div class="ttdoc">Return a reference to a thermo film. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00055">liquidFilmThermo.C:55</a></div></div>
-<div class="ttc" id="a01349_html_a4e13048174dc5eaefa60cf6f9d4b1895"><div class="ttname"><a href="a01349.html#a4e13048174dc5eaefa60cf6f9d4b1895">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::useReferenceValues_</a></div><div class="ttdeci">bool useReferenceValues_</div><div class="ttdoc">Flag to indicate that reference values of p and T should be used. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00074">liquidFilmThermo.H:74</a></div></div>
-<div class="ttc" id="a01349_html_aa10788def1b8dfa8b174af3f0586ab8f"><div class="ttname"><a href="a01349.html#aa10788def1b8dfa8b174af3f0586ab8f">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::ownLiquid_</a></div><div class="ttdeci">bool ownLiquid_</div><div class="ttdoc">Flag to indicate that model owns the liquid object. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00071">liquidFilmThermo.H:71</a></div></div>
-<div class="ttc" id="a01349_html_af14c188d9750a591877aa9c1f44200cc"><div class="ttname"><a href="a01349.html#af14c188d9750a591877aa9c1f44200cc">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::TRef_</a></div><div class="ttdeci">scalar TRef_</div><div class="ttdoc">Reference temperature [K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00080">liquidFilmThermo.H:80</a></div></div>
-<div class="ttc" id="a09458_html"><div class="ttname"><a href="a09458.html">liquidFilmThermo.H</a></div></div>
-<div class="ttc" id="a01170_html"><div class="ttname"><a href="a01170.html">Foam::IOobject</a></div><div class="ttdoc">IOobject defines the attributes of an object for which implicit objectRegistry management is supporte...</div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00091">IOobject.H:91</a></div></div>
-<div class="ttc" id="a01170_html_ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4"><div class="ttname"><a href="a01170.html#ade8fe914e1b32f96447fe9b2f8bbfc51a49d7e3f5888432d6048abf6cab3988d4">Foam::IOobject::NO_WRITE</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00118">IOobject.H:118</a></div></div>
-<div class="ttc" id="a10675_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10675.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07674_source.html#l00124">errorManip.H:124</a></div></div>
-<div class="ttc" id="a10675_html_a351a623596279a79515ef2cf69e1c277"><div class="ttname"><a href="a10675.html#a351a623596279a79515ef2cf69e1c277">Foam::dimTime</a></div><div class="ttdeci">const dimensionSet dimTime(0, 0, 1, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00051">dimensionSets.H:51</a></div></div>
-<div class="ttc" id="a00783_html_a1dc2bddde79e05299749056dbc1802b5"><div class="ttname"><a href="a00783.html#a1dc2bddde79e05299749056dbc1802b5">Foam::regionModels::surfaceFilmModels::filmSubModelBase::owner</a></div><div class="ttdeci">const surfaceFilmModel &amp; owner() const </div><div class="ttdoc">Return const access to the owner surface film model. </div><div class="ttdef"><b>Definition:</b> <a href="a09450_source.html#l00037">filmSubModelBaseI.H:37</a></div></div>
-<div class="ttc" id="a01349_html_a5673e50c4f933c26fce60fdc3fb74323"><div class="ttname"><a href="a01349.html#a5673e50c4f933c26fce60fdc3fb74323">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::initLiquid</a></div><div class="ttdeci">void initLiquid(const dictionary &amp;dict)</div><div class="ttdoc">Initialise the liquid pointer. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00074">liquidFilmThermo.C:74</a></div></div>
-<div class="ttc" id="a02587_html"><div class="ttname"><a href="a02587.html">Foam::regionModels::surfaceFilmModels::thermoSingleLayer</a></div><div class="ttdef"><b>Definition:</b> <a href="a09531_source.html#l00063">thermoSingleLayer.H:63</a></div></div>
-<div class="ttc" id="a01678_html_affcae20935bdf1726ec1f822228a2330"><div class="ttname"><a href="a01678.html#affcae20935bdf1726ec1f822228a2330">Foam::objectRegistry::lookupObject</a></div><div class="ttdeci">const Type &amp; lookupObject(const word &amp;name) const </div><div class="ttdoc">Lookup and return the object of the given Type. </div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00165">objectRegistryTemplates.C:165</a></div></div>
-<div class="ttc" id="a10675_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10675.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
-<div class="ttc" id="a01349_html_adc83171063c684e40ecfe4b1d172bbe5"><div class="ttname"><a href="a01349.html#adc83171063c684e40ecfe4b1d172bbe5">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::liquidPtr_</a></div><div class="ttdeci">const liquidProperties * liquidPtr_</div><div class="ttdoc">Pointer to the liquid properties. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00068">liquidFilmThermo.H:68</a></div></div>
-<div class="ttc" id="a10675_html_a025d6b292bb66af0ecf0e11e5e8cdc86"><div class="ttname"><a href="a10675.html#a025d6b292bb66af0ecf0e11e5e8cdc86">Foam::dimPressure</a></div><div class="ttdeci">const dimensionSet dimPressure</div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a10750_html_a8e65981fc49a9cc390da2af27417606f"><div class="ttname"><a href="a10750.html#a8e65981fc49a9cc390da2af27417606f">Foam::regionModels::surfaceFilmModels::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(surfaceFilmModel, kinematicSingleLayer, mesh)</div></div>
-<div class="ttc" id="a01229_html_ab77642b1717d0dfc606a7ed261396257"><div class="ttname"><a href="a01229.html#ab77642b1717d0dfc606a7ed261396257">Foam::regionModels::surfaceFilmModels::kinematicSingleLayer::pPrimary</a></div><div class="ttdeci">const volScalarField &amp; pPrimary() const </div><div class="ttdoc">Pressure / [Pa]. </div><div class="ttdef"><b>Definition:</b> <a href="a09444_source.html#l00155">kinematicSingleLayerI.H:155</a></div></div>
-<div class="ttc" id="a01349_html_a80314d2c049aedaf23246c6311f43156"><div class="ttname"><a href="a01349.html#a80314d2c049aedaf23246c6311f43156">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::~liquidFilmThermo</a></div><div class="ttdeci">virtual ~liquidFilmThermo()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00131">liquidFilmThermo.C:131</a></div></div>
-<div class="ttc" id="a01349_html_a35dd3b4ebaafdf38a681d6ffa0ad76eb"><div class="ttname"><a href="a01349.html#a35dd3b4ebaafdf38a681d6ffa0ad76eb">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::Tb</a></div><div class="ttdeci">virtual scalar Tb(const scalar p) const </div><div class="ttdoc">Return boiling temperature [K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00234">liquidFilmThermo.C:234</a></div></div>
-<div class="ttc" id="a10675_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10675.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07819_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
-<div class="ttc" id="a10675_html_a1034b419c2aa877c655c82a3250462c4"><div class="ttname"><a href="a10675.html#a1034b419c2aa877c655c82a3250462c4">Foam::dimPower</a></div><div class="ttdeci">const dimensionSet dimPower</div></div>
-<div class="ttc" id="a01349_html_af12d6b219d12545bad916dbd9f5ccdd2"><div class="ttname"><a href="a01349.html#af12d6b219d12545bad916dbd9f5ccdd2">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::pRef_</a></div><div class="ttdeci">scalar pRef_</div><div class="ttdoc">Reference pressure [pa]. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00077">liquidFilmThermo.H:77</a></div></div>
-<div class="ttc" id="a01349_html_a50fd7d13a0f7a6007ca5027b3bb8765a"><div class="ttname"><a href="a01349.html#a50fd7d13a0f7a6007ca5027b3bb8765a">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::name_</a></div><div class="ttdeci">word name_</div><div class="ttdoc">Liquid name. </div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00065">liquidFilmThermo.H:65</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a128e6922f1b49f939c43266d8ad70ab8"><div class="ttname"><a href="a10675.html#a128e6922f1b49f939c43266d8ad70ab8">Foam::readBool</a></div><div class="ttdeci">bool readBool(Istream &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08751_source.html#l00060">boolIO.C:60</a></div></div>
-<div class="ttc" id="a01350_html_a67d9f77fcf67fad544225c6e5243b1e2"><div class="ttname"><a href="a01350.html#a67d9f77fcf67fad544225c6e5243b1e2">Foam::liquidMixtureProperties::properties</a></div><div class="ttdeci">const PtrList&lt; liquidProperties &gt; &amp; properties() const </div><div class="ttdoc">Return the liquid properties. </div><div class="ttdef"><b>Definition:</b> <a href="a09940_source.html#l00128">liquidMixtureProperties.H:128</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a01349_html_a64d70a485a53f43d27b5747c30a4bdbd"><div class="ttname"><a href="a01349.html#a64d70a485a53f43d27b5747c30a4bdbd">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::D</a></div><div class="ttdeci">virtual scalar D(const scalar p, const scalar T) const </div><div class="ttdoc">Return diffusivity [m2/s]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00199">liquidFilmThermo.C:199</a></div></div>
-<div class="ttc" id="a09531_html"><div class="ttname"><a href="a09531.html">thermoSingleLayer.H</a></div></div>
-<div class="ttc" id="a01351_html_aa69552e0842bd2a2874c5953b93399ab"><div class="ttname"><a href="a01351.html#aa69552e0842bd2a2874c5953b93399ab">Foam::liquidProperties::pvInvert</a></div><div class="ttdeci">virtual scalar pvInvert(scalar p) const </div><div class="ttdoc">Invert the vapour pressure relationship to retrieve the. </div><div class="ttdef"><b>Definition:</b> <a href="a10022_source.html#l00318">liquidProperties.C:318</a></div></div>
-<div class="ttc" id="a02120_html_a3f74d6f26fb409562d28d2365d1bbf12"><div class="ttname"><a href="a02120.html#a3f74d6f26fb409562d28d2365d1bbf12">Foam::regionModels::regionModel::primaryMesh</a></div><div class="ttdeci">const fvMesh &amp; primaryMesh() const </div><div class="ttdoc">Return the reference to the primary mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a09415_source.html#l00031">regionModelI.H:31</a></div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a10675_html_a29615c1c63112a96e023ee5b50833661"><div class="ttname"><a href="a10675.html#a29615c1c63112a96e023ee5b50833661">Foam::dimEnergy</a></div><div class="ttdeci">const dimensionSet dimEnergy</div></div>
-<div class="ttc" id="a02466_html"><div class="ttname"><a href="a02466.html">Foam::regionModels::surfaceFilmModels::surfaceFilmModel</a></div><div class="ttdoc">Base class for surface film models. </div><div class="ttdef"><b>Definition:</b> <a href="a09527_source.html#l00061">surfaceFilmModel.H:61</a></div></div>
-<div class="ttc" id="a03875_html_a2f677c654c2b7f157710d334624b8800"><div class="ttname"><a href="a03875.html#a2f677c654c2b7f157710d334624b8800">timeName</a></div><div class="ttdeci">word timeName</div><div class="ttdef"><b>Definition:</b> <a href="a03875_source.html#l00003">getTimeIndex.H:3</a></div></div>
-<div class="ttc" id="a10675_html_a676ff999562d389fd174d693e17d230a"><div class="ttname"><a href="a10675.html#a676ff999562d389fd174d693e17d230a">Foam::deleteDemandDrivenData</a></div><div class="ttdeci">void deleteDemandDrivenData(DataPtr &amp;dataPtr)</div><div class="ttdef"><b>Definition:</b> <a href="a08159_source.html#l00040">demandDrivenData.H:40</a></div></div>
-<div class="ttc" id="a01349_html_a6d296151ad3579c3213f91adc6ed6f52"><div class="ttname"><a href="a01349.html#a6d296151ad3579c3213f91adc6ed6f52">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::rho</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; rho() const </div><div class="ttdoc">Return density [kg/m3]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00240">liquidFilmThermo.C:240</a></div></div>
-<div class="ttc" id="a01349_html_a7154c604f3de90da13aa951d64eb40ff"><div class="ttname"><a href="a01349.html#a7154c604f3de90da13aa951d64eb40ff">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::hl</a></div><div class="ttdeci">virtual scalar hl(const scalar p, const scalar T) const </div><div class="ttdoc">Return latent heat [J/kg]. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00209">liquidFilmThermo.C:209</a></div></div>
-<div class="ttc" id="a02574_html"><div class="ttname"><a href="a02574.html">Foam::thermo</a></div><div class="ttdoc">Basic thermodynamics type based on the use of fitting functions for cp, h, s obtained from the templa...</div></div>
-<div class="ttc" id="a01349_html_a458824760a535c81f2c31586a907dc7a"><div class="ttname"><a href="a01349.html#a458824760a535c81f2c31586a907dc7a">Foam::regionModels::surfaceFilmModels::liquidFilmThermo::name</a></div><div class="ttdeci">virtual const word &amp; name() const </div><div class="ttdoc">Return the specie name. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00142">liquidFilmThermo.C:142</a></div></div>
-<div class="ttc" id="a01170_html_a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05"><div class="ttname"><a href="a01170.html#a20b9ac27bfc4eb7f88f7ae5771de6bf0a2236347a9c1072b71703cbc5eccbad05">Foam::IOobject::NO_READ</a></div><div class="ttdef"><b>Definition:</b> <a href="a07694_source.html#l00111">IOobject.H:111</a></div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a00785_html"><div class="ttname"><a href="a00785.html">Foam::regionModels::surfaceFilmModels::filmThermoModel</a></div><div class="ttdef"><b>Definition:</b> <a href="a09455_source.html#l00054">filmThermoModel.H:54</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a08159_html"><div class="ttname"><a href="a08159.html">demandDrivenData.H</a></div><div class="ttdoc">Template functions to aid in the implementation of demand driven data. </div></div>
-<div class="ttc" id="a02321_html_a5380a8807acfea3ce69f4d4386f49f64"><div class="ttname"><a href="a02321.html#a5380a8807acfea3ce69f4d4386f49f64">Foam::SLGThermo::liquids</a></div><div class="ttdeci">const liquidMixtureProperties &amp; liquids() const </div><div class="ttdoc">Return reference to the global (additional) liquids. </div><div class="ttdef"><b>Definition:</b> <a href="a10162_source.html#l00124">SLGThermo.C:124</a></div></div>
-<div class="ttc" id="a03197_html_a1900a6d4ca2a9f556fdda6733816e355"><div class="ttname"><a href="a03197.html#a1900a6d4ca2a9f556fdda6733816e355">trho</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; trho</div><div class="ttdef"><b>Definition:</b> <a href="a03197_source.html#l00004">setRegionSolidFields.H:4</a></div></div>
-<div class="ttc" id="a02321_html_ad8e2f67bfe191385c993ea6c60d25a0a"><div class="ttname"><a href="a02321.html#ad8e2f67bfe191385c993ea6c60d25a0a">Foam::SLGThermo::liquidId</a></div><div class="ttdeci">label liquidId(const word &amp;cmptName, bool allowNotFound=false) const </div><div class="ttdoc">Index of liquid component. </div><div class="ttdef"><b>Definition:</b> <a href="a10162_source.html#l00185">SLGThermo.C:185</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02597_html_a84eeb8112f81ad68b619e4b5d160a557"><div class="ttname"><a href="a02597.html#a84eeb8112f81ad68b619e4b5d160a557">Foam::regionModels::surfaceFilmModels::thermoSingleLayer::Ts</a></div><div class="ttdeci">virtual const volScalarField &amp; Ts() const </div><div class="ttdoc">Return the film surface temperature [K]. </div><div class="ttdef"><b>Definition:</b> <a href="a09582_source.html#l00697">thermoSingleLayer.C:697</a></div></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01916_html"><div class="ttname"><a href="a01916.html">Foam::polyMesh</a></div><div class="ttdoc">Mesh consisting of general polyhedral cells. </div><div class="ttdef"><b>Definition:</b> <a href="a08631_source.html#l00074">polyMesh.H:74</a></div></div>
+<div class="ttc" id="a01420_html_a3434acc5afba1f7b7b8f4c573befd8b3"><div class="ttname"><a href="a01420.html#a3434acc5afba1f7b7b8f4c573befd8b3">Foam::mappedPatchBase::samplePolyPatch</a></div><div class="ttdeci">const polyPatch &amp; samplePolyPatch() const </div><div class="ttdoc">Get the patch on the region. </div><div class="ttdef"><b>Definition:</b> <a href="a07277_source.html#l01244">mappedPatchBase.C:1244</a></div></div>
+<div class="ttc" id="a00885_html_a7d1e8acadb27bd2b4e61457d47b71b6f"><div class="ttname"><a href="a00885.html#a7d1e8acadb27bd2b4e61457d47b71b6f">Foam::fvPatch::index</a></div><div class="ttdeci">label index() const </div><div class="ttdoc">Return the index of this patch in the fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00179">fvPatch.H:179</a></div></div>
+<div class="ttc" id="a02597_html_a46fbaeb462f37f772bcfddf3d8c10661"><div class="ttname"><a href="a02597.html#a46fbaeb462f37f772bcfddf3d8c10661">Foam::regionModels::surfaceFilmModels::thermoSingleLayer::htcw</a></div><div class="ttdeci">const heatTransferModel &amp; htcw() const </div><div class="ttdoc">Return const access to the (wall) heat transfer model. </div><div class="ttdef"><b>Definition:</b> <a href="a09584_source.html#l00142">thermoSingleLayerI.H:142</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a02597_html"><div class="ttname"><a href="a02597.html">Foam::regionModels::surfaceFilmModels::thermoSingleLayer</a></div><div class="ttdef"><b>Definition:</b> <a href="a09583_source.html#l00063">thermoSingleLayer.H:63</a></div></div>
+<div class="ttc" id="a00784_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a00784.html#a0941061ad5a26be83b4107d05750ace6">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00382">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.C:382</a></div></div>
+<div class="ttc" id="a00885_html_aefe0792b5b0175e6022a92a906fdf053"><div class="ttname"><a href="a00885.html#aefe0792b5b0175e6022a92a906fdf053">Foam::fvPatch::size</a></div><div class="ttdeci">virtual label size() const </div><div class="ttdoc">Return size. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00161">fvPatch.H:161</a></div></div>
+<div class="ttc" id="a00990_html_a293edbfde9c3261e77d5f9243d84648e"><div class="ttname"><a href="a00990.html#a293edbfde9c3261e77d5f9243d84648e">Foam::regionModels::surfaceFilmModels::heatTransferModel::h</a></div><div class="ttdeci">virtual tmp&lt; volScalarField &gt; h() const  =0</div><div class="ttdoc">Return the heat transfer coefficient [W/m2/K]. </div></div>
+<div class="ttc" id="a10725_html_a28f53307dad4466f23067e79a948e2a1"><div class="ttname"><a href="a10725.html#a28f53307dad4466f23067e79a948e2a1">Foam::refCast</a></div><div class="ttdeci">To &amp; refCast(From &amp;r)</div><div class="ttdoc">Reference type cast template function. </div><div class="ttdef"><b>Definition:</b> <a href="a07864_source.html#l00106">typeInfo.H:106</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a00885_html_a68566c15658234b1c4c972ff9bfcee26"><div class="ttname"><a href="a00885.html#a68566c15658234b1c4c972ff9bfcee26">Foam::fvPatch::deltaCoeffs</a></div><div class="ttdeci">const scalarField &amp; deltaCoeffs() const </div><div class="ttdoc">Return the face - cell distance coeffient. </div><div class="ttdef"><b>Definition:</b> <a href="a05922_source.html#l00164">fvPatch.C:164</a></div></div>
+<div class="ttc" id="a00876_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a00876.html#a75b72488d2e82151b025744974919d5d">Foam::fvMesh::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return reference to name. </div><div class="ttdef"><b>Definition:</b> <a href="a05871_source.html#l00257">fvMesh.H:257</a></div></div>
+<div class="ttc" id="a02131_html_ab5a56b597db315d880e81c09a4341244"><div class="ttname"><a href="a02131.html#ab5a56b597db315d880e81c09a4341244">Foam::regionModels::regionModel::time</a></div><div class="ttdeci">const Time &amp; time() const </div><div class="ttdoc">Return the reference to the time database. </div><div class="ttdef"><b>Definition:</b> <a href="a09467_source.html#l00037">regionModelI.H:37</a></div></div>
+<div class="ttc" id="a00885_html_afaaf754f8e65cc448cfe3dfb1e033ae1"><div class="ttname"><a href="a00885.html#afaaf754f8e65cc448cfe3dfb1e033ae1">Foam::fvPatch::lookupPatchField</a></div><div class="ttdeci">const GeometricField::PatchFieldType &amp; lookupPatchField(const word &amp;name, const GeometricField *=NULL, const Type *=NULL) const </div><div class="ttdoc">Lookup and return the patchField of the named field from the. </div><div class="ttdef"><b>Definition:</b> <a href="a05924_source.html#l00032">fvPatchFvMeshTemplates.C:32</a></div></div>
+<div class="ttc" id="a00784_html_a4b4d28b402b6dad014790c4172a84bb6"><div class="ttname"><a href="a00784.html#a4b4d28b402b6dad014790c4172a84bb6">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::K</a></div><div class="ttdeci">tmp&lt; scalarField &gt; K() const </div><div class="ttdoc">Get corresponding K field. </div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10725_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10725.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09070_source.html#l00614">POSIX.C:614</a></div></div>
+<div class="ttc" id="a02917_html_a8f30b3c2179b03a7acf273e9dea43342"><div class="ttname"><a href="a02917.html#a8f30b3c2179b03a7acf273e9dea43342">write</a></div><div class="ttdeci">runTime write()</div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02042_html"><div class="ttname"><a href="a02042.html">Foam::regionModels::pyrolysisModels::pyrolysisModel</a></div><div class="ttdoc">Base class for pyrolysis models. </div><div class="ttdef"><b>Definition:</b> <a href="a09449_source.html#l00060">pyrolysisModel.H:60</a></div></div>
+<div class="ttc" id="a02131_html_ab75224234f0496ea2c9f2eed3f848d1a"><div class="ttname"><a href="a02131.html#ab75224234f0496ea2c9f2eed3f848d1a">Foam::regionModels::regionModel::nbrCoupledPatchID</a></div><div class="ttdeci">label nbrCoupledPatchID(const regionModel &amp;nbrRegion, const label regionPatchI) const </div><div class="ttdoc">Return the coupled patch ID paired with coupled patch. </div><div class="ttdef"><b>Definition:</b> <a href="a09465_source.html#l00303">regionModel.C:303</a></div></div>
+<div class="ttc" id="a00784_html"><div class="ttname"><a href="a00784.html">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00092">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.H:92</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a10735_html_a97fb79d7ca4d61fd4a89879cf7f990ae"><div class="ttname"><a href="a10735.html#a97fb79d7ca4d61fd4a89879cf7f990ae">Foam::constant::atomic::alpha</a></div><div class="ttdeci">const dimensionedScalar alpha</div><div class="ttdoc">Fine-structure constant: default SI units: []. </div><div class="ttdef"><b>Definition:</b> <a href="a03877_source.html#l00216">readThermalProperties.H:216</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">Foam::token::END_STATEMENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00099">token.H:99</a></div></div>
+<div class="ttc" id="a02131_html_a3f74d6f26fb409562d28d2365d1bbf12"><div class="ttname"><a href="a02131.html#a3f74d6f26fb409562d28d2365d1bbf12">Foam::regionModels::regionModel::primaryMesh</a></div><div class="ttdeci">const fvMesh &amp; primaryMesh() const </div><div class="ttdoc">Return the reference to the primary mesh database. </div><div class="ttdef"><b>Definition:</b> <a href="a09467_source.html#l00031">regionModelI.H:31</a></div></div>
+<div class="ttc" id="a00524_html_ae9d6521e0e8d3956f9b49ddeb44877b8"><div class="ttname"><a href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">Foam::dictionary::found</a></div><div class="ttdeci">bool found(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Search dictionary for given keyword. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00306">dictionary.C:306</a></div></div>
+<div class="ttc" id="a02560_html_a27f7eb60b12da7ce5742958e36252898"><div class="ttname"><a href="a02560.html#a27f7eb60b12da7ce5742958e36252898">Foam::temperatureCoupledBase::kappa</a></div><div class="ttdeci">tmp&lt; scalarField &gt; kappa(const scalarField &amp;Tp) const </div><div class="ttdoc">Given patch temperature calculate corresponding K field. </div><div class="ttdef"><b>Definition:</b> <a href="a10515_source.html#l00101">temperatureCoupledBase.C:101</a></div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a03120_html_a942cd19121a46cdc649099eb27c74b18"><div class="ttname"><a href="a03120.html#a942cd19121a46cdc649099eb27c74b18">dimensionedInternalField</a></div><div class="ttdeci">rDeltaT dimensionedInternalField()</div></div>
+<div class="ttc" id="a07278_html"><div class="ttname"><a href="a07278.html">mappedPatchBase.H</a></div></div>
+<div class="ttc" id="a03922_html_a658027ecaee450b6533bd8d019d2c1f5"><div class="ttname"><a href="a03922.html#a658027ecaee450b6533bd8d019d2c1f5">boundary</a></div><div class="ttdeci">faceListList boundary(nPatches)</div></div>
+<div class="ttc" id="a04427_html_a78bcf340cde4f20cf12473945680d11a"><div class="ttname"><a href="a04427.html#a78bcf340cde4f20cf12473945680d11a">Qr</a></div><div class="ttdeci">volScalarField Qr(IOobject(                    &quot;Qr&quot;,                       runTime.timeName(),                       mesh,                       IOobject::READ_IF_PRESENT,                       IOobject::NO_WRITE       ), mesh, dimensionedScalar(&quot;Qr&quot;, dimMass/pow3(dimTime), 0.0))</div></div>
+<div class="ttc" id="a10725_html_a447107a607d03e417307c203fa5fb44b"><div class="ttname"><a href="a10725.html#a447107a607d03e417307c203fa5fb44b">Foam::abort</a></div><div class="ttdeci">errorManip&lt; error &gt; abort(error &amp;err)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00131">errorManip.H:131</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a09458_html"><div class="ttname"><a href="a09458.html">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.H</a></div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a02560_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a02560.html#a0941061ad5a26be83b4107d05750ace6">Foam::temperatureCoupledBase::write</a></div><div class="ttdeci">void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a10515_source.html#l00225">temperatureCoupledBase.C:225</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a01688_html_a8e23a9a988d3882cb74a1ada1e71f50b"><div class="ttname"><a href="a01688.html#a8e23a9a988d3882cb74a1ada1e71f50b">Foam::objectRegistry::lookupClass</a></div><div class="ttdeci">HashTable&lt; const Type * &gt; lookupClass(const bool strict=false) const </div><div class="ttdoc">Lookup and return all objects of the given Type. </div></div>
+<div class="ttc" id="a10725_html_a828d57f6d9b9806c086a3f840a147115"><div class="ttname"><a href="a10725.html#a828d57f6d9b9806c086a3f840a147115">Foam::readScalar</a></div><div class="ttdeci">bool readScalar(const char *buf, doubleScalar &amp;s)</div><div class="ttdoc">Read whole of buf as a scalar. Return true if succesful. </div><div class="ttdef"><b>Definition:</b> <a href="a08932_source.html#l00063">doubleScalar.H:63</a></div></div>
+<div class="ttc" id="a02131_html_a779f4d55fab3a54210ef162099b2bf12"><div class="ttname"><a href="a02131.html#a779f4d55fab3a54210ef162099b2bf12">Foam::regionModels::regionModel::mapRegionPatchField</a></div><div class="ttdeci">tmp&lt; Foam::Field&lt; Type &gt; &gt; mapRegionPatchField(const regionModel &amp;nbrRegion, const label regionPatchI, const label nbrPatchI, const Field&lt; Type &gt; &amp;nbrField, const bool flip=false) const </div><div class="ttdoc">Map patch field from another region model to local patch. </div></div>
+<div class="ttc" id="a01420_html_a80e7d2240854cf86b347a95cb1bab341"><div class="ttname"><a href="a01420.html#a80e7d2240854cf86b347a95cb1bab341">Foam::mappedPatchBase::sampleMesh</a></div><div class="ttdeci">const polyMesh &amp; sampleMesh() const </div><div class="ttdoc">Get the region mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07277_source.html#l01235">mappedPatchBase.C:1235</a></div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a10725_html_ab45e56189711a2e5cdd381a0e2b6cc5c"><div class="ttname"><a href="a10725.html#ab45e56189711a2e5cdd381a0e2b6cc5c">Foam::gAverage</a></div><div class="ttdeci">Type gAverage(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00571">FieldFieldFunctions.C:571</a></div></div>
+<div class="ttc" id="a10725_html_a11b1ebb4c53ad062332767d75ca96328"><div class="ttname"><a href="a10725.html#a11b1ebb4c53ad062332767d75ca96328">Foam::gSum</a></div><div class="ttdeci">Type gSum(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00564">FieldFieldFunctions.C:564</a></div></div>
+<div class="ttc" id="a10725_html_ae8d631fb8e841947408bb711abfb1e67"><div class="ttname"><a href="a10725.html#ae8d631fb8e841947408bb711abfb1e67">Foam::gMax</a></div><div class="ttdeci">Type gMax(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00562">FieldFieldFunctions.C:562</a></div></div>
+<div class="ttc" id="a00885_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a00885.html#a75b72488d2e82151b025744974919d5d">Foam::fvPatch::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00149">fvPatch.H:149</a></div></div>
+<div class="ttc" id="a00886_html_a6a896c9a07142ef7985d976d61181176"><div class="ttname"><a href="a00886.html#a6a896c9a07142ef7985d976d61181176">Foam::fvPatchField::operator=</a></div><div class="ttdeci">virtual void operator=(const UList&lt; Type &gt; &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a05513_source.html#l00380">fvPatchField.C:380</a></div></div>
+<div class="ttc" id="a01420_html_a19634e92e19466f33831b6908d0a4fab"><div class="ttname"><a href="a01420.html#a19634e92e19466f33831b6908d0a4fab">Foam::mappedPatchBase::distribute</a></div><div class="ttdeci">void distribute(List&lt; Type &gt; &amp;lst) const </div><div class="ttdoc">Wrapper around map/interpolate data distribution. </div><div class="ttdef"><b>Definition:</b> <a href="a07280_source.html#l00027">mappedPatchBaseTemplates.C:27</a></div></div>
+<div class="ttc" id="a10725_html_a44a8c9a8ab08f6bf1f84bf3dab3f82a2"><div class="ttname"><a href="a10725.html#a44a8c9a8ab08f6bf1f84bf3dab3f82a2">Foam::makePatchTypeField</a></div><div class="ttdeci">makePatchTypeField(fvPatchVectorField, SRFFreestreamVelocityFvPatchVectorField)</div></div>
+<div class="ttc" id="a10725_html_a36d195c257b66c83b3ca1069e5ec8d15"><div class="ttname"><a href="a10725.html#a36d195c257b66c83b3ca1069e5ec8d15">Foam::volScalarField</a></div><div class="ttdeci">GeometricField&lt; scalar, fvPatchField, volMesh &gt; volScalarField</div><div class="ttdef"><b>Definition:</b> <a href="a05610_source.html#l00052">volFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a07669_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00449">UList.H:449</a></div></div>
+<div class="ttc" id="a00784_html_a1bdcd6a656ea3867f4ffa06e0eb51e41"><div class="ttname"><a href="a00784.html#a1bdcd6a656ea3867f4ffa06e0eb51e41">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField</a></div><div class="ttdeci">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField(const fvPatch &amp;, const DimensionedField&lt; scalar, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00103">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.C:103</a></div></div>
+<div class="ttc" id="a00921_html_a3c6c1a789b48ea0c5e8bff64f9c14f2d"><div class="ttname"><a href="a00921.html#a3c6c1a789b48ea0c5e8bff64f9c14f2d">Foam::GeometricField::boundaryField</a></div><div class="ttdeci">GeometricBoundaryField &amp; boundaryField()</div><div class="ttdoc">Return reference to GeometricBoundaryField. </div><div class="ttdef"><b>Definition:</b> <a href="a08019_source.html#l00686">GeometricField.C:686</a></div></div>
+<div class="ttc" id="a00524_html_ab188313de67c2c7ad4a5e8151eefb49d"><div class="ttname"><a href="a00524.html#ab188313de67c2c7ad4a5e8151eefb49d">Foam::dictionary::lookupOrDefault</a></div><div class="ttdeci">T lookupOrDefault(const word &amp;, const T &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return a T,. </div><div class="ttdef"><b>Definition:</b> <a href="a07689_source.html#l00033">dictionaryTemplates.C:33</a></div></div>
+<div class="ttc" id="a01420_html"><div class="ttname"><a href="a01420.html">Foam::mappedPatchBase</a></div><div class="ttdoc">Determines a mapping between patch face centres and mesh cell or face centres and processors they&#39;re ...</div><div class="ttdef"><b>Definition:</b> <a href="a07278_source.html#l00101">mappedPatchBase.H:101</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a00784_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a00784.html#a7e24eafac629d3733181cd942d4c902f">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients associated with the patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a09457_source.html#l00219">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.C:219</a></div></div>
+<div class="ttc" id="a10725_html_aca330ee6cfe7d602300dbc5905f8c9f6"><div class="ttname"><a href="a10725.html#aca330ee6cfe7d602300dbc5905f8c9f6">Foam::gMin</a></div><div class="ttdeci">Type gMin(const FieldField&lt; Field, Type &gt; &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="a07909_source.html#l00563">FieldFieldFunctions.C:563</a></div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a00784_html_aafc45507cbceff7c24d49e90e4b050b7"><div class="ttname"><a href="a00784.html#aafc45507cbceff7c24d49e90e4b050b7">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::pyrolysisModelType</a></div><div class="ttdeci">Foam::regionModels::pyrolysisModels::pyrolysisModel pyrolysisModelType</div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00103">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.H:103</a></div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a00784_html_afb09096e0a29a690f4e1c9ed38601a49"><div class="ttname"><a href="a00784.html#afb09096e0a29a690f4e1c9ed38601a49">Foam::filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::filmModelType</a></div><div class="ttdeci">Foam::regionModels::surfaceFilmModels::thermoSingleLayer filmModelType</div><div class="ttdef"><b>Definition:</b> <a href="a09458_source.html#l00100">filmPyrolysisRadiativeCoupledMixedFvPatchScalarField.H:100</a></div></div>
+<div class="ttc" id="a02869_html"><div class="ttname"><a href="a02869.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08985_source.html#l00059">word.H:59</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
+<div class="ttc" id="a01799_html_a7d1e8acadb27bd2b4e61457d47b71b6f"><div class="ttname"><a href="a01799.html#a7d1e8acadb27bd2b4e61457d47b71b6f">Foam::patchIdentifier::index</a></div><div class="ttdeci">label index() const </div><div class="ttdoc">Return the index of this patch in the boundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a08468_source.html#l00133">patchIdentifier.H:133</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
+<div class="ttc" id="a02560_html"><div class="ttname"><a href="a02560.html">Foam::temperatureCoupledBase</a></div><div class="ttdoc">Common functions for use in temperature coupled boundaries. </div><div class="ttdef"><b>Definition:</b> <a href="a10516_source.html#l00104">temperatureCoupledBase.H:104</a></div></div>
+<div class="ttc" id="a10725_html_a6e363d070e971ead1a4c40475084e584"><div class="ttname"><a href="a10725.html#a6e363d070e971ead1a4c40475084e584">Foam::scalarField</a></div><div class="ttdeci">Field&lt; scalar &gt; scalarField</div><div class="ttdoc">Specialisation of Field<T> for scalar. </div><div class="ttdef"><b>Definition:</b> <a href="a07963_source.html#l00048">primitiveFieldsFwd.H:48</a></div></div>
+<div class="ttc" id="a02131_html_ae3e2347b9e0b838573435f06d9e51bf0"><div class="ttname"><a href="a02131.html#ae3e2347b9e0b838573435f06d9e51bf0">Foam::regionModels::regionModel::toPrimary</a></div><div class="ttdeci">void toPrimary(const label regionPatchI, List&lt; Type &gt; &amp;regionField) const </div><div class="ttdoc">Convert a local region field to the primary region. </div><div class="ttdef"><b>Definition:</b> <a href="a09468_source.html#l00161">regionModelTemplates.C:161</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

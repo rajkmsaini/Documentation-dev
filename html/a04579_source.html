@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_ad006ac2d4adf68d191bc9af38a824ca.html">thermophysical</a></li><li class="navelem"><a class="el" href="dir_0ad7c9a720bf0d963f3aee398084f3b5.html">chemkinToFoam</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_2cb9088fcfa5d85f3ea0b5a37d6be287.html">preProcessing</a></li><li class="navelem"><a class="el" href="dir_2bff761b90451d3e5a5395d4816ecc83.html">wallFunctionTable</a></li><li class="navelem"><a class="el" href="dir_9d6d4bfa5eea1af8e55384bbf07dd9db.html">tabulatedWallFunction</a></li><li class="navelem"><a class="el" href="dir_84484b4bbc0b7304a2ca4f93bbec51bc.html">tabulatedWallFunction</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">chemkinToFoam.C</div>  </div>
+<div class="title">tabulatedWallFunctionNew.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a04579.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,78 +119,62 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Application</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    chemkinToFoam</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Converts CHEMKINIII thermodynamics and reaction data files into</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    OpenFOAM format.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08097.html">argList.H</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10116.html">chemkinReader.H</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07720.html">OFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a04577.html">tabulatedWallFunction.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>tabulatedWallFunctions</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">using namespace </span><a class="code" href="a10675.html">Foam</a>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">int</span> <a class="code" href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;autoPtr&lt;tabulatedWallFunction&gt; <a class="code" href="a02555.html#a8b4ec9c2e6dd11cd9bc5c23938198c40">tabulatedWallFunction::New</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;(</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> dictionary&amp; dict,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> polyMesh&amp; mesh</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;)</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a00065.html#ac8aad3029c6566991cdcb3aebab399a2">argList::validArgs</a>.append(<span class="stringliteral">&quot;CHEMKINFile&quot;</span>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a00065.html#ac8aad3029c6566991cdcb3aebab399a2">argList::validArgs</a>.append(<span class="stringliteral">&quot;CHEMKINThermodynamicsFile&quot;</span>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a00065.html#ac8aad3029c6566991cdcb3aebab399a2">argList::validArgs</a>.append(<span class="stringliteral">&quot;FOAMChemistryFile&quot;</span>);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="a00065.html#ac8aad3029c6566991cdcb3aebab399a2">argList::validArgs</a>.append(<span class="stringliteral">&quot;FOAMThermodynamicsFile&quot;</span>);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="a00065.html#a4713251600d03471873e0d9bd8379c5c">argList::addBoolOption</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    (</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="stringliteral">&quot;newFormat&quot;</span>,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="stringliteral">&quot;read Chemkin thermo file in new format&quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    );</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a00065.html">argList</a> <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>(argc, argv);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">bool</span> newFormat = <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>.<a class="code" href="a00065.html#a1448e8925bc2243c51fa37aa47b66453">optionFound</a>(<span class="stringliteral">&quot;newFormat&quot;</span>);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a00972.html">speciesTable</a> species;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="a00268.html">chemkinReader</a> cr(<a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>[1], species, <a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>[2], newFormat);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    word twfTypeName = dict.lookup(<span class="stringliteral">&quot;tabulatedWallFunction&quot;</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Selecting tabulatedWallFunction &quot;</span> &lt;&lt; twfTypeName &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    dictionaryConstructorTable::iterator cstrIter =</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        dictionaryConstructorTablePtr_-&gt;find(twfTypeName);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">if</span> (cstrIter == dictionaryConstructorTablePtr_-&gt;end())</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            &lt;&lt; <span class="stringliteral">&quot;Unknown tabulatedWallFunction type &quot;</span> &lt;&lt; twfTypeName</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a> &lt;&lt; <span class="stringliteral">&quot;Valid tabulatedWallFunction types are:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            &lt;&lt; dictionaryConstructorTablePtr_-&gt;toc()</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            &lt;&lt; <a class="code" href="a10725.html#a06ca7250d8e89caf05243ec094843642">exit</a>(<a class="code" href="a10725.html#ac50d206700f3f71855dd30c9a076de43">FatalError</a>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> autoPtr&lt;tabulatedWallFunction&gt;(cstrIter()(<a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, <a class="code" href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a>));</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a01692.html">OFstream</a> reactionsFile(<a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>[3]);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    reactionsFile</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        &lt;&lt; <span class="stringliteral">&quot;species&quot;</span> &lt;&lt; cr.species() &lt;&lt; <a class="code" href="a02609.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; nl &lt;&lt; <a class="code" href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    cr.reactions().write(reactionsFile);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;} <span class="comment">// End namespace tabulatedWallFunctions</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} <span class="comment">// End namespace Foam</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="a01692.html">OFstream</a> thermoFile(<a class="code" href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a>[4]);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    cr.speciesThermo().write(thermoFile);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;End\n&quot;</span> &lt;&lt; <a class="code" href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01692_html"><div class="ttname"><a href="a01692.html">Foam::OFstream</a></div><div class="ttdoc">Output to file stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07720_source.html#l00081">OFstream.H:81</a></div></div>
-<div class="ttc" id="a00268_html"><div class="ttname"><a href="a00268.html">Foam::chemkinReader</a></div><div class="ttdoc">Foam::chemkinReader. </div><div class="ttdef"><b>Definition:</b> <a href="a10116_source.html#l00062">chemkinReader.H:62</a></div></div>
-<div class="ttc" id="a10675_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10675.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00251">Ostream.H:251</a></div></div>
-<div class="ttc" id="a00065_html_a4713251600d03471873e0d9bd8379c5c"><div class="ttname"><a href="a00065.html#a4713251600d03471873e0d9bd8379c5c">Foam::argList::addBoolOption</a></div><div class="ttdeci">static void addBoolOption(const word &amp;opt, const string &amp;usage=&quot;&quot;)</div><div class="ttdoc">Add to a bool option to validOptions with usage information. </div><div class="ttdef"><b>Definition:</b> <a href="a08096_source.html#l00083">argList.C:83</a></div></div>
-<div class="ttc" id="a00065_html_a1448e8925bc2243c51fa37aa47b66453"><div class="ttname"><a href="a00065.html#a1448e8925bc2243c51fa37aa47b66453">Foam::argList::optionFound</a></div><div class="ttdeci">bool optionFound(const word &amp;opt) const </div><div class="ttdoc">Return true if the named option is found. </div><div class="ttdef"><b>Definition:</b> <a href="a08098_source.html#l00108">argListI.H:108</a></div></div>
-<div class="ttc" id="a02609_html_a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38"><div class="ttname"><a href="a02609.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">Foam::token::END_STATEMENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07774_source.html#l00099">token.H:99</a></div></div>
-<div class="ttc" id="a07720_html"><div class="ttname"><a href="a07720.html">OFstream.H</a></div></div>
-<div class="ttc" id="a00065_html_ac8aad3029c6566991cdcb3aebab399a2"><div class="ttname"><a href="a00065.html#ac8aad3029c6566991cdcb3aebab399a2">Foam::argList::validArgs</a></div><div class="ttdeci">static SLList&lt; string &gt; validArgs</div><div class="ttdoc">A list of valid (mandatory) arguments. </div><div class="ttdef"><b>Definition:</b> <a href="a08097_source.html#l00154">argList.H:154</a></div></div>
-<div class="ttc" id="a10116_html"><div class="ttname"><a href="a10116.html">chemkinReader.H</a></div></div>
-<div class="ttc" id="a10675_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10675.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07733_source.html#l00260">Ostream.H:260</a></div></div>
-<div class="ttc" id="a08162_html_ab517f1c9143023797c59a4aa1b3ea71f"><div class="ttname"><a href="a08162.html#ab517f1c9143023797c59a4aa1b3ea71f">args</a></div><div class="ttdeci">Foam::argList args(argc, argv)</div></div>
-<div class="ttc" id="a08097_html"><div class="ttname"><a href="a08097.html">argList.H</a></div></div>
-<div class="ttc" id="a00972_html"><div class="ttname"><a href="a00972.html">Foam::hashedWordList</a></div><div class="ttdoc">A wordList with hashed indices for faster lookup by name. </div><div class="ttdef"><b>Definition:</b> <a href="a08915_source.html#l00057">hashedWordList.H:57</a></div></div>
-<div class="ttc" id="a10675_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10675.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
-<div class="ttc" id="a00065_html"><div class="ttname"><a href="a00065.html">Foam::argList</a></div><div class="ttdoc">Extract command arguments and options from the supplied argc and argv parameters. ...</div><div class="ttdef"><b>Definition:</b> <a href="a08097_source.html#l00102">argList.H:102</a></div></div>
-<div class="ttc" id="a09365_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a09365.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a09365_source.html#l00054">postCalc.C:54</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a04725_html_a4c1de256df6b3d186a85745b3149394a"><div class="ttname"><a href="a04725.html#a4c1de256df6b3d186a85745b3149394a">mesh</a></div><div class="ttdeci">dynamicFvMesh &amp; mesh</div><div class="ttdef"><b>Definition:</b> <a href="a04725_source.html#l00018">createDynamicFvMesh.H:18</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a10725_html_a06ca7250d8e89caf05243ec094843642"><div class="ttname"><a href="a10725.html#a06ca7250d8e89caf05243ec094843642">Foam::exit</a></div><div class="ttdeci">errorManipArg&lt; error, int &gt; exit(error &amp;err, const int errNo=1)</div><div class="ttdef"><b>Definition:</b> <a href="a07725_source.html#l00124">errorManip.H:124</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a10725_html_ac50d206700f3f71855dd30c9a076de43"><div class="ttname"><a href="a10725.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a></div><div class="ttdeci">error FatalError</div></div>
+<div class="ttc" id="a02555_html_a8b4ec9c2e6dd11cd9bc5c23938198c40"><div class="ttname"><a href="a02555.html#a8b4ec9c2e6dd11cd9bc5c23938198c40">Foam::tabulatedWallFunctions::tabulatedWallFunction::New</a></div><div class="ttdeci">static autoPtr&lt; tabulatedWallFunction &gt; New(const dictionary &amp;dict, const polyMesh &amp;mesh)</div><div class="ttdoc">Selector. </div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a07724_html_af2484eff8084de37cba5d9d7a00fb293"><div class="ttname"><a href="a07724.html#af2484eff8084de37cba5d9d7a00fb293">FatalErrorInFunction</a></div><div class="ttdeci">#define FatalErrorInFunction</div><div class="ttdoc">Report an error message using Foam::FatalError. </div><div class="ttdef"><b>Definition:</b> <a href="a07724_source.html#l00319">error.H:319</a></div></div>
+<div class="ttc" id="a04577_html"><div class="ttname"><a href="a04577.html">tabulatedWallFunction.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

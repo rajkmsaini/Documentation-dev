@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_962442b8f989d5529fab5e0f0e4ffb74.html">fields</a></li><li class="navelem"><a class="el" href="dir_7d364942a13d3ce50f6681364b448a98.html">Fields</a></li><li class="navelem"><a class="el" href="dir_62121045496432322c34e84039d5b7cd.html">diagTensorField</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c5473ff19b20e6ec4dfe5c310b3778a8.html">OpenFOAM</a></li><li class="navelem"><a class="el" href="dir_962442b8f989d5529fab5e0f0e4ffb74.html">fields</a></li><li class="navelem"><a class="el" href="dir_601461f72cb8e2bd89ab876e79d2e8aa.html">cloud</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">diagTensorIOField.H</div>  </div>
+<div class="title">mapClouds.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07885.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -119,37 +119,71 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Typedef</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::diagTensorIOField</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">InNamespace</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::mapClouds</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    diagTensorField with IO.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef diagTensorIOField_H</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define diagTensorIOField_H</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07881.html">diagTensorField.H</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07709.html">IOField.H</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Generic Geometric field mapper.  For &quot;real&quot; mapping, add template</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    specialisations for mapping of internal fields depending on mesh</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    type.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef mapClouds_H</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define mapClouds_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07884.html">cloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07832.html">objectRegistry.H</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a10675.html#af7c811cb5a9081e1bc9ddfde919e42ac">   42</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="a01165.html">IOField&lt;diagTensor&gt;</a> <a class="code" href="a10675.html#af7c811cb5a9081e1bc9ddfde919e42ac">diagTensorIOField</a>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a07709_html"><div class="ttname"><a href="a07709.html">IOField.H</a></div></div>
-<div class="ttc" id="a07881_html"><div class="ttname"><a href="a07881.html">diagTensorField.H</a></div></div>
-<div class="ttc" id="a10675_html_af7c811cb5a9081e1bc9ddfde919e42ac"><div class="ttname"><a href="a10675.html#af7c811cb5a9081e1bc9ddfde919e42ac">Foam::diagTensorIOField</a></div><div class="ttdeci">IOField&lt; diagTensor &gt; diagTensorIOField</div><div class="ttdoc">diagTensorField with IO. </div><div class="ttdef"><b>Definition:</b> <a href="a07885_source.html#l00042">diagTensorIOField.H:42</a></div></div>
-<div class="ttc" id="a01165_html"><div class="ttname"><a href="a01165.html">Foam::IOField</a></div><div class="ttdoc">A primitive field of type <T> with automated input and output. </div><div class="ttdef"><b>Definition:</b> <a href="a07709_source.html#l00050">IOField.H:50</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">//- Generic Geometric field mapper.</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">//  For &quot;real&quot; mapping, add template specialisations for mapping of internal</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">//  fields depending on mesh type.</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a10725.html#a6be781af3daa081b41b12982c81ea787">   48</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="a10725.html#a6be781af3daa081b41b12982c81ea787">mapClouds</a>(<span class="keyword">const</span> <a class="code" href="a01688.html">objectRegistry</a>&amp; db, <span class="keyword">const</span> <a class="code" href="a01431.html">mapPolyMesh</a>&amp; mapper)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a00984.html">HashTable&lt;const cloud*&gt;</a> clouds(db.<a class="code" href="a01688.html#a8e23a9a988d3882cb74a1ada1e71f50b">lookupClass</a>&lt;<a class="code" href="a00282.html">cloud</a>&gt;());</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="a07669.html#a6ddb7d9e8299f07327eb1a5eb9cf58f2">forAllIter</a>(<a class="code" href="a00984.html">HashTable&lt;const cloud*&gt;</a>, clouds, iter)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="a00282.html">cloud</a>&amp; c = <span class="keyword">const_cast&lt;</span><a class="code" href="a00282.html">cloud</a>&amp;<span class="keyword">&gt;</span>(*iter());</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">if</span> (polyMesh::debug)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <a class="code" href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Info</a>&lt;&lt; <span class="stringliteral">&quot;Mapping cloud &quot;</span> &lt;&lt; c.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        c.<a class="code" href="a00282.html#a92925e15793eb93f049bdd7d1bfdff58">autoMap</a>(mapper);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html_a6be781af3daa081b41b12982c81ea787"><div class="ttname"><a href="a10725.html#a6be781af3daa081b41b12982c81ea787">Foam::mapClouds</a></div><div class="ttdeci">void mapClouds(const objectRegistry &amp;db, const mapPolyMesh &amp;mapper)</div><div class="ttdoc">Generic Geometric field mapper. </div><div class="ttdef"><b>Definition:</b> <a href="a07885_source.html#l00048">mapClouds.H:48</a></div></div>
+<div class="ttc" id="a07884_html"><div class="ttname"><a href="a07884.html">cloud.H</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a07669_html_a6ddb7d9e8299f07327eb1a5eb9cf58f2"><div class="ttname"><a href="a07669.html#a6ddb7d9e8299f07327eb1a5eb9cf58f2">forAllIter</a></div><div class="ttdeci">#define forAllIter(Container, container, iter)                                                                  </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00431">UList.H:431</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01688_html"><div class="ttname"><a href="a01688.html">Foam::objectRegistry</a></div><div class="ttdoc">Registry of regIOobjects. </div><div class="ttdef"><b>Definition:</b> <a href="a07832_source.html#l00050">objectRegistry.H:50</a></div></div>
+<div class="ttc" id="a00984_html"><div class="ttname"><a href="a00984.html">Foam::HashTable</a></div><div class="ttdoc">An STL-conforming hash table. </div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00061">HashTable.H:61</a></div></div>
+<div class="ttc" id="a00282_html"><div class="ttname"><a href="a00282.html">Foam::cloud</a></div><div class="ttdoc">A cloud is a collection of lagrangian particles. </div><div class="ttdef"><b>Definition:</b> <a href="a07884_source.html#l00051">cloud.H:51</a></div></div>
+<div class="ttc" id="a07832_html"><div class="ttname"><a href="a07832.html">objectRegistry.H</a></div></div>
+<div class="ttc" id="a10725_html_a501e80d1e14c94973e82f1555e7eb711"><div class="ttname"><a href="a10725.html#a501e80d1e14c94973e82f1555e7eb711">Foam::Info</a></div><div class="ttdeci">messageStream Info</div></div>
+<div class="ttc" id="a01688_html_a8e23a9a988d3882cb74a1ada1e71f50b"><div class="ttname"><a href="a01688.html#a8e23a9a988d3882cb74a1ada1e71f50b">Foam::objectRegistry::lookupClass</a></div><div class="ttdeci">HashTable&lt; const Type * &gt; lookupClass(const bool strict=false) const </div><div class="ttdoc">Lookup and return all objects of the given Type. </div></div>
+<div class="ttc" id="a00282_html_a92925e15793eb93f049bdd7d1bfdff58"><div class="ttname"><a href="a00282.html#a92925e15793eb93f049bdd7d1bfdff58">Foam::cloud::autoMap</a></div><div class="ttdeci">virtual void autoMap(const mapPolyMesh &amp;)</div><div class="ttdoc">Remap the cells of particles corresponding to the. </div><div class="ttdef"><b>Definition:</b> <a href="a07883_source.html#l00067">cloud.C:67</a></div></div>
+<div class="ttc" id="a01431_html"><div class="ttname"><a href="a01431.html">Foam::mapPolyMesh</a></div><div class="ttdoc">Class containing mesh-to-mesh mapping information after a change in polyMesh topology. </div><div class="ttdef"><b>Definition:</b> <a href="a08620_source.html#l00158">mapPolyMesh.H:158</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

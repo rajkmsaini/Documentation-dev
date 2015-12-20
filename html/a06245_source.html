@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_ab5426228c8fb14cfc52c0ebfb464378.html">sources</a></li><li class="navelem"><a class="el" href="dir_04ada5f3e1c5f73b4b84eeccdf3d9cec.html">derived</a></li><li class="navelem"><a class="el" href="dir_302b93324372230db987b55787390993.html">solidificationMeltingSource</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3feeed9f14097927738cfbd9bcefd859.html">fvOptions</a></li><li class="navelem"><a class="el" href="dir_35258aa5e0da929963ca5864cc4044a5.html">constraints</a></li><li class="navelem"><a class="el" href="dir_7a951326ad32a095872b9f7d751d0b80.html">general</a></li><li class="navelem"><a class="el" href="dir_d7e1f4e268ef79af46c71aeb39ab5554.html">explicitSetValue</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">solidificationMeltingSourceIO.C</div>  </div>
+<div class="title">ExplicitSetValueIO.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06245.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,52 +121,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06244.html">solidificationMeltingSource.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06244.html">ExplicitSetValue.H</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="a02356.html#a6ce0c64db98eb6144d363dbfc86104eb">   30</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a02356.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::solidificationMeltingSource::read</a>(<span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a00224.html#a6ce0c64db98eb6144d363dbfc86104eb">cellSetOption::read</a>(dict))</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;Tmelt&quot;</span>) &gt;&gt; Tmelt_;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;L&quot;</span>) &gt;&gt; L_;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;relax&quot;</span>, relax_);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        mode_ = <a class="code" href="a02356.html#af372385be2eed98146f57ceb69acce32">thermoModeTypeNames_</a>.<a class="code" href="a01558.html#a255819e1197b63592b6b8dbc6b9585c5">read</a>(<a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;thermoMode&quot;</span>));</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;rhoRef&quot;</span>) &gt;&gt; rhoRef_;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;TName&quot;</span>, TName_);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;UName&quot;</span>, UName_);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a00687.html#a6ce0c64db98eb6144d363dbfc86104eb">   31</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00687.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::ExplicitSetValue&lt;Type&gt;::read</a>(<span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; <a class="code" href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">cellSetOption::read</a>(dict))</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        setFieldData(coeffs_.subDict(<span class="stringliteral">&quot;injectionRate&quot;</span>));</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;Cu&quot;</span>, Cu_);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;q&quot;</span>, q_);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">coeffs_</a>.<a class="code" href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">readIfPresent</a>(<span class="stringliteral">&quot;beta&quot;</span>, beta_);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02356_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a02356.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::solidificationMeltingSource::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read source dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06245_source.html#l00030">solidificationMeltingSourceIO.C:30</a></div></div>
-<div class="ttc" id="a01704_html_a7b0976d42fed52bc3770b92aa4468135"><div class="ttname"><a href="a01704.html#a7b0976d42fed52bc3770b92aa4468135">Foam::fv::option::coeffs_</a></div><div class="ttdeci">dictionary coeffs_</div><div class="ttdoc">Dictionary containing source coefficients. </div><div class="ttdef"><b>Definition:</b> <a href="a06195_source.html#l00084">fvOption.H:84</a></div></div>
-<div class="ttc" id="a00224_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a00224.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::cellSetOption::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read source dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06183_source.html#l00030">cellSetOptionIO.C:30</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a00518_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00518.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07632_source.html#l00452">dictionary.C:452</a></div></div>
-<div class="ttc" id="a02356_html_af372385be2eed98146f57ceb69acce32"><div class="ttname"><a href="a02356.html#af372385be2eed98146f57ceb69acce32">Foam::fv::solidificationMeltingSource::thermoModeTypeNames_</a></div><div class="ttdeci">static const NamedEnum&lt; thermoMode, 2 &gt; thermoModeTypeNames_</div><div class="ttdef"><b>Definition:</b> <a href="a06244_source.html#l00201">solidificationMeltingSource.H:201</a></div></div>
-<div class="ttc" id="a00518_html_ac3502a72e9d1a84f63c4919b78595cd4"><div class="ttname"><a href="a00518.html#ac3502a72e9d1a84f63c4919b78595cd4">Foam::dictionary::readIfPresent</a></div><div class="ttdeci">bool readIfPresent(const word &amp;, T &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find an entry if present, and assign to T. </div><div class="ttdef"><b>Definition:</b> <a href="a07638_source.html#l00094">dictionaryTemplates.C:94</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a01558_html_a255819e1197b63592b6b8dbc6b9585c5"><div class="ttname"><a href="a01558.html#a255819e1197b63592b6b8dbc6b9585c5">Foam::NamedEnum::read</a></div><div class="ttdeci">Enum read(Istream &amp;) const </div><div class="ttdoc">Read a word from Istream and return the corresponding. </div><div class="ttdef"><b>Definition:</b> <a href="a07625_source.html#l00061">NamedEnum.C:61</a></div></div>
-<div class="ttc" id="a06244_html"><div class="ttname"><a href="a06244.html">solidificationMeltingSource.H</a></div></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a00687_html_a6ce0c64db98eb6144d363dbfc86104eb"><div class="ttname"><a href="a00687.html#a6ce0c64db98eb6144d363dbfc86104eb">Foam::fv::ExplicitSetValue::read</a></div><div class="ttdeci">virtual bool read(const dictionary &amp;dict)</div><div class="ttdoc">Read source dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06245_source.html#l00031">ExplicitSetValueIO.C:31</a></div></div>
+<div class="ttc" id="a10725_html_a18efc6d016047ec7c6d5150d913d8c34"><div class="ttname"><a href="a10725.html#a18efc6d016047ec7c6d5150d913d8c34">Foam::read</a></div><div class="ttdeci">bool read(const char *, int32_t &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a08878_source.html#l00087">int32IO.C:87</a></div></div>
+<div class="ttc" id="a04571_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04571.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04571_source.html#l00014">searchingEngine.H:14</a></div></div>
+<div class="ttc" id="a06244_html"><div class="ttname"><a href="a06244.html">ExplicitSetValue.H</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

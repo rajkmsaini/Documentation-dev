@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b63c002b7559990bd414058641eb48ad.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_fc98c2e9ee0413e7a39bdbd8e1af4ce3.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_09361cf56c32d5394d8654f03a55f311.html">interfaces</a></li><li class="navelem"><a class="el" href="dir_fddef246f4af2fa09dab6fe9a1488c76.html">VTK</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9415e59289a6feeb24164dafa70a594f.html">transportModels</a></li><li class="navelem"><a class="el" href="dir_c88d6d7462244dc5ba84ed1605548fd3.html">interfaceProperties</a></li><li class="navelem"><a class="el" href="dir_6de74109c510cd6a2506e074a875f72a.html">interfaceCompression</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">readVTK.C</div>  </div>
+<div class="title">interfaceCompression.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10428.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,105 +119,81 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10437.html">triSurface.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09821.html">VTKsurfaceFormat.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::interfaceCompressionLimiter</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    Interface compression scheme currently based on the generic limited</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">    scheme although it does not use the NVD/TVD functions.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">    interfaceCompression.C</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">bool</span> Foam::triSurface::readVTK(<span class="keyword">const</span> fileName&amp; fName)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Read (and triangulate) point, faces, zone info</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    fileFormats::VTKsurfaceFormat&lt;triFace&gt; surf(fName);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef interfaceCompression_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define interfaceCompression_H</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a09045.html">vector.H</a>&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    List&lt;labelledTri&gt; tris(surf.faces().size());</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(tris, i)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">const</span> <a class="code" href="a03883.html#a85e205b40128f23c7ad84f2d6fe1a4b1">triFace</a>&amp; <a class="code" href="a03883.html#a888be93833ac7a23170555c69c690288">f</a> = surf[i];</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        tris[i] = labelledTri(f[0], f[1], f[2], 0);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// Add regions from zone</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> List&lt;surfZone&gt;&amp; surfZones = surf.surfZones();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="a10675.html#a4afd3a5c9c7ae7c3ce56d27341f8177e">geometricSurfacePatchList</a> <a class="code" href="a02902.html#a6eea546b8fab7318f4d0d67e4ff28fde">patches</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">                           Class interfaceCompressionWeight Declaration</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a01142.html">   49</a></span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">class </span><a class="code" href="a01142.html">interfaceCompressionLimiter</a></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">if</span> (surfZones.size())</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        patches.setSize(surfZones.size());</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(surfZones, zoneI)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keyword">const</span> surfZone&amp; zone = surfZones[zoneI];</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="comment">// Add patch. Convert synthetic &#39;zone&#39; name into &#39;patch&#39; for now.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="comment">// (vtk format does not contain region names)</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            word regionName = zone.name();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> (regionName != (<span class="keywordtype">string</span>(<span class="stringliteral">&quot;zone&quot;</span>) + <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>(zoneI)))</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                regionName = string(<span class="stringliteral">&quot;patch&quot;</span>) + <a class="code" href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>(zoneI);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            patches[zoneI] = geometricSurfacePatch</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            (</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                (</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                    zone.geometricType() != <a class="code" href="a02856.html#a5e70847c3fec3d9d4c7265dfacdf7fd3">word::null</a></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                  ? zone.geometricType()</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                  : <span class="stringliteral">&quot;empty&quot;</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                ),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                regionName,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                zoneI</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            );</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="a01142.html#a408cc452de9d56dd6784f9e10af90368">   54</a></span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="a01142.html#a408cc452de9d56dd6784f9e10af90368">interfaceCompressionLimiter</a>(<a class="code" href="a01199.html">Istream</a>&amp;)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a01142.html#a039fa741b4c8ebc4957f4bc721f91355">   58</a></span>&#160;    scalar <a class="code" href="a01142.html#a039fa741b4c8ebc4957f4bc721f91355">limiter</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    (</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">const</span> scalar cdWeight,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">const</span> scalar faceFlux,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">const</span> scalar phiP,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">const</span> scalar phiN,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">const</span> <a class="code" href="a02787.html">vector</a>&amp;,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> scalar</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">// Quadratic compression scheme</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">//return min(max(4*min(phiP*(1 - phiP), phiN*(1 - phiN)), 0), 1);</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">// Quartic compression scheme</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <a class="code" href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">min</a>(<a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            1 - <a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(<a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(1 - 4*phiP*(1 - phiP)), <a class="code" href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">sqr</a>(1 - 4*phiN*(1 - phiN))),</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            0), 1);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="comment">// Set triangle regions</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keywordflow">for</span> (<a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i = zone.start(); i &lt; zone.start()+zone.size(); i++)</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                tris[i].region() = zoneI;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="comment">// Add single patch</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        patches[0] = geometricSurfacePatch(<span class="stringliteral">&quot;empty&quot;</span>, <span class="stringliteral">&quot;patch0&quot;</span>, 0);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// Triangle regions already set to 0</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// Create triSurface</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    *<span class="keyword">this</span> = triSurface</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    (</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        tris.xfer(),</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <a class="code" href="a02902.html#a6eea546b8fab7318f4d0d67e4ff28fde">patches</a>,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        xferCopy&lt;List&lt;point&gt; &gt;(surf.points())</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    );</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a10675_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10675.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08761_source.html#l00047">complex.C:47</a></div></div>
-<div class="ttc" id="a10675_html_a4afd3a5c9c7ae7c3ce56d27341f8177e"><div class="ttname"><a href="a10675.html#a4afd3a5c9c7ae7c3ce56d27341f8177e">Foam::geometricSurfacePatchList</a></div><div class="ttdeci">List&lt; geometricSurfacePatch &gt; geometricSurfacePatchList</div><div class="ttdef"><b>Definition:</b> <a href="a10411_source.html#l00044">geometricSurfacePatchList.H:44</a></div></div>
-<div class="ttc" id="a09821_html"><div class="ttname"><a href="a09821.html">VTKsurfaceFormat.H</a></div></div>
-<div class="ttc" id="a10437_html"><div class="ttname"><a href="a10437.html">triSurface.H</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a03883_html_a85e205b40128f23c7ad84f2d6fe1a4b1"><div class="ttname"><a href="a03883.html#a85e205b40128f23c7ad84f2d6fe1a4b1">triFace</a></div><div class="ttdeci">face triFace(3)</div></div>
-<div class="ttc" id="a02902_html_a6eea546b8fab7318f4d0d67e4ff28fde"><div class="ttname"><a href="a02902.html#a6eea546b8fab7318f4d0d67e4ff28fde">patches</a></div><div class="ttdeci">patches[0]</div><div class="ttdef"><b>Definition:</b> <a href="a02902_source.html#l00036">createSingleCellMesh.H:36</a></div></div>
-<div class="ttc" id="a03883_html_a888be93833ac7a23170555c69c690288"><div class="ttname"><a href="a03883.html#a888be93833ac7a23170555c69c690288">f</a></div><div class="ttdeci">labelList f(nPoints)</div></div>
-<div class="ttc" id="a07618_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07618.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00406">UList.H:406</a></div></div>
-<div class="ttc" id="a02856_html_a5e70847c3fec3d9d4c7265dfacdf7fd3"><div class="ttname"><a href="a02856.html#a5e70847c3fec3d9d4c7265dfacdf7fd3">Foam::word::null</a></div><div class="ttdeci">static const word null</div><div class="ttdoc">An empty word. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00077">word.H:77</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a01142_html"><div class="ttname"><a href="a01142.html">Foam::interfaceCompressionLimiter</a></div><div class="ttdoc">Interface compression scheme currently based on the generic limited scheme although it does not use t...</div><div class="ttdef"><b>Definition:</b> <a href="a10428_source.html#l00049">interfaceCompression.H:49</a></div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a01199_html"><div class="ttname"><a href="a01199.html">Foam::Istream</a></div><div class="ttdoc">An Istream is an abstract base class for all input systems (streams, files, token lists etc)...</div><div class="ttdef"><b>Definition:</b> <a href="a07782_source.html#l00057">Istream.H:57</a></div></div>
+<div class="ttc" id="a02787_html"><div class="ttname"><a href="a02787.html">Foam::Vector&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01142_html_a039fa741b4c8ebc4957f4bc721f91355"><div class="ttname"><a href="a01142.html#a039fa741b4c8ebc4957f4bc721f91355">Foam::interfaceCompressionLimiter::limiter</a></div><div class="ttdeci">scalar limiter(const scalar cdWeight, const scalar faceFlux, const scalar phiP, const scalar phiN, const vector &amp;, const scalar) const </div><div class="ttdef"><b>Definition:</b> <a href="a10428_source.html#l00058">interfaceCompression.H:58</a></div></div>
+<div class="ttc" id="a09045_html"><div class="ttname"><a href="a09045.html">vector.H</a></div></div>
+<div class="ttc" id="a01142_html_a408cc452de9d56dd6784f9e10af90368"><div class="ttname"><a href="a01142.html#a408cc452de9d56dd6784f9e10af90368">Foam::interfaceCompressionLimiter::interfaceCompressionLimiter</a></div><div class="ttdeci">interfaceCompressionLimiter(Istream &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="a10428_source.html#l00054">interfaceCompression.H:54</a></div></div>
+<div class="ttc" id="a10725_html_a253e112ad2d56d96230ff39ea7f442dc"><div class="ttname"><a href="a10725.html#a253e112ad2d56d96230ff39ea7f442dc">Foam::min</a></div><div class="ttdeci">dimensioned&lt; Type &gt; min(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a10725_html_a277dc11c581d53826ab5090b08f3b17b"><div class="ttname"><a href="a10725.html#a277dc11c581d53826ab5090b08f3b17b">Foam::sqr</a></div><div class="ttdeci">dimensionedSymmTensor sqr(const dimensionedVector &amp;dv)</div><div class="ttdef"><b>Definition:</b> <a href="a07870_source.html#l00049">dimensionedSymmTensor.C:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

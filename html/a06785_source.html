@@ -88,12 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_825de5f87f0ef3ae7d76ccd6a5458244.html">submodels</a></li><li class="navelem"><a class="el" href="dir_d333e36c7ce13a9450f826e417b6349d.html">ReactingMultiphase</a></li><li class="navelem"><a class="el" href="dir_27b24386216f86dd240f0a86ae1a3a0c.html">StochasticCollision</a></li><li class="navelem"><a class="el" href="dir_c73c14d2fa04a20994c1a8e27c19e53e.html">SuppressionCollision</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f8c25efc4b6f6a8502a42d5af7554d23.html">lagrangian</a></li><li class="navelem"><a class="el" href="dir_d3c32a493136c130c1f0d51f4f35c297.html">intermediate</a></li><li class="navelem"><a class="el" href="dir_825de5f87f0ef3ae7d76ccd6a5458244.html">submodels</a></li><li class="navelem"><a class="el" href="dir_a5b7b518592fef4af5ad7ba70d45069c.html">MPPIC</a></li><li class="navelem"><a class="el" href="dir_eb34afd0ce3dd2051d17f60c79db9853.html">TimeScaleModels</a></li><li class="navelem"><a class="el" href="dir_2ce70e6c9cd6e34d4610e134a6c05966.html">equilibrium</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">SuppressionCollision.C</div>  </div>
+<div class="title">equilibrium.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a06785.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
@@ -121,101 +121,92 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06786.html">SuppressionCollision.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06391.html">kinematicCloud.H</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06786.html">equilibrium.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a02462.html#a771b0c1c395f034e8452b2b3716fa886">   32</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02462.html#a771b0c1c395f034e8452b2b3716fa886">Foam::SuppressionCollision&lt;CloudType&gt;::collide</a>(<span class="keyword">const</span> scalar dt)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01222.html">kinematicCloud</a>&amp; sc =</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        this-&gt;owner().mesh().template</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        lookupObject&lt;kinematicCloud&gt;(suppressionCloud_);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a00913.html">volScalarField</a> vDotSweep(sc.<a class="code" href="a01222.html#a074e45bd512baf96d953dc4ee4645ae0">vDotSweep</a>());</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a00526.html">dimensionedScalar</a> Dt(<span class="stringliteral">&quot;dt&quot;</span>, <a class="code" href="a10675.html#a351a623596279a79515ef2cf69e1c277">dimTime</a>, dt);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="a00913.html">volScalarField</a> P(<a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a>() + <span class="stringliteral">&quot;:p&quot;</span>, 1.0 - <a class="code" href="a10675.html#a12bca6c677fcf0977532179c3cb9bb89">exp</a>(-vDotSweep*Dt));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="a07618.html#a6ddb7d9e8299f07327eb1a5eb9cf58f2">forAllIter</a>(<span class="keyword">typename</span> <a class="code" href="a00577.html">CloudType</a>, this-&gt;owner(), iter)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keyword">typename</span> <a class="code" href="a00577.html#a40b4ac150704f644630bba4cb68dbc2c">CloudType::parcelType</a>&amp; <a class="code" href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a> = iter();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> cellI = p.cell();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        scalar xx = this-&gt;owner().rndGen().template sample01&lt;scalar&gt;();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">if</span> (xx &lt; P[cellI])</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            p.canCombust() = -1;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            p.typeId() = <a class="code" href="a10675.html#ac993e906cf2774ae77e666bc24e81733">max</a>(p.typeId(), suppressedParcelType_);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a10815.html">   33</a></span>&#160;<span class="keyword">namespace </span>TimeScaleModels</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="a10815.html#a05e9cb2a66fe43d76cb166c7d0dbaff9">defineTypeNameAndDebug</a>(<a class="code" href="a00672.html">equilibrium</a>, 0);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a10815.html#a8cb0071cd67acb66b4cef033eefa1211">addToRunTimeSelectionTable</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    (</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <a class="code" href="a02611.html">TimeScaleModel</a>,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="a00672.html">equilibrium</a>,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a00524.html">dictionary</a></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    );</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a00672.html#a1d08d041f547f9071893b4ebfc72c61d">Foam::TimeScaleModels::equilibrium::equilibrium</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00672.html#a1d08d041f547f9071893b4ebfc72c61d">   50</a></span>&#160;(</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="a02611.html">TimeScaleModel</a>(dict)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{}</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<a class="code" href="a02462.html#a04290dbbdd96206b3653d56ebb74280a">Foam::SuppressionCollision&lt;CloudType&gt;::SuppressionCollision</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02462.html#a04290dbbdd96206b3653d56ebb74280a">   63</a></span>&#160;(</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; dict,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="a00577.html">CloudType</a>&amp; owner</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="a02439.html">StochasticCollisionModel&lt;CloudType&gt;</a>(<a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>, owner, typeName),</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    suppressionCloud_(this-&gt;coeffDict().lookup(<span class="stringliteral">&quot;suppressionCloud&quot;</span>)),</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    suppressedParcelType_</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    (</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        this-&gt;coeffDict().lookupOrDefault(<span class="stringliteral">&quot;suppressedParcelType&quot;</span>, -1)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    )</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<a class="code" href="a02462.html#a04290dbbdd96206b3653d56ebb74280a">Foam::SuppressionCollision&lt;CloudType&gt;::SuppressionCollision</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a02462.html#a9bdecbb0687dabf50a157f1a575c9a2e">   79</a></span>&#160;(</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02462.html">SuppressionCollision&lt;CloudType&gt;</a>&amp; cm</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a02439.html">StochasticCollisionModel&lt;CloudType&gt;</a>(cm),</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    suppressionCloud_(cm.<a class="code" href="a02462.html#a560e3e69507a9761c6a2adc9ba7da3c2">suppressionCloud_</a>),</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    suppressedParcelType_(cm.<a class="code" href="a02462.html#aa4bc3b5382c70916737627e1231cc09d">suppressedParcelType_</a>)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;{}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="a00672.html#a1d08d041f547f9071893b4ebfc72c61d">Foam::TimeScaleModels::equilibrium::equilibrium</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00672.html#ab4a00829e864abd6499dd5ce6583381b">   59</a></span>&#160;(</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00672.html">equilibrium</a>&amp; hc</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="a02611.html">TimeScaleModel</a>(hc)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a00672.html#aba947a710a27bf837e59ee7096896bd4">   69</a></span>&#160;<a class="code" href="a00672.html#aba947a710a27bf837e59ee7096896bd4">Foam::TimeScaleModels::equilibrium::~equilibrium</a>()</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{}</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<a class="code" href="a02618.html">Foam::tmp&lt;Foam::FieldField&lt;Foam::Field, Foam::scalar&gt;</a> &gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<a class="code" href="a00672.html#a8c84ec9cb3bb165ff0ca2c7160d99c93">Foam::TimeScaleModels::equilibrium::oneByTau</a></div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="a00672.html#a8c84ec9cb3bb165ff0ca2c7160d99c93">   77</a></span>&#160;(</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; alpha,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; r32,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; uSqr,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00762.html">FieldField&lt;Field, scalar&gt;</a>&amp; f</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;) <span class="keyword">const</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> scalar a =</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        16.0/<a class="code" href="a10725.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(3.0*<a class="code" href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">constant::mathematical::pi</a>)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;       *0.25*(1.0 - e_*e_);</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> CloudType&gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a02462.html#aab0f05b734e4c53cd701ed62e2bdd088">   92</a></span>&#160;<a class="code" href="a02462.html#aab0f05b734e4c53cd701ed62e2bdd088">Foam::SuppressionCollision&lt;CloudType&gt;::~SuppressionCollision</a>()</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{}</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        a</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;       *alpha*<a class="code" href="a10725.html#a8616bd62eebf2342a80222fecb1bda71">sqrt</a>(<a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(uSqr, scalar(0)))/<a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(r32, SMALL)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;       *alphaPacked_/<a class="code" href="a10725.html#ac993e906cf2774ae77e666bc24e81733">max</a>(alphaPacked_ - alpha, SMALL);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a02462_html_aab0f05b734e4c53cd701ed62e2bdd088"><div class="ttname"><a href="a02462.html#aab0f05b734e4c53cd701ed62e2bdd088">Foam::SuppressionCollision::~SuppressionCollision</a></div><div class="ttdeci">virtual ~SuppressionCollision()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00092">SuppressionCollision.C:92</a></div></div>
-<div class="ttc" id="a01222_html"><div class="ttname"><a href="a01222.html">Foam::kinematicCloud</a></div><div class="ttdoc">Virtual abstract base class for templated KinematicCloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06391_source.html#l00049">kinematicCloud.H:49</a></div></div>
-<div class="ttc" id="a02439_html"><div class="ttname"><a href="a02439.html">Foam::StochasticCollisionModel</a></div><div class="ttdoc">Templated stochastic collision model class. </div><div class="ttdef"><b>Definition:</b> <a href="a06411_source.html#l00088">KinematicCloud.H:88</a></div></div>
-<div class="ttc" id="a02462_html_a04290dbbdd96206b3653d56ebb74280a"><div class="ttname"><a href="a02462.html#a04290dbbdd96206b3653d56ebb74280a">Foam::SuppressionCollision::SuppressionCollision</a></div><div class="ttdeci">SuppressionCollision(const dictionary &amp;dict, CloudType &amp;owner)</div><div class="ttdoc">Construct from dictionary. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00063">SuppressionCollision.C:63</a></div></div>
-<div class="ttc" id="a10675_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10675.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08831_source.html#l00059">label.H:59</a></div></div>
-<div class="ttc" id="a04395_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04395.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04395_source.html#l00051">createFields.H:51</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a02462_html"><div class="ttname"><a href="a02462.html">Foam::SuppressionCollision</a></div><div class="ttdoc">Inter-cloud collision model, whereby the canReact flag can be used to inhibit devolatilisation and su...</div><div class="ttdef"><b>Definition:</b> <a href="a06786_source.html#l00046">SuppressionCollision.H:46</a></div></div>
-<div class="ttc" id="a00577_html_a40b4ac150704f644630bba4cb68dbc2c"><div class="ttname"><a href="a00577.html#a40b4ac150704f644630bba4cb68dbc2c">Foam::DSMCCloud::parcelType</a></div><div class="ttdeci">ParcelType parcelType</div><div class="ttdoc">Type of parcel the cloud was instantiated for. </div><div class="ttdef"><b>Definition:</b> <a href="a06353_source.html#l00217">DSMCCloud.H:217</a></div></div>
-<div class="ttc" id="a02462_html_a771b0c1c395f034e8452b2b3716fa886"><div class="ttname"><a href="a02462.html#a771b0c1c395f034e8452b2b3716fa886">Foam::SuppressionCollision::collide</a></div><div class="ttdeci">virtual void collide(const scalar dt)</div><div class="ttdoc">Update the model. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00032">SuppressionCollision.C:32</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a07618_html_a6ddb7d9e8299f07327eb1a5eb9cf58f2"><div class="ttname"><a href="a07618.html#a6ddb7d9e8299f07327eb1a5eb9cf58f2">forAllIter</a></div><div class="ttdeci">#define forAllIter(Container, container, iter)                                                                  </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07618_source.html#l00431">UList.H:431</a></div></div>
-<div class="ttc" id="a10675_html_a351a623596279a79515ef2cf69e1c277"><div class="ttname"><a href="a10675.html#a351a623596279a79515ef2cf69e1c277">Foam::dimTime</a></div><div class="ttdeci">const dimensionSet dimTime(0, 0, 1, 0, 0, 0, 0)</div><div class="ttdef"><b>Definition:</b> <a href="a07831_source.html#l00051">dimensionSets.H:51</a></div></div>
-<div class="ttc" id="a06786_html"><div class="ttname"><a href="a06786.html">SuppressionCollision.H</a></div></div>
-<div class="ttc" id="a02462_html_a560e3e69507a9761c6a2adc9ba7da3c2"><div class="ttname"><a href="a02462.html#a560e3e69507a9761c6a2adc9ba7da3c2">Foam::SuppressionCollision::suppressionCloud_</a></div><div class="ttdeci">const word suppressionCloud_</div><div class="ttdoc">Name of cloud used for suppression. </div><div class="ttdef"><b>Definition:</b> <a href="a06786_source.html#l00055">SuppressionCollision.H:55</a></div></div>
-<div class="ttc" id="a01222_html_a074e45bd512baf96d953dc4ee4645ae0"><div class="ttname"><a href="a01222.html#a074e45bd512baf96d953dc4ee4645ae0">Foam::kinematicCloud::vDotSweep</a></div><div class="ttdeci">virtual const tmp&lt; volScalarField &gt; vDotSweep() const  =0</div><div class="ttdoc">Volume swept rate of parcels per cell. </div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; scalar, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a10675_html_a12bca6c677fcf0977532179c3cb9bb89"><div class="ttname"><a href="a10675.html#a12bca6c677fcf0977532179c3cb9bb89">Foam::exp</a></div><div class="ttdeci">dimensionedScalar exp(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00252">dimensionedScalar.C:252</a></div></div>
-<div class="ttc" id="a02462_html_aa4bc3b5382c70916737627e1231cc09d"><div class="ttname"><a href="a02462.html#aa4bc3b5382c70916737627e1231cc09d">Foam::SuppressionCollision::suppressedParcelType_</a></div><div class="ttdeci">const label suppressedParcelType_</div><div class="ttdoc">Suppressed parcel type - optional. </div><div class="ttdef"><b>Definition:</b> <a href="a06786_source.html#l00058">SuppressionCollision.H:58</a></div></div>
-<div class="ttc" id="a00577_html"><div class="ttname"><a href="a00577.html">Foam::DSMCCloud</a></div><div class="ttdoc">Templated base class for dsmc cloud. </div><div class="ttdef"><b>Definition:</b> <a href="a06353_source.html#l00068">DSMCCloud.H:68</a></div></div>
-<div class="ttc" id="a10675_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10675.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a06391_html"><div class="ttname"><a href="a06391.html">kinematicCloud.H</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a10725_html_a8616bd62eebf2342a80222fecb1bda71"><div class="ttname"><a href="a10725.html#a8616bd62eebf2342a80222fecb1bda71">Foam::sqrt</a></div><div class="ttdeci">dimensionedScalar sqrt(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07865_source.html#l00142">dimensionedScalar.C:142</a></div></div>
+<div class="ttc" id="a10815_html_a05e9cb2a66fe43d76cb166c7d0dbaff9"><div class="ttname"><a href="a10815.html#a05e9cb2a66fe43d76cb166c7d0dbaff9">Foam::TimeScaleModels::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(equilibrium, 0)</div></div>
+<div class="ttc" id="a10737_html_a731b8788a4c01586c35266c7ca4fed04"><div class="ttname"><a href="a10737.html#a731b8788a4c01586c35266c7ca4fed04">Foam::constant::mathematical::pi</a></div><div class="ttdeci">const scalar pi(M_PI)</div></div>
+<div class="ttc" id="a00762_html"><div class="ttname"><a href="a00762.html">Foam::FieldField</a></div><div class="ttdoc">Generic field type. </div><div class="ttdef"><b>Definition:</b> <a href="a07908_source.html#l00051">FieldField.H:51</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a10815_html_a8cb0071cd67acb66b4cef033eefa1211"><div class="ttname"><a href="a10815.html#a8cb0071cd67acb66b4cef033eefa1211">Foam::TimeScaleModels::addToRunTimeSelectionTable</a></div><div class="ttdeci">addToRunTimeSelectionTable(TimeScaleModel, equilibrium, dictionary)</div></div>
+<div class="ttc" id="a10725_html_ac993e906cf2774ae77e666bc24e81733"><div class="ttname"><a href="a10725.html#ac993e906cf2774ae77e666bc24e81733">Foam::max</a></div><div class="ttdeci">dimensioned&lt; Type &gt; max(const dimensioned&lt; Type &gt; &amp;, const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a06786_html"><div class="ttname"><a href="a06786.html">equilibrium.H</a></div></div>
+<div class="ttc" id="a00672_html_aba947a710a27bf837e59ee7096896bd4"><div class="ttname"><a href="a00672.html#aba947a710a27bf837e59ee7096896bd4">Foam::TimeScaleModels::equilibrium::~equilibrium</a></div><div class="ttdeci">virtual ~equilibrium()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00069">equilibrium.C:69</a></div></div>
+<div class="ttc" id="a00672_html_a8c84ec9cb3bb165ff0ca2c7160d99c93"><div class="ttname"><a href="a00672.html#a8c84ec9cb3bb165ff0ca2c7160d99c93">Foam::TimeScaleModels::equilibrium::oneByTau</a></div><div class="ttdeci">tmp&lt; FieldField&lt; Field, scalar &gt; &gt; oneByTau(const FieldField&lt; Field, scalar &gt; &amp;alpha, const FieldField&lt; Field, scalar &gt; &amp;r32, const FieldField&lt; Field, scalar &gt; &amp;uSqr, const FieldField&lt; Field, scalar &gt; &amp;f) const </div><div class="ttdoc">Member Functions. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00077">equilibrium.C:77</a></div></div>
+<div class="ttc" id="a00672_html"><div class="ttname"><a href="a00672.html">Foam::TimeScaleModels::equilibrium</a></div><div class="ttdoc">Equlibrium model for the time scale over which properties of a dispersed phase tend towards the mean ...</div><div class="ttdef"><b>Definition:</b> <a href="a06786_source.html#l00059">equilibrium.H:59</a></div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a02611_html"><div class="ttname"><a href="a02611.html">Foam::TimeScaleModel</a></div><div class="ttdoc">Base class for time scale models. </div><div class="ttdef"><b>Definition:</b> <a href="a06792_source.html#l00052">TimeScaleModel.H:52</a></div></div>
+<div class="ttc" id="a00672_html_a1d08d041f547f9071893b4ebfc72c61d"><div class="ttname"><a href="a00672.html#a1d08d041f547f9071893b4ebfc72c61d">Foam::TimeScaleModels::equilibrium::equilibrium</a></div><div class="ttdeci">equilibrium(const dictionary &amp;dict)</div><div class="ttdoc">Constructors. </div><div class="ttdef"><b>Definition:</b> <a href="a06785_source.html#l00050">equilibrium.C:50</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_4df5f063103ed43a92094c50d9ef5fe1.html">surfaceInterpolation</a></li><li class="navelem"><a class="el" href="dir_3b094e1ce2b3f641da0071aec2c4e694.html">limitedSchemes</a></li><li class="navelem"><a class="el" href="dir_4f765f4be874e7c1018013a8d8ff5f6d.html">limitedSurfaceInterpolationScheme</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_a586eb954e2e5e74ecf6fe95a2457777.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_c993260712d995df6dda7964041544db.html">interpolation</a></li><li class="navelem"><a class="el" href="dir_a3dc0e4243195fcc544ce440c33a38a4.html">interpolationCellPoint</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">limitedSurfaceInterpolationSchemes.C</div>  </div>
+<div class="title">interpolationCellPoint.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05963.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,54 +121,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05962.html">limitedSurfaceInterpolationScheme.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">   35</a></span>&#160;<span class="preprocessor">#define makeBaseLimitedSurfaceInterpolationScheme(Type)                       \</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">                                                                              \</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">defineNamedTemplateTypeNameAndDebug                                           \</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">(                                                                             \</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">    limitedSurfaceInterpolationScheme&lt;Type&gt;,                                  \</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">    0                                                                         \</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">);                                                                            \</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">                                                                              \</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">defineTemplateRunTimeSelectionTable                                           \</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">(                                                                             \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">    limitedSurfaceInterpolationScheme&lt;Type&gt;,                                  \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">    Mesh                                                                      \</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">);                                                                            \</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">                                                                              \</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">defineTemplateRunTimeSelectionTable                                           \</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">(                                                                             \</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">    limitedSurfaceInterpolationScheme&lt;Type&gt;,                                  \</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">    MeshFlux                                                                  \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">);</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a>(scalar)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a>(<a class="code" href="a10675.html#a7ea82552101f041fad7635b3ed036a84">vector</a>)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a>(<a class="code" href="a10675.html#a1c80fd5035e8c5cf0a92b733153dff96">sphericalTensor</a>)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a>(<a class="code" href="a10675.html#a4abedc496c75ae36ae5b37d8ec9e2a05">symmTensor</a>)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<a class="code" href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a>(<a class="code" href="a10675.html#a2d3833265c99c683af8c5d2e430b7425">tensor</a>)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05962_html"><div class="ttname"><a href="a05962.html">limitedSurfaceInterpolationScheme.H</a></div></div>
-<div class="ttc" id="a10675_html_a1c80fd5035e8c5cf0a92b733153dff96"><div class="ttname"><a href="a10675.html#a1c80fd5035e8c5cf0a92b733153dff96">Foam::sphericalTensor</a></div><div class="ttdeci">SphericalTensor&lt; scalar &gt; sphericalTensor</div><div class="ttdoc">SphericalTensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a08900_source.html#l00048">sphericalTensor.H:48</a></div></div>
-<div class="ttc" id="a10675_html_a4abedc496c75ae36ae5b37d8ec9e2a05"><div class="ttname"><a href="a10675.html#a4abedc496c75ae36ae5b37d8ec9e2a05">Foam::symmTensor</a></div><div class="ttdeci">SymmTensor&lt; scalar &gt; symmTensor</div><div class="ttdoc">SymmTensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a08949_source.html#l00048">symmTensor.H:48</a></div></div>
-<div class="ttc" id="a05963_html_a9bfdae145fb306aa776edd1e3f812274"><div class="ttname"><a href="a05963.html#a9bfdae145fb306aa776edd1e3f812274">makeBaseLimitedSurfaceInterpolationScheme</a></div><div class="ttdeci">#define makeBaseLimitedSurfaceInterpolationScheme(Type)                                          </div><div class="ttdef"><b>Definition:</b> <a href="a05963_source.html#l00035">limitedSurfaceInterpolationSchemes.C:35</a></div></div>
-<div class="ttc" id="a10675_html_a2d3833265c99c683af8c5d2e430b7425"><div class="ttname"><a href="a10675.html#a2d3833265c99c683af8c5d2e430b7425">Foam::tensor</a></div><div class="ttdeci">Tensor&lt; scalar &gt; tensor</div><div class="ttdoc">Tensor of scalars. </div><div class="ttdef"><b>Definition:</b> <a href="a08965_source.html#l00051">tensor.H:51</a></div></div>
-<div class="ttc" id="a10675_html_a7ea82552101f041fad7635b3ed036a84"><div class="ttname"><a href="a10675.html#a7ea82552101f041fad7635b3ed036a84">Foam::vector</a></div><div class="ttdeci">Vector&lt; scalar &gt; vector</div><div class="ttdoc">A scalar version of the templated Vector. </div><div class="ttdef"><b>Definition:</b> <a href="a08993_source.html#l00049">vector.H:49</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05964.html">interpolationCellPoint.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a06156.html">volPointInterpolation.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Type&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a01155.html#a91510bfe938f5a1b0b6bde407beecc06">Foam::interpolationCellPoint&lt;Type&gt;::interpolationCellPoint</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a01155.html#a91510bfe938f5a1b0b6bde407beecc06">   33</a></span>&#160;(</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00921.html">GeometricField&lt;Type, fvPatchField, volMesh&gt;</a>&amp; psi</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a01151.html">interpolation&lt;Type&gt;</a>(<a class="code" href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a>),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    psip_</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    (</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">volPointInterpolation::New</a>(psi.<a class="code" href="a00533.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>()).<a class="code" href="a10783.html#a4d62f21551985d814104861e7c1d9b4f">interpolate</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        (</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            psi,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="stringliteral">&quot;volPointInterpolate(&quot;</span> + psi.<a class="code" href="a01179.html#a75b72488d2e82151b025744974919d5d">name</a>() + <span class="charliteral">&#39;)&#39;</span>,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <span class="keyword">true</span>        <span class="comment">// use cache</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        )</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    )</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// Uses cellPointWeight to do interpolation which needs tet decomposition</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    (void)psi.<a class="code" href="a00533.html#abdefa6904b53f35c49185ee1cb3d1800">mesh</a>().tetBasePtIs();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a01151_html"><div class="ttname"><a href="a01151.html">Foam::interpolation</a></div><div class="ttdoc">Abstract base class for interpolation. </div><div class="ttdef"><b>Definition:</b> <a href="a05366_source.html#l00057">mappedPatchFieldBase.H:57</a></div></div>
+<div class="ttc" id="a05964_html"><div class="ttname"><a href="a05964.html">interpolationCellPoint.H</a></div></div>
+<div class="ttc" id="a01179_html_a75b72488d2e82151b025744974919d5d"><div class="ttname"><a href="a01179.html#a75b72488d2e82151b025744974919d5d">Foam::IOobject::name</a></div><div class="ttdeci">const word &amp; name() const </div><div class="ttdoc">Return name. </div><div class="ttdef"><b>Definition:</b> <a href="a07745_source.html#l00260">IOobject.H:260</a></div></div>
+<div class="ttc" id="a10783_html_a4d62f21551985d814104861e7c1d9b4f"><div class="ttname"><a href="a10783.html#a4d62f21551985d814104861e7c1d9b4f">Foam::MULES::interpolate</a></div><div class="ttdeci">tmp&lt; surfaceScalarField &gt; interpolate(const RhoType &amp;rho)</div><div class="ttdef"><b>Definition:</b> <a href="a05798_source.html#l00040">IMULESTemplates.C:40</a></div></div>
+<div class="ttc" id="a00921_html"><div class="ttname"><a href="a00921.html">Foam::GeometricField</a></div><div class="ttdoc">Generic GeometricField class. </div><div class="ttdef"><b>Definition:</b> <a href="a05605_source.html#l00052">surfaceFieldsFwd.H:52</a></div></div>
+<div class="ttc" id="a10732_html_ac8bda880d4c66ce83b8278cc6db08df1"><div class="ttname"><a href="a10732.html#ac8bda880d4c66ce83b8278cc6db08df1">Foam::compressible::New</a></div><div class="ttdeci">autoPtr&lt; BasicCompressibleTurbulenceModel &gt; New(const volScalarField &amp;rho, const volVectorField &amp;U, const surfaceScalarField &amp;phi, const typename BasicCompressibleTurbulenceModel::transportModel &amp;transport, const word &amp;propertiesName)</div><div class="ttdef"><b>Definition:</b> <a href="a10544_source.html#l00036">turbulentFluidThermoModel.C:36</a></div></div>
+<div class="ttc" id="a00533_html_abdefa6904b53f35c49185ee1cb3d1800"><div class="ttname"><a href="a00533.html#abdefa6904b53f35c49185ee1cb3d1800">Foam::DimensionedField::mesh</a></div><div class="ttdeci">const Mesh &amp; mesh() const </div><div class="ttdoc">Return mesh. </div><div class="ttdef"><b>Definition:</b> <a href="a07892_source.html#l00038">DimensionedFieldI.H:38</a></div></div>
+<div class="ttc" id="a01155_html_a91510bfe938f5a1b0b6bde407beecc06"><div class="ttname"><a href="a01155.html#a91510bfe938f5a1b0b6bde407beecc06">Foam::interpolationCellPoint::interpolationCellPoint</a></div><div class="ttdeci">interpolationCellPoint(const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;psi)</div><div class="ttdoc">Construct from components. </div><div class="ttdef"><b>Definition:</b> <a href="a05963_source.html#l00033">interpolationCellPoint.C:33</a></div></div>
+<div class="ttc" id="a06156_html"><div class="ttname"><a href="a06156.html">volPointInterpolation.H</a></div></div>
+<div class="ttc" id="a04435_html_aba679271c41582099c8ccf4827fdf217"><div class="ttname"><a href="a04435.html#aba679271c41582099c8ccf4827fdf217">psi</a></div><div class="ttdeci">const volScalarField &amp; psi</div><div class="ttdef"><b>Definition:</b> <a href="a04435_source.html#l00024">createFields.H:24</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

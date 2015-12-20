@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1eda626aeac0f0ad2848c36acaa5d501.html">TurbulenceModels</a></li><li class="navelem"><a class="el" href="dir_7904bc8e3270082a35070ba525b2d08a.html">compressible</a></li><li class="navelem"><a class="el" href="dir_dd9eb626e90b169804eeadb587274e8e.html">RAS</a></li><li class="navelem"><a class="el" href="dir_8ae53f3ede4981c9e508a736e6423a4d.html">buoyantKEpsilon</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9415e59289a6feeb24164dafa70a594f.html">transportModels</a></li><li class="navelem"><a class="el" href="dir_3019d983b5a7602720418391e329a496.html">twoPhaseProperties</a></li><li class="navelem"><a class="el" href="dir_5cc4425849afd5f12d0c88462d52aecd.html">alphaFixedPressure</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">buoyantKEpsilon.C</div>  </div>
+<div class="title">alphaFixedPressureFvPatchScalarField.H</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a10450.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,186 +119,182 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10451.html">buoyantKEpsilon.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a08095.html">uniformDimensionedFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05631.html">fvcGrad.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a10746.html">   35</a></span>&#160;<span class="keyword">namespace </span>RASModels</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::alphaFixedPressureFvPatchScalarField</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    A fixed-pressure alphaContactAngle boundary</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">SourceFiles</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    alphaFixedPressureFvPatchScalarField.C</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef alphaFixedPressureFvPatchScalarField_H</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define alphaFixedPressureFvPatchScalarField_H</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05180.html">fixedValueFvPatchFields.H</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a00165.html">buoyantKEpsilon&lt;BasicTurbulenceModel&gt;::buoyantKEpsilon</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a00165.html#adc44a08715e6f569fb928b48d7e5b4f2">   42</a></span>&#160;(</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00165.html#a06a66094f33d6817d19225445c5ea874">alphaField</a>&amp; <a class="code" href="a10685.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00165.html#a1dda906cfc9022335f0782a632302cd8">rhoField</a>&amp; <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">volVectorField</a>&amp; <a class="code" href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; alphaRhoPhi,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00913.html">surfaceScalarField</a>&amp; <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00165.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">transportModel</a>&amp; transport,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; propertiesName,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02856.html">word</a>&amp; <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="a01218.html">kEpsilon&lt;BasicTurbulenceModel&gt;</a></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    (</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="a10685.html#a97fb79d7ca4d61fd4a89879cf7f990ae">alpha</a>,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a>,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <a class="code" href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        alphaRhoPhi,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        transport,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        propertiesName,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a10675.html#aec48583af672626378f501eb9fc32cd1">type</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    ),</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">                 Class alphaFixedPressureFvPatch Declaration</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00038.html">   48</a></span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">class </span><a class="code" href="a00038.html">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">public</span> fixedValueFvPatchScalarField</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Private data</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="comment">//- Fixed pressure</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a00755.html">scalarField</a> p_;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">//- Runtime type information</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a00038.html#aee43459f4eb52198bb0bb7e56235ff5c">TypeName</a>(<span class="stringliteral">&quot;alphaFixedPressure&quot;</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    Cg_</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    (</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="a00526.html">dimensioned&lt;scalar&gt;::lookupOrAddToDict</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        (</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="stringliteral">&quot;Cg&quot;</span>,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            this-&gt;coeffDict_,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            1.0</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        )</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    )</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span> (type == typeName)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="a01218.html#aaffe89433f18f1ee4137486e19219448">kEpsilon&lt;BasicTurbulenceModel&gt;::correctNut</a>();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        this-&gt;printCoeffs(type);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">// Constructors</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">//- Construct from patch and internal field</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        (</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        );</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//- Construct from patch, internal field and dictionary</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        (</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        );</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a00165.html#af816873151ddb0126e98bb2f914d8ed5">   86</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="a00165.html#af816873151ddb0126e98bb2f914d8ed5">buoyantKEpsilon&lt;BasicTurbulenceModel&gt;::read</a>()</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a01218.html">kEpsilon&lt;BasicTurbulenceModel&gt;::read</a>())</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        Cg_.readIfPresent(this-&gt;coeffDict());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="comment">//- Construct by mapping given alphaFixedPressureFvPatchScalarField</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="comment">//  onto a new patch</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        (</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00038.html">alphaFixedPressureFvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp;,</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        );</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<a class="code" href="a02608.html">tmp&lt;volScalarField&gt;</a></div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="a00165.html#acc45366b9465ff4765360fa9a8645009">  103</a></span>&#160;<a class="code" href="a00165.html#acc45366b9465ff4765360fa9a8645009">buoyantKEpsilon&lt;BasicTurbulenceModel&gt;::Gcoef</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02729.html">uniformDimensionedVectorField</a>&amp; <a class="code" href="a03181.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a> =</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        this-&gt;mesh_.objectRegistry::template</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        lookupObject&lt;uniformDimensionedVectorField&gt;(<span class="stringliteral">&quot;g&quot;</span>);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        (Cg_*this-&gt;Cmu_)*this-&gt;alpha_*this-&gt;k_*(g &amp; <a class="code" href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">fvc::grad</a>(this-&gt;rho_))</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;       /(this-&gt;epsilon_ + this-&gt;epsilonMin_);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//- Construct as copy</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        (</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00038.html">alphaFixedPressureFvPatchScalarField</a>&amp;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        );</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="a00038.html#afdeceecb1c75e9ccc98c2f489fe8fa00">   98</a></span>&#160;        <span class="comment">//- Construct and return a clone</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a> <a class="code" href="a00038.html#afdeceecb1c75e9ccc98c2f489fe8fa00">clone</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            (</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keyword">new</span> <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a>(*<span class="keyword">this</span>)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            );</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">//- Construct as copy setting internal field reference</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        (</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00038.html">alphaFixedPressureFvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        );</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<a class="code" href="a02608.html">tmp&lt;fvScalarMatrix&gt;</a></div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="a00165.html#a35d9c0577be35b98ff5b50384753d958">  117</a></span>&#160;<a class="code" href="a00165.html#a35d9c0577be35b98ff5b50384753d958">buoyantKEpsilon&lt;BasicTurbulenceModel&gt;::kSource</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02729.html">uniformDimensionedVectorField</a>&amp; <a class="code" href="a03181.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a> =</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        this-&gt;mesh_.objectRegistry::template</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        lookupObject&lt;uniformDimensionedVectorField&gt;(<span class="stringliteral">&quot;g&quot;</span>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(g.<a class="code" href="a00526.html#a080d3824651cfcf52f72acceec615aaa">value</a>()) &gt; SMALL)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">return</span> -<a class="code" href="a10710.html#afbc5644dc62f3adaff3848482484e0a6">fvm::SuSp</a>(Gcoef(), this-&gt;k_);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a01218.html#a35d9c0577be35b98ff5b50384753d958">kEpsilon&lt;BasicTurbulenceModel&gt;::kSource</a>();</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> BasicTurbulenceModel&gt;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<a class="code" href="a02608.html">tmp&lt;fvScalarMatrix&gt;</a></div>
-<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="a00165.html#a735aae63c00c42eb78545a9a53aca979">  136</a></span>&#160;<a class="code" href="a00165.html#a735aae63c00c42eb78545a9a53aca979">buoyantKEpsilon&lt;BasicTurbulenceModel&gt;::epsilonSource</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02729.html">uniformDimensionedVectorField</a>&amp; <a class="code" href="a03181.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a> =</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        this-&gt;mesh_.objectRegistry::template</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        lookupObject&lt;uniformDimensionedVectorField&gt;(<span class="stringliteral">&quot;g&quot;</span>);</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(g.<a class="code" href="a00526.html#a080d3824651cfcf52f72acceec615aaa">value</a>()) &gt; SMALL)</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    {</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <a class="code" href="a02776.html">vector</a> gHat(g.<a class="code" href="a00526.html#a080d3824651cfcf52f72acceec615aaa">value</a>()/<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(g.<a class="code" href="a00526.html#a080d3824651cfcf52f72acceec615aaa">value</a>()));</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//- Construct and return a clone setting internal field reference</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="a00038.html#a8a53cadd8227f307947ec9c8750e5f11">  115</a></span>&#160;        <span class="keyword">virtual</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a> <a class="code" href="a00038.html#afdeceecb1c75e9ccc98c2f489fe8fa00">clone</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        (</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;scalar, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        )<span class="keyword"> const</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a02618.html">tmp&lt;fvPatchScalarField&gt;</a></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            (</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                <span class="keyword">new</span> <a class="code" href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">alphaFixedPressureFvPatchScalarField</a>(*<span class="keyword">this</span>, iF)</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            );</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">// Member functions</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="comment">// Access</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="a00038.html#a22c84ba6a9c14d44f571657a00e58ada">  131</a></span>&#160;            <span class="comment">//- Return the alphaFixed pressure</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00755.html">scalarField</a>&amp; <a class="code" href="a00038.html#a22c84ba6a9c14d44f571657a00e58ada">p</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">            </span>{</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keywordflow">return</span> p_;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="a00038.html#a1a2d6114a64a29c1804685c69cb2f546">  137</a></span>&#160;            <span class="comment">//- Return reference to the alphaFixed pressure to allow adjustment</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <a class="code" href="a00755.html">scalarField</a>&amp; <a class="code" href="a00038.html#a22c84ba6a9c14d44f571657a00e58ada">p</a>()</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            {</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;                <span class="keywordflow">return</span> p_;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="comment">// Mapping functions</span></div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <a class="code" href="a00913.html">volScalarField</a> v(gHat &amp; this-&gt;U_);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <a class="code" href="a00913.html">volScalarField</a> u</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        (</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(this-&gt;U_ - gHat*v)</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;          + <a class="code" href="a10675.html#a072b5cdfc288c7565684d29740185304">dimensionedScalar</a>(<span class="stringliteral">&quot;SMALL&quot;</span>, <a class="code" href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">dimVelocity</a>, SMALL)</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        );</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">return</span> -<a class="code" href="a10710.html#afbc5644dc62f3adaff3848482484e0a6">fvm::SuSp</a>(this-&gt;C1_*<a class="code" href="a10675.html#a495b8b73fde3fbf83457f43628cc4087">tanh</a>(<a class="code" href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(v)/u)*Gcoef(), this-&gt;epsilon_);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a01218.html#a735aae63c00c42eb78545a9a53aca979">kEpsilon&lt;BasicTurbulenceModel&gt;::epsilonSource</a>();</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;}</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <span class="comment">//- Map (and resize as needed) from self given a mapping object</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00038.html#a0ab0c43ce90d756c88dd81e3d0a9eef5">autoMap</a></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            (</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            );</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            <span class="comment">//- Reverse map the given fvPatchField onto this fvPatchField</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00038.html#a713277715ccc0a5ef466b0516d44731f">rmap</a></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            (</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                <span class="keyword">const</span> <a class="code" href="a00886.html">fvPatchScalarField</a>&amp;,</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            );</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">// Evaluation functions</span></div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;} <span class="comment">// End namespace RASModels</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a00165_html_ac0a5dc3c45a2d1c61a649bc435a1a48a"><div class="ttname"><a href="a00165.html#ac0a5dc3c45a2d1c61a649bc435a1a48a">Foam::RASModels::buoyantKEpsilon::transportModel</a></div><div class="ttdeci">BasicTurbulenceModel::transportModel transportModel</div><div class="ttdef"><b>Definition:</b> <a href="a10451_source.html#l00111">buoyantKEpsilon.H:111</a></div></div>
-<div class="ttc" id="a10675_html_a072b5cdfc288c7565684d29740185304"><div class="ttname"><a href="a10675.html#a072b5cdfc288c7565684d29740185304">Foam::dimensionedScalar</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; dimensionedScalar</div><div class="ttdoc">Dimensioned scalar obtained from generic dimensioned type. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a10710_html_afbc5644dc62f3adaff3848482484e0a6"><div class="ttname"><a href="a10710.html#afbc5644dc62f3adaff3848482484e0a6">Foam::fvm::SuSp</a></div><div class="ttdeci">tmp&lt; fvMatrix&lt; Type &gt; &gt; SuSp(const DimensionedField&lt; scalar, volMesh &gt; &amp;, const GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;)</div></div>
-<div class="ttc" id="a01218_html_a35d9c0577be35b98ff5b50384753d958"><div class="ttname"><a href="a01218.html#a35d9c0577be35b98ff5b50384753d958">Foam::RASModels::kEpsilon::kSource</a></div><div class="ttdeci">virtual tmp&lt; fvScalarMatrix &gt; kSource() const </div><div class="ttdef"><b>Definition:</b> <a href="a10638_source.html#l00049">kEpsilon.C:49</a></div></div>
-<div class="ttc" id="a10685_html_a97fb79d7ca4d61fd4a89879cf7f990ae"><div class="ttname"><a href="a10685.html#a97fb79d7ca4d61fd4a89879cf7f990ae">Foam::constant::atomic::alpha</a></div><div class="ttdeci">const dimensionedScalar alpha</div><div class="ttdoc">Fine-structure constant: default SI units: []. </div><div class="ttdef"><b>Definition:</b> <a href="a03838_source.html#l00222">readThermalProperties.H:222</a></div></div>
-<div class="ttc" id="a02856_html"><div class="ttname"><a href="a02856.html">Foam::word</a></div><div class="ttdoc">A class for handling words, derived from string. </div><div class="ttdef"><b>Definition:</b> <a href="a08933_source.html#l00059">word.H:59</a></div></div>
-<div class="ttc" id="a08095_html"><div class="ttname"><a href="a08095.html">uniformDimensionedFields.H</a></div></div>
-<div class="ttc" id="a00165_html_a1dda906cfc9022335f0782a632302cd8"><div class="ttname"><a href="a00165.html#a1dda906cfc9022335f0782a632302cd8">Foam::RASModels::buoyantKEpsilon::rhoField</a></div><div class="ttdeci">BasicTurbulenceModel::rhoField rhoField</div><div class="ttdef"><b>Definition:</b> <a href="a10451_source.html#l00110">buoyantKEpsilon.H:110</a></div></div>
-<div class="ttc" id="a10675_html_a48a6d59f43b62ef8c6bfa58c3db34dfa"><div class="ttname"><a href="a10675.html#a48a6d59f43b62ef8c6bfa58c3db34dfa">Foam::dimVelocity</a></div><div class="ttdeci">const dimensionSet dimVelocity</div></div>
-<div class="ttc" id="a02776_html"><div class="ttname"><a href="a02776.html">Foam::Vector&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a00165_html_acc45366b9465ff4765360fa9a8645009"><div class="ttname"><a href="a00165.html#acc45366b9465ff4765360fa9a8645009">Foam::RASModels::buoyantKEpsilon::Gcoef</a></div><div class="ttdeci">tmp&lt; volScalarField &gt; Gcoef() const </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00103">buoyantKEpsilon.C:103</a></div></div>
-<div class="ttc" id="a02965_html_ae323f2a96b6b181ecef23798ef9f4982"><div class="ttname"><a href="a02965.html#ae323f2a96b6b181ecef23798ef9f4982">rho</a></div><div class="ttdeci">rho</div><div class="ttdef"><b>Definition:</b> <a href="a02965_source.html#l00096">readInitialConditions.H:96</a></div></div>
-<div class="ttc" id="a00165_html_a735aae63c00c42eb78545a9a53aca979"><div class="ttname"><a href="a00165.html#a735aae63c00c42eb78545a9a53aca979">Foam::RASModels::buoyantKEpsilon::epsilonSource</a></div><div class="ttdeci">virtual tmp&lt; fvScalarMatrix &gt; epsilonSource() const </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00136">buoyantKEpsilon.C:136</a></div></div>
-<div class="ttc" id="a00526_html"><div class="ttname"><a href="a00526.html">Foam::dimensioned</a></div><div class="ttdoc">Generic dimensioned Type class. </div><div class="ttdef"><b>Definition:</b> <a href="a07816_source.html#l00041">dimensionedScalarFwd.H:41</a></div></div>
-<div class="ttc" id="a01218_html"><div class="ttname"><a href="a01218.html">Foam::RASModels::kEpsilon</a></div><div class="ttdoc">Standard k-epsilon turbulence model for incompressible and compressible flows including rapid distort...</div><div class="ttdef"><b>Definition:</b> <a href="a10639_source.html#l00086">kEpsilon.H:86</a></div></div>
-<div class="ttc" id="a10451_html"><div class="ttname"><a href="a10451.html">buoyantKEpsilon.H</a></div></div>
-<div class="ttc" id="a00165_html_a06a66094f33d6817d19225445c5ea874"><div class="ttname"><a href="a00165.html#a06a66094f33d6817d19225445c5ea874">Foam::RASModels::buoyantKEpsilon::alphaField</a></div><div class="ttdeci">BasicTurbulenceModel::alphaField alphaField</div><div class="ttdef"><b>Definition:</b> <a href="a10451_source.html#l00109">buoyantKEpsilon.H:109</a></div></div>
-<div class="ttc" id="a01218_html_aaffe89433f18f1ee4137486e19219448"><div class="ttname"><a href="a01218.html#aaffe89433f18f1ee4137486e19219448">Foam::RASModels::kEpsilon::correctNut</a></div><div class="ttdeci">virtual void correctNut()</div><div class="ttdef"><b>Definition:</b> <a href="a10638_source.html#l00039">kEpsilon.C:39</a></div></div>
-<div class="ttc" id="a05631_html"><div class="ttname"><a href="a05631.html">fvcGrad.H</a></div><div class="ttdoc">Calculate the gradient of the given field. </div></div>
-<div class="ttc" id="a03181_html_a1a97abcf6c141f539994c8a21c8daca7"><div class="ttname"><a href="a03181.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a></div><div class="ttdeci">surfaceScalarField &amp; phi</div><div class="ttdef"><b>Definition:</b> <a href="a03181_source.html#l00008">setRegionFluidFields.H:8</a></div></div>
-<div class="ttc" id="a00165_html_af816873151ddb0126e98bb2f914d8ed5"><div class="ttname"><a href="a00165.html#af816873151ddb0126e98bb2f914d8ed5">Foam::RASModels::buoyantKEpsilon::read</a></div><div class="ttdeci">virtual bool read()</div><div class="ttdoc">Re-read model coefficients if they have changed. </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00086">buoyantKEpsilon.C:86</a></div></div>
-<div class="ttc" id="a02729_html"><div class="ttname"><a href="a02729.html">Foam::UniformDimensionedField</a></div><div class="ttdoc">Dimensioned<Type> registered with the database as a registered IOobject which has the functionality o...</div><div class="ttdef"><b>Definition:</b> <a href="a08093_source.html#l00052">UniformDimensionedField.H:52</a></div></div>
-<div class="ttc" id="a00913_html"><div class="ttname"><a href="a00913.html">Foam::GeometricField&lt; vector, fvPatchField, volMesh &gt;</a></div></div>
-<div class="ttc" id="a03181_html_ae0b3bf70bd591e6682c5eaa2191bafe7"><div class="ttname"><a href="a03181.html#ae0b3bf70bd591e6682c5eaa2191bafe7">g</a></div><div class="ttdeci">const dimensionedVector &amp; g</div><div class="ttdef"><b>Definition:</b> <a href="a03181_source.html#l00033">setRegionFluidFields.H:33</a></div></div>
-<div class="ttc" id="a10709_html_a7c00ec90ecc15ed3005255e42c52827a"><div class="ttname"><a href="a10709.html#a7c00ec90ecc15ed3005255e42c52827a">Foam::fvc::grad</a></div><div class="ttdeci">tmp&lt; GeometricField&lt; typename outerProduct&lt; vector, Type &gt;::type, fvPatchField, volMesh &gt;&gt; grad(const GeometricField&lt; Type, fvsPatchField, surfaceMesh &gt; &amp;ssf)</div><div class="ttdef"><b>Definition:</b> <a href="a05630_source.html#l00052">fvcGrad.C:52</a></div></div>
-<div class="ttc" id="a00165_html"><div class="ttname"><a href="a00165.html">Foam::RASModels::buoyantKEpsilon</a></div><div class="ttdoc">Additional buoyancy generation/dissipation term applied to the k and epsilon equations of the standar...</div><div class="ttdef"><b>Definition:</b> <a href="a10451_source.html#l00080">buoyantKEpsilon.H:80</a></div></div>
-<div class="ttc" id="a10675_html_a495b8b73fde3fbf83457f43628cc4087"><div class="ttname"><a href="a10675.html#a495b8b73fde3fbf83457f43628cc4087">Foam::tanh</a></div><div class="ttdeci">dimensionedScalar tanh(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00263">dimensionedScalar.C:263</a></div></div>
-<div class="ttc" id="a01218_html_a735aae63c00c42eb78545a9a53aca979"><div class="ttname"><a href="a01218.html#a735aae63c00c42eb78545a9a53aca979">Foam::RASModels::kEpsilon::epsilonSource</a></div><div class="ttdeci">virtual tmp&lt; fvScalarMatrix &gt; epsilonSource() const </div><div class="ttdef"><b>Definition:</b> <a href="a10638_source.html#l00064">kEpsilon.C:64</a></div></div>
-<div class="ttc" id="a00165_html_a35d9c0577be35b98ff5b50384753d958"><div class="ttname"><a href="a00165.html#a35d9c0577be35b98ff5b50384753d958">Foam::RASModels::buoyantKEpsilon::kSource</a></div><div class="ttdeci">virtual tmp&lt; fvScalarMatrix &gt; kSource() const </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00117">buoyantKEpsilon.C:117</a></div></div>
-<div class="ttc" id="a10675_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10675.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a02608_html"><div class="ttname"><a href="a02608.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07604_source.html#l00118">PtrList.H:118</a></div></div>
-<div class="ttc" id="a10675_html_aec48583af672626378f501eb9fc32cd1"><div class="ttname"><a href="a10675.html#aec48583af672626378f501eb9fc32cd1">Foam::type</a></div><div class="ttdeci">fileName::Type type(const fileName &amp;)</div><div class="ttdoc">Return the file type: DIRECTORY or FILE. </div><div class="ttdef"><b>Definition:</b> <a href="a09018_source.html#l00589">POSIX.C:589</a></div></div>
-<div class="ttc" id="a02906_html_a81cf6107131a3583e2b0b762cb9c2862"><div class="ttname"><a href="a02906.html#a81cf6107131a3583e2b0b762cb9c2862">U</a></div><div class="ttdeci">U</div><div class="ttdef"><b>Definition:</b> <a href="a02906_source.html#l00082">pEqn.H:82</a></div></div>
-<div class="ttc" id="a00526_html_a080d3824651cfcf52f72acceec615aaa"><div class="ttname"><a href="a00526.html#a080d3824651cfcf52f72acceec615aaa">Foam::dimensioned::value</a></div><div class="ttdeci">const Type &amp; value() const </div><div class="ttdoc">Return const reference to value. </div><div class="ttdef"><b>Definition:</b> <a href="a07823_source.html#l00263">dimensionedType.C:263</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            <span class="comment">//- Update the coefficients associated with the patch field</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00038.html#a7e24eafac629d3733181cd942d4c902f">updateCoeffs</a>();</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="comment">//- Write</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="a00038.html#a0941061ad5a26be83b4107d05750ace6">write</a>(<a class="code" href="a01736.html">Ostream</a>&amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;};</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;} <span class="comment">// End namespace Foam</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a00038_html_a0ab0c43ce90d756c88dd81e3d0a9eef5"><div class="ttname"><a href="a00038.html#a0ab0c43ce90d756c88dd81e3d0a9eef5">Foam::alphaFixedPressureFvPatchScalarField::autoMap</a></div><div class="ttdeci">virtual void autoMap(const fvPatchFieldMapper &amp;)</div><div class="ttdoc">Map (and resize as needed) from self given a mapping object. </div><div class="ttdef"><b>Definition:</b> <a href="a10449_source.html#l00112">alphaFixedPressureFvPatchScalarField.C:112</a></div></div>
+<div class="ttc" id="a00038_html_a4e1ec106653139f1668829769dfc8eb0"><div class="ttname"><a href="a00038.html#a4e1ec106653139f1668829769dfc8eb0">Foam::alphaFixedPressureFvPatchScalarField::alphaFixedPressureFvPatchScalarField</a></div><div class="ttdeci">alphaFixedPressureFvPatchScalarField(const fvPatch &amp;, const DimensionedField&lt; scalar, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a10449_source.html#l00037">alphaFixedPressureFvPatchScalarField.C:37</a></div></div>
+<div class="ttc" id="a00038_html_afdeceecb1c75e9ccc98c2f489fe8fa00"><div class="ttname"><a href="a00038.html#afdeceecb1c75e9ccc98c2f489fe8fa00">Foam::alphaFixedPressureFvPatchScalarField::clone</a></div><div class="ttdeci">virtual tmp&lt; fvPatchScalarField &gt; clone() const </div><div class="ttdoc">Construct and return a clone. </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00098">alphaFixedPressureFvPatchScalarField.H:98</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a00038_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a00038.html#a0941061ad5a26be83b4107d05750ace6">Foam::alphaFixedPressureFvPatchScalarField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a10449_source.html#l00156">alphaFixedPressureFvPatchScalarField.C:156</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; scalar &gt;</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List&lt; label &gt;</a></div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a00038_html"><div class="ttname"><a href="a00038.html">Foam::alphaFixedPressureFvPatchScalarField</a></div><div class="ttdoc">A fixed-pressure alphaContactAngle boundary. </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00048">alphaFixedPressureFvPatchScalarField.H:48</a></div></div>
+<div class="ttc" id="a00038_html_a713277715ccc0a5ef466b0516d44731f"><div class="ttname"><a href="a00038.html#a713277715ccc0a5ef466b0516d44731f">Foam::alphaFixedPressureFvPatchScalarField::rmap</a></div><div class="ttdeci">virtual void rmap(const fvPatchScalarField &amp;, const labelList &amp;)</div><div class="ttdoc">Reverse map the given fvPatchField onto this fvPatchField. </div><div class="ttdef"><b>Definition:</b> <a href="a10449_source.html#l00122">alphaFixedPressureFvPatchScalarField.C:122</a></div></div>
+<div class="ttc" id="a00038_html_a22c84ba6a9c14d44f571657a00e58ada"><div class="ttname"><a href="a00038.html#a22c84ba6a9c14d44f571657a00e58ada">Foam::alphaFixedPressureFvPatchScalarField::p</a></div><div class="ttdeci">const scalarField &amp; p() const </div><div class="ttdoc">Return the alphaFixed pressure. </div><div class="ttdef"><b>Definition:</b> <a href="a10450_source.html#l00131">alphaFixedPressureFvPatchScalarField.H:131</a></div></div>
+<div class="ttc" id="a02618_html"><div class="ttname"><a href="a02618.html">Foam::tmp</a></div><div class="ttdoc">A class for managing temporary objects. </div><div class="ttdef"><b>Definition:</b> <a href="a07655_source.html#l00118">PtrList.H:118</a></div></div>
+<div class="ttc" id="a00038_html_aee43459f4eb52198bb0bb7e56235ff5c"><div class="ttname"><a href="a00038.html#aee43459f4eb52198bb0bb7e56235ff5c">Foam::alphaFixedPressureFvPatchScalarField::TypeName</a></div><div class="ttdeci">TypeName(&quot;alphaFixedPressure&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
+<div class="ttc" id="a00038_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a00038.html#a7e24eafac629d3733181cd942d4c902f">Foam::alphaFixedPressureFvPatchScalarField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients associated with the patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a10449_source.html#l00136">alphaFixedPressureFvPatchScalarField.C:136</a></div></div>
+<div class="ttc" id="a05180_html"><div class="ttname"><a href="a05180.html">fixedValueFvPatchFields.H</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

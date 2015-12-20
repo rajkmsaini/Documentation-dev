@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_e47b7a1cb0d621da2e060462b00c1c76.html">ODE</a></li><li class="navelem"><a class="el" href="dir_3c9eb44cc766b767ba49f7a4339bd2b9.html">ODESolvers</a></li><li class="navelem"><a class="el" href="dir_31c62ff2f20a3e57587f1a0fee3b6b36.html">Rosenbrock23</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ae30ad0bef50cf391b24c614251bb9fd.html">meshTools</a></li><li class="navelem"><a class="el" href="dir_2c4b96702ead4056d900947b6784ec65.html">triSurface</a></li><li class="navelem"><a class="el" href="dir_74d5f0ef26cbc0ed5739a8bd0c9545b2.html">booleanOps</a></li><li class="navelem"><a class="el" href="dir_48887ee3a7ed9e7dfb18bb977eed01ab.html">intersectedSurface</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Rosenbrock23.H</div>  </div>
+<div class="title">edgeSurface.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a07474.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -119,139 +119,441 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">    You should have received a copy of the GNU General Public License</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">    along with OpenFOAM.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">Class</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">    Foam::Rosenbrock23</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">Description</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">    L-stable embedded Rosenbrock ODE solver of order (2)3.</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">    References:</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    \verbatim</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">        Sandu et al,</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">        &quot;Benchmarking stiff ODE solvers for atmospheric chemistry problems II</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">         Rosenbrock solvers&quot;,</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">         A. Sandu,</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">         J.G. Verwer,</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">         J.G. Blom,</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">         E.J. Spee,</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">         G.R. Carmichael,</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">         F.A. Potra,</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">         Atmospheric Environment, Volume 31, 1997, Issue 20, Pages 3459-3472</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">    \endverbatim</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">SourceFiles</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">    Rosenbrock23.C</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#ifndef Rosenbrock23_H</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define Rosenbrock23_H</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07459.html">ODESolver.H</a>&quot;</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07455.html">adaptiveSolver.H</a>&quot;</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07475.html">edgeSurface.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a10489.html">triSurface.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07481.html">surfaceIntersection.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07303.html">meshTools.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07771.html">OFstream.H</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">defineTypeNameAndDebug</a>(edgeSurface, 0);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// Write whole pointField and edges to stream</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> Foam::edgeSurface::writeOBJ</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp; points,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#ac74e20afd12e634897e4a0b62666e33b">edgeList</a>&amp; edges,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    Ostream&amp; os</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(points, pointI)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a643590f4015338d12714af03d61a0ac9">point</a>&amp; pt = points[pointI];</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;v &quot;</span> &lt;&lt; pt.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>() &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; pt.y() &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; pt.z() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(edges, edgeI)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> edge&amp; e = edges[edgeI];</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">                           Class Rosenbrock23 Declaration</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a02198.html">   63</a></span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">class </span><a class="code" href="a02198.html">Rosenbrock23</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">public</span> <a class="code" href="a01683.html">ODESolver</a>,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">public</span> <a class="code" href="a00020.html">adaptiveSolver</a></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// Private data</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> k1_;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> k2_;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> k3_;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> err_;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> dydx_;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a00749.html">scalarField</a> dfdx_;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a02400.html">scalarSquareMatrix</a> dfdy_;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a02400.html">scalarSquareMatrix</a> a_;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keyword">mutable</span> <a class="code" href="a01355.html">labelList</a> pivotIndices_;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> scalar</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            a21, a31, a32,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            c21, c31, c32,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            b1, b2, b3,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            e1, e2, e3,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            gamma,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            c2, c3,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            d1, d2, d3;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">//- Runtime type information</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a02198.html#a06720fdb591376821c6e705be6e94d29">TypeName</a>(<span class="stringliteral">&quot;Rosenbrock23&quot;</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;l &quot;</span> &lt;&lt; e.start()+1 &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; e.end()+1 &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// Write whole pointField and selected edges to stream</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span> Foam::edgeSurface::writeOBJ</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;(</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a5997a67f2e85a15c0e13a1724273aa5f">pointField</a>&amp; points,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#ac74e20afd12e634897e4a0b62666e33b">edgeList</a>&amp; edges,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; edgeLabels,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    Ostream&amp; os</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(points, pointI)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a643590f4015338d12714af03d61a0ac9">point</a>&amp; pt = points[pointI];</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;v &quot;</span> &lt;&lt; pt.<a class="code" href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">x</a>() &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; pt.y() &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; pt.z() &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(edgeLabels, i)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">const</span> edge&amp; e = edges[edgeLabels[i]];</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;l &quot;</span> &lt;&lt; e.start()+1 &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; e.end()+1 &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// Pointedges in edgeSurface indices only.</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">void</span> Foam::edgeSurface::calcPointEdges()</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    pointEdges_.setSize(points_.size());</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a> pointNEdges(points_.size(), 0);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Constructors</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">//- Construct from ODE</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <a class="code" href="a02198.html#a62484ec9991548b847bcd27c9428f920">Rosenbrock23</a>(<span class="keyword">const</span> <a class="code" href="a01684.html">ODESystem</a>&amp; <a class="code" href="a01682.html">ode</a>, <span class="keyword">const</span> <a class="code" href="a00518.html">dictionary</a>&amp; <a class="code" href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a>);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// Member Functions</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//- Inherit solve from ODESolver</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keyword">using</span> <a class="code" href="a01683.html#ae28f1708651d3bf1ea89db3d1993bab7">ODESolver::solve</a>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="comment">//- Solve a single step dx and return the error</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        scalar <a class="code" href="a02198.html#addb49744b13dfd8476bbb75b6209bfb3">solve</a></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        (</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keyword">const</span> scalar x0,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a10675.html#a30cc5927b23ad62902bfeab8cc64ef1b">y0</a>,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00749.html">scalarField</a>&amp; dydx0,</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">const</span> scalar dx,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; <a class="code" href="a06933.html#afa8b67a0d5607da908ad92ed485e19e8">y</a></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        ) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(edges_, edgeI)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">const</span> edge&amp; e = edges_[edgeI];</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        pointNEdges[e[0]]++;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        pointNEdges[e[1]]++;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(pointEdges_, pointI)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        pointEdges_[pointI].setSize(pointNEdges[pointI]);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    pointNEdges = 0;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(edges_, edgeI)</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keyword">const</span> edge&amp; e = edges_[edgeI];</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; pEdges0 = pointEdges_[e[0]];</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        pEdges0[pointNEdges[e[0]]++] = edgeI;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="comment">//- Solve the ODE system and the update the state</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="a02198.html#addb49744b13dfd8476bbb75b6209bfb3">solve</a></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        (</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            scalar&amp; <a class="code" href="a06934.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a>,</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <a class="code" href="a00749.html">scalarField</a>&amp; y,</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            scalar&amp; dxTry</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        ) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a01683_html_ae28f1708651d3bf1ea89db3d1993bab7"><div class="ttname"><a href="a01683.html#ae28f1708651d3bf1ea89db3d1993bab7">Foam::ODESolver::solve</a></div><div class="ttdeci">virtual void solve(scalar &amp;x, scalarField &amp;y, scalar &amp;dxTry) const </div><div class="ttdoc">Solve the ODE system as far as possible upto dxTry. </div><div class="ttdef"><b>Definition:</b> <a href="a07459_source.html#l00178">ODESolver.H:178</a></div></div>
-<div class="ttc" id="a07455_html"><div class="ttname"><a href="a07455.html">adaptiveSolver.H</a></div></div>
-<div class="ttc" id="a06933_html_afa8b67a0d5607da908ad92ed485e19e8"><div class="ttname"><a href="a06933.html#afa8b67a0d5607da908ad92ed485e19e8">y</a></div><div class="ttdeci">scalar y</div><div class="ttdef"><b>Definition:</b> <a href="a06933_source.html#l00014">LISASMDCalcMethod1.H:14</a></div></div>
-<div class="ttc" id="a00518_html"><div class="ttname"><a href="a00518.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07633_source.html#l00137">dictionary.H:137</a></div></div>
-<div class="ttc" id="a06934_html_a9336ebf25087d91c818ee6e9ec29f8c1"><div class="ttname"><a href="a06934.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a></div><div class="ttdeci">x</div><div class="ttdef"><b>Definition:</b> <a href="a06934_source.html#l00052">LISASMDCalcMethod2.H:52</a></div></div>
-<div class="ttc" id="a01355_html"><div class="ttname"><a href="a01355.html">Foam::List&lt; label &gt;</a></div></div>
-<div class="ttc" id="a01684_html"><div class="ttname"><a href="a01684.html">Foam::ODESystem</a></div><div class="ttdoc">Abstract base class for the systems of ordinary differential equations. </div><div class="ttdef"><b>Definition:</b> <a href="a07485_source.html#l00046">ODESystem.H:46</a></div></div>
-<div class="ttc" id="a01682_html"><div class="ttname"><a href="a01682.html">Foam::ode</a></div><div class="ttdoc">An ODE solver for chemistry. </div><div class="ttdef"><b>Definition:</b> <a href="a09927_source.html#l00050">ode.H:50</a></div></div>
-<div class="ttc" id="a10675_html_a30cc5927b23ad62902bfeab8cc64ef1b"><div class="ttname"><a href="a10675.html#a30cc5927b23ad62902bfeab8cc64ef1b">Foam::y0</a></div><div class="ttdeci">dimensionedScalar y0(const dimensionedScalar &amp;ds)</div><div class="ttdef"><b>Definition:</b> <a href="a07814_source.html#l00272">dimensionedScalar.C:272</a></div></div>
-<div class="ttc" id="a02198_html_a06720fdb591376821c6e705be6e94d29"><div class="ttname"><a href="a02198.html#a06720fdb591376821c6e705be6e94d29">Foam::Rosenbrock23::TypeName</a></div><div class="ttdeci">TypeName(&quot;Rosenbrock23&quot;)</div><div class="ttdoc">Runtime type information. </div></div>
-<div class="ttc" id="a00020_html"><div class="ttname"><a href="a00020.html">Foam::adaptiveSolver</a></div><div class="ttdef"><b>Definition:</b> <a href="a07455_source.html#l00047">adaptiveSolver.H:47</a></div></div>
-<div class="ttc" id="a00749_html"><div class="ttname"><a href="a00749.html">Foam::Field&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a01683_html"><div class="ttname"><a href="a01683.html">Foam::ODESolver</a></div><div class="ttdoc">Abstract base-class for ODE system solvers. </div><div class="ttdef"><b>Definition:</b> <a href="a07459_source.html#l00050">ODESolver.H:50</a></div></div>
-<div class="ttc" id="a02400_html"><div class="ttname"><a href="a02400.html">Foam::SquareMatrix&lt; scalar &gt;</a></div></div>
-<div class="ttc" id="a02198_html_a62484ec9991548b847bcd27c9428f920"><div class="ttname"><a href="a02198.html#a62484ec9991548b847bcd27c9428f920">Foam::Rosenbrock23::Rosenbrock23</a></div><div class="ttdeci">Rosenbrock23(const ODESystem &amp;ode, const dictionary &amp;dict)</div><div class="ttdoc">Construct from ODE. </div><div class="ttdef"><b>Definition:</b> <a href="a07473_source.html#l00064">Rosenbrock23.C:64</a></div></div>
-<div class="ttc" id="a02198_html_addb49744b13dfd8476bbb75b6209bfb3"><div class="ttname"><a href="a02198.html#addb49744b13dfd8476bbb75b6209bfb3">Foam::Rosenbrock23::solve</a></div><div class="ttdeci">scalar solve(const scalar x0, const scalarField &amp;y0, const scalarField &amp;dydx0, const scalar dx, scalarField &amp;y) const </div><div class="ttdoc">Solve a single step dx and return the error. </div><div class="ttdef"><b>Definition:</b> <a href="a07473_source.html#l00083">Rosenbrock23.C:83</a></div></div>
-<div class="ttc" id="a02198_html"><div class="ttname"><a href="a02198.html">Foam::Rosenbrock23</a></div><div class="ttdoc">L-stable embedded Rosenbrock ODE solver of order (2)3. </div><div class="ttdef"><b>Definition:</b> <a href="a07474_source.html#l00063">Rosenbrock23.H:63</a></div></div>
-<div class="ttc" id="a04532_html_a4cc578826f71ffb4192a5bd0a65aeeea"><div class="ttname"><a href="a04532.html#a4cc578826f71ffb4192a5bd0a65aeeea">dict</a></div><div class="ttdeci">dictionary dict</div><div class="ttdef"><b>Definition:</b> <a href="a04532_source.html#l00014">searchingEngine.H:14</a></div></div>
-<div class="ttc" id="a07459_html"><div class="ttname"><a href="a07459.html">ODESolver.H</a></div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="a10725.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; pEdges1 = pointEdges_[e[1]];</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        pEdges1[pointNEdges[e[1]]++] = edgeI;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// Construct from surface and intersection description</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<a class="code" href="a00621.html#abe6268d682c2dab294acf2175f47ca38">Foam::edgeSurface::edgeSurface</a></div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="a00621.html#abe6268d682c2dab294acf2175f47ca38">  128</a></span>&#160;(</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02679.html">triSurface</a>&amp; surf,</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> isFirstSurface,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02482.html">surfaceIntersection</a>&amp; inter</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;)</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;:</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    points_(surf.<a class="code" href="a01970.html#a9927abeba2c8506177084d644b6e573a">nPoints</a>() + inter.<a class="code" href="a02482.html#accb8b5b33864e301df17e24f7da938f2">cutPoints</a>().<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()),</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    nSurfacePoints_(surf.<a class="code" href="a01970.html#a9927abeba2c8506177084d644b6e573a">nPoints</a>()),</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    edges_(),</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    nSurfaceEdges_(surf.<a class="code" href="a01970.html#a1db9478309c639504a743b7b194226f4">nEdges</a>()),</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    parentEdges_(0),</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    faceEdges_(surf.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>()),</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    pointEdges_(points_.size())</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;{</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="comment">// Copy points (surface ones first)</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> pointI = 0;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; surfPoints = surf.<a class="code" href="a01970.html#a180aa335ba66b3224df33de8eb29b3bf">localPoints</a>();</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(surfPoints, i)</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    {</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        points_[pointI++] = surfPoints[i];</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">pointField</a>&amp; cutPoints = inter.<a class="code" href="a02482.html#accb8b5b33864e301df17e24f7da938f2">cutPoints</a>();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(cutPoints, i)</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    {</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        points_[pointI++] = cutPoints[i];</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="comment">// Copy edges (surface ones first)</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <a class="code" href="a00604.html">DynamicList&lt;edge&gt;</a> allEdges(surf.<a class="code" href="a01970.html#a1db9478309c639504a743b7b194226f4">nEdges</a>() + inter.<a class="code" href="a02482.html#a7c76e3ed03912ae1e5c62b13611670e3">cutEdges</a>().<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <a class="code" href="a00604.html">DynamicList&lt;label&gt;</a> allParentEdges(surf.<a class="code" href="a01970.html#a1db9478309c639504a743b7b194226f4">nEdges</a>());</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="a01364.html">List&lt;DynamicList&lt;label&gt;</a> &gt; allFaceEdges(surf.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// Copy surface edges (can be split!)</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">edgeList</a>&amp; surfEdges = surf.<a class="code" href="a01970.html#aae82d34fe433288eb6b1f9dea53675c8">edges</a>();</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(surfEdges, edgeI)</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    {</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; e = surfEdges[edgeI];</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="comment">// Get additional vertices for this edge.</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; extraVerts = inter.<a class="code" href="a02482.html#a77d4d32bb8a3a239389250d20b2111e9">edgeCuts</a>(isFirstSurface)[edgeI];</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="comment">// Store current top of allEdges.</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> freeNewEdgeI = allEdges.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">if</span> (extraVerts.<a class="code" href="a02731.html#ac6e61de369e994009e36f344f99c15ad">empty</a>())</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            <span class="comment">// No cuts across this edge. Note that vertices do not need to be</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;            <span class="comment">// renumbered.</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;            allEdges.append(e);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        }</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            <span class="comment">// Edge is cut. From e.start() to extraVerts[0],</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <span class="comment">// from extraVerts[i] to i+1 and finally to e.end().</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            allEdges.append</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            (</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;                <a class="code" href="a00612.html">edge</a></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                (</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                    e.<a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">start</a>(),</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                    extraVerts[0] + nSurfacePoints_</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                )</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            );</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> extraI = 1; extraI &lt; extraVerts.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>(); extraI++)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            {</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;                allEdges.append</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;                (</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;                    <a class="code" href="a00612.html">edge</a></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                    (</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;                        extraVerts[extraI-1] + nSurfacePoints_,</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;                        extraVerts[extraI] + nSurfacePoints_</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                    )</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                );</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            }</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            allEdges.append</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            (</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                <a class="code" href="a00612.html">edge</a></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                (</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                    extraVerts.<a class="code" href="a02731.html#aef07c02ea1c27bdb5906043b399e0ff0">last</a>() + nSurfacePoints_,</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;                    e.<a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">end</a>()</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;                )</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            );</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        }</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <span class="comment">// Update allFaceEdges, parentEdges_ for the newly added edges.</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="comment">// Add each edge label to all face neighbours of edgeI</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; myFaces = surf.<a class="code" href="a01970.html#ab456054a1e7e1a07261799f50167916f">edgeFaces</a>()[edgeI];</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> eI = freeNewEdgeI; eI &lt; allEdges.size(); eI++)</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        {</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            allParentEdges.<a class="code" href="a01364.html#a399dd2bf0d9a32016717dc90126f016b">append</a>(edgeI);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(myFaces, myFaceI)</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            {</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                allFaceEdges[myFaces[myFaceI]].append(eI);</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            }</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        }</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    }</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="comment">// Done all (possibly split) surface edges by now.</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    nSurfaceEdges_ = allEdges.size();</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="comment">// Copy intersection edges</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="comment">// (note no parentEdges)</span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">edgeList</a>&amp; cutEdges = inter.<a class="code" href="a02482.html#a7c76e3ed03912ae1e5c62b13611670e3">cutEdges</a>();</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(cutEdges, i)</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    {</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; e = cutEdges[i];</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        allEdges.<a class="code" href="a01364.html#a399dd2bf0d9a32016717dc90126f016b">append</a>(<a class="code" href="a00612.html">edge</a>(e[0] + nSurfacePoints_, e[1] + nSurfacePoints_));</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    }</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="comment">// Add intersection edges to faceEdges</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <a class="code" href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a>(<a class="code" href="a00984.html">labelPairLookup</a>, inter.<a class="code" href="a02482.html#aff5326a438cc05079f20ac9f267d9b0a">facePairToEdge</a>(), iter)</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    {</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="comment">// Edge label in intersection</span></div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> edgeI = iter();</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="comment">// Get the face from the correct surface</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        <span class="keyword">const</span> <a class="code" href="a00824.html">FixedList&lt;label, 2&gt;</a>&amp; twoFaces = iter.key();</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keywordflow">if</span> (isFirstSurface)</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;        {</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            faceI = twoFaces[0];</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        }</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        {</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            faceI = twoFaces[1];</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        }</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="comment">// Store on face-edge addressing. (note: offset edge)</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        allFaceEdges[faceI].append(edgeI + nSurfaceEdges_);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    }</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="comment">// Transfer.</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    edges_.<a class="code" href="a00824.html#ad199ea6fc3eb573dd9192b5606943cdd">transfer</a>(allEdges);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    parentEdges_.transfer(allParentEdges);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(allFaceEdges, faceI)</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    {</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        faceEdges_[faceI].transfer(allFaceEdges[faceI]);</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    }</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="comment">// Additional addressing</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    calcPointEdges();</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keywordflow">if</span> (debug &amp; 4)</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;edgeSurface : Dumping faceEdges to files&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(faceEdges_, faceI)</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        {</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; fEdges = faceEdges_[faceI];</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            <span class="keywordflow">if</span> (fEdges.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>() != 3)</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                <a class="code" href="a00780.html">fileName</a> faceFName(<span class="stringliteral">&quot;face_&quot;</span> + <a class="code" href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">name</a>(faceI) + <span class="stringliteral">&quot;.obj&quot;</span>);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;                <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;edgeSurface : Dumping faceEdges for face &quot;</span> &lt;&lt; faceI</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                    &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; faceFName &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                <a class="code" href="a01702.html">OFstream</a> fStream(faceFName);</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                <a class="code" href="a10780.html#afd76c6ccc8ee4a5957f0232218167c17">writeOBJ</a>(points_, edges_, fEdges, fStream);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            }</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        }</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;edgeSurface : Dumping edges to edges.obj&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <a class="code" href="a01702.html">OFstream</a> eStream(<span class="stringliteral">&quot;edges.obj&quot;</span>);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <a class="code" href="a10780.html#afd76c6ccc8ee4a5957f0232218167c17">writeOBJ</a>(points_, edges_, eStream);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;edgeSurface : Dumping intersectionEdges to&quot;</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;            &lt;&lt; <span class="stringliteral">&quot; intersectionEdges.obj&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <a class="code" href="a01702.html">OFstream</a> intEdgesStream(<span class="stringliteral">&quot;intersectionEdges.obj&quot;</span>);</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <a class="code" href="a01364.html">labelList</a> edgeLabels(edges_.size() - nSurfaceEdges_);</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> i = 0;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> edgeI = nSurfaceEdges_; edgeI &lt; edges_.size(); edgeI++)</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        {</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            edgeLabels[i++] = edgeI;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        }</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        <a class="code" href="a10780.html#afd76c6ccc8ee4a5957f0232218167c17">writeOBJ</a>(points_, edges_, edgeLabels, intEdgesStream);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;}</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00621.html#aa26839701e0cd28a34fefc83a9ad6a78">Foam::edgeSurface::addIntersectionEdges</a></div>
+<div class="line"><a name="l00343"></a><span class="lineno"><a class="line" href="a00621.html#aa26839701e0cd28a34fefc83a9ad6a78">  343</a></span>&#160;(</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> faceI,</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keyword">const</span> <a class="code" href="a01364.html">edgeList</a>&amp; additionalEdges</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;)</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;{</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordflow">if</span> (debug &amp; 2)</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;Old face consisted of edges:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; fEdges = faceEdges_[faceI];</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fEdges, i)</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;        {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; e = edges_[fEdges[i]];</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;            <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;    &quot;</span> &lt;&lt; fEdges[i] &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; e</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                &lt;&lt; points_[e.<a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">start</a>()] &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; points_[e.<a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">end</a>()] &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        }</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    }</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="comment">// Make space for additional intersection edges (copies old ones)</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keyword">const</span> <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> oldNEdges = edges_.size();</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    edges_.setSize(oldNEdges + additionalEdges.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="comment">// Append new intersection edges</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> newEdgeI = oldNEdges;</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(additionalEdges, i)</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    {</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        edges_[newEdgeI] = additionalEdges[i];  <span class="comment">// Vertices already in eSurf</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                                                <span class="comment">// indices.</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        newEdgeI++;</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    }</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    <span class="comment">// Append to faceEdges.</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <a class="code" href="a01364.html">labelList</a>&amp; fEdges = faceEdges_[faceI];</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <a class="code" href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nFEdges = fEdges.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>();</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    fEdges.<a class="code" href="a01364.html#aedb985ffeaf1bdbfeccc2a8730405703">setSize</a>(nFEdges + additionalEdges.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>());</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(additionalEdges, i)</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    {</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        fEdges[nFEdges++] = oldNEdges + i;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="comment">// Update pointEdge addressing</span></div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    calcPointEdges();</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordflow">if</span> (debug &amp; 2)</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    {</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        <span class="keyword">const</span> <a class="code" href="a01364.html">labelList</a>&amp; fEdges = faceEdges_[faceI];</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;New face consists of edges:&quot;</span> &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <a class="code" href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a>(fEdges, i)</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        {</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            <span class="keyword">const</span> <a class="code" href="a00612.html">edge</a>&amp; e = edges_[fEdges[i]];</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            <a class="code" href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Pout</a>&lt;&lt; <span class="stringliteral">&quot;    &quot;</span> &lt;&lt; fEdges[i] &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; e</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                &lt;&lt; points_[e.<a class="code" href="a00612.html#a96b607a9a9baa575783b4af443ef613f">start</a>()] &lt;&lt; <span class="charliteral">&#39; &#39;</span> &lt;&lt; points_[e.<a class="code" href="a00612.html#a8ed0e876210c2c116b5694307a830518">end</a>()] &lt;&lt; <a class="code" href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">endl</a>;</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        }</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    }</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;}</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a00824_html"><div class="ttname"><a href="a00824.html">Foam::FixedList&lt; label, 2 &gt;</a></div></div>
+<div class="ttc" id="a01970_html_a180aa335ba66b3224df33de8eb29b3bf"><div class="ttname"><a href="a01970.html#a180aa335ba66b3224df33de8eb29b3bf">Foam::PrimitivePatch::localPoints</a></div><div class="ttdeci">const Field&lt; PointType &gt; &amp; localPoints() const </div><div class="ttdoc">Return pointField of points in patch. </div><div class="ttdef"><b>Definition:</b> <a href="a08741_source.html#l00448">PrimitivePatch.C:448</a></div></div>
+<div class="ttc" id="a10725_html_a643590f4015338d12714af03d61a0ac9"><div class="ttname"><a href="a10725.html#a643590f4015338d12714af03d61a0ac9">Foam::point</a></div><div class="ttdeci">vector point</div><div class="ttdoc">Point is a vector. </div><div class="ttdef"><b>Definition:</b> <a href="a08774_source.html#l00041">point.H:41</a></div></div>
+<div class="ttc" id="a01702_html"><div class="ttname"><a href="a01702.html">Foam::OFstream</a></div><div class="ttdoc">Output to file stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07771_source.html#l00081">OFstream.H:81</a></div></div>
+<div class="ttc" id="a10725_html_a2db8fe02a0d3909e9351bb4275b23ce4"><div class="ttname"><a href="a10725.html#a2db8fe02a0d3909e9351bb4275b23ce4">Foam::endl</a></div><div class="ttdeci">Ostream &amp; endl(Ostream &amp;os)</div><div class="ttdoc">Add newline and flush stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00251">Ostream.H:251</a></div></div>
+<div class="ttc" id="a00621_html_abe6268d682c2dab294acf2175f47ca38"><div class="ttname"><a href="a00621.html#abe6268d682c2dab294acf2175f47ca38">Foam::edgeSurface::edgeSurface</a></div><div class="ttdeci">edgeSurface(const triSurface &amp;surf, const bool isFirstSurface, const surfaceIntersection &amp;inter)</div><div class="ttdoc">Construct from surface and intersection description. </div><div class="ttdef"><b>Definition:</b> <a href="a07474_source.html#l00128">edgeSurface.C:128</a></div></div>
+<div class="ttc" id="a10725_html_a9907f9d4272b10c75ac87c1679b77c24"><div class="ttname"><a href="a10725.html#a9907f9d4272b10c75ac87c1679b77c24">Foam::defineTypeNameAndDebug</a></div><div class="ttdeci">defineTypeNameAndDebug(combustionModel, 0)</div></div>
+<div class="ttc" id="a07475_html"><div class="ttname"><a href="a07475.html">edgeSurface.H</a></div></div>
+<div class="ttc" id="a10725_html_a1cb143a027019075df276006651d7048"><div class="ttname"><a href="a10725.html#a1cb143a027019075df276006651d7048">Foam::labelList</a></div><div class="ttdeci">List&lt; label &gt; labelList</div><div class="ttdoc">A List of labels. </div><div class="ttdef"><b>Definition:</b> <a href="a08887_source.html#l00056">labelList.H:56</a></div></div>
+<div class="ttc" id="a00612_html_a8ed0e876210c2c116b5694307a830518"><div class="ttname"><a href="a00612.html#a8ed0e876210c2c116b5694307a830518">Foam::edge::end</a></div><div class="ttdeci">label end() const </div><div class="ttdoc">Return end vertex label. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00092">edgeI.H:92</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a02482_html_accb8b5b33864e301df17e24f7da938f2"><div class="ttname"><a href="a02482.html#accb8b5b33864e301df17e24f7da938f2">Foam::surfaceIntersection::cutPoints</a></div><div class="ttdeci">const pointField &amp; cutPoints() const </div><div class="ttdef"><b>Definition:</b> <a href="a07480_source.html#l01132">surfaceIntersection.C:1132</a></div></div>
+<div class="ttc" id="a07669_html_a1a02bffef961ee015f0e9b03d336c6a9"><div class="ttname"><a href="a07669.html#a1a02bffef961ee015f0e9b03d336c6a9">forAll</a></div><div class="ttdeci">#define forAll(list, i)</div><div class="ttdoc">Loop across all elements in list. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00406">UList.H:406</a></div></div>
+<div class="ttc" id="a07481_html"><div class="ttname"><a href="a07481.html">surfaceIntersection.H</a></div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a00984_html"><div class="ttname"><a href="a00984.html">Foam::HashTable&lt; label, FixedList&lt; label, 2 &gt;, FixedList&lt; label, 2 &gt;::Hash&lt;&gt; &gt;</a></div></div>
+<div class="ttc" id="a01970_html_ab456054a1e7e1a07261799f50167916f"><div class="ttname"><a href="a01970.html#ab456054a1e7e1a07261799f50167916f">Foam::PrimitivePatch::edgeFaces</a></div><div class="ttdeci">const labelListList &amp; edgeFaces() const </div><div class="ttdoc">Return edge-face addressing. </div><div class="ttdef"><b>Definition:</b> <a href="a08741_source.html#l00308">PrimitivePatch.C:308</a></div></div>
+<div class="ttc" id="a01364_html"><div class="ttname"><a href="a01364.html">Foam::List</a></div><div class="ttdoc">A 1D array of objects of type <T>, where the size of the vector is known and used for subscript bound...</div><div class="ttdef"><b>Definition:</b> <a href="a07575_source.html#l00059">HashTable.H:59</a></div></div>
+<div class="ttc" id="a02731_html_ac6e61de369e994009e36f344f99c15ad"><div class="ttname"><a href="a02731.html#ac6e61de369e994009e36f344f99c15ad">Foam::UList::empty</a></div><div class="ttdeci">bool empty() const </div><div class="ttdoc">Return true if the UList is empty (ie, size() is zero). </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00313">UListI.H:313</a></div></div>
+<div class="ttc" id="a10489_html"><div class="ttname"><a href="a10489.html">triSurface.H</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00076">ListI.H:76</a></div></div>
+<div class="ttc" id="a10725_html_ac74e20afd12e634897e4a0b62666e33b"><div class="ttname"><a href="a10725.html#ac74e20afd12e634897e4a0b62666e33b">Foam::edgeList</a></div><div class="ttdeci">List&lt; edge &gt; edgeList</div><div class="ttdef"><b>Definition:</b> <a href="a08525_source.html#l00038">edgeList.H:38</a></div></div>
+<div class="ttc" id="a02679_html"><div class="ttname"><a href="a02679.html">Foam::triSurface</a></div><div class="ttdoc">Triangulated surface description with patch information. </div><div class="ttdef"><b>Definition:</b> <a href="a10489_source.html#l00057">triSurface.H:57</a></div></div>
+<div class="ttc" id="a02482_html_a77d4d32bb8a3a239389250d20b2111e9"><div class="ttname"><a href="a02482.html#a77d4d32bb8a3a239389250d20b2111e9">Foam::surfaceIntersection::edgeCuts</a></div><div class="ttdeci">const labelListList &amp; edgeCuts(const bool) const </div><div class="ttdoc">Access either surf1EdgeCuts (isFirstSurface = true) or. </div><div class="ttdef"><b>Definition:</b> <a href="a07480_source.html#l01157">surfaceIntersection.C:1157</a></div></div>
+<div class="ttc" id="a02482_html"><div class="ttname"><a href="a02482.html">Foam::surfaceIntersection</a></div><div class="ttdoc">Basic surface-surface intersection description. Constructed from two surfaces it creates a descriptio...</div><div class="ttdef"><b>Definition:</b> <a href="a07481_source.html#l00080">surfaceIntersection.H:80</a></div></div>
+<div class="ttc" id="a00612_html"><div class="ttname"><a href="a00612.html">Foam::edge</a></div><div class="ttdoc">An edge is a list of two point labels. The functionality it provides supports the discretisation on a...</div><div class="ttdef"><b>Definition:</b> <a href="a08521_source.html#l00058">edge.H:58</a></div></div>
+<div class="ttc" id="a01970_html_a9927abeba2c8506177084d644b6e573a"><div class="ttname"><a href="a01970.html#a9927abeba2c8506177084d644b6e573a">Foam::PrimitivePatch::nPoints</a></div><div class="ttdeci">label nPoints() const </div><div class="ttdoc">Return number of points supporting patch faces. </div><div class="ttdef"><b>Definition:</b> <a href="a08742_source.html#l00295">PrimitivePatch.H:295</a></div></div>
+<div class="ttc" id="a01970_html_aae82d34fe433288eb6b1f9dea53675c8"><div class="ttname"><a href="a01970.html#aae82d34fe433288eb6b1f9dea53675c8">Foam::PrimitivePatch::edges</a></div><div class="ttdeci">const edgeList &amp; edges() const </div><div class="ttdoc">Return list of edges, address into LOCAL point list. </div><div class="ttdef"><b>Definition:</b> <a href="a08741_source.html#l00228">PrimitivePatch.C:228</a></div></div>
+<div class="ttc" id="a02731_html_aef07c02ea1c27bdb5906043b399e0ff0"><div class="ttname"><a href="a02731.html#aef07c02ea1c27bdb5906043b399e0ff0">Foam::UList::last</a></div><div class="ttdeci">T &amp; last()</div><div class="ttdoc">Return the last element of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07670_source.html#l00131">UListI.H:131</a></div></div>
+<div class="ttc" id="a07669_html_a3c352c3e2ae09f8937f7a243a7fcbe5e"><div class="ttname"><a href="a07669.html#a3c352c3e2ae09f8937f7a243a7fcbe5e">forAllConstIter</a></div><div class="ttdeci">#define forAllConstIter(Container, container, iter)                                                        </div><div class="ttdoc">Iterate across all elements in the container object of type. </div><div class="ttdef"><b>Definition:</b> <a href="a07669_source.html#l00449">UList.H:449</a></div></div>
+<div class="ttc" id="a01970_html_a1db9478309c639504a743b7b194226f4"><div class="ttname"><a href="a01970.html#a1db9478309c639504a743b7b194226f4">Foam::PrimitivePatch::nEdges</a></div><div class="ttdeci">label nEdges() const </div><div class="ttdoc">Return number of edges in patch. </div><div class="ttdef"><b>Definition:</b> <a href="a08742_source.html#l00301">PrimitivePatch.H:301</a></div></div>
+<div class="ttc" id="a02482_html_aff5326a438cc05079f20ac9f267d9b0a"><div class="ttname"><a href="a02482.html#aff5326a438cc05079f20ac9f267d9b0a">Foam::surfaceIntersection::facePairToEdge</a></div><div class="ttdeci">const labelPairLookup &amp; facePairToEdge() const </div><div class="ttdef"><b>Definition:</b> <a href="a07480_source.html#l01150">surfaceIntersection.C:1150</a></div></div>
+<div class="ttc" id="a07771_html"><div class="ttname"><a href="a07771.html">OFstream.H</a></div></div>
+<div class="ttc" id="a10725_html_a5997a67f2e85a15c0e13a1724273aa5f"><div class="ttname"><a href="a10725.html#a5997a67f2e85a15c0e13a1724273aa5f">Foam::pointField</a></div><div class="ttdeci">vectorField pointField</div><div class="ttdoc">pointField is a vectorField. </div><div class="ttdef"><b>Definition:</b> <a href="a08776_source.html#l00042">pointFieldFwd.H:42</a></div></div>
+<div class="ttc" id="a01364_html_a399dd2bf0d9a32016717dc90126f016b"><div class="ttname"><a href="a01364.html#a399dd2bf0d9a32016717dc90126f016b">Foam::List::append</a></div><div class="ttdeci">void append(const T &amp;)</div><div class="ttdoc">Append an element at the end of the list. </div><div class="ttdef"><b>Definition:</b> <a href="a07639_source.html#l00097">ListI.H:97</a></div></div>
+<div class="ttc" id="a10725_html_a1bc01f0470f765b8c1e9e7d09b5754bf"><div class="ttname"><a href="a10725.html#a1bc01f0470f765b8c1e9e7d09b5754bf">Foam::Pout</a></div><div class="ttdeci">prefixOSstream Pout(cout,&quot;Pout&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="a07775_source.html#l00053">IOstreams.H:53</a></div></div>
+<div class="ttc" id="a00612_html_a96b607a9a9baa575783b4af443ef613f"><div class="ttname"><a href="a00612.html#a96b607a9a9baa575783b4af443ef613f">Foam::edge::start</a></div><div class="ttdeci">label start() const </div><div class="ttdoc">Return start vertex label. </div><div class="ttdef"><b>Definition:</b> <a href="a08522_source.html#l00081">edgeI.H:81</a></div></div>
+<div class="ttc" id="a02787_html_aeb7dc4a97968c543f58f9c7082e55757"><div class="ttname"><a href="a02787.html#aeb7dc4a97968c543f58f9c7082e55757">Foam::Vector::x</a></div><div class="ttdeci">const Cmpt &amp; x() const </div><div class="ttdef"><b>Definition:</b> <a href="a09046_source.html#l00065">VectorI.H:65</a></div></div>
+<div class="ttc" id="a10780_html_afd76c6ccc8ee4a5957f0232218167c17"><div class="ttname"><a href="a10780.html#afd76c6ccc8ee4a5957f0232218167c17">Foam::meshTools::writeOBJ</a></div><div class="ttdeci">void writeOBJ(Ostream &amp;os, const point &amp;pt)</div><div class="ttdoc">Write obj representation of point. </div><div class="ttdef"><b>Definition:</b> <a href="a07302_source.html#l00204">meshTools.C:204</a></div></div>
+<div class="ttc" id="a01364_html_aedb985ffeaf1bdbfeccc2a8730405703"><div class="ttname"><a href="a01364.html#aedb985ffeaf1bdbfeccc2a8730405703">Foam::List::setSize</a></div><div class="ttdeci">void setSize(const label)</div><div class="ttdoc">Reset size of List. </div><div class="ttdef"><b>Definition:</b> <a href="a07637_source.html#l00318">List.C:318</a></div></div>
+<div class="ttc" id="a00780_html"><div class="ttname"><a href="a00780.html">Foam::fileName</a></div><div class="ttdoc">A class for handling file names. </div><div class="ttdef"><b>Definition:</b> <a href="a08959_source.html#l00069">fileName.H:69</a></div></div>
+<div class="ttc" id="a07303_html"><div class="ttname"><a href="a07303.html">meshTools.H</a></div></div>
+<div class="ttc" id="a00824_html_ad199ea6fc3eb573dd9192b5606943cdd"><div class="ttname"><a href="a00824.html#ad199ea6fc3eb573dd9192b5606943cdd">Foam::FixedList::transfer</a></div><div class="ttdeci">void transfer(const FixedList&lt; T, Size &gt; &amp;)</div><div class="ttdoc">Copy (not transfer) the argument contents. </div><div class="ttdef"><b>Definition:</b> <a href="a07631_source.html#l00185">FixedListI.H:185</a></div></div>
+<div class="ttc" id="a02482_html_a7c76e3ed03912ae1e5c62b13611670e3"><div class="ttname"><a href="a02482.html#a7c76e3ed03912ae1e5c62b13611670e3">Foam::surfaceIntersection::cutEdges</a></div><div class="ttdeci">const edgeList &amp; cutEdges() const </div><div class="ttdef"><b>Definition:</b> <a href="a07480_source.html#l01138">surfaceIntersection.C:1138</a></div></div>
+<div class="ttc" id="a10725_html_a22f45a3cb4f074e609f58ebaeef0ecf9"><div class="ttname"><a href="a10725.html#a22f45a3cb4f074e609f58ebaeef0ecf9">Foam::label</a></div><div class="ttdeci">intWM_LABEL_SIZE_t label</div><div class="ttdoc">A label is an int32_t or int64_t as specified by the pre-processor macro WM_LABEL_SIZE. </div><div class="ttdef"><b>Definition:</b> <a href="a08883_source.html#l00059">label.H:59</a></div></div>
+<div class="ttc" id="a00604_html"><div class="ttname"><a href="a00604.html">Foam::DynamicList</a></div><div class="ttdoc">A 1D vector of objects of type <T> that resizes itself as necessary to accept the new objects...</div><div class="ttdef"><b>Definition:</b> <a href="a07627_source.html#l00056">DynamicList.H:56</a></div></div>
+<div class="ttc" id="a10725_html_adcb0df2bd4953cb6bb390272d8263c3a"><div class="ttname"><a href="a10725.html#adcb0df2bd4953cb6bb390272d8263c3a">Foam::name</a></div><div class="ttdeci">word name(const complex &amp;)</div><div class="ttdoc">Return a string representation of a complex. </div><div class="ttdef"><b>Definition:</b> <a href="a08813_source.html#l00047">complex.C:47</a></div></div>
+<div class="ttc" id="a00621_html_aa26839701e0cd28a34fefc83a9ad6a78"><div class="ttname"><a href="a00621.html#aa26839701e0cd28a34fefc83a9ad6a78">Foam::edgeSurface::addIntersectionEdges</a></div><div class="ttdeci">void addIntersectionEdges(const label faceI, const edgeList &amp;)</div><div class="ttdoc">Add intersection edges to a face. Used for connecting. </div><div class="ttdef"><b>Definition:</b> <a href="a07474_source.html#l00343">edgeSurface.C:343</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

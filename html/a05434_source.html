@@ -88,19 +88,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_a5850494bc77049b2a182260f0d1f703.html">fvPatchFields</a></li><li class="navelem"><a class="el" href="dir_ece9aa6b5af9a7776a75b0c1993b0910.html">derived</a></li><li class="navelem"><a class="el" href="dir_18efd00646b4a268ded8f54fc1cb6921.html">uniformJump</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9bd15774b555cf7259a6fa18f99fe99b.html">finiteVolume</a></li><li class="navelem"><a class="el" href="dir_25ab4a83a983f7bb7a38b7f63bb141b7.html">fields</a></li><li class="navelem"><a class="el" href="dir_a5850494bc77049b2a182260f0d1f703.html">fvPatchFields</a></li><li class="navelem"><a class="el" href="dir_ece9aa6b5af9a7776a75b0c1993b0910.html">derived</a></li><li class="navelem"><a class="el" href="dir_0027a7004ad4335210bedfeef5c27fa0.html">rotatingWallVelocity</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">uniformJumpFvPatchFields.C</div>  </div>
+<div class="title">rotatingWallVelocityFvPatchVectorField.C</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a05434.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*\</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  =========                 |</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   \\    /   O peration     |</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">     \\/     M anipulation  |</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">-------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">License</span></div>
@@ -121,29 +121,178 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">\*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05435.html">uniformJumpFvPatchFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07788.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05554.html">volFields.H</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10675.html">Foam</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a10675.html#a8a07f6a6e8849a406c6f0ac3175a3486">makePatchFields</a>(uniformJump);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;} <span class="comment">// End namespace Foam</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
-<div class="ttc" id="a05435_html"><div class="ttname"><a href="a05435.html">uniformJumpFvPatchFields.H</a></div></div>
-<div class="ttc" id="a05554_html"><div class="ttname"><a href="a05554.html">volFields.H</a></div></div>
-<div class="ttc" id="a10675_html_a8a07f6a6e8849a406c6f0ac3175a3486"><div class="ttname"><a href="a10675.html#a8a07f6a6e8849a406c6f0ac3175a3486">Foam::makePatchFields</a></div><div class="ttdeci">makePatchFields(calculated)</div></div>
-<div class="ttc" id="a07788_html"><div class="ttname"><a href="a07788.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
-<div class="ttc" id="a10675_html"><div class="ttname"><a href="a10675.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04585_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05435.html">rotatingWallVelocityFvPatchVectorField.H</a>&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a07839.html">addToRunTimeSelectionTable.H</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05609.html">volFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a05604.html">surfaceFields.H</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">   35</a></span>&#160;(</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="a00839.html">fixedValueFvPatchField&lt;vector&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF),</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    origin_(),</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    axis_(vector::zero),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    omega_(0)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="a02217.html#af5e90d81e18a5a5b52aaef3bdd294b87">   49</a></span>&#160;(</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02217.html">rotatingWallVelocityFvPatchVectorField</a>&amp; ptf,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00887.html">fvPatchFieldMapper</a>&amp; mapper</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="a00839.html">fixedValueFvPatchField&lt;vector&gt;</a>(ptf, <a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF, mapper),</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    origin_(ptf.origin_),</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    axis_(ptf.axis_),</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    omega_(ptf.omega_, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{}</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::</a></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a02217.html#aa15dbfac45d4f98fc2f5e7e28506c382">   65</a></span>&#160;(</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00885.html">fvPatch</a>&amp; p,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp; iF,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00524.html">dictionary</a>&amp; dict</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;:</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="a00839.html">fixedValueFvPatchField&lt;vector&gt;</a>(<a class="code" href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, iF),</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    origin_(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;origin&quot;</span>)),</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    axis_(dict.<a class="code" href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">lookup</a>(<span class="stringliteral">&quot;axis&quot;</span>)),</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    omega_(<a class="code" href="a00503.html">DataEntry&lt;scalar&gt;::New</a>(<span class="stringliteral">&quot;omega&quot;</span>, dict))</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (dict.<a class="code" href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">found</a>(<span class="stringliteral">&quot;value&quot;</span>))</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <a class="code" href="a00886.html">fvPatchField&lt;vector&gt;::operator</a>=</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        (</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <a class="code" href="a04313.html#a26449ea948f1206dbb29e1bc6e5c7c64">vectorField</a>(<span class="stringliteral">&quot;value&quot;</span>, dict, p.<a class="code" href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">size</a>())</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        );</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">// Evaluate the wall velocity</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        updateCoeffs();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::</a></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="a02217.html#a46e1098bd6496369af00d519ea7bfe8f">   93</a></span>&#160;(</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02217.html">rotatingWallVelocityFvPatchVectorField</a>&amp; rwvpvf</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;:</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="a00839.html">fixedValueFvPatchField&lt;vector&gt;</a>(rwvpvf),</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    origin_(rwvpvf.origin_),</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    axis_(rwvpvf.axis_),</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    omega_(rwvpvf.omega_, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{}</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<a class="code" href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="a02217.html#af942273c90e06b5c0f77c9acad50d9e9">  106</a></span>&#160;(</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">const</span> <a class="code" href="a02217.html">rotatingWallVelocityFvPatchVectorField</a>&amp; rwvpvf,</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00533.html">DimensionedField&lt;vector, volMesh&gt;</a>&amp; iF</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;)</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;:</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="a00839.html">fixedValueFvPatchField&lt;vector&gt;</a>(rwvpvf, iF),</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    origin_(rwvpvf.origin_),</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    axis_(rwvpvf.axis_),</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    omega_(rwvpvf.omega_, <span class="keyword">false</span>)</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="a02217.html#a7e24eafac629d3733181cd942d4c902f">  120</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02217.html#a7e24eafac629d3733181cd942d4c902f">Foam::rotatingWallVelocityFvPatchVectorField::updateCoeffs</a>()</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;{</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">if</span> (updated())</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">const</span> scalar t = this-&gt;db().time().timeOutputValue();</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    scalar om = omega_-&gt;value(t);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="comment">// Calculate the rotating wall velocity from the specification of the motion</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a> Up</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    (</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        (-om)*((patch().Cf() - origin_) ^ (axis_/<a class="code" href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">mag</a>(axis_)))</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    );</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="comment">// Remove the component of Up normal to the wall</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="comment">// just in case it is not exactly circular</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">const</span> <a class="code" href="a00755.html">vectorField</a> <a class="code" href="a07006.html#a830e93cc5b8d859299d1a788c12be8ac">n</a>(patch().nf());</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <a class="code" href="a00755.html#a4356fadebc9e59fb8189733d26c75605">vectorField::operator=</a>(Up - n*(n &amp; Up));</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    fixedValueFvPatchVectorField::updateCoeffs();</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="a02217.html#a0941061ad5a26be83b4107d05750ace6">  145</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a02217.html#a0941061ad5a26be83b4107d05750ace6">Foam::rotatingWallVelocityFvPatchVectorField::write</a>(<a class="code" href="a01736.html">Ostream</a>&amp; os)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <a class="code" href="a00886.html#a0941061ad5a26be83b4107d05750ace6">fvPatchVectorField::write</a>(os);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;origin&quot;</span>) &lt;&lt; origin_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    os.<a class="code" href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">writeKeyword</a>(<span class="stringliteral">&quot;axis&quot;</span>) &lt;&lt; axis_ &lt;&lt; <a class="code" href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">token::END_STATEMENT</a> &lt;&lt; <a class="code" href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">nl</a>;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    omega_-&gt;writeData(os);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    writeEntry(<span class="stringliteral">&quot;value&quot;</span>, os);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;}</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keyword">namespace </span><a class="code" href="a10725.html">Foam</a></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;{</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <a class="code" href="a10725.html#a44a8c9a8ab08f6bf1f84bf3dab3f82a2">makePatchTypeField</a></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    (</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <a class="code" href="a00886.html">fvPatchVectorField</a>,</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <a class="code" href="a02217.html">rotatingWallVelocityFvPatchVectorField</a></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    );</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment">// ************************************************************************* //</span></div>
+<div class="ttc" id="a02217_html_a7e24eafac629d3733181cd942d4c902f"><div class="ttname"><a href="a02217.html#a7e24eafac629d3733181cd942d4c902f">Foam::rotatingWallVelocityFvPatchVectorField::updateCoeffs</a></div><div class="ttdeci">virtual void updateCoeffs()</div><div class="ttdoc">Update the coefficients associated with the patch field. </div><div class="ttdef"><b>Definition:</b> <a href="a05434_source.html#l00120">rotatingWallVelocityFvPatchVectorField.C:120</a></div></div>
+<div class="ttc" id="a00524_html"><div class="ttname"><a href="a00524.html">Foam::dictionary</a></div><div class="ttdoc">A list of keyword definitions, which are a keyword followed by any number of values (e...</div><div class="ttdef"><b>Definition:</b> <a href="a07684_source.html#l00137">dictionary.H:137</a></div></div>
+<div class="ttc" id="a05435_html"><div class="ttname"><a href="a05435.html">rotatingWallVelocityFvPatchVectorField.H</a></div></div>
+<div class="ttc" id="a01736_html_a3c58b2bb9174ea3c4a5fa58095d1290e"><div class="ttname"><a href="a01736.html#a3c58b2bb9174ea3c4a5fa58095d1290e">Foam::Ostream::writeKeyword</a></div><div class="ttdeci">Ostream &amp; writeKeyword(const keyType &amp;)</div><div class="ttdoc">Write the keyword followed by an appropriate indentation. </div><div class="ttdef"><b>Definition:</b> <a href="a07783_source.html#l00059">Ostream.C:59</a></div></div>
+<div class="ttc" id="a00839_html"><div class="ttname"><a href="a00839.html">Foam::fixedValueFvPatchField</a></div><div class="ttdoc">This boundary condition supplies a fixed value constraint, and is the base class for a number of othe...</div><div class="ttdef"><b>Definition:</b> <a href="a05178_source.html#l00079">fixedValueFvPatchField.H:79</a></div></div>
+<div class="ttc" id="a00886_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a00886.html#a0941061ad5a26be83b4107d05750ace6">Foam::fvPatchField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a05513_source.html#l00347">fvPatchField.C:347</a></div></div>
+<div class="ttc" id="a01736_html"><div class="ttname"><a href="a01736.html">Foam::Ostream</a></div><div class="ttdoc">An Ostream is an abstract base class for all output systems (streams, files, token lists...</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00053">Ostream.H:53</a></div></div>
+<div class="ttc" id="a00503_html"><div class="ttname"><a href="a00503.html">Foam::DataEntry</a></div><div class="ttdoc">Top level data entry class for use in dictionaries. Provides a mechanism to specify a variable as a c...</div><div class="ttdef"><b>Definition:</b> <a href="a08835_source.html#l00052">DataEntry.H:52</a></div></div>
+<div class="ttc" id="a10725_html_ae53117a9770efe95d2d01bb5cc2c99ef"><div class="ttname"><a href="a10725.html#ae53117a9770efe95d2d01bb5cc2c99ef">Foam::nl</a></div><div class="ttdeci">static const char nl</div><div class="ttdef"><b>Definition:</b> <a href="a07784_source.html#l00260">Ostream.H:260</a></div></div>
+<div class="ttc" id="a05609_html"><div class="ttname"><a href="a05609.html">volFields.H</a></div></div>
+<div class="ttc" id="a10725_html"><div class="ttname"><a href="a10725.html">Foam</a></div><div class="ttdoc">Namespace for OpenFOAM. </div><div class="ttdef"><b>Definition:</b> <a href="a04624_source.html#l00030">combustionModel.C:30</a></div></div>
+<div class="ttc" id="a04313_html_a26449ea948f1206dbb29e1bc6e5c7c64"><div class="ttname"><a href="a04313.html#a26449ea948f1206dbb29e1bc6e5c7c64">vectorField</a></div><div class="ttdeci">volVectorField vectorField(fieldObject, mesh)</div></div>
+<div class="ttc" id="a00755_html"><div class="ttname"><a href="a00755.html">Foam::Field&lt; vector &gt;</a></div></div>
+<div class="ttc" id="a02619_html_a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38"><div class="ttname"><a href="a02619.html#a684efe2f2e78731b859a7baeec2217c2a60d8bd9afe6091a5c3904605dd0e0c38">Foam::token::END_STATEMENT</a></div><div class="ttdef"><b>Definition:</b> <a href="a07825_source.html#l00099">token.H:99</a></div></div>
+<div class="ttc" id="a02217_html_a0941061ad5a26be83b4107d05750ace6"><div class="ttname"><a href="a02217.html#a0941061ad5a26be83b4107d05750ace6">Foam::rotatingWallVelocityFvPatchVectorField::write</a></div><div class="ttdeci">virtual void write(Ostream &amp;) const </div><div class="ttdoc">Write. </div><div class="ttdef"><b>Definition:</b> <a href="a05434_source.html#l00145">rotatingWallVelocityFvPatchVectorField.C:145</a></div></div>
+<div class="ttc" id="a00524_html_ae9d6521e0e8d3956f9b49ddeb44877b8"><div class="ttname"><a href="a00524.html#ae9d6521e0e8d3956f9b49ddeb44877b8">Foam::dictionary::found</a></div><div class="ttdeci">bool found(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Search dictionary for given keyword. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00306">dictionary.C:306</a></div></div>
+<div class="ttc" id="a00887_html"><div class="ttname"><a href="a00887.html">Foam::fvPatchFieldMapper</a></div><div class="ttdoc">Foam::fvPatchFieldMapper. </div><div class="ttdef"><b>Definition:</b> <a href="a05515_source.html#l00045">fvPatchFieldMapper.H:45</a></div></div>
+<div class="ttc" id="a07006_html_a830e93cc5b8d859299d1a788c12be8ac"><div class="ttname"><a href="a07006.html#a830e93cc5b8d859299d1a788c12be8ac">n</a></div><div class="ttdeci">label n</div><div class="ttdef"><b>Definition:</b> <a href="a07006_source.html#l00031">TABSMDCalcMethod2.H:31</a></div></div>
+<div class="ttc" id="a01364_html_a8a5f6fa29bd4b500caf186f60245b384"><div class="ttname"><a href="a01364.html#a8a5f6fa29bd4b500caf186f60245b384">Foam::List&lt; Type &gt;::size</a></div><div class="ttdeci">void size(const label)</div><div class="ttdoc">Override size to be inconsistent with allocated storage. </div></div>
+<div class="ttc" id="a02217_html_ae7ae83ad279e6fc806f7912c82ec35ec"><div class="ttname"><a href="a02217.html#ae7ae83ad279e6fc806f7912c82ec35ec">Foam::rotatingWallVelocityFvPatchVectorField::rotatingWallVelocityFvPatchVectorField</a></div><div class="ttdeci">rotatingWallVelocityFvPatchVectorField(const fvPatch &amp;, const DimensionedField&lt; vector, volMesh &gt; &amp;)</div><div class="ttdoc">Construct from patch and internal field. </div><div class="ttdef"><b>Definition:</b> <a href="a05434_source.html#l00035">rotatingWallVelocityFvPatchVectorField.C:35</a></div></div>
+<div class="ttc" id="a00524_html_a8baab402d653d6e789f67c57e23a5b59"><div class="ttname"><a href="a00524.html#a8baab402d653d6e789f67c57e23a5b59">Foam::dictionary::lookup</a></div><div class="ttdeci">ITstream &amp; lookup(const word &amp;, bool recursive=false, bool patternMatch=true) const </div><div class="ttdoc">Find and return an entry data stream. </div><div class="ttdef"><b>Definition:</b> <a href="a07683_source.html#l00451">dictionary.C:451</a></div></div>
+<div class="ttc" id="a00755_html_a4356fadebc9e59fb8189733d26c75605"><div class="ttname"><a href="a00755.html#a4356fadebc9e59fb8189733d26c75605">Foam::Field&lt; vector &gt;::operator=</a></div><div class="ttdeci">void operator=(const Field&lt; vector &gt; &amp;)</div></div>
+<div class="ttc" id="a04434_html_a334650304cdcdff41898bee9eaf2e3db"><div class="ttname"><a href="a04434.html#a334650304cdcdff41898bee9eaf2e3db">p</a></div><div class="ttdeci">volScalarField &amp; p</div><div class="ttdef"><b>Definition:</b> <a href="a04434_source.html#l00051">createFields.H:51</a></div></div>
+<div class="ttc" id="a10725_html_a44a8c9a8ab08f6bf1f84bf3dab3f82a2"><div class="ttname"><a href="a10725.html#a44a8c9a8ab08f6bf1f84bf3dab3f82a2">Foam::makePatchTypeField</a></div><div class="ttdeci">makePatchTypeField(fvPatchVectorField, SRFFreestreamVelocityFvPatchVectorField)</div></div>
+<div class="ttc" id="a02217_html"><div class="ttname"><a href="a02217.html">Foam::rotatingWallVelocityFvPatchVectorField</a></div><div class="ttdoc">This boundary condition provides a rotational velocity condition. </div><div class="ttdef"><b>Definition:</b> <a href="a05435_source.html#l00099">rotatingWallVelocityFvPatchVectorField.H:99</a></div></div>
+<div class="ttc" id="a00886_html"><div class="ttname"><a href="a00886.html">Foam::fvPatchField</a></div><div class="ttdoc">Abstract base class with a fat-interface to all derived classes covering all possible ways in which t...</div><div class="ttdef"><b>Definition:</b> <a href="a05514_source.html#l00065">fvPatchField.H:65</a></div></div>
+<div class="ttc" id="a05604_html"><div class="ttname"><a href="a05604.html">surfaceFields.H</a></div><div class="ttdoc">Foam::surfaceFields. </div></div>
+<div class="ttc" id="a00533_html"><div class="ttname"><a href="a00533.html">Foam::DimensionedField</a></div><div class="ttdoc">Field with dimensions and associated with geometry type GeoMesh which is used to size the field and a...</div><div class="ttdef"><b>Definition:</b> <a href="a07887_source.html#l00051">DimensionedField.H:51</a></div></div>
+<div class="ttc" id="a10725_html_a929da2a3fdcf3dacbbe0487d3a330dae"><div class="ttname"><a href="a10725.html#a929da2a3fdcf3dacbbe0487d3a330dae">Foam::mag</a></div><div class="ttdeci">dimensioned&lt; scalar &gt; mag(const dimensioned&lt; Type &gt; &amp;)</div></div>
+<div class="ttc" id="a07839_html"><div class="ttname"><a href="a07839.html">addToRunTimeSelectionTable.H</a></div><div class="ttdoc">Macros for easy insertion into run-time selection tables. </div></div>
+<div class="ttc" id="a00885_html"><div class="ttname"><a href="a00885.html">Foam::fvPatch</a></div><div class="ttdoc">A finiteVolume patch using a polyPatch and a fvBoundaryMesh. </div><div class="ttdef"><b>Definition:</b> <a href="a05923_source.html#l00061">fvPatch.H:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->
