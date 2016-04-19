@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>OpenFOAM C++ style guide</title>
+<!-- 2016-04-19 Tue 14:13 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">OpenFOAM C++ style guide</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. OpenFOAM C++ style guide</a>
+<ul>
+<li><a href="#sec-1-1">1.1. General</a></li>
+<li><a href="#sec-1-2">1.2. The <i>.H</i> Header Files</a></li>
+<li><a href="#sec-1-3">1.3. The <i>.C</i> Sourcs Files</a></li>
+<li><a href="#sec-1-4">1.4. Coding Practice</a></li>
+<li><a href="#sec-1-5">1.5. Conditional Statements</a></li>
+<li><a href="#sec-1-6">1.6. <code>for</code> and <code>while</code> Loops</a></li>
+<li><a href="#sec-1-7">1.7. <code>forAll</code>, <code>forAllIter</code>, <code>forAllConstIter</code>, <i>etc.</i> loops</a></li>
+<li><a href="#sec-1-8">1.8. Splitting Over Multiple Lines</a>
+<ul>
+<li><a href="#sec-1-8-1">1.8.1. Splitting return type and function name</a></li>
+<li><a href="#sec-1-8-2">1.8.2. Splitting long lines at an "="</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-9">1.9. Maths and Logic</a></li>
+<li><a href="#sec-1-10">1.10. Documentation</a></li>
+<li><a href="#sec-1-11">1.11. General</a></li>
+<li><a href="#sec-1-12">1.12. Doxygen Special Commands</a></li>
+<li><a href="#sec-1-13">1.13. HTML Special Commands</a></li>
+<li><a href="#sec-1-14">1.14. Documenting Namespaces</a></li>
+<li><a href="#sec-1-15">1.15. Documenting Applications</a></li>
+<li><a href="#sec-1-16">1.16. Orthography</a></li>
+<li><a href="#sec-1-17">1.17. References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> OpenFOAM C++ style guide</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> General</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>80 character lines max
+</li>
+<li>The normal indentation is 4 spaces per logical level.
+</li>
+<li>Use spaces for indentation, not tab characters.
+</li>
+<li>Avoid trailing whitespace.
+</li>
+<li>The body of control statements (eg, <code>if</code>, <code>else</code>, <code>while</code>, <i>etc.</i>). is
+always delineated with braces.  A possible exception can be
+made in conjunction with <code>break</code> or <code>continue</code> as part of a control
+structure.
+</li>
+<li>The body of <code>case</code> statements is usually delineated with braces.
+</li>
+<li>Stream output
+<ul class="org-ul">
+<li><code>&lt;&lt;</code> is always four characters after the start of the stream,
+so that the <code>&lt;&lt;</code> symbols align, i.e.
+<div class="org-src-container">
+
+<pre class="src src-c++">Info&lt;&lt; ...
+os  &lt;&lt; ...
+</pre>
+</div>
+<p>
+so
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">WarningInFunction
+    &lt;&lt; <span style="color: #008b00;">"Warning message"</span>
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">WarningInFunction
+&lt;&lt; <span style="color: #008b00;">"Warning message"</span>
+</pre>
+</div>
+</li>
+</ul>
+</li>
+
+<li>Remove unnecessary class section headers, i.e. remove
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">* * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //</span>
+
+    <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">Check</span>
+
+    <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">Edit</span>
+
+    <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">Write</span>
+</pre>
+</div>
+<p>
+if they contain nothing, even if planned for 'future use'
+</p>
+
+<ul class="org-ul">
+<li>Class titles should be centred
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #912cee; font-weight: bold;">/*</span><span style="color: #912cee;">---------------------------------------------------------------------------*\</span>
+<span style="color: #912cee;">                        Class exampleClass Declaration</span>
+<span style="color: #912cee;">\*---------------------------------------------------------------------------*/</span>
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #912cee; font-weight: bold;">/*</span><span style="color: #912cee;">---------------------------------------------------------------------------*\</span>
+<span style="color: #912cee;">                Class exampleClass Declaration</span>
+<span style="color: #912cee;">\*---------------------------------------------------------------------------*/</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> The <i>.H</i> Header Files</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>Header file spacing
+<ul class="org-ul">
+<li>Leave two empty lines between sections
+(as per functions in the <i>.C</i> file <i>etc.</i>)
+</li>
+</ul>
+</li>
+<li>Use <code>//- Comment</code> comments in header file to add descriptions to class
+data and functions do be included in the Doxygen documentation:
+<ul class="org-ul">
+<li>Text on the line starting with <code>//-</code> becomes the Doxygen brief
+description;
+</li>
+<li>Text on subsequent lines becomes the Doxygen detailed description <i>e.g.</i>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- A function which returns a thing</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">This is a detailed description of the function</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">which processes stuff and returns other stuff</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">depending on things.</span>
+<span style="color: #0000ff;">thing</span> <span style="color: #00008b; font-weight: bold;">function</span>(stuff1, stuff2);
+</pre>
+</div>
+</li>
+<li>List entries start with <code>-</code> or <code>-#</code> for numbered lists but cannot start
+on the line immediately below the brief description so
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- Compare triFaces</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">Returns:</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-  0: different</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- +1: identical</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- -1: same face, but different orientation</span>
+<span style="color: #0000cd; font-weight: bold;">static</span> <span style="color: #0000cd; font-weight: bold;">inline</span> <span style="color: #0000ff;">int</span> <span style="color: #00008b; font-weight: bold;">compare</span>(<span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;, <span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;);
+</pre>
+</div>
+<p>
+or
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- Compare triFaces returning 0, +1 or -1</span>
+<span style="color: #912cee; font-weight: bold;">//</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-  0: different</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- +1: identical</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- -1: same face, but different orientation</span>
+<span style="color: #0000cd; font-weight: bold;">static</span> <span style="color: #0000cd; font-weight: bold;">inline</span> <span style="color: #0000ff;">int</span> <span style="color: #00008b; font-weight: bold;">compare</span>(<span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;, <span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;);
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- Compare triFaces returning 0, +1 or -1</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-  0: different</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- +1: identical</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">- -1: same face, but different orientation</span>
+<span style="color: #0000cd; font-weight: bold;">static</span> <span style="color: #0000cd; font-weight: bold;">inline</span> <span style="color: #0000ff;">int</span> <span style="color: #00008b; font-weight: bold;">compare</span>(<span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;, <span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">triFace</span>&amp;);
+</pre>
+</div>
+</li>
+<li>List can be nested for example
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- Search for \em name</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">in the following hierarchy:</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-# personal settings:</span>
+<span style="color: #912cee; font-weight: bold;">//    </span><span style="color: #912cee;">- ~/.OpenFOAM/\&lt;VERSION\&gt;/</span>
+<span style="color: #912cee; font-weight: bold;">//      </span><span style="color: #912cee;">&lt;em&gt;for version-specific files&lt;/em&gt;</span>
+<span style="color: #912cee; font-weight: bold;">//    </span><span style="color: #912cee;">- ~/.OpenFOAM/</span>
+<span style="color: #912cee; font-weight: bold;">//      </span><span style="color: #912cee;">&lt;em&gt;for version-independent files&lt;/em&gt;</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-# site-wide settings:</span>
+<span style="color: #912cee; font-weight: bold;">//    </span><span style="color: #912cee;">- $WM_PROJECT_INST_DIR/site/\&lt;VERSION\&gt;</span>
+<span style="color: #912cee; font-weight: bold;">//      </span><span style="color: #912cee;">&lt;em&gt;for version-specific files&lt;/em&gt;</span>
+<span style="color: #912cee; font-weight: bold;">//    </span><span style="color: #912cee;">- $WM_PROJECT_INST_DIR/site/</span>
+<span style="color: #912cee; font-weight: bold;">//      </span><span style="color: #912cee;">&lt;em&gt;for version-independent files&lt;/em&gt;</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">-# shipped settings:</span>
+<span style="color: #912cee; font-weight: bold;">//    </span><span style="color: #912cee;">- $WM_PROJECT_DIR/etc/</span>
+<span style="color: #912cee; font-weight: bold;">//</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">\return the full path name or fileName() if the name cannot be found</span>
+<span style="color: #912cee; font-weight: bold;">//  </span><span style="color: #912cee;">Optionally abort if the file cannot be found</span>
+<span style="color: #0000ff;">fileName</span> <span style="color: #00008b; font-weight: bold;">findEtcFile</span>(<span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">fileName</span>&amp;, <span style="color: #0000ff;">bool</span> <span style="color: #000000;">mandatory</span>=<span style="color: #008b8b;">false</span>);
+</pre>
+</div>
+</li>
+<li>For more details see the Doxygen documentation.
+</li>
+</ul>
+</li>
+<li>Destructor
+<ul class="org-ul">
+<li>When adding a comment to the destructor use <code>//-</code> and code as a normal
+function:
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">//- Destructor</span>
+~className();
+</pre>
+</div>
+</li>
+</ul>
+</li>
+<li>Inline functions
+<ul class="org-ul">
+<li>Use inline functions where appropriate in a separate <i>classNameI.H</i>
+        file.  Avoid cluttering the header file with function bodies.
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> The <i>.C</i> Sourcs Files</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>Do not open/close namespaces in a <i>.C</i> file
+<ul class="org-ul">
+<li>Fully scope the function name, i.e.
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">returnType</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">className</span>::<span style="color: #00008b; font-weight: bold;">functionName</span>()
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">namespace</span> <span style="color: #008b8b;">Foam</span>
+{
+    ...
+    returnType <span style="color: #008b8b;">className</span>::functionName()
+    ...
+}
+</pre>
+</div>
+<p>
+<b>Exception</b>
+When there are multiple levels of namespace, they may be used in the
+<i>.C</i> file to avoid excessive clutter, i.e.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">namespace</span> <span style="color: #008b8b;">Foam</span>
+{
+<span style="color: #0000cd; font-weight: bold;">namespace</span> <span style="color: #008b8b;">compressible</span>
+{
+<span style="color: #0000cd; font-weight: bold;">namespace</span> <span style="color: #008b8b;">RASModels</span>
+{
+    ...
+} <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">End namespace RASModels</span>
+} <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">End namespace compressible</span>
+} <span style="color: #912cee; font-weight: bold;">// </span><span style="color: #912cee;">End namespace Foam</span>
+</pre>
+</div>
+</li>
+</ul>
+</li>
+
+<li>Use two empty lines between functions
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Coding Practice</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>Passing data as arguments or return values:
+<ul class="org-ul">
+<li>Pass bool, label, scalar and other primitive types as copy,
+anything larger by reference.
+</li>
+</ul>
+</li>
+<li><code>const</code>
+<ul class="org-ul">
+<li>Use everywhere it is applicable.
+</li>
+</ul>
+</li>
+<li>Variable initialisation using
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">className</span>&amp; <span style="color: #000000;">variableName</span> = otherClass.data();
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #0000ff;">className</span>&amp; <span style="color: #00008b; font-weight: bold;">variableName</span>(otherClass.data());
+</pre>
+</div>
+</li>
+<li>Virtual functions
+<ul class="org-ul">
+<li>If a class is virtual, make all derived classes virtual.
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Conditional Statements</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">if</span> (condition)
+{
+    code;
+}
+</pre>
+</div>
+<p>
+OR
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">if</span>
+(
+   <span style="color: #0000ff;">long</span> <span style="color: #000000;">condition</span>
+)
+{
+    code;
+}
+</pre>
+</div>
+<p>
+<b>not</b> (no space between <code>if</code> and <code>(</code> used)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">if</span>(condition)
+{
+    code;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> <code>for</code> and <code>while</code> Loops</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">for</span> (i = 0; i &lt; maxI; i++)
+{
+    code;
+}
+</pre>
+</div>
+<p>
+OR
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">for</span>
+(
+    i = 0;
+    i &lt; maxI;
+    i++
+)
+{
+    code;
+}
+</pre>
+</div>
+<p>
+<b>not</b> this (no space between <code>for</code> and <code>(</code> used)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">for</span>(i = 0; i &lt; maxI; i++)
+{
+    code;
+}
+</pre>
+</div>
+<p>
+Note that when indexing through iterators, it is often slightly more
+efficient to use the pre-increment form. Eg, <code>++iter</code> instead of <code>iter++</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> <code>forAll</code>, <code>forAllIter</code>, <code>forAllConstIter</code>, <i>etc.</i> loops</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+Like <code>for</code> loops, but
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">forAll(
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">forAll (
+</pre>
+</div>
+<p>
+Using the <code>forAllIter</code> and <code>forAllConstIter</code> macros is generally
+advantageous - less typing, easier to find later.  However, since
+they are macros, they will fail if the iterated object contains
+any commas <i>e.g.</i> following will FAIL!:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">forAllIter(HashTable&lt;labelPair, edge, Hash&lt;edge&gt;&gt;, foo, iter)
+</pre>
+</div>
+<p>
+These convenience macros are also generally avoided in other
+container classes and OpenFOAM primitive classes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> Splitting Over Multiple Lines</h3>
+<div class="outline-text-3" id="text-1-8">
+</div><div id="outline-container-sec-1-8-1" class="outline-4">
+<h4 id="sec-1-8-1"><span class="section-number-4">1.8.1</span> Splitting return type and function name</h4>
+<div class="outline-text-4" id="text-1-8-1">
+<ul class="org-ul">
+<li>Split initially after the function return type and left align
+</li>
+<li>Do not put <code>const</code> onto its own line - use a split to keep it with
+the function name and arguments.
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">longReturnTypeName</span>&amp;
+<span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">longClassName</span>::<span style="color: #0000ff;">longFunctionName</span> <span style="color: #0000cd; font-weight: bold;">const</span>
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">longReturnTypeName</span>&amp;
+    <span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">longClassName</span>::<span style="color: #0000ff;">longFunctionName</span> <span style="color: #0000cd; font-weight: bold;">const</span>
+</pre>
+</div>
+<p>
+<b>nor</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">longReturnTypeName</span>&amp; <span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">longClassName</span>::<span style="color: #0000ff;">longFunctionName</span>
+<span style="color: #0000cd; font-weight: bold;">const</span>
+</pre>
+</div>
+<p>
+<b>nor</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">longReturnTypeName</span>&amp; <span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">longClassName</span>::
+<span style="color: #0000ff;">longFunctionName</span> <span style="color: #0000cd; font-weight: bold;">const</span>
+</pre>
+</div>
+</li>
+<li>If it needs to be split again, split at the function name (leaving
+behind the preceding scoping =::=s), and again, left align, i.e.
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">const</span> <span style="color: #008b8b;">Foam</span>::<span style="color: #0000ff;">longReturnTypeName</span>&amp;
+<span style="color: #008b8b;">Foam</span>::<span style="color: #008b8b;">veryveryveryverylongClassName</span>::
+<span style="color: #0000ff;">veryveryveryverylongFunctionName</span> <span style="color: #0000cd; font-weight: bold;">const</span>
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-8-2" class="outline-4">
+<h4 id="sec-1-8-2"><span class="section-number-4">1.8.2</span> Splitting long lines at an "="</h4>
+<div class="outline-text-4" id="text-1-8-2">
+<p>
+Indent after split
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName =
+    longClassName.longFunctionName(longArgument);
+</pre>
+</div>
+<p>
+OR (where necessary)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName =
+    longClassName.longFunctionName
+    (
+        longArgument1,
+        longArgument2
+    );
+</pre>
+</div>
+<p>
+<b>not</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName =
+longClassName.longFunctionName(longArgument);
+</pre>
+</div>
+<p>
+<b>nor</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName = longClassName.longFunctionName
+(
+    longArgument1,
+    longArgument2
+);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> Maths and Logic</h3>
+<div class="outline-text-3" id="text-1-9">
+<ul class="org-ul">
+<li>Operator spacing
+<div class="org-src-container">
+
+<pre class="src src-C++">a + b, a - b
+a*b, a/b
+a &amp; b, a ^ b
+a = b, a != b
+<span style="color: #0000ff;">a</span> &lt; b, a &gt; b, a &gt;= b, a &lt;= b
+a || b, a &amp;&amp; b
+</pre>
+</div>
+</li>
+<li>Splitting formulae over several lines
+
+<p>
+Split and indent as per "splitting long lines at an ="
+with the operator on the lower line.  Align operator so that first
+variable, function or bracket on the next line is 4 spaces indented i.e.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName =
+    a*(a + b)
+   *exp(c/d)
+   *(k + t);
+</pre>
+</div>
+<p>
+This is sometimes more legible when surrounded by extra parentheses:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C++">variableName =
+(
+    a*(a + b)
+   *exp(c/d)
+   *(k + t)
+);
+</pre>
+</div>
+</li>
+<li>Splitting logical tests over several lines
+
+<p>
+outdent the operator so that the next variable to test is aligned with
+the four space indentation, i.e.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #0000cd; font-weight: bold;">if</span>
+(
+    a == <span style="color: #008b8b;">true</span>
+ &amp;&amp; b == c
+)
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-10" class="outline-3">
+<h3 id="sec-1-10"><span class="section-number-3">1.10</span> Documentation</h3>
+<div class="outline-text-3" id="text-1-10">
+</div><div id="outline-container-sec-1-11" class="outline-3">
+<h3 id="sec-1-11"><span class="section-number-3">1.11</span> General</h3>
+<div class="outline-text-3" id="text-1-11">
+<ul class="org-ul">
+<li>For readability in the comment blocks, certain tags are used that are
+translated by pre-filtering the file before sending it to Doxygen.
+</li>
+<li>The tags start in column 1, the contents follow on the next lines and
+indented by 4 spaces. The filter removes the leading 4 spaces from the
+following lines until the next tag that starts in column 1.
+</li>
+<li>The 'Class' and 'Description' tags are the most important ones.
+</li>
+<li>The first paragraph following the 'Description' will be used for the
+brief description, the remaining paragraphs become the detailed
+description.  For example,
+<pre class="example">
+Class
+    Foam::myClass
+
+Description
+    A class for specifying the documentation style.
+
+    The class is implemented as a set of recommendations that may
+    sometimes be useful.
+</pre>
+</li>
+
+<li>The class name must be qualified by its namespace, otherwise Doxygen
+will think you are documenting some other class.
+</li>
+<li>If you don't have anything to say about the class (at the moment), use
+the namespace-qualified class name for the description. This aids with
+finding these under-documented classes later.
+<pre class="example">
+Class
+    Foam::myUnderDocumentedClass
+
+Description
+    Foam::myUnderDocumentedClass
+</pre>
+</li>
+<li>Use 'Class' and 'Namespace' tags in the header files.
+The Description block then applies to documenting the class.
+</li>
+<li>Use 'InClass' and 'InNamespace' in the source files.
+The Description block then applies to documenting the file itself.
+<pre class="example">
+InClass
+    Foam::myClass
+
+Description
+    Implements the read and writing of files.
+</pre>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-12" class="outline-3">
+<h3 id="sec-1-12"><span class="section-number-3">1.12</span> Doxygen Special Commands</h3>
+<div class="outline-text-3" id="text-1-12">
+<p>
+Doxygen has a large number of special commands with a <code>\</code> prefix.
+</p>
+
+<p>
+Since the filtering removes the leading spaces within the blocks, the
+Doxygen commmands can be inserted within the block without problems.
+</p>
+<pre class="example">
+InClass
+    Foam::myClass
+
+Description
+    Implements the read and writing of files.
+
+    An example input file:
+    \verbatim
+        patchName
+        {
+            type        myPatchType;
+            refValue    100;
+            value       uniform 1;
+        }
+    \endverbatim
+
+    Within the implementation, a loop over all patches is done:
+    \code
+        forAll(patches, patchI)
+        {
+            ...  // some operation
+        }
+    \endcode
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-1-13" class="outline-3">
+<h3 id="sec-1-13"><span class="section-number-3">1.13</span> HTML Special Commands</h3>
+<div class="outline-text-3" id="text-1-13">
+<p>
+Since Doxygen also handles HTML tags to a certain extent, the angle
+brackets need quoting in the documentation blocks. Non-HTML tags cause
+Doxygen to complain, but seem to work anyhow.  <i>e.g.</i>,
+</p>
+<ul class="org-ul">
+<li>The template with type <code>&lt;HR&gt;</code> is a bad example.
+</li>
+<li>The template with type <code>\&lt;HR\&gt;</code> is a better example.
+</li>
+<li>The template with type <code>&lt;Type&gt;</code> causes Doxygen to complain about an
+unknown html type, but it seems to work okay anyhow.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-14" class="outline-3">
+<h3 id="sec-1-14"><span class="section-number-3">1.14</span> Documenting Namespaces</h3>
+<div class="outline-text-3" id="text-1-14">
+<ul class="org-ul">
+<li>If namespaces are explictly declared with the <code>Namespace()</code> macro,
+they should be documented there.
+</li>
+<li>If the namespaces is used to hold sub-models, the namespace can be
+documented in the same file as the class with the model selector.
+<i>e.g.</i>,
+<pre class="example">
+documented namespace 'Foam::functionEntries' within the
+class 'Foam::functionEntry'
+</pre>
+</li>
+<li>If nothing else helps, find some sensible header.
+<i>e.g.</i>,
+<pre class="example">
+namespace 'Foam' is documented in the foamVersion.H file
+</pre>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-15" class="outline-3">
+<h3 id="sec-1-15"><span class="section-number-3">1.15</span> Documenting Applications</h3>
+<div class="outline-text-3" id="text-1-15">
+<p>
+Any number of classes might be defined by a particular application, but
+these classes will not, however, be available to other parts of
+OpenFOAM. At the moment, the sole purpose for running Doxygen on the
+applications is to extract program usage information for the '-doc'
+option.
+</p>
+
+<p>
+The documentation for a particular application is normally contained
+within the first comment block in a <i>.C</i> source file. The solution is this
+to invoke a special filter for the "<i>applications/{solver,utilities}</i>"
+directories that only allows the initial comment block for the <i>.C</i> files
+through.
+</p>
+
+<p>
+The layout of the application documentation has not yet been finalized,
+but foamToVTK shows an initial attempt.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-16" class="outline-3">
+<h3 id="sec-1-16"><span class="section-number-3">1.16</span> Orthography</h3>
+<div class="outline-text-3" id="text-1-16">
+<p>
+Given the origins of OpenFOAM, the British spellings (<i>e.g.</i>, neighbour and
+not neighbor) are generally favoured.
+</p>
+
+<p>
+Both '-ize' and the '-ise' variant are found in the code comments. If
+used as a variable or class method name, it is probably better to use
+'-ize', which is considered the main form by the Oxford University
+Press. <i>e.g.</i>,
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">myClass.initialize()
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-17" class="outline-3">
+<h3 id="sec-1-17"><span class="section-number-3">1.17</span> References</h3>
+<div class="outline-text-3" id="text-1-17">
+<p>
+References provided in the <code>Description</code> section of the class header files
+should be formatted in the <a href="http://www.apastyle.org">APA (American
+Psychological Association)</a> style <i>e.g.</i> from <code>kEpsilon.H</code>
+</p>
+<pre class="example">
+Description
+    Standard k-epsilon turbulence model for incompressible and compressible
+    flows including rapid distortion theory (RDT) based compression term.
+
+    Reference:
+    \verbatim
+        Standard model:
+            Launder, B. E., &amp; Spalding, D. B. (1972).
+            Lectures in mathematical models of turbulence.
+
+            Launder, B. E., &amp; Spalding, D. B. (1974).
+            The numerical computation of turbulent flows.
+            Computer methods in applied mechanics and engineering,
+            3(2), 269-289.
+
+        For the RDT-based compression term:
+            El Tahry, S. H. (1983).
+            k-epsilon equation for compressible reciprocating engine flows.
+            Journal of Energy, 7(4), 345-353.
+    \endverbatim
+</pre>
+<p>
+The APA style is a commonly used standard and references are available in
+this format from many sources including
+<a href="http://www.citationmachine.net/apa/cite-a-book">Citation Machine</a> and
+<a href="http://scholar.google.com">Google Scholar</a>.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2011-2016</p>
+<p class="date">Created: 2016-04-19 Tue 14:13</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
