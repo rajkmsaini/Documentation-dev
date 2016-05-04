@@ -532,5 +532,5 @@ var searchData=
   ['burns_2eh',['Burns.H',['../a03663.html',1,'']]],
   ['bytesize',['byteSize',['../a01795.html#ad5fcaa12dbc47e1d6ee03dc9b01c8ce6',1,'Foam::PackedList::byteSize()'],['../a02831.html#ad5fcaa12dbc47e1d6ee03dc9b01c8ce6',1,'Foam::UList::byteSize()']]],
   ['boundary_20conditions',['Boundary Conditions',['../a11082.html',1,'']]],
-  ['boundary_20conditions',['Boundary Conditions',['../a00003.html',1,'']]]
+  ['boundary_20conditions',['Boundary Conditions',['../a00003.html',1,'index']]]
 ];

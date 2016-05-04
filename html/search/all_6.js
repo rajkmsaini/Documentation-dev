@@ -1546,7 +1546,7 @@ var searchData=
   ['granularpressuremodels',['granularPressureModels',['../a11020.html',1,'Foam::kineticTheoryModels']]],
   ['field_20function_20objects',['Field function objects',['../a11090.html',1,'']]],
   ['forces_20function_20objects',['Forces function objects',['../a11091.html',1,'']]],
-  ['function_20objects',['Function objects',['../a11089.html',1,'']]],
+  ['functionobjects',['FunctionObjects',['../a11089.html',1,'']]],
   ['heattransfermodels',['heatTransferModels',['../a11011.html',1,'Foam']]],
   ['helptypes',['helpTypes',['../a11012.html',1,'Foam']]],
   ['iatesources',['IATEsources',['../a10996.html',1,'Foam::diameterModels']]],
