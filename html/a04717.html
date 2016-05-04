@@ -92,25 +92,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_ad006ac2d4adf68d191bc9af38a824ca.html">thermophysical</a></li><li class="navelem"><a class="el" href="dir_951da15e0d5e25ea971ef53cbd589459.html">equilibriumCO</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_f17de662d5fa06afbf0442aecb6ca0a0.html">surface</a></li><li class="navelem"><a class="el" href="dir_ee972f15c860a9ec8ef6fc62c05021c3.html">surfaceSplitNonManifolds</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">equilibriumCO.C File Reference</div>  </div>
+<div class="title">surfaceSplitNonManifolds.C File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Calculates the equilibrium level of carbon monoxide.  
+<p>Takes multiply connected surface and tries to split surface at multiply connected edges by duplicating points. Introduces concept of.  
 <a href="#details">More...</a></p>
 
 <p><a href="a04717_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Calculates the equilibrium level of carbon monoxide. </p>
-<p><b>Original source file</b> <a href="https://github.com/OpenFOAM/OpenFOAM-dev/tree/master/applications/utilities/thermophysical/equilibriumCO/equilibriumCO.C">equilibriumCO.C</a></p>
-<p><a class="anchor" id="Description"></a> </p>
+<div class="textblock"><p>Takes multiply connected surface and tries to split surface at multiply connected edges by duplicating points. Introduces concept of. </p>
+<p><b>Original source file</b> <a href="../../../applications/utilities/surface/surfaceSplitNonManifolds/surfaceSplitNonManifolds.C">surfaceSplitNonManifolds.C</a></p>
+<p><a class="anchor" id="Description"></a>- borderEdge. Edge with 4 faces connected to it.</p><ul>
+<li>borderPoint. Point connected to exactly 2 borderEdges.</li>
+<li>borderLine. Connected list of borderEdges.</li>
+</ul>
+<p>By duplicating borderPoints this will split 'borderLines'. As a preprocessing step it can detect borderEdges without any borderPoints and explicitly split these triangles.</p>
+<p>The problems in this algorithm are:</p><ul>
+<li>determining which two (of the four) faces form a surface. Done by walking face-edge-face while keeping and edge or point on the borderEdge borderPoint.</li>
+<li>determining the outwards pointing normal to be used to slightly offset the duplicated point.</li>
+</ul>
+<p>Uses sortedEdgeFaces quite a bit.</p>
+<p>Is tested on simple borderLines resulting from extracting a surface from a hex mesh. Will quite possibly go wrong on more complicated border lines (i.e. ones forming a loop).</p>
+<p>Dumps surface every so often since might take a long time to complete. </p>
 
-<p>Definition in file <a class="el" href="a04717_source.html">equilibriumCO.C</a>.</p>
+<p>Definition in file <a class="el" href="a04717_source.html">surfaceSplitNonManifolds.C</a>.</p>
 </div></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->
