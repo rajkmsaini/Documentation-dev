@@ -1,16 +1,15 @@
 var searchData=
 [
-  ['yeeqn_2eh',['YEEqn.H',['../a03187.html',1,'']]],
+  ['yeeqn_2eh',['YEEqn.H',['../a03185.html',1,'']]],
+  ['yeqn_2eh',['YEqn.H',['../a03120.html',1,'']]],
   ['yeqn_2eh',['YEqn.H',['../a03122.html',1,'']]],
-  ['yeqn_2eh',['YEqn.H',['../a03124.html',1,'']]],
-  ['yeqn_2eh',['YEqn.H',['../a03125.html',1,'']]],
-  ['yeqn_2eh',['YEqn.H',['../a03121.html',1,'']]],
-  ['yeqn_2eh',['YEqn.H',['../a03126.html',1,'']]],
   ['yeqn_2eh',['YEqn.H',['../a03123.html',1,'']]],
+  ['yeqn_2eh',['YEqn.H',['../a03119.html',1,'']]],
+  ['yeqn_2eh',['YEqn.H',['../a03124.html',1,'']]],
+  ['yeqn_2eh',['YEqn.H',['../a03121.html',1,'']]],
   ['yeqns_2eh',['YEqns.H',['../a03862.html',1,'']]],
   ['yeqns_2eh',['YEqns.H',['../a03863.html',1,'']]],
-  ['yplus_2ec',['yPlus.C',['../a09529.html',1,'']]],
-  ['yplus_2ec',['yPlus.C',['../a09530.html',1,'']]],
-  ['yplus_2eh',['yPlus.H',['../a09531.html',1,'']]],
-  ['yplustemplates_2ec',['yPlusTemplates.C',['../a09532.html',1,'']]]
+  ['yplus_2ec',['yPlus.C',['../a06443.html',1,'']]],
+  ['yplus_2ec',['yPlus.C',['../a06442.html',1,'']]],
+  ['yplus_2eh',['yPlus.H',['../a06444.html',1,'']]]
 ];
