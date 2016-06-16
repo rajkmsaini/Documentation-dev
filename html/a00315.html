@@ -94,32 +94,127 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10909.html">Foam</a></li><li class="navelem"><a class="el" href="a00315.html">combineReduceFileStates</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10893.html">Foam</a></li><li class="navelem"><a class="el" href="a00315.html">commSchedule</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="a21194.html">List of all members</a>  </div>
+<a href="a21176.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">combineReduceFileStates Class Reference</div>  </div>
+<div class="title">commSchedule Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Combine operator for <a class="el" href="a01800.html" title="A dynamically allocatable list of packed unsigned integers. ">PackedList</a> of fileState.  
+<p>Determines the order in which a set of processors should communicate with one another.  
  <a href="a00315.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad6e979ac7af7448ebf671bc27f92ad0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00315.html#aad6e979ac7af7448ebf671bc27f92ad0">operator()</a> (unsigned int &amp;<a class="el" href="a07308.html#a9336ebf25087d91c818ee6e9ec29f8c1">x</a>, const unsigned int <a class="el" href="a03370.html#aabf00e52e11844ad9d70d904aeacd648">y</a>) const </td></tr>
-<tr class="separator:aad6e979ac7af7448ebf671bc27f92ad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f87f0cca5f63d26259fe697cb9fbc3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00315.html#a90f87f0cca5f63d26259fe697cb9fbc3">ClassName</a> (&quot;commSchedule&quot;)</td></tr>
+<tr class="separator:a90f87f0cca5f63d26259fe697cb9fbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1437bad1028054476a2c9d03fab24a7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00315.html#a1437bad1028054476a2c9d03fab24a7e">commSchedule</a> (const <a class="el" href="a10893.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a> nProcs, const <a class="el" href="a01395.html">List</a>&lt; <a class="el" href="a10893.html#a123bf349eca926d6984b23e5e067d8b9">labelPair</a> &gt; &amp;comms)</td></tr>
+<tr class="memdesc:a1437bad1028054476a2c9d03fab24a7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from wanted communication. Wanted communication is between.  <a href="#a1437bad1028054476a2c9d03fab24a7e">More...</a><br /></td></tr>
+<tr class="separator:a1437bad1028054476a2c9d03fab24a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7c4ced89a9b0ef97e1991638bf52e2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="a10893.html#a1cb143a027019075df276006651d7048">labelList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00315.html#a8d7c4ced89a9b0ef97e1991638bf52e2">schedule</a> () const </td></tr>
+<tr class="memdesc:a8d7c4ced89a9b0ef97e1991638bf52e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Order in which comms is scheduled.  <a href="#a8d7c4ced89a9b0ef97e1991638bf52e2">More...</a><br /></td></tr>
+<tr class="separator:a8d7c4ced89a9b0ef97e1991638bf52e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79ac43f6f05a8baf448560b645940751"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="a10893.html#a8d042301b1c77516c5bfd527662e4f54">labelListList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00315.html#a79ac43f6f05a8baf448560b645940751">procSchedule</a> () const </td></tr>
+<tr class="memdesc:a79ac43f6f05a8baf448560b645940751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per processor the order in which communication has been scheduled.  <a href="#a79ac43f6f05a8baf448560b645940751">More...</a><br /></td></tr>
+<tr class="separator:a79ac43f6f05a8baf448560b645940751"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Combine operator for <a class="el" href="a01800.html" title="A dynamically allocatable list of packed unsigned integers. ">PackedList</a> of fileState. </p>
+<div class="textblock"><p>Determines the order in which a set of processors should communicate with one another. </p>
+<p><a class="anchor" id="Description"></a>The communication order should</p><ul>
+<li>have maximum overlap</li>
+<li>allow blocking communication without deadlock</li>
+</ul>
+<p>Does a very simple scheduling which assumes same time for all operations.</p>
+<p>After construction:</p><ul>
+<li><a class="el" href="a00315.html#a8d7c4ced89a9b0ef97e1991638bf52e2" title="Order in which comms is scheduled. ">schedule()</a> gives the order in which the input communication should occur</li>
+<li><a class="el" href="a00315.html#a79ac43f6f05a8baf448560b645940751" title="Per processor the order in which communication has been scheduled. ">procSchedule()</a>[proci] gives per proci</li>
+</ul>
+<p>Does not care whether 'talking' is first send, second receive or maybe full swap. This is all responsability of caller. See <a class="el" href="a02045.html" title="Determines processor-processor connection. After instantiation contains on all processors the process...">ProcessorTopology</a> class for use in scheduling processor boundary swaps.</p>
+<dl class="section user"><dt>Source files</dt><dd><ul>
+<li>
+<a href="../../../src/OpenFOAM/meshes/ProcessorTopology/commSchedule.H">commSchedule.H</a> </li>
+<li>
+<a href="../../../src/OpenFOAM/meshes/ProcessorTopology/commSchedule.C">commSchedule.C</a> </li>
+</ul>
+</dd></dl>
 
-<p>Definition at line <a class="el" href="a09427_source.html#l00099">99</a> of file <a class="el" href="a09427_source.html">fileMonitor.C</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="aad6e979ac7af7448ebf671bc27f92ad0"></a>
+<p>Definition at line <a class="el" href="a09116_source.html#l00065">65</a> of file <a class="el" href="a09116_source.html">commSchedule.H</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a1437bad1028054476a2c9d03fab24a7e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00315.html">commSchedule</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="a10893.html#a22f45a3cb4f074e609f58ebaeef0ecf9">label</a>&#160;</td>
+          <td class="paramname"><em>nProcs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="a01395.html">List</a>&lt; <a class="el" href="a10893.html#a123bf349eca926d6984b23e5e067d8b9">labelPair</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>comms</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct from wanted communication. Wanted communication is between. </p>
+<p>two processors. Can be a one-way communication or two-way communication, that is up to the caller. This class just determines an order for it such that any processor is only talking to one other at a time. After construction:</p><ul>
+<li>schedule is the order in which comms is done.</li>
+<li>procSchedule[proci] is for proci the order in which comms is done. </li>
+</ul>
+
+<p>Definition at line <a class="el" href="a09115_source.html#l00066">66</a> of file <a class="el" href="a09115_source.html">commSchedule.C</a>.</p>
+
+<p>References <a class="el" href="a08032_source.html#l00131">Foam::abort()</a>, <a class="el" href="a07945_source.html#l00097">List&lt; T &gt;::append()</a>, <a class="el" href="a08098_source.html#l00253">Foam::endl()</a>, <a class="el" href="a10893.html#ac50d206700f3f71855dd30c9a076de43">Foam::FatalError</a>, <a class="el" href="a08031_source.html#l00319">FatalErrorInFunction</a>, <a class="el" href="a07975_source.html#l00428">forAll</a>, <a class="el" href="a09202_source.html#l00061">Foam::labelMin</a>, <a class="el" href="a08120_source.html#l00411">UPstream::master()</a>, <a class="el" href="a08089_source.html#l00053">Foam::Pout</a>, <a class="el" href="a08092_source.html#l00199">Foam::setw()</a>, <a class="el" href="a07945_source.html#l00076">List&lt; T &gt;::size()</a>, and <a class="el" href="a08136_source.html#l00107">OStringStream::str()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00315_a1437bad1028054476a2c9d03fab24a7e_cgraph.png" border="0" usemap="#a00315_a1437bad1028054476a2c9d03fab24a7e_cgraph" alt=""/></div>
+<map name="a00315_a1437bad1028054476a2c9d03fab24a7e_cgraph" id="a00315_a1437bad1028054476a2c9d03fab24a7e_cgraph">
+<area shape="rect" id="node2" href="a10893.html#a447107a607d03e417307c203fa5fb44b" title="Foam::abort" alt="" coords="209,5,304,32"/>
+<area shape="rect" id="node3" href="a01395.html#a399dd2bf0d9a32016717dc90126f016b" title="Append an element at the end of the list. " alt="" coords="187,56,326,83"/>
+<area shape="rect" id="node4" href="a10893.html#a2db8fe02a0d3909e9351bb4275b23ce4" title="Add newline and flush stream. " alt="" coords="211,107,302,133"/>
+<area shape="rect" id="node5" href="a02876.html#a36af549940a0aae3733774649594489f" title="Am I the master process. " alt="" coords="170,157,343,184"/>
+<area shape="rect" id="node6" href="a10893.html#a3318127f6f23246407ca749a0a0ea03c" title="Foam::setw" alt="" coords="210,208,303,235"/>
+<area shape="rect" id="node7" href="a01395.html#a8a5f6fa29bd4b500caf186f60245b384" title="Override size to be inconsistent with allocated storage. " alt="" coords="197,259,316,285"/>
+<area shape="rect" id="node8" href="a01780.html#a0bd251dfecae718a4c1568eb3d660697" title="Return the string. " alt="" coords="169,309,344,336"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a90f87f0cca5f63d26259fe697cb9fbc3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ClassName </td>
+          <td>(</td>
+          <td class="paramtype">&quot;commSchedule&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8d7c4ced89a9b0ef97e1991638bf52e2"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -127,21 +222,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void operator() </td>
+          <td class="memname">const <a class="el" href="a10893.html#a1cb143a027019075df276006651d7048">labelList</a>&amp; schedule </td>
           <td>(</td>
-          <td class="paramtype">unsigned int &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -151,14 +235,42 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a09427_source.html#l00102">102</a> of file <a class="el" href="a09427_source.html">fileMonitor.C</a>.</p>
+<p>Order in which comms is scheduled. </p>
 
-<p>References <a class="el" href="a07308_source.html#l00052">x</a>, and <a class="el" href="a07307_source.html#l00014">y</a>.</p>
+<p>Definition at line <a class="el" href="a09116_source.html#l00101">101</a> of file <a class="el" href="a09116_source.html">commSchedule.H</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/OSspecific/POSIX/<a class="el" href="a09427_source.html">fileMonitor.C</a></li>
+<a class="anchor" id="a79ac43f6f05a8baf448560b645940751"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="a10893.html#a8d042301b1c77516c5bfd527662e4f54">labelListList</a>&amp; procSchedule </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Per processor the order in which communication has been scheduled. </p>
+
+<p>Definition at line <a class="el" href="a09116_source.html#l00107">107</a> of file <a class="el" href="a09116_source.html">commSchedule.H</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/OpenFOAM/meshes/ProcessorTopology/<a class="el" href="a09116_source.html">commSchedule.H</a></li>
+<li>src/OpenFOAM/meshes/ProcessorTopology/<a class="el" href="a09115_source.html">commSchedule.C</a></li>
 </ul>
 </div><!-- contents -->
   <!-- end of doxygen-generated content -->
