@@ -9,6 +9,6 @@ var searchData=
   ['yeqn_2eh',['YEqn.H',['../a03123.html',1,'']]],
   ['yeqns_2eh',['YEqns.H',['../a03862.html',1,'']]],
   ['yeqns_2eh',['YEqns.H',['../a03861.html',1,'']]],
-  ['yplus_2ec',['yPlus.C',['../a06431.html',1,'']]],
-  ['yplus_2eh',['yPlus.H',['../a06432.html',1,'']]]
+  ['yplus_2ec',['yPlus.C',['../a06430.html',1,'']]],
+  ['yplus_2eh',['yPlus.H',['../a06431.html',1,'']]]
 ];

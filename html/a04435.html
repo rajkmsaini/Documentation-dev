@@ -92,25 +92,87 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_b0c2b0d6e5b08bdff054b28f26ba51e7.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_287a8ee951d3c46055211652d30251ed.html">dataConversion</a></li><li class="navelem"><a class="el" href="dir_b20f4e7e983e511c716513c337bb3841.html">foamToTetDualMesh</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_b0c2b0d6e5b08bdff054b28f26ba51e7.html">postProcessing</a></li><li class="navelem"><a class="el" href="dir_287a8ee951d3c46055211652d30251ed.html">dataConversion</a></li><li class="navelem"><a class="el" href="dir_f73f3a59aefc419d78bd8216641486ec.html">foamToVTK</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">foamToTetDualMesh.C File Reference</div>  </div>
+<div class="title">foamToVTK.C File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Converts polyMesh results to tetDualMesh.  
+<p>Legacy VTK file format writer.  
 <a href="#details">More...</a></p>
 
 <p><a href="a04435_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Converts polyMesh results to tetDualMesh. </p>
-<p><b>Original source file</b> <a href="../../../applications/utilities/postProcessing/dataConversion/foamToTetDualMesh/foamToTetDualMesh.C">foamToTetDualMesh.C</a></p>
-<p><a class="anchor" id="Description"></a> </p>
+<div class="textblock"><p>Legacy VTK file format writer. </p>
+<p><b>Original source file</b> <a href="../../../applications/utilities/postProcessing/dataConversion/foamToVTK/foamToVTK.C">foamToVTK.C</a></p>
+<p><a class="anchor" id="Description"></a>- Handles volFields, pointFields, surfaceScalarField, surfaceVectorField fields.</p><ul>
+<li>Mesh topo changes.</li>
+<li>Both ascii and binary.</li>
+<li>Single time step writing.</li>
+<li>Write subset only.</li>
+<li>Automatic decomposition of cells; polygons on boundary undecomposed since handled by vtk.</li>
+</ul>
+<dl class="section user"><dt>Usage</dt><dd><b>foamToVTK</b> [OPTION]</dd></dl>
+<p>Options:</p><ul>
+<li><dl class="section user"><dt>-ascii</dt><dd>Write VTK data in ASCII format instead of binary.</dd></dl>
+</li>
+<li><dl class="section user"><dt>-mesh &lt;name&gt;</dt><dd>Use a different mesh name (instead of -region)</dd></dl>
+</li>
+<li><dl class="section user"><dt>-fields &lt;fields&gt;</dt><dd>Convert selected fields only. For example, <pre class="fragment">      -fields "( p T U )"</pre> The quoting is required to avoid shell expansions and to pass the information as a single argument.</dd></dl>
+</li>
+<li><dl class="section user"><dt>-surfaceFields</dt><dd>Write surfaceScalarFields (e.g., phi)</dd></dl>
+</li>
+<li><dl class="section user"><dt>-cellSet &lt;name&gt;</dt><dd></dd></dl>
+</li>
+<li><dl class="section user"><dt>-faceSet &lt;name&gt;</dt><dd></dd></dl>
+</li>
+<li><dl class="section user"><dt>-pointSet &lt;name&gt;</dt><dd>Restrict conversion to the cellSet, faceSet or pointSet.</dd></dl>
+</li>
+<li><dl class="section user"><dt>-nearCellValue</dt><dd>Output cell value on patches instead of patch value itself</dd></dl>
+</li>
+<li><dl class="section user"><dt>-noInternal</dt><dd>Do not generate file for mesh, only for patches</dd></dl>
+</li>
+<li><dl class="section user"><dt>-noPointValues</dt><dd>No pointFields</dd></dl>
+</li>
+<li><dl class="section user"><dt>-noFaceZones</dt><dd>No faceZones</dd></dl>
+</li>
+<li><dl class="section user"><dt>-noLinks</dt><dd>(in parallel) do not link processor files to master</dd></dl>
+</li>
+<li><dl class="section user"><dt>poly</dt><dd>write polyhedral cells without tet/pyramid decomposition</dd></dl>
+</li>
+<li><dl class="section user"><dt>-allPatches</dt><dd>Combine all patches into a single file</dd></dl>
+</li>
+<li><dl class="section user"><dt>-excludePatches &lt;patchNames&gt;</dt><dd>Specify patches (wildcards) to exclude. For example, <pre class="fragment">      -excludePatches '( inlet_1 inlet_2 "proc.*")'</pre> The quoting is required to avoid shell expansions and to pass the information as a single argument. The double quotes denote a regular expression.</dd></dl>
+</li>
+<li><dl class="section user"><dt>-useTimeName</dt><dd>use the time index in the VTK file name instead of the time index</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>mesh subset is handled by vtkMesh. Slight inconsistency in interpolation: on the internal field it interpolates the whole volField to the whole-mesh pointField and then selects only those values it needs for the subMesh (using the fvMeshSubset cellMap(), pointMap() functions). For the patches however it uses the fvMeshSubset.interpolate function to directly interpolate the whole-mesh values onto the subset patch.</dd>
+<dd>
+</dd></dl>
+<dl class="section user"><dt>new file format:</dt><dd>no automatic timestep recognition. However can have .pvd file format which refers to time simulation if XML *.vtu files are available:</dd></dl>
+<pre class="fragment">      &lt;?xml version="1.0"?&gt;
+      &lt;VTKFile type="Collection"
+           version="0.1"
+           byte_order="LittleEndian"
+           compressor="vtkZLibDataCompressor"&gt;
+        &lt;Collection&gt;
+          &lt;DataSet timestep="50" file="pitzDaily_2.vtu"/&gt;
+          &lt;DataSet timestep="100" file="pitzDaily_3.vtu"/&gt;
+          &lt;DataSet timestep="150" file="pitzDaily_4.vtu"/&gt;
+          &lt;DataSet timestep="200" file="pitzDaily_5.vtu"/&gt;
+          &lt;DataSet timestep="250" file="pitzDaily_6.vtu"/&gt;
+          &lt;DataSet timestep="300" file="pitzDaily_7.vtu"/&gt;
+          &lt;DataSet timestep="350" file="pitzDaily_8.vtu"/&gt;
+          &lt;DataSet timestep="400" file="pitzDaily_9.vtu"/&gt;
+          &lt;DataSet timestep="450" file="pitzDaily_10.vtu"/&gt;
+          &lt;DataSet timestep="500" file="pitzDaily_11.vtu"/&gt;
+        &lt;/Collection&gt;
+      &lt;/VTKFile&gt;</pre> </li>
+</ul>
 
-<p>Definition in file <a class="el" href="a04435_source.html">foamToTetDualMesh.C</a>.</p>
+<p>Definition in file <a class="el" href="a04435_source.html">foamToVTK.C</a>.</p>
 </div></div><!-- contents -->
   <!-- end of doxygen-generated content -->
   </div> <!-- main -->

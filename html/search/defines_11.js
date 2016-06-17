@@ -11,7 +11,7 @@ var searchData=
   ['seriouserrorinfunction',['SeriousErrorInFunction',['../a08035.html#aed57e3d69e073924bc0fb9021c9870ab',1,'messageStream.H']]],
   ['seriousioerrorin',['SeriousIOErrorIn',['../a08035.html#a52a28c4e6275f6d260fb9a8e0ead74ef',1,'messageStream.H']]],
   ['seriousioerrorinfunction',['SeriousIOErrorInFunction',['../a08035.html#a5571043df601aca858c74948eb6bebe1',1,'messageStream.H']]],
-  ['simple_5fcontrol',['SIMPLE_CONTROL',['../a05269.html#aae9ef40e611a5879f4f2e91c43d0bfd1',1,'simpleControl.H']]],
+  ['simple_5fcontrol',['SIMPLE_CONTROL',['../a05268.html#aae9ef40e611a5879f4f2e91c43d0bfd1',1,'simpleControl.H']]],
   ['statichashtable_5fc',['StaticHashTable_C',['../a07887.html#a61cbdb0d5cc5edbe407d22858cf94c87',1,'StaticHashTable.C']]],
   ['swap',['SWAP',['../a09498.html#aac9153aee4bdb92701df902e06a74eb3',1,'fft.C']]]
 ];

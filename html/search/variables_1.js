@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b',['b',['../a10905.html#a00faad9a19c0dc0bcae765415926e925',1,'Foam::constant::physicoChemical::b()'],['../a04585.html#a964130827b991c6d279eac49e0e29eb0',1,'b():&#160;createFields.H'],['../a04589.html#a964130827b991c6d279eac49e0e29eb0',1,'b():&#160;createFields.H']]],
+  ['b',['b',['../a10905.html#a00faad9a19c0dc0bcae765415926e925',1,'Foam::constant::physicoChemical::b()'],['../a04584.html#a964130827b991c6d279eac49e0e29eb0',1,'b():&#160;createFields.H'],['../a04588.html#a964130827b991c6d279eac49e0e29eb0',1,'b():&#160;createFields.H']]],
   ['b1_5f',['b1_',['../a01268.html#a65b7da414fbc1c8ee4e4aea0c7bc07db',1,'Foam::kOmegaSST']]],
   ['b_5f',['B_',['../a00038.html#ad44554fe371bb59836624cad1c370de7',1,'Foam::compressible::RASModels::alphatFilmWallFunctionFvPatchScalarField::B_()'],['../a01719.html#ad44554fe371bb59836624cad1c370de7',1,'Foam::compressible::RASModels::nutkFilmWallFunctionFvPatchScalarField::B_()'],['../a00060.html#a0fa59ab5248e1ff99f2c10b567ae66c6',1,'Foam::saturationModels::Antoine::B_()'],['../a01663.html#ad2f1b2ee56beefcaf25d6636fc8c42be',1,'Foam::NonSphereDragForce::b_()'],['../a02693.html#a4f51e92f0ae82e636dbe181f25ddd941',1,'Foam::regionModels::surfaceFilmModels::thixotropicViscosity::b_()'],['../a03002.html#a34f1c6df22c0db632ea42add56f8a551',1,'Foam::XiModel::b_()']]],
   ['bafflefaces_5f',['baffleFaces_',['../a01506.html#aac86d62e6daa912470d64042f4c8e073',1,'Foam::meshReader']]],
@@ -23,7 +23,7 @@ var searchData=
   ['binpoints_5f',['binPoints_',['../a00867.html#a1831b38e153755e86b6a8352de440ad4',1,'Foam::functionObjects::forces']]],
   ['blade_5f',['blade_',['../a02285.html#a72cb5b2ffdc012bb7dd028eba0814074',1,'Foam::fv::rotorDiskSource']]],
   ['blendingmethods_5f',['blendingMethods_',['../a01887.html#ae77c6edcb321074f2cf61b098a432ab6',1,'Foam::phaseSystem']]],
-  ['bmesh',['bMesh',['../a04464.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldScalar.H'],['../a04465.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldTensor.H'],['../a04466.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldVector.H']]],
+  ['bmesh',['bMesh',['../a04463.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldScalar.H'],['../a04464.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldTensor.H'],['../a04465.html#a579e6ddb8a925124f74aacb1ddb63df3',1,'bMesh():&#160;getPatchFieldVector.H']]],
   ['bodies_5f',['bodies_',['../a02265.html#a60aba5d4b02626e053368003fd2750fc',1,'Foam::RBD::rigidBodyModel']]],
   ['body_5f',['body_',['../a02408.html#a7a415bc99a98f90b903bf7038572e8af',1,'Foam::sixDoFSolver']]],
   ['bodyid_5f',['bodyID_',['../a02222.html#a2df6374d245ccf3e6819431463c848a2',1,'Foam::RBD::restraint']]],
