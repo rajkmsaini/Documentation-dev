@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>OpenFOAM: applications/utilities/mesh/conversion/gmshToFoam/gmshToFoam.C File Reference</title>
+<title>OpenFOAM: applications/utilities/mesh/advanced/combinePatchFaces/combinePatchFaces.C File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,28 +88,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_d0d736d3dc14112e53d1ae4faa8f931f.html">mesh</a></li><li class="navelem"><a class="el" href="dir_5148cfe1bce83bc5fdc09a52963260a1.html">conversion</a></li><li class="navelem"><a class="el" href="dir_70ca48d6efc076aae6c126917cb7ccc1.html">gmshToFoam</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_a6e4fee11f07c3b70486e88fe92cbbdc.html">applications</a></li><li class="navelem"><a class="el" href="dir_a740ba71acc8f57051af57c325cf1aa6.html">utilities</a></li><li class="navelem"><a class="el" href="dir_d0d736d3dc14112e53d1ae4faa8f931f.html">mesh</a></li><li class="navelem"><a class="el" href="dir_33cf184158805ce1a4614f861f9c9f7a.html">advanced</a></li><li class="navelem"><a class="el" href="dir_eb4abae7c4687d9bb506282a2c0cedb6.html">combinePatchFaces</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">gmshToFoam.C File Reference</div>  </div>
+<div class="title">combinePatchFaces.C File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Reads .msh file as written by Gmsh.  
+<p>Checks for multiple patch faces on same cell and combines them. Multiple patch faces can result from e.g. removal of refined neighbouring cells, leaving 4 exposed faces with same owner.  
 <a href="#details">More...</a></p>
 
 <p><a href="a04060_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Reads .msh file as written by Gmsh. </p>
-<p><b>Original source file</b> <a href="https://github.com/OpenFOAM/OpenFOAM-dev/tree/master/applications/utilities/mesh/conversion/gmshToFoam/gmshToFoam.C">gmshToFoam.C</a></p>
-<p><a class="anchor" id="Description"></a>Needs surface elements on mesh to be present and aligned with outside faces of the mesh. I.e. if the mesh is hexes, the outside faces need to be quads.</p>
-<p>Note: There is something seriously wrong with the ordering written in the .msh file. Normal operation is to check the ordering and invert prisms and hexes if found to be wrong way round. Use the -keepOrientation to keep the raw information.</p>
-<p>Note: The code now uses the element (cell,face) physical region id number to create cell zones and faces zones (similar to fluentMeshWithInternalFaces).</p>
-<p>A use of the cell zone information, is for field initialization with the "setFields" utility. see the classes: topoSetSource, zoneToCell. </p>
+<div class="textblock"><p>Checks for multiple patch faces on same cell and combines them. Multiple patch faces can result from e.g. removal of refined neighbouring cells, leaving 4 exposed faces with same owner. </p>
+<p><b>Original source file</b> <a href="../../../applications/utilities/mesh/advanced/combinePatchFaces/combinePatchFaces.C">combinePatchFaces.C</a></p>
+<p><a class="anchor" id="Description"></a>Rules for merging:</p><ul>
+<li>only boundary faces (since multiple internal faces between two cells not allowed anyway)</li>
+<li>faces have to have same owner</li>
+<li>faces have to be connected via edge which are not features (so angle between them &lt; feature angle)</li>
+<li>outside of faces has to be single loop</li>
+<li>outside of face should not be (or just slightly) concave (so angle between consecutive edges &lt; concaveangle</li>
+</ul>
+<p>E.g. to allow all faces on same patch to be merged:</p>
+<p>combinePatchFaces 180 -concaveAngle 90 </p>
 
-<p>Definition in file <a class="el" href="a04060_source.html">gmshToFoam.C</a>.</p>
+<p>Definition in file <a class="el" href="a04060_source.html">combinePatchFaces.C</a>.</p>
 </div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.11-->
 <!-- start footer part -->
